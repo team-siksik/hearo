@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:hearo_app/screens/home_screen.dart';
+import 'package:get/get.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -39,113 +41,111 @@ class LoginScreen extends StatelessWidget {
                 ),
               ],
             ),
-            GestureDetector(
-              onTap: () {
-                showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return Dialog(
-                        shape: const RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(20))),
-                        child: SizedBox(
-                            height: size.width * 0.55,
-                            width: size.width * 0.8,
-                            child: Padding(
-                              padding: const EdgeInsets.only(
-                                  top: 30, bottom: 30, left: 20, right: 20),
-                              child: Column(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  const Text(
-                                    "히어로에 오신 것을 환영합니다.",
-                                    style: TextStyle(
-                                        fontSize: 24,
-                                        fontWeight: FontWeight.w700),
-                                  ),
-                                  const Column(
-                                    children: [
-                                      SizedBox(
-                                        height: 20,
-                                      ),
-                                      Text(
-                                        "상대를 초대해서",
-                                        style: TextStyle(
-                                          fontSize: 20,
-                                        ),
-                                      ),
-                                      Text(
-                                        "대화를 시작해 보세요!",
-                                        style: TextStyle(
-                                          fontSize: 20,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    width: 250,
-                                    child: ElevatedButton(
-                                        style: const ButtonStyle(
-                                            iconSize:
-                                                MaterialStatePropertyAll(20),
-                                            backgroundColor:
-                                                MaterialStatePropertyAll(
-                                                    Color.fromARGB(
-                                                        255, 127, 206, 255)),
-                                            shape: MaterialStatePropertyAll(
-                                                RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.all(
-                                                            Radius.circular(
-                                                                10))))),
-                                        onPressed: () {},
-                                        child: const Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Text(
-                                              "시작하기",
-                                              style: TextStyle(fontSize: 20),
-                                            ),
-                                            SizedBox(
-                                              width: 20,
-                                            ),
-                                            Icon(Icons.arrow_forward)
-                                          ],
-                                        )),
-                                  )
-                                ],
+            // 환영 모달
+            welcomeModal(context, size)
+          ],
+        ),
+      ),
+    );
+  }
+
+  // 환영 모달
+  GestureDetector welcomeModal(BuildContext context, Size size) {
+    return GestureDetector(
+      onTap: () {
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return Dialog(
+                shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(20))),
+                child: SizedBox(
+                    height: size.width * 0.55,
+                    width: size.width * 0.8,
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                          top: 30, bottom: 30, left: 20, right: 20),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            "히어로에 오신 것을 환영합니다.",
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                                fontSize: 22, fontWeight: FontWeight.w700),
+                          ),
+                          const Column(
+                            children: [
+                              SizedBox(
+                                height: 20,
                               ),
-                            )),
-                      );
-                    });
-              },
-              child: Container(
-                decoration: BoxDecoration(
-                    border: Border.all(
-                      color: const Color(0xffEEEEEE),
-                    ),
-                    borderRadius: const BorderRadius.all(Radius.circular(24))),
-                width: 300,
-                padding: const EdgeInsets.only(
-                    left: 30, top: 6, bottom: 6, right: 30),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    SizedBox(
-                      width: 50,
-                      height: 50,
-                      child: Image.asset("assets/images/googlelogo1.png"),
-                    ),
-                    const Text(
-                      "구글아이디로 로그인",
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
-                    )
-                  ],
-                ),
-              ),
+                              Text(
+                                "상대를 초대해서",
+                                style: TextStyle(
+                                  fontSize: 18,
+                                ),
+                              ),
+                              Text(
+                                "대화를 시작해 보세요!",
+                                style: TextStyle(
+                                  fontSize: 18,
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            width: 250,
+                            child: ElevatedButton(
+                                style: const ButtonStyle(
+                                    iconSize: MaterialStatePropertyAll(20),
+                                    backgroundColor: MaterialStatePropertyAll(
+                                        Color(0xffe63e43)),
+                                    shape: MaterialStatePropertyAll(
+                                        RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(10))))),
+                                onPressed: () {
+                                  Get.to(const HomeScreen());
+                                },
+                                child: const Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      "시작하기",
+                                      style: TextStyle(fontSize: 20),
+                                    ),
+                                    SizedBox(
+                                      width: 20,
+                                    ),
+                                    Icon(Icons.arrow_forward)
+                                  ],
+                                )),
+                          )
+                        ],
+                      ),
+                    )),
+              );
+            });
+      },
+      child: Container(
+        decoration: BoxDecoration(
+            border: Border.all(
+              color: const Color(0xffEEEEEE),
+            ),
+            borderRadius: const BorderRadius.all(Radius.circular(24))),
+        width: 300,
+        padding: const EdgeInsets.only(left: 30, top: 6, bottom: 6, right: 30),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            SizedBox(
+              width: 50,
+              height: 50,
+              child: Image.asset("assets/images/googlelogo1.png"),
+            ),
+            const Text(
+              "구글아이디로 로그인",
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
             )
           ],
         ),
