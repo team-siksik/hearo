@@ -39,7 +39,8 @@ dependencies:
   material_design_icons_flutter: ^6.0.7096
   # gif 사용가능하게 하기
   image: ^4.0.15
-
+  # 이미지 캐러셀
+  carousel_slider: ^4.2.1
 
 dev_dependencies:
   flutter_test:
