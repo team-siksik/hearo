@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hearo_app/screens/gpt_temp.dart';
 import 'package:hearo_app/screens/home_screen.dart';
 import 'package:get/get.dart';
 
@@ -15,7 +16,11 @@ class LoginScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Image.asset("assets/images/hearo1.png"),
+            GestureDetector(
+                onTap: () {
+                  Get.to(const GptTemp());
+                },
+                child: Image.asset("assets/images/hearo1.png")),
             const Column(
               children: [
                 SizedBox(
