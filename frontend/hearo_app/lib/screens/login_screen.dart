@@ -18,7 +18,7 @@ class LoginScreen extends StatelessWidget {
           children: [
             GestureDetector(
                 onTap: () {
-                  Get.to(const GptTemp());
+                  Get.to(GptTemp());
                 },
                 child: Image.asset("assets/images/hearo1.png")),
             const Column(
@@ -110,7 +110,7 @@ class LoginScreen extends StatelessWidget {
                                             borderRadius: BorderRadius.all(
                                                 Radius.circular(10))))),
                                 onPressed: () {
-                                  Get.to(const HomeScreen());
+                                  Get.to(() => HomeScreen());
                                 },
                                 child: const Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
