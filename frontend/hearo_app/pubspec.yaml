@@ -44,6 +44,9 @@ dependencies:
   carousel_slider: ^4.2.1
   # ChatGPT
   chat_gpt_api: ^1.0.2
+  # 컨펌창
+  confirm_dialog: ^1.0.1
+
 
 dev_dependencies:
   flutter_test:
