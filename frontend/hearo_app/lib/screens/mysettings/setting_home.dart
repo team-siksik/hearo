@@ -142,6 +142,8 @@ class SettingHome extends StatelessWidget {
                     onPressed: () => showDialog(
                       context: context,
                       builder: (BuildContext context) => AlertDialog(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20)),
                         title: const Text(
                           '로그아웃',
                           textAlign: TextAlign.center,
@@ -205,13 +207,15 @@ class SettingHome extends StatelessWidget {
                     onPressed: () => showDialog(
                       context: context,
                       builder: (BuildContext context) => AlertDialog(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20)),
                         title: const Text(
                           '회원탈퇴',
                           textAlign: TextAlign.center,
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                         content: SizedBox(
-                          height: size.height * 0.1,
+                          height: size.height * 0.08,
                           child: Column(
                             children: [
                               const Text(
