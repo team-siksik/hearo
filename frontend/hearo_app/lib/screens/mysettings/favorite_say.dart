@@ -6,9 +6,18 @@ class FavoriteSay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.sizeOf(context);
     return Scaffold(
       appBar: CustomAppBarInner(name: "자주 쓰는 말"),
-      body: Text("자주 쓰는 말 스크린"),
+      body: SizedBox(
+        width: size.width,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text("자주 쓰는 말 스크린"),
+          ],
+        ),
+      ),
     );
   }
 }
