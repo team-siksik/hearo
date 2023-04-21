@@ -11,3 +11,6 @@ spring:
     properties:
       hibernate:
         format_sql: true  # SQL pretty print
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
