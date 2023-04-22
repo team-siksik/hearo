@@ -6,7 +6,7 @@ class GptTemp extends StatefulWidget {
   const GptTemp({super.key});
 
   @override
-  _GptTempState createState() => _GptTempState();
+  State<GptTemp> createState() => _GptTempState();
 }
 
 class _GptTempState extends State<GptTemp> {
