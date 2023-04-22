@@ -56,7 +56,7 @@ class HomeScreen extends StatelessWidget {
               flex: 1,
               child: Container(
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: Color(0xffFAFAFA),
                     borderRadius: const BorderRadius.only(
                         bottomLeft: Radius.circular(14),
                         bottomRight: Radius.circular(14)),

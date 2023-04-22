@@ -20,27 +20,32 @@ class LoginScreen extends StatelessWidget {
                 onTap: () {
                   Get.to(GptTemp());
                 },
-                child: Image.asset("assets/images/hearo1.png")),
-            const Column(
+                child: SizedBox(
+                    height: size.width * 0.6,
+                    width: size.width * 0.6,
+                    child: Image.asset("assets/images/hearo_logo_circle.png",
+                        fit: BoxFit.fill))),
+            Column(
               children: [
                 SizedBox(
                   height: 30,
                 ),
-                Text(
-                  "히어로",
-                  style: TextStyle(fontSize: 40, fontWeight: FontWeight.w600),
-                ),
+                Image.asset("assets/images/hearo_text_login.png"),
+                // Text(
+                //   "히어로",
+                //   style: TextStyle(fontSize: 40, fontWeight: FontWeight.w600),
+                // ),
                 SizedBox(
                   height: 40,
                 ),
-                Text(
-                  "반갑습니다!",
-                  style: TextStyle(fontSize: 20),
-                ),
-                Text(
-                  "히어로에 오신 것을 환영해요",
-                  style: TextStyle(fontSize: 20),
-                ),
+                // Text(
+                //   "반갑습니다!",
+                //   style: TextStyle(fontSize: 20),
+                // ),
+                // Text(
+                //   "히어로에 오신 것을 환영해요",
+                //   style: TextStyle(fontSize: 20),
+                // ),
                 SizedBox(
                   height: 40,
                 ),
@@ -134,10 +139,20 @@ class LoginScreen extends StatelessWidget {
       },
       child: Container(
         decoration: BoxDecoration(
-            border: Border.all(
-              color: const Color(0xffEEEEEE),
+          color: Colors.white,
+          // border: Border.all(
+          //   color: const Color(0xffEEEEEE),
+          // ),
+          borderRadius: const BorderRadius.all(Radius.circular(24)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.transparent.withOpacity(0.25),
+              spreadRadius: 0,
+              blurRadius: 1.0,
+              offset: const Offset(0, 2), // changes position of shadow
             ),
-            borderRadius: const BorderRadius.all(Radius.circular(24))),
+          ],
+        ),
         width: 300,
         padding: const EdgeInsets.only(left: 30, top: 6, bottom: 6, right: 30),
         child: Row(
