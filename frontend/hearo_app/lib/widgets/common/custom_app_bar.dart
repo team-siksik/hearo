@@ -14,15 +14,11 @@ class CustomMainAppBar extends StatelessWidget implements PreferredSizeWidget {
           child: Row(
             children: [
               Container(
-                  margin: const EdgeInsets.fromLTRB(0, 0, 5, 0),
-                  child: Image.asset("assets/images/hearo1.png")),
-              const Text(
-                "Hearo",
-                style: TextStyle(
-                    color: Color(0xffe64e43),
-                    fontSize: 24,
-                    fontWeight: FontWeight.w600),
-              )
+                  margin: const EdgeInsets.fromLTRB(5, 5, 5, 5),
+                  child: Image.asset("assets/images/hearo_logo_circle.png")),
+              Container(
+                  margin: const EdgeInsets.fromLTRB(2, 5, 5, 5),
+                  child: Image.asset("assets/images/hearo_text1.png"))
             ],
           )),
       actions: [
