@@ -48,7 +48,12 @@ dependencies:
   confirm_dialog: ^1.0.1
   # 토글 예쁜거
   animated_toggle_switch: ^0.6.2
+  # 드랍다운
+  dropdown_button2: ^2.1.0
+  # TTS
+  flutter_tts: ^3.6.3
 
+  
 dev_dependencies:
   flutter_test:
     sdk: flutter
