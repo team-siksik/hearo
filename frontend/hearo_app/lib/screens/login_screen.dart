@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:hearo_app/screens/gpt_temp.dart';
 import 'package:hearo_app/screens/home_screen.dart';
 import 'package:get/get.dart';
+import 'package:hearo_app/skills/text_to_speech.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -18,7 +18,7 @@ class LoginScreen extends StatelessWidget {
           children: [
             GestureDetector(
                 onTap: () {
-                  Get.to(GptTemp());
+                  Get.to(TextToSpeech());
                 },
                 child: SizedBox(
                     height: size.width * 0.6,

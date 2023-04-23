@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:hearo_app/widgets/common/custom_app_bar_inner.dart';
 import 'package:animated_toggle_switch/animated_toggle_switch.dart';
 import 'package:hearo_app/widgets/mysettings/chat_preview.dart';
+import 'package:hearo_app/widgets/mysettings/dropdown_box.dart';
+import 'dart:async';
 
 class SettingScreen extends StatefulWidget {
   const SettingScreen({super.key});
@@ -14,6 +16,18 @@ class SettingScreen extends StatefulWidget {
 int value = 0;
 bool positive = false;
 bool loading = false;
+
+final List<String> items = [
+  'Item1',
+  'Item2',
+  'Item3',
+  'Item4',
+  'Item5',
+  'Item6',
+  'Item7',
+  'Item8',
+];
+String? selectedValue;
 
 class _SettingScreenState extends State<SettingScreen> {
   @override
@@ -63,7 +77,26 @@ class _SettingScreenState extends State<SettingScreen> {
                         ),
                       )
                     ],
-                  )
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(15),
+                    child: Center(
+                      child: CustomDropdownButton2(
+                        buttonWidth: size.width * 0.6,
+                        dropdownWidth: size.width * 0.6,
+                        icon: Icon(Icons.arrow_drop_down_circle_outlined),
+                        iconSize: 20,
+                        hint: 'Select Item',
+                        dropdownItems: items,
+                        value: selectedValue,
+                        onChanged: (value1) {
+                          setState(() {
+                            selectedValue = value1;
+                          });
+                        },
+                      ),
+                    ),
+                  ),
                 ],
               )),
         ]),
@@ -126,7 +159,6 @@ class _SettingScreenState extends State<SettingScreen> {
       },
       borderWidth: 0.0,
       borderColor: Colors.transparent,
-      // colorBuilder: (i) => i.isEven ? Colors.amber : Colors.red,
       colorBuilder: (i) => Color.fromARGB(255, 230, 137, 140),
       onChanged: (i) async {
         setState(
