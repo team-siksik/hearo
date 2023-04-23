@@ -36,7 +36,6 @@ class _SpeechBubbleState extends State<SpeechBubble> {
     } else if (widget.textSize == 2) {
       fonts = 28;
     }
-    print(widget.who);
     return SizedBox(
       width: MediaQuery.of(context).size.width,
       child: widget.who == 0
@@ -45,6 +44,7 @@ class _SpeechBubbleState extends State<SpeechBubble> {
               children: [
                 Container(
                   decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black26, width: 0.5),
                     borderRadius: BorderRadius.circular(14),
                     color: colorList[widget.who],
                   ),
@@ -62,6 +62,7 @@ class _SpeechBubbleState extends State<SpeechBubble> {
               children: [
                 Container(
                   decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black26, width: 0.5),
                     borderRadius: BorderRadius.circular(14),
                     color: colorList[widget.who],
                   ),
