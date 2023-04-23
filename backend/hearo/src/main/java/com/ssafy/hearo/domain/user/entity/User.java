@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
@@ -31,13 +32,14 @@ public class User {
     private String userImageUrl;
 
     @Column(name="reg_dtm", updatable = false, nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    @CreationTimestamp
     private Timestamp regDtm;
 
     @Column(name="del_yn", nullable = false, columnDefinition = "TINYINT", length = 1 )
-    private boolean delYn;
+    private Byte delYn;
 // Builder
     @Builder
-    public User(Long userSeq, String userId, String userName, String userImageUrl, Timestamp regDtm, boolean delYn) {
+    public User(Long userSeq, String userId, String userName, String userImageUrl, Timestamp regDtm, Byte delYn) {
         this.userSeq = userSeq;
         this.userId = userId;
         this.userName = userName;
