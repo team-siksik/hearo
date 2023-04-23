@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -41,6 +42,7 @@ public class Setting {
     private String mainTheme;
 
     @Column(name = "mod_dtm", nullable = false)
+    @UpdateTimestamp
     private Timestamp modDtm;
 // builder
     @Builder
