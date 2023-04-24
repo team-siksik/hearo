@@ -11,7 +11,6 @@ import javax.persistence.*;
 import java.sql.Timestamp;
 
 @Getter
-@Setter
 @Entity
 @NoArgsConstructor
 @DynamicInsert
@@ -37,19 +36,33 @@ public class User {
 
     @Column(name="del_yn", nullable = false, columnDefinition = "TINYINT", length = 1 )
     private Byte delYn;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = true)
+    private Role role;
+
 // Builder
     @Builder
-    public User(Long userSeq, String userId, String userName, String userImageUrl, Timestamp regDtm, Byte delYn) {
-        this.userSeq = userSeq;
+    public User(String userId, String userName, String userImageUrl, Role role) {
         this.userId = userId;
         this.userName = userName;
         this.userImageUrl = userImageUrl;
-        this.regDtm = regDtm;
-        this.delYn = delYn;
+        this.role = role;
     }
 // modify
     public void modify(String userName, String userImageUrl) {
         this.userName = userName;
         this.userImageUrl = userImageUrl;
+    }
+
+    public User update(String name, String picture){
+        this.userName = name;
+        this.userImageUrl = picture;
+
+        return this;
+    }
+
+    public String getRoleKey(){
+        return this.role.getKey();
     }
 }
