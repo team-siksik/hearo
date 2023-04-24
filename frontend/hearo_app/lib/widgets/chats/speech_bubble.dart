@@ -15,16 +15,16 @@ class SpeechBubble extends StatefulWidget {
 }
 
 const colorList = {
-  0: Color.fromARGB(255, 255, 251, 251),
-  1: Color.fromARGB(255, 255, 136, 136),
-  2: Color.fromARGB(255, 255, 206, 136),
-  3: Color.fromARGB(255, 255, 255, 136),
-  4: Color.fromARGB(255, 217, 255, 136),
-  5: Color.fromARGB(255, 136, 255, 136),
-  6: Color.fromARGB(255, 136, 225, 255),
-  7: Color.fromARGB(255, 136, 156, 255),
-  8: Color.fromARGB(255, 195, 136, 255),
-  9: Color.fromARGB(255, 255, 136, 233),
+  0: Color.fromARGB(90, 152, 178, 255),
+  1: Color.fromARGB(90, 255, 211, 211),
+  2: Color.fromARGB(90, 255, 238, 211),
+  3: Color.fromARGB(90, 254, 255, 211),
+  4: Color.fromARGB(90, 229, 255, 211),
+  5: Color.fromARGB(90, 211, 255, 246),
+  6: Color.fromARGB(90, 248, 249, 255),
+  7: Color.fromARGB(90, 243, 211, 255),
+  8: Color.fromARGB(90, 230, 230, 230),
+  9: Color.fromARGB(90, 186, 186, 186),
 };
 
 class _SpeechBubbleState extends State<SpeechBubble> {
@@ -44,7 +44,7 @@ class _SpeechBubbleState extends State<SpeechBubble> {
               children: [
                 Container(
                   decoration: BoxDecoration(
-                    border: Border.all(color: Colors.black26, width: 0.5),
+                    // border: Border.all(color: Colors.black26, width: 0.3),
                     borderRadius: BorderRadius.circular(14),
                     color: colorList[widget.who],
                   ),
@@ -62,7 +62,7 @@ class _SpeechBubbleState extends State<SpeechBubble> {
               children: [
                 Container(
                   decoration: BoxDecoration(
-                    border: Border.all(color: Colors.black26, width: 0.5),
+                    // border: Border.all(color: Colors.black26, width: 0.3),
                     borderRadius: BorderRadius.circular(14),
                     color: colorList[widget.who],
                   ),
