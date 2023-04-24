@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hearo_app/screens/home_screen.dart';
 import 'package:get/get.dart';
+import 'package:hearo_app/skills/text_to_speech.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -15,27 +16,36 @@ class LoginScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Image.asset("assets/images/hearo1.png"),
-            const Column(
+            GestureDetector(
+                onTap: () {
+                  Get.to(TextToSpeech());
+                },
+                child: SizedBox(
+                    height: size.width * 0.6,
+                    width: size.width * 0.6,
+                    child: Image.asset("assets/images/hearo_logo_circle.png",
+                        fit: BoxFit.fill))),
+            Column(
               children: [
                 SizedBox(
                   height: 30,
                 ),
-                Text(
-                  "히어로",
-                  style: TextStyle(fontSize: 40, fontWeight: FontWeight.w600),
-                ),
+                Image.asset("assets/images/hearo_text_login.png"),
+                // Text(
+                //   "히어로",
+                //   style: TextStyle(fontSize: 40, fontWeight: FontWeight.w600),
+                // ),
                 SizedBox(
                   height: 40,
                 ),
-                Text(
-                  "반갑습니다!",
-                  style: TextStyle(fontSize: 20),
-                ),
-                Text(
-                  "히어로에 오신 것을 환영해요",
-                  style: TextStyle(fontSize: 20),
-                ),
+                // Text(
+                //   "반갑습니다!",
+                //   style: TextStyle(fontSize: 20),
+                // ),
+                // Text(
+                //   "히어로에 오신 것을 환영해요",
+                //   style: TextStyle(fontSize: 20),
+                // ),
                 SizedBox(
                   height: 40,
                 ),
@@ -105,7 +115,7 @@ class LoginScreen extends StatelessWidget {
                                             borderRadius: BorderRadius.all(
                                                 Radius.circular(10))))),
                                 onPressed: () {
-                                  Get.to(const HomeScreen());
+                                  Get.to(() => HomeScreen());
                                 },
                                 child: const Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -129,10 +139,20 @@ class LoginScreen extends StatelessWidget {
       },
       child: Container(
         decoration: BoxDecoration(
-            border: Border.all(
-              color: const Color(0xffEEEEEE),
+          color: Colors.white,
+          // border: Border.all(
+          //   color: const Color(0xffEEEEEE),
+          // ),
+          borderRadius: const BorderRadius.all(Radius.circular(24)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.transparent.withOpacity(0.25),
+              spreadRadius: 0,
+              blurRadius: 1.0,
+              offset: const Offset(0, 2), // changes position of shadow
             ),
-            borderRadius: const BorderRadius.all(Radius.circular(24))),
+          ],
+        ),
         width: 300,
         padding: const EdgeInsets.only(left: 30, top: 6, bottom: 6, right: 30),
         child: Row(
