@@ -52,6 +52,14 @@ dependencies:
   dropdown_button2: ^2.1.0
   # TTS
   flutter_tts: ^3.6.3
+  # 공유
+  share_plus: ^6.3.2
+  # 복사
+  clipboard: ^0.1.3
+  # 화면 꺼짐 방지
+  wakelock: ^0.6.2
+  # 토스트
+  fluttertoast: ^8.2.1
 
   
 dev_dependencies:

@@ -83,7 +83,7 @@ SizedBox voiceList(AsyncSnapshot snapshot, context) {
     child: Center(
       child: ListView.separated(
         itemBuilder: (context, index) {
-          var infos = snapshot.data![index];
+          // var infos = snapshot.data![index];
           // print(infos);
           return Row(
             children: [
