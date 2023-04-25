@@ -7,14 +7,14 @@ public class SettingResDto {
 
     @Getter
     @Builder
-    public static class SettingInfoDto {
+    public static class SettingInfoResDto {
+
         private long settingSeq;
         private long userSeq;
         private byte wordSize;
         private byte voiceSetting;
         private byte darkMode;
         private String mainTheme;
-        private String modDtm;
     }
 
 }
