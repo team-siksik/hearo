@@ -1,4 +1,4 @@
-package com.ssafy.hearo.global.config;
+package com.ssafy.hearo.global.config.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
