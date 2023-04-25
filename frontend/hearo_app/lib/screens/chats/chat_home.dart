@@ -11,6 +11,18 @@ class ChatHome extends StatefulWidget {
 }
 
 class _ChatHomeState extends State<ChatHome> {
+  final _scrollController = ScrollController();
+
+  void addChat() {
+    // 새로운 항목을 ListView에 추가합니다.
+    setState(() {
+      conversations.add({"who": 1, "message": "회의를 시작하겠습니다."});
+    });
+
+    // ListView를 맨 하단으로 스크롤합니다.
+    _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+  }
+
   @override
   void initState() {
     super.initState();
@@ -64,21 +76,25 @@ class _ChatHomeState extends State<ChatHome> {
               }
             },
             child: Container(
-              padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
+              padding: EdgeInsets.fromLTRB(20, 20, 20, 10),
               width: size.width,
               height: size.height,
               child: Stack(
                 children: <Widget>[
-                  ListView.separated(
-                    separatorBuilder: (context, index) => SizedBox(height: 10),
-                    itemCount: conversations.length,
-                    itemBuilder: (context, index) {
-                      var saying = conversations[index];
-                      return SpeechBubble(
-                          message: saying["message"],
-                          who: saying["who"],
-                          textSize: textSize);
-                    },
+                  Container(
+                    padding: EdgeInsets.only(bottom: 70),
+                    child: ListView.separated(
+                      controller: _scrollController,
+                      separatorBuilder: (context, index) => SizedBox(height: 5),
+                      itemCount: conversations.length,
+                      itemBuilder: (context, index) {
+                        var saying = conversations[index];
+                        return SpeechBubble(
+                            message: saying["message"],
+                            who: saying["who"],
+                            textSize: textSize);
+                      },
+                    ),
                   ),
                   Positioned(
                     left: 0,
@@ -104,6 +120,30 @@ class _ChatHomeState extends State<ChatHome> {
                       ),
                     ),
                   ),
+                  Positioned(
+                      right: 0,
+                      bottom: 65,
+                      child: GestureDetector(
+                        onTap: () {},
+                        child: Container(
+                          width: 56,
+                          height: 56,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              color: Colors.white,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.transparent.withOpacity(0.20),
+                                  spreadRadius: 0,
+                                  blurRadius: 1.0,
+                                  offset: const Offset(
+                                      1, 1), // changes position of shadow
+                                ),
+                              ]),
+                          child: Icon(Icons.star_rounded,
+                              color: Colors.amber, size: 32),
+                        ),
+                      )),
                 ],
               ),
             ),
