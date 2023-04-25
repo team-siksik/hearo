@@ -1,4 +1,4 @@
-package com.ssafy.hearo.domain.user.entity;
+package com.ssafy.hearo.domain.account.entity;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -16,7 +16,7 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @DynamicInsert
 @Table(name = "user")
-public class User {
+public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="user_seq", nullable = false)
@@ -39,7 +39,7 @@ public class User {
     private Byte delYn;
 // Builder
     @Builder
-    public User(Long userSeq, String userId, String userName, String userImageUrl, Timestamp regDtm, Byte delYn) {
+    public Account(Long userSeq, String userId, String userName, String userImageUrl, Timestamp regDtm, Byte delYn) {
         this.userSeq = userSeq;
         this.userId = userId;
         this.userName = userName;
