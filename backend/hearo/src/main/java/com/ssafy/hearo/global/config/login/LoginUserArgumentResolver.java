@@ -1,6 +1,6 @@
 package com.ssafy.hearo.global.config.login;
 
-import com.ssafy.hearo.domain.user.dto.SessionUser;
+import com.ssafy.hearo.domain.account.dto.SessionUser;
 import com.ssafy.hearo.global.annotation.LoginUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.MethodParameter;

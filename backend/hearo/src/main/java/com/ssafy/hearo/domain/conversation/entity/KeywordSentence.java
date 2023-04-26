@@ -13,18 +13,18 @@ import javax.persistence.*;
 @Entity
 @NoArgsConstructor
 @DynamicInsert
-@Table(name = "keyword_sentence")
+//@Table(name = "keyword_sentence")
 public class KeywordSentence {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "sentence_seq", nullable = false)
+    @Column(nullable = false)
     private Long sentenceSeq;
 
     @ManyToOne
     @JoinColumn(name = "keyword_seq", nullable = false)
     private Keyword keywordSeq;
 
-    @Column(name = "keyword_sentence", nullable = false, length = 100)
+    @Column(nullable = false, length = 100)
     private String keywordSentence;
 //    builder
     @Builder

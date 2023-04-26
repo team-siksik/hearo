@@ -1,4 +1,4 @@
-package com.ssafy.hearo.domain.user.entity;
+package com.ssafy.hearo.domain.account.entity;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

@@ -10,14 +10,14 @@ import java.sql.Timestamp;
 @Getter
 @Setter
 @Entity
-@Table(name = "room")
+//@Table(name = "room")
 public class Room {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="room_seq", nullable = false)
+    @Column(nullable = false)
     private Long roomSeq;
 
-    @Column(name="room_code", nullable = false)
+    @Column(nullable = false)
     private Integer roomCode;
 
     @Column(name="user_seq", nullable = false)
