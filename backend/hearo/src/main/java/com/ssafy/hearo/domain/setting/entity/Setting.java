@@ -1,5 +1,7 @@
 package com.ssafy.hearo.domain.setting.entity;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.ssafy.hearo.domain.account.entity.Account;
 import lombok.Getter;
 import lombok.Builder;
@@ -16,39 +18,38 @@ import java.sql.Timestamp;
 @Entity
 @NoArgsConstructor
 @DynamicInsert
-@Table(name = "setting")
+@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class Setting {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "setting_seq", nullable = false)
+    @Column(nullable = false)
     private Long settingSeq;
 
     @OneToOne
-    @JoinColumn(name="user_seq", nullable = false)
+    @JoinColumn(name="userSeq", nullable = false)
     private Account account;
 
-    @Column(name = "word_size", nullable = false)
+    @Column(nullable = false)
     @ColumnDefault("2")
     private Byte wordSize;
 
-    @Column(name="voice_setting", nullable = false)
+    @Column(nullable = false)
     @ColumnDefault("1")
     private Byte voiceSetting;
 
-    @Column(name = "dark_mode", nullable = false)
+    @Column(nullable = false)
     @ColumnDefault("0")
     private Byte darkMode;
 
-    @Column(name = "main_theme", nullable = false, length = 7)
+    @Column(nullable = false, length = 7)
     @ColumnDefault("#E63E43")
     private String mainTheme;
 
-    @Column(name = "mod_dtm", nullable = false)
+    @Column(nullable = false)
     @UpdateTimestamp
     private Timestamp modDtm;
 
-    // builder
     @Builder
     public Setting(Byte wordSize, Byte voiceSetting, Byte darkMode, String mainTheme) {
         this.wordSize = wordSize;
