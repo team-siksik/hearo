@@ -59,7 +59,6 @@ public class Setting {
         this.modDtm = modDtm;
     }
 
-    // modify
     public void modify(Byte wordSize, Byte voiceSetting, Byte darkMode, String mainTheme) {
         this.wordSize = wordSize;
         this.voiceSetting = voiceSetting;
