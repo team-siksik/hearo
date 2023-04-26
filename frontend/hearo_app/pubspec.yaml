@@ -60,7 +60,8 @@ dependencies:
   wakelock: ^0.6.2
   # 토스트
   fluttertoast: ^8.2.1
-
+  # 말풍선
+  bubble: ^1.2.1
   
 dev_dependencies:
   flutter_test:

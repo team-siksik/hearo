@@ -2,9 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:hearo_app/widgets/common/custom_app_bar_inner.dart';
 import 'package:get/get.dart';
 
-class FavoriteSay extends StatelessWidget {
+class FavoriteSay extends StatefulWidget {
   const FavoriteSay({super.key});
 
+  @override
+  State<FavoriteSay> createState() => _FavoriteSayState();
+}
+
+List<String> sayings = [
+  "안녕하세요",
+  "반갑습니다.",
+  "좋은 생각인 것 같아요!",
+  "제가 해보겠습니다",
+  "좋은 아침입니다!"
+];
+
+class _FavoriteSayState extends State<FavoriteSay> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.sizeOf(context);
@@ -23,103 +36,11 @@ class FavoriteSay extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    "5 / 10",
+                    "${sayings.length} / 10",
                     style: TextStyle(fontSize: 18),
                   ),
                   TextButton(
-                      onPressed: () => showDialog(
-                            context: context,
-                            builder: (BuildContext context) => AlertDialog(
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20)),
-                              title: Text(
-                                '자주 쓰는 말 추가',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                              content: SizedBox(
-                                width: size.width * 0.55,
-                                child: TextField(
-                                  maxLines: 5,
-                                  //  controller: _textController,
-                                  //  onSubmitted: sendMsg,  //키보드로 엔터 클릭 시 호출
-                                  //  onChanged: checkText,  //text 가 입력될 때 마다 호출
-                                  decoration: InputDecoration(
-                                    // labelText: '텍스트 입력',
-                                    hintText: '자주쓰는 말을 입력해주세요',
-                                    focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color: Color(0xff3ED598)),
-                                        borderRadius:
-                                            BorderRadius.circular(14)), //외곽선
-                                    enabledBorder: OutlineInputBorder(
-                                        borderSide:
-                                            BorderSide(color: Colors.black26),
-                                        borderRadius:
-                                            BorderRadius.circular(14)), //외곽선
-                                  ),
-                                ),
-                              ),
-                              // SizedBox(
-                              //     height: size.height * 0.2,
-                              //     child: Container(
-                              //       decoration: BoxDecoration(
-                              //           border:
-                              //               Border.all(color: Colors.black26),
-                              //           borderRadius:
-                              //               BorderRadius.circular(14)),
-                              //     )),
-                              actions: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    ElevatedButton(
-                                      style: ButtonStyle(
-                                          backgroundColor:
-                                              MaterialStatePropertyAll(
-                                                  Color.fromARGB(
-                                                      255, 255, 255, 255)),
-                                          shape: MaterialStatePropertyAll(
-                                              RoundedRectangleBorder(
-                                                  side: BorderSide(
-                                                      color: Colors.black38),
-                                                  borderRadius:
-                                                      BorderRadius.all(
-                                                          Radius.circular(
-                                                              30))))),
-                                      onPressed: () {
-                                        Get.back();
-                                      },
-                                      child: Text(
-                                        '돌아가기',
-                                        style: TextStyle(color: Colors.black38),
-                                      ),
-                                    ),
-                                    ElevatedButton(
-                                      style: ButtonStyle(
-                                          backgroundColor:
-                                              MaterialStatePropertyAll(
-                                                  Color(0xff3ED598)),
-                                          shape: MaterialStatePropertyAll(
-                                              RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.all(
-                                                          Radius.circular(
-                                                              30))))),
-                                      onPressed: () {
-                                        // 투두: 여기다가 추가 함수 넣어야 함
-                                        Get.back();
-                                      },
-                                      child: const Text(
-                                        '추가하기',
-                                      ),
-                                    ),
-                                  ],
-                                )
-                              ],
-                            ),
-                          ),
+                      onPressed: () => sayingDialog(context, size, true, ''),
                       child: Text(
                         "추가",
                         style:
@@ -130,25 +51,12 @@ class FavoriteSay extends StatelessWidget {
             ),
             SizedBox(
               height: size.height * 0.8,
-              child: ListView(
-                children: [
-                  favoriteSay(context, "안녕하세요, 반갑습니다!"),
-                  favoriteSay(context, "감사합니다!"),
-                  favoriteSay(context, "안녕하세요, 반갑습니다!"),
-                  favoriteSay(context, "감사합니다!"),
-                  favoriteSay(context, "안녕하세요, 반갑습니다!"),
-                  favoriteSay(context, "감사합니다!"),
-                  favoriteSay(context, "안녕하세요, 반갑습니다!"),
-                  favoriteSay(context, "감사합니다!"),
-                  favoriteSay(context, "안녕하세요, 반갑습니다!"),
-                  favoriteSay(context, "감사합니다!"),
-                  favoriteSay(context, "안녕하세요, 반갑습니다!"),
-                  favoriteSay(context, "감사합니다!"),
-                  favoriteSay(context, "안녕하세요, 반갑습니다!"),
-                  favoriteSay(context, "감사합니다!"),
-                  favoriteSay(context, "안녕하세요, 반갑습니다!"),
-                  favoriteSay(context, "감사합니다!"),
-                ],
+              child: ListView.builder(
+                itemCount: sayings.length,
+                itemBuilder: (context, index) {
+                  var saying = sayings[index];
+                  return favoriteSay(context, size, saying);
+                },
               ),
             )
           ],
@@ -157,22 +65,97 @@ class FavoriteSay extends StatelessWidget {
     );
   }
 
-  Container favoriteSay(BuildContext context, saying) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Container(
-        decoration: BoxDecoration(
-            border:
-                BorderDirectional(bottom: BorderSide(color: Colors.black26))),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              saying,
-              style: TextStyle(fontSize: 16),
+  Future<dynamic> sayingDialog(
+      BuildContext context, Size size, bool edit, String say) {
+    TextEditingController textController =
+        TextEditingController(text: edit ? say : '');
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: Text(
+          edit ? '자주 쓰는 말 변경' : '자주 쓰는 말 추가',
+          textAlign: TextAlign.center,
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        content: SizedBox(
+          width: size.width * 0.55,
+          child: TextField(
+            maxLines: 5,
+            controller: textController,
+            //  onSubmitted: sendMsg,  //키보드로 엔터 클릭 시 호출
+            //  onChanged: checkText,  //text 가 입력될 때 마다 호출
+            decoration: InputDecoration(
+              // labelText: '텍스트 입력',
+              hintText: '자주쓰는 말을 입력해주세요',
+              focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Color(0xff3ED598)),
+                  borderRadius: BorderRadius.circular(14)), //외곽선
+              enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.black26),
+                  borderRadius: BorderRadius.circular(14)), //외곽선
             ),
-            sayDelete(context)
-          ],
+          ),
+        ),
+        actions: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              ElevatedButton(
+                style: ButtonStyle(
+                    backgroundColor: MaterialStatePropertyAll(
+                        Color.fromARGB(255, 255, 255, 255)),
+                    shape: MaterialStatePropertyAll(RoundedRectangleBorder(
+                        side: BorderSide(color: Colors.black38),
+                        borderRadius: BorderRadius.all(Radius.circular(30))))),
+                onPressed: () {
+                  Get.back();
+                },
+                child: Text(
+                  '돌아가기',
+                  style: TextStyle(color: Colors.black38),
+                ),
+              ),
+              ElevatedButton(
+                style: ButtonStyle(
+                    backgroundColor:
+                        MaterialStatePropertyAll(Color(0xff3ED598)),
+                    shape: MaterialStatePropertyAll(RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(30))))),
+                onPressed: () {
+                  // 투두: 여기다가 추가 함수 넣어야 함
+                  Get.back();
+                },
+                child: edit ? Text('변경하기') : Text('추가하기'),
+              ),
+            ],
+          )
+        ],
+      ),
+    );
+  }
+
+  GestureDetector favoriteSay(BuildContext context, Size size, saying) {
+    return GestureDetector(
+      onTap: () {
+        sayingDialog(context, size, true, saying);
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: Container(
+          decoration: BoxDecoration(
+              border:
+                  BorderDirectional(bottom: BorderSide(color: Colors.black26))),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                saying,
+                style: TextStyle(fontSize: 16),
+              ),
+              sayDelete(context)
+            ],
+          ),
         ),
       ),
     );
