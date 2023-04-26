@@ -38,7 +38,7 @@ class _ChatHomeState extends State<ChatHome> {
   }
 
   List conversations = [
-    {"who": 1, "message": "회의를 시작하겠습니다."},
+    {"who": 1, "message": "회의를 시작하겠습니다회의를 시작하겠습니다회의를 시작하겠습니다."},
     {"who": 2, "message": "안녕하세요."},
     {"who": 0, "message": "반갑습니다!"},
     {"who": 4, "message": "좋은 하루에요!"},
