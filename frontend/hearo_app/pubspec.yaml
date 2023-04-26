@@ -32,8 +32,9 @@ dependencies:
     sdk: flutter
   # getX
   get: ^4.6.5
-  # Restful dio 통신
-  dio: ^5.1.1
+  # Restful dio, http 통신
+  dio: ^4.0.6
+  http: ^0.13.5
   # 아이콘들
   cupertino_icons: ^1.0.5
   material_design_icons_flutter: ^6.0.7096
@@ -41,7 +42,18 @@ dependencies:
   image: ^4.0.15
   # 이미지 캐러셀
   carousel_slider: ^4.2.1
+  # ChatGPT
+  chat_gpt_api: ^1.0.2
+  # 컨펌창
+  confirm_dialog: ^1.0.1
+  # 토글 예쁜거
+  animated_toggle_switch: ^0.6.2
+  # 드랍다운
+  dropdown_button2: ^2.1.0
+  # TTS
+  flutter_tts: ^3.6.3
 
+  
 dev_dependencies:
   flutter_test:
     sdk: flutter
