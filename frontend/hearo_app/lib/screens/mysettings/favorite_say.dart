@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hearo_app/controller/my_data_controller.dart';
 import 'package:hearo_app/widgets/common/custom_app_bar_inner.dart';
 import 'package:get/get.dart';
 
@@ -9,15 +10,11 @@ class FavoriteSay extends StatefulWidget {
   State<FavoriteSay> createState() => _FavoriteSayState();
 }
 
-List<String> sayings = [
-  "안녕하세요",
-  "반갑습니다.",
-  "좋은 생각인 것 같아요!",
-  "제가 해보겠습니다",
-  "좋은 아침입니다!"
-];
+String inputText = '';
+final myDataControll = Get.put(MyDataController());
 
 class _FavoriteSayState extends State<FavoriteSay> {
+  TextEditingController textController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.sizeOf(context);
@@ -35,26 +32,43 @@ class _FavoriteSayState extends State<FavoriteSay> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    "${sayings.length} / 10",
-                    style: TextStyle(fontSize: 18),
-                  ),
-                  TextButton(
-                      onPressed: () => sayingDialog(context, size, true, ''),
-                      child: Text(
-                        "추가",
-                        style:
-                            TextStyle(color: Color(0xff3ED598), fontSize: 18),
-                      ))
+                  myDataControll.sayings.length < 10
+                      ? Text(
+                          "${myDataControll.sayings.length} / 10",
+                          style: TextStyle(fontSize: 18),
+                        )
+                      : Text(
+                          "${myDataControll.sayings.length} / 10",
+                          style:
+                              TextStyle(fontSize: 18, color: Color(0xffe63e43)),
+                        ),
+                  myDataControll.sayings.length < 10
+                      ? TextButton(
+                          onPressed: () {
+                            setState(() {
+                              textController.text = '';
+                            });
+                            if (myDataControll.sayings.length < 10) {
+                              sayingDialog(context, size, false, '');
+                            }
+                          },
+                          child: Text(
+                            "추가",
+                            style: TextStyle(
+                                color: Color(0xff3ED598), fontSize: 18),
+                          ))
+                      : SizedBox(
+                          height: 40,
+                        )
                 ],
               ),
             ),
             SizedBox(
               height: size.height * 0.8,
               child: ListView.builder(
-                itemCount: sayings.length,
+                itemCount: myDataControll.sayings.length,
                 itemBuilder: (context, index) {
-                  var saying = sayings[index];
+                  var saying = myDataControll.sayings[index];
                   return favoriteSay(context, size, saying);
                 },
               ),
@@ -67,8 +81,16 @@ class _FavoriteSayState extends State<FavoriteSay> {
 
   Future<dynamic> sayingDialog(
       BuildContext context, Size size, bool edit, String say) {
-    TextEditingController textController =
-        TextEditingController(text: edit ? say : '');
+    setState(() {
+      if (edit) {
+        textController.text = say;
+        inputText = say;
+      } else {
+        textController.text = '';
+        inputText = '';
+      }
+    });
+
     return showDialog(
       context: context,
       builder: (BuildContext context) => AlertDialog(
@@ -82,9 +104,12 @@ class _FavoriteSayState extends State<FavoriteSay> {
           width: size.width * 0.55,
           child: TextField(
             maxLines: 5,
+            maxLength: 50,
             controller: textController,
             //  onSubmitted: sendMsg,  //키보드로 엔터 클릭 시 호출
-            //  onChanged: checkText,  //text 가 입력될 때 마다 호출
+            onChanged: (text) {
+              inputText = text;
+            }, //text 가 입력될 때 마다 호출
             decoration: InputDecoration(
               // labelText: '텍스트 입력',
               hintText: '자주쓰는 말을 입력해주세요',
@@ -122,8 +147,32 @@ class _FavoriteSayState extends State<FavoriteSay> {
                         MaterialStatePropertyAll(Color(0xff3ED598)),
                     shape: MaterialStatePropertyAll(RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(Radius.circular(30))))),
-                onPressed: () {
-                  // 투두: 여기다가 추가 함수 넣어야 함
+                onPressed: () async {
+                  if (inputText.trim().isEmpty ||
+                      myDataControll.sayings.contains(inputText.trim())) {
+                    var duple =
+                        inputText.trim().isEmpty ? "입력된 말이 없어요" : "중복된 말입니다.";
+                    print("@@@@@@@@@@@@@@@@@@@@@@@@@");
+                    print(inputText);
+                    Get.snackbar(duple, say,
+                        duration: Duration(seconds: 1),
+                        snackPosition: SnackPosition.BOTTOM,
+                        backgroundColor:
+                            const Color.fromARGB(137, 255, 114, 114),
+                        margin: EdgeInsets.only(bottom: 10));
+
+                    return;
+                  }
+                  setState(() {
+                    if (edit) {
+                      myDataControll.editSaying(say, inputText.trim());
+                    } else {
+                      myDataControll.addSaying(inputText.trim());
+                    }
+
+                    textController.text = '';
+                    inputText = '';
+                  });
                   Get.back();
                 },
                 child: edit ? Text('변경하기') : Text('추가하기'),
@@ -153,7 +202,7 @@ class _FavoriteSayState extends State<FavoriteSay> {
                 saying,
                 style: TextStyle(fontSize: 16),
               ),
-              sayDelete(context)
+              sayDelete(context, saying)
             ],
           ),
         ),
@@ -162,7 +211,7 @@ class _FavoriteSayState extends State<FavoriteSay> {
   }
 
   // 자주 쓰는 말 삭제 아이콘 버튼
-  IconButton sayDelete(BuildContext context) {
+  IconButton sayDelete(BuildContext context, saying) {
     return IconButton(
         color: Color(0xffE63E43),
         onPressed: () => showDialog(
@@ -176,7 +225,7 @@ class _FavoriteSayState extends State<FavoriteSay> {
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
                 content: Text(
-                  '자주 쓰는 말을 삭제 하시겠습니까?',
+                  '"$saying" 을 삭제 하시겠습니까?',
                   textAlign: TextAlign.center,
                 ),
                 actions: [
@@ -209,7 +258,10 @@ class _FavoriteSayState extends State<FavoriteSay> {
                                     borderRadius: BorderRadius.all(
                                         Radius.circular(30))))),
                         onPressed: () {
-                          Get.back();
+                          setState(() {
+                            myDataControll.removeSaying(saying);
+                            Get.back();
+                          });
                         },
                         child: const Text(
                           '삭제하기',
