@@ -20,15 +20,14 @@ public class Room {
     @Column(nullable = false)
     private Integer roomCode;
 
-    @Column(name="user_seq", nullable = false)
+    @Column( nullable = false)
     private Long userSeq;
 
-    @Column(name="headcount", nullable = false)
+    @Column( nullable = false)
     private Integer headcount;
 
-    @Column(name="reg_dtm", nullable = false)
+    @Column(nullable = false)
     private Timestamp regDtm;
 
-    @Column(name="end_dtm")
     private Timestamp endDtm;
 }

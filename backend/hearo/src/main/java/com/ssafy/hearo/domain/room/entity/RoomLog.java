@@ -10,11 +10,11 @@ import javax.persistence.*;
 @Getter
 @Setter
 @Entity
-@Table(name = "room_log")
+//@Table(name = "room_log")
 public class RoomLog {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="room_log_seq", nullable = false)
+    @Column(nullable = false)
     private Long roomLogSeq;
 
     @ManyToOne
@@ -25,7 +25,7 @@ public class RoomLog {
     @JoinColumn(name = "user_seq")
     private Account accountSeq;
 
-    @Column(name="save_condition", nullable = false)
+    @Column(nullable = false)
     @ColumnDefault("1")
     private Integer saveCondition;
 // builder

@@ -9,5 +9,10 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
 
         Optional<Account> findByUserId(String userId);
 
-        Optional<Account> findByUserIdAndDelYn(String id, String delYn);
+        Optional<Account> findByUserIdAndDelYn(String userId, String delYn);
+
+        boolean existsByUserIdAndDelYn(String userId, String delYn);
+
+        Account getByUserIdAndDelYn(String userId, String delYn);
+
 }
