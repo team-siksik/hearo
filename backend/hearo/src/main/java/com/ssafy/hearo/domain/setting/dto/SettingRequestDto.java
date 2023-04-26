@@ -3,7 +3,7 @@ package com.ssafy.hearo.domain.setting.dto;
 import lombok.Getter;
 
 
-public class SettingReqDto {
+public class SettingRequestDto {
 
     @Getter
     public static class ModifySettingRequestDto {
@@ -16,4 +16,9 @@ public class SettingReqDto {
         private String mainTheme;
     }
 
+    @Getter
+    public static class FrequentRequestDto {
+
+        private String sentence;
+    }
 }

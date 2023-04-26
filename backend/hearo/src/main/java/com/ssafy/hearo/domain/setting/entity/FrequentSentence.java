@@ -1,21 +1,22 @@
 package com.ssafy.hearo.domain.setting.entity;
 
 import com.ssafy.hearo.domain.account.entity.Account;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
 
 @Getter
-@Setter
+@Entity
 @NoArgsConstructor
 @DynamicInsert
-@Entity
 @Table(name = "frequent_sentence")
 public class FrequentSentence {
 
@@ -42,13 +43,17 @@ public class FrequentSentence {
     @Column(name = "del_yn", columnDefinition = "TINYINT", length = 1)
     private byte delYn;
 
-    // builder
+    @Builder
     public FrequentSentence(String sentence, Byte delYn) {
         this.sentence = sentence;
         this.delYn = delYn;
     }
-    // modify
     public void modify(String sentence) {
         this.sentence = sentence;
     }
+
+    public void remove(byte delYn) {
+        this.delYn = (byte)1;
+    }
+
 }
