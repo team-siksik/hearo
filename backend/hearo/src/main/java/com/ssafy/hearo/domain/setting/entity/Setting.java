@@ -18,6 +18,7 @@ import java.sql.Timestamp;
 @DynamicInsert
 @Table(name = "setting")
 public class Setting {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "setting_seq", nullable = false)
