@@ -12,9 +12,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 @RestController
-@RequestMapping("profile")
+@RequestMapping("/profile")
 @RequiredArgsConstructor
 @Slf4j
 public class SettingController {
@@ -37,5 +39,14 @@ public class SettingController {
         settingService.modifySetting(account, requestDto);
         return ResponseEntity.ok()
                 .body(responseService.getSuccessResult());
+    }
+
+    @GetMapping("/frequent")
+    public ResponseEntity<Result> getFrequentList(@LoginUser Account account) {
+        log.info("[getFrequentList] 자주 쓰는 말 목록 조회 API 호출 > {}", account);
+        List<FrequentResDto> result = settingService.getFrequentList(account);
+        log.info("[getFrequentList] result: {}", result);
+        return ResponseEntity.ok()
+                .body(responseService.getListResult(result));
     }
 }
