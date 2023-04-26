@@ -1,6 +1,6 @@
 package com.ssafy.hearo.domain.room.entity;
 
-import com.ssafy.hearo.domain.user.entity.User;
+import com.ssafy.hearo.domain.account.entity.Account;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
@@ -23,15 +23,15 @@ public class RoomLog {
 
     @ManyToOne
     @JoinColumn(name = "user_seq")
-    private User userSeq;
+    private Account accountSeq;
 
     @Column(name="save_condition", nullable = false)
     @ColumnDefault("1")
     private Integer saveCondition;
 // builder
-    public RoomLog(Room roomSeq, User userSeq, Integer saveCondition) {
+    public RoomLog(Room roomSeq, Account accountSeq, Integer saveCondition) {
         this.roomSeq = roomSeq;
-        this.userSeq = userSeq;
+        this.accountSeq = accountSeq;
         this.saveCondition = saveCondition;
     }
 // modify

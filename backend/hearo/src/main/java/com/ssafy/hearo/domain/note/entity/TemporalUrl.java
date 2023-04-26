@@ -1,6 +1,6 @@
 package com.ssafy.hearo.domain.note.entity;
 
-import com.ssafy.hearo.domain.user.entity.User;
+import com.ssafy.hearo.domain.account.entity.Account;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,11 +15,11 @@ import java.sql.Timestamp;
 @Entity
 @NoArgsConstructor
 @DynamicInsert
-@Table(name = "temporal_url")
+//@Table(name = "temporal_url")
 public class TemporalUrl {
     @Id
     @GeneratedValue(generator = "temporal_url_id_seq")
-    @Column(name="url_seq", nullable = false)
+    @Column(nullable = false)
     private Long urlSeq;
 
     @OneToOne
@@ -27,19 +27,19 @@ public class TemporalUrl {
     private Dialog dialog;
 
     @ManyToOne
-    @JoinColumn(name="user_seq", nullable = false)
-    private User user;
+    @JoinColumn(nullable = false)
+    private Account account;
 
-    @Column(name="url", nullable = false)
+    @Column(nullable = false)
     private String url;
 
-    @Column(name="expiration_date", nullable = false)
+    @Column(nullable = false)
     private Timestamp expirationDate;
 //    modify
     @Builder
-    public TemporalUrl(Dialog dialog, User user, String url, Timestamp expirationDate) {
+    public TemporalUrl(Dialog dialog, Account account, String url, Timestamp expirationDate) {
         this.dialog = dialog;
-        this.user = user;
+        this.account = account;
         this.url = url;
         this.expirationDate = expirationDate;
     }
