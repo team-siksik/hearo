@@ -1,6 +1,6 @@
 package com.ssafy.hearo.domain.setting.entity;
 
-import com.ssafy.hearo.domain.user.entity.User;
+import com.ssafy.hearo.domain.account.entity.Account;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -26,7 +26,7 @@ public class FrequentSentence {
 
     @ManyToOne
     @JoinColumn(name = "user_seq", nullable = false)
-    private User userSeq;
+    private Account accountSeq;
 
     @Column(name = "sentence", nullable = false, length = 200)
     private String sentence;
@@ -42,9 +42,9 @@ public class FrequentSentence {
     @Column(name = "del_yn", columnDefinition = "TINYINT", length = 1)
     private Byte delYn;
 // builder
-    public FrequentSentence(Long frequentSeq, User userSeq, String sentence, Timestamp regDtm, Timestamp modDtm, Byte delYn) {
+    public FrequentSentence(Long frequentSeq, Account accountSeq, String sentence, Timestamp regDtm, Timestamp modDtm, Byte delYn) {
         this.frequentSeq = frequentSeq;
-        this.userSeq = userSeq;
+        this.accountSeq = accountSeq;
         this.sentence = sentence;
         this.regDtm = regDtm;
         this.modDtm = modDtm;

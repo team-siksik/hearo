@@ -1,6 +1,6 @@
 package com.ssafy.hearo.domain.setting.entity;
 
-import com.ssafy.hearo.domain.user.entity.User;
+import com.ssafy.hearo.domain.account.entity.Account;
 import lombok.Getter;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
@@ -25,7 +25,7 @@ public class Setting {
 
     @OneToOne
     @JoinColumn(name="user_seq", nullable = false)
-    private User userSeq;
+    private Account accountSeq;
 
     @Column(name = "word_size", nullable = false)
     @ColumnDefault("2")
@@ -49,9 +49,9 @@ public class Setting {
 
     // builder
     @Builder
-    public Setting(Long settingSeq, User userSeq, Byte wordSize, Byte voiceSetting, Byte darkMode, String mainTheme, Timestamp modDtm) {
+    public Setting(Long settingSeq, Account accountSeq, Byte wordSize, Byte voiceSetting, Byte darkMode, String mainTheme, Timestamp modDtm) {
         this.settingSeq = settingSeq;
-        this.userSeq = userSeq;
+        this.accountSeq = accountSeq;
         this.wordSize = wordSize;
         this.voiceSetting = voiceSetting;
         this.darkMode = darkMode;
