@@ -3,7 +3,9 @@ package com.ssafy.hearo.domain.setting.service.impl;
 import com.ssafy.hearo.domain.account.entity.Account;
 import com.ssafy.hearo.domain.setting.dto.SettingReqDto.*;
 import com.ssafy.hearo.domain.setting.dto.SettingResDto.*;
+import com.ssafy.hearo.domain.setting.entity.FrequentSentence;
 import com.ssafy.hearo.domain.setting.entity.Setting;
+import com.ssafy.hearo.domain.setting.repository.FrequentSentenceRepository;
 import com.ssafy.hearo.domain.setting.repository.SettingRepository;
 import com.ssafy.hearo.domain.setting.service.SettingService;
 import com.ssafy.hearo.global.error.code.CommonErrorCode;
@@ -13,6 +15,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -22,6 +27,7 @@ import java.util.Set;
 public class SettingServiceImpl implements SettingService {
 
     private final SettingRepository settingRepository;
+    private final FrequentSentenceRepository frequentSentenceRepository;
 
     @Override
     public SettingInfoResDto getSetting(Account account) {
@@ -57,6 +63,25 @@ public class SettingServiceImpl implements SettingService {
         setting.modify(wordSize, voiceSetting, darkMode, mainTheme);
 
         log.info("[modifySetting] 설정 수정 완료");
+    }
+
+    @Override
+    public List<FrequentResDto> getFrequentList(Account account) {
+        log.info("[getFrequentList] 자주 쓰는 말 목록 조회 시작");
+
+        List<FrequentSentence> frequentSentenceList = frequentSentenceRepository.findByAccountAndDelYn(account, (byte) 0);
+
+        List<FrequentResDto> result = new ArrayList<>();
+        for (FrequentSentence frequentSentence : frequentSentenceList) {
+            result.add(FrequentResDto.builder()
+                            .frequentSeq(frequentSentence.getFrequentSeq())
+                            .sentence(frequentSentence.getSentence())
+                            .build());
+        }
+
+        log.info("[getFrequentList] 자주 쓰는 말 목록 조회 완료");
+
+        return result;
     }
 
 

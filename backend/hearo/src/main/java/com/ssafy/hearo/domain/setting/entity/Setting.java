@@ -25,7 +25,7 @@ public class Setting {
 
     @OneToOne
     @JoinColumn(name="user_seq", nullable = false)
-    private Account accountSeq;
+    private Account account;
 
     @Column(name = "word_size", nullable = false)
     @ColumnDefault("2")
@@ -33,7 +33,7 @@ public class Setting {
 
     @Column(name="voice_setting", nullable = false)
     @ColumnDefault("1")
-    private Byte voiceSetting; // 해당 voice종류에 따라 확장해야 할 경우 존재할수도
+    private Byte voiceSetting;
 
     @Column(name = "dark_mode", nullable = false)
     @ColumnDefault("0")
@@ -49,14 +49,11 @@ public class Setting {
 
     // builder
     @Builder
-    public Setting(Long settingSeq, Account accountSeq, Byte wordSize, Byte voiceSetting, Byte darkMode, String mainTheme, Timestamp modDtm) {
-        this.settingSeq = settingSeq;
-        this.accountSeq = accountSeq;
+    public Setting(Byte wordSize, Byte voiceSetting, Byte darkMode, String mainTheme) {
         this.wordSize = wordSize;
         this.voiceSetting = voiceSetting;
         this.darkMode = darkMode;
         this.mainTheme = mainTheme;
-        this.modDtm = modDtm;
     }
 
     public void modify(Byte wordSize, Byte voiceSetting, Byte darkMode, String mainTheme) {
