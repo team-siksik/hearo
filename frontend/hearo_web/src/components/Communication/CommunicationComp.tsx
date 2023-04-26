@@ -1,9 +1,12 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import Timer from "../common/Timer";
 
 function CommunicationComp() {
   return (
     <div>
-      <h1>대화를 시작하였습니다.</h1>
+      <nav>
+        <Timer />
+      </nav>
     </div>
   );
 }

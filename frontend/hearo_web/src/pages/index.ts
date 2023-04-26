@@ -1,4 +1,7 @@
-import Login from "./Login";
-import Communication from "./Communication";
+import LoginPage from "./LoginPage";
+import CommunicationPage from "./CommunicationPage";
+import RecordsPage from "./RecordsPage";
+import MyPage from "./MyPage";
+import MainPage from "./MainPage";
 
-export default { Login, Communication };
+export { LoginPage, CommunicationPage, RecordsPage, MyPage, MainPage };
