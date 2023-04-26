@@ -1,18 +1,21 @@
 import { Routes, Route } from "react-router-dom";
-import "./App.css";
+import "./index.css";
 import Google from "./apis/google";
-import Login from "./pages/Login";
-import Communication from "./pages/Communication";
+import LoginPage from "./pages/LoginPage";
+import MyPage from "./pages/MyPage";
+import RecordsPage from "./pages/RecordsPage";
+import CommunicationPage from "./pages/CommunicationPage";
+import MainPage from "./pages/MainPage";
 
 function App() {
-  function login(): void {
-    console.log("login");
-  }
   return (
-    <div className="bg-slate-600">
+    <div>
       <Routes>
-        <Route path="/comm" element={<Communication />} />
-        <Route path="/login" element={<Login />} />
+        <Route path="/" element={<MainPage/>} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/comm" element={<CommunicationPage />} />
+        <Route path="/records" element={<RecordsPage />} />
+        <Route path="/setting" element={<MyPage />} />
         <Route path="/login/oauth2/code/google" element={<Google />} />
       </Routes>
     </div>
@@ -20,3 +23,4 @@ function App() {
 }
 
 export default App;
+
