@@ -16,30 +16,30 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @DynamicInsert
 @Entity
-@Table(name = "frequent_sentence")
+//@Table(name = "frequent_sentence")
 public class FrequentSentence {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "frequent_seq", nullable = false)
+    @Column(nullable = false)
     private Long frequentSeq;
 
     @ManyToOne
     @JoinColumn(name = "user_seq", nullable = false)
     private Account accountSeq;
 
-    @Column(name = "sentence", nullable = false, length = 200)
+    @Column( nullable = false, length = 200)
     private String sentence;
 
-    @Column(name = "reg_dtm", nullable = false)
+    @Column( nullable = false)
     @CreationTimestamp
     private Timestamp regDtm;
 
-    @Column(name = "mod_dtm", nullable = false)
+    @Column(nullable = false)
     @UpdateTimestamp
     private Timestamp modDtm;
 
-    @Column(name = "del_yn", columnDefinition = "TINYINT", length = 1)
+    @Column( columnDefinition = "TINYINT", length = 1)
     private Byte delYn;
 // builder
     public FrequentSentence(Long frequentSeq, Account accountSeq, String sentence, Timestamp regDtm, Timestamp modDtm, Byte delYn) {

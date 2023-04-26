@@ -17,7 +17,7 @@ import java.sql.Timestamp;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED) // 아무런 값도 갖지않는 의미 없는 객체의 생성을 막음.
 @DynamicInsert
-@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
+//@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 //@Table(name = "user")
 public class Account {
     @Id
@@ -38,9 +38,9 @@ public class Account {
     @CreationTimestamp
     private Timestamp regDtm;
 
-    @Column(nullable = false, columnDefinition = "TINYINT", length = 1 )
-    @ColumnDefault("0")
-    private Byte delYn;
+    @Column(nullable = false)
+    @ColumnDefault("N")
+    private String delYn;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = true)
@@ -53,11 +53,13 @@ public class Account {
 
 // Builder
     @Builder
-    public Account(String userId, String userName, String userImageUrl, Role role) {
+    public Account(String userId, String userName, String userImageUrl, Role role, String deviceToken) {
         this.userId = userId;
         this.userName = userName;
         this.userImageUrl = userImageUrl;
         this.role = role;
+        this.deviceToken = deviceToken;
+        this.delYn = "N";
     }
 // modify
     public void modify(String userName, String userImageUrl) {
@@ -71,8 +73,30 @@ public class Account {
 
         return this;
     }
+    public void login(String refreshToken, String deviceToken) {
+        this.refreshToken = refreshToken;
+        this.deviceToken = deviceToken;
+    }
 
+    public void logout() {
+        this.refreshToken = null;
+        this.deviceToken = null;
+    }
+
+    public void withdraw() {
+        this.refreshToken = null;
+        this.deviceToken = null;
+        this.delYn = "Y";
+    }
     public String getRoleKey(){
         return this.role.getKey();
+    }
+
+    public String getId() {
+        return this.userId;
+    }
+
+    public void refresh(String refreshToken) {
+        this.refreshToken = refreshToken;
     }
 }
