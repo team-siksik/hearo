@@ -23,7 +23,7 @@ public class Dialog {
 
     @ManyToOne
     @JoinColumn(name = "user_seq")
-    private Account accountSeq;
+    private Account account;
 
     @Column(nullable = false, length = 500)
     private String recorededFile;
@@ -43,9 +43,9 @@ public class Dialog {
     private Byte delYn;
     // builder
     @Builder
-    public Dialog(Long dialogSeq, Account accountSeq, String recorededFile, String clovaFile, Timestamp regDtm, Timestamp modDtm, Byte delYn) {
+    public Dialog(Long dialogSeq, Account account, String recorededFile, String clovaFile, Timestamp regDtm, Timestamp modDtm, Byte delYn) {
         this.dialogSeq = dialogSeq;
-        this.accountSeq = accountSeq;
+        this.account = account;
         this.recorededFile = recorededFile;
         this.clovaFile = clovaFile;
         this.regDtm = regDtm;
