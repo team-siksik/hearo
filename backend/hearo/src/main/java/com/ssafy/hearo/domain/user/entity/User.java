@@ -3,7 +3,7 @@ package com.ssafy.hearo.domain.user.entity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicInsert;
 
@@ -34,8 +34,9 @@ public class User {
     @CreationTimestamp
     private Timestamp regDtm;
 
-    @Column(name="del_yn", nullable = false, columnDefinition = "TINYINT", length = 1 )
-    private Byte delYn;
+//    @Column(name="del_yn", nullable = false, columnDefinition = "TINYINT", length = 1 )
+//    @ColumnDefault("0")
+//    private Byte delYn;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = true)
