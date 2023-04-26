@@ -22,11 +22,11 @@ public class FrequentSentence {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "frequent_seq", nullable = false)
-    private Long frequentSeq;
+    private long frequentSeq;
 
     @ManyToOne
     @JoinColumn(name = "user_seq", nullable = false)
-    private Account accountSeq;
+    private Account account;
 
     @Column(name = "sentence", nullable = false, length = 200)
     private String sentence;
@@ -40,17 +40,14 @@ public class FrequentSentence {
     private Timestamp modDtm;
 
     @Column(name = "del_yn", columnDefinition = "TINYINT", length = 1)
-    private Byte delYn;
-// builder
-    public FrequentSentence(Long frequentSeq, Account accountSeq, String sentence, Timestamp regDtm, Timestamp modDtm, Byte delYn) {
-        this.frequentSeq = frequentSeq;
-        this.accountSeq = accountSeq;
+    private byte delYn;
+
+    // builder
+    public FrequentSentence(String sentence, Byte delYn) {
         this.sentence = sentence;
-        this.regDtm = regDtm;
-        this.modDtm = modDtm;
         this.delYn = delYn;
     }
-// modify
+    // modify
     public void modify(String sentence) {
         this.sentence = sentence;
     }
