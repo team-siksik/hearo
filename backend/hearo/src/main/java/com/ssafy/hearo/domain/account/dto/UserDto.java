@@ -1,4 +1,4 @@
-package com.ssafy.hearo.domain.user.dto;
+package com.ssafy.hearo.domain.account.dto;
 
 
 import lombok.Getter;

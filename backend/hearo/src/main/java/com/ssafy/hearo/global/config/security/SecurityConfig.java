@@ -1,7 +1,7 @@
 package com.ssafy.hearo.global.config.security;
 
-import com.ssafy.hearo.domain.user.entity.Role;
-import com.ssafy.hearo.domain.user.service.CustomOAuth2UserService;
+import com.ssafy.hearo.domain.account.entity.Role;
+import com.ssafy.hearo.domain.account.service.CustomOAuth2UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -23,7 +23,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .headers().frameOptions().disable()
                 .and()
                 .authorizeRequests()
-                .antMatchers("/accounts/sign-in/**").permitAll()
+                .antMatchers("/test/**").permitAll()
                 .antMatchers("/api/v1/**").hasRole(Role.USER.name())
                 .anyRequest().authenticated()
                 .and()

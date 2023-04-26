@@ -1,7 +1,7 @@
-package com.ssafy.hearo.domain.user.dto;
+package com.ssafy.hearo.domain.account.dto;
 
-import com.ssafy.hearo.domain.user.entity.Role;
-import com.ssafy.hearo.domain.user.entity.User;
+import com.ssafy.hearo.domain.account.entity.Role;
+import com.ssafy.hearo.domain.account.entity.Account;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -38,8 +38,8 @@ public class OAuthAttributes {
                 .build();
     }
 
-    public User toEntity(){
-        return User.builder()
+    public Account toEntity(){
+        return Account.builder()
                 .userName(name)
                 .userId(email)
                 .userImageUrl(picture)

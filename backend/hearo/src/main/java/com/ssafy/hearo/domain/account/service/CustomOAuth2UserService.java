@@ -1,9 +1,9 @@
-package com.ssafy.hearo.domain.user.service;
+package com.ssafy.hearo.domain.account.service;
 
-import com.ssafy.hearo.domain.user.entity.User;
-import com.ssafy.hearo.domain.user.repository.UserRepository;
-import com.ssafy.hearo.domain.user.dto.SessionUser;
-import com.ssafy.hearo.domain.user.dto.OAuthAttributes;
+import com.ssafy.hearo.domain.account.entity.Account;
+import com.ssafy.hearo.domain.account.repository.AccountRepository;
+import com.ssafy.hearo.domain.account.dto.SessionUser;
+import com.ssafy.hearo.domain.account.dto.OAuthAttributes;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -21,7 +21,7 @@ import java.util.Collections;
 @Service
 public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
 
-    private final UserRepository userRepository;
+    private final AccountRepository accountRepository;
     private final HttpSession httpSession;
 
     @Override
@@ -34,16 +34,16 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
 
         OAuthAttributes attributes = OAuthAttributes.of(registrationId, userNameAttributeName, oauth2User.getAttributes());
 
-        User user = saveOrUpdate(attributes);
-        httpSession.setAttribute("user", new SessionUser(user));
+        Account account = saveOrUpdate(attributes);
+        httpSession.setAttribute("user", new SessionUser(account));
 
-        return new DefaultOAuth2User(Collections.singleton(new SimpleGrantedAuthority(user.getRoleKey())), attributes.getAttributes(), attributes.getNameAttributeKey());
+        return new DefaultOAuth2User(Collections.singleton(new SimpleGrantedAuthority(account.getRoleKey())), attributes.getAttributes(), attributes.getNameAttributeKey());
     }
 
-    private User saveOrUpdate(OAuthAttributes attributes){
-        User user = userRepository.findByUserId(attributes.getEmail()).map(entity->entity.update(attributes.getName(), attributes.getPicture()))
+    private Account saveOrUpdate(OAuthAttributes attributes){
+        Account account = accountRepository.findByUserId(attributes.getEmail()).map(entity->entity.update(attributes.getName(), attributes.getPicture()))
                 .orElse(attributes.toEntity());
 
-        return userRepository.save(user);
+        return accountRepository.save(account);
     }
 }
