@@ -1,6 +1,6 @@
 package com.ssafy.hearo.domain.note.entity;
 
-import com.ssafy.hearo.domain.user.entity.User;
+import com.ssafy.hearo.domain.account.entity.Account;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,7 +28,7 @@ public class TemporalUrl {
 
     @ManyToOne
     @JoinColumn(name="user_seq", nullable = false)
-    private User user;
+    private Account user;
 
     @Column(name="url", nullable = false)
     private String url;
@@ -37,7 +37,7 @@ public class TemporalUrl {
     private Timestamp expirationDate;
 //    modify
     @Builder
-    public TemporalUrl(Dialog dialog, User user, String url, Timestamp expirationDate) {
+    public TemporalUrl(Dialog dialog, Account user, String url, Timestamp expirationDate) {
         this.dialog = dialog;
         this.user = user;
         this.url = url;

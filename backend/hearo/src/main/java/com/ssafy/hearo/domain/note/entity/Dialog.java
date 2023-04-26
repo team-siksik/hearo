@@ -4,7 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-import com.ssafy.hearo.domain.user.entity.User;
+import com.ssafy.hearo.domain.account.entity.Account;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -23,7 +23,7 @@ public class Dialog {
 
     @ManyToOne
     @JoinColumn(name = "user_seq")
-    private User userSeq;
+    private Account userSeq;
 
     @Column(name = "recorede_file", nullable = false, length = 500)
     private String recorededFile;
@@ -43,7 +43,7 @@ public class Dialog {
     private Byte delYn;
     // builder
     @Builder
-    public Dialog(Long dialogSeq, User userSeq, String recorededFile, String clovaFile, Timestamp regDtm, Timestamp modDtm, Byte delYn) {
+    public Dialog(Long dialogSeq, Account userSeq, String recorededFile, String clovaFile, Timestamp regDtm, Timestamp modDtm, Byte delYn) {
         this.dialogSeq = dialogSeq;
         this.userSeq = userSeq;
         this.recorededFile = recorededFile;
