@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hearo_app/widgets/chats/close_chat.dart';
-import 'package:hearo_app/widgets/chats/share_icon_widget.dart';
+import 'package:hearo_app/widgets/chats/info_icon_widget.dart';
 import 'dart:async';
 
 class CustomAppBarChat extends StatefulWidget implements PreferredSizeWidget {
@@ -48,33 +48,13 @@ class _CustomAppBarChatState extends State<CustomAppBarChat> {
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      leading: InfoIconWidget(),
       titleSpacing: 0.0,
       automaticallyImplyLeading: false,
       foregroundColor: Colors.black,
       elevation: 0,
       centerTitle: true,
-      title: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          ShareIconWidget(),
-          IconButton(
-            icon: Icon(Icons.mic_rounded),
-            onPressed: () {},
-          ),
-          Expanded(
-            child: Center(
-                child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text(
-                  stopWatchText,
-                ),
-              ],
-            )),
-          )
-        ],
-      ),
+      title: Text(stopWatchText),
       backgroundColor: Colors.transparent,
       actions: <Widget>[CloseChat()],
     );

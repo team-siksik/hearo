@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:bubble/bubble.dart';
 
 class SpeechBubble extends StatefulWidget {
   final String message;
@@ -15,16 +16,16 @@ class SpeechBubble extends StatefulWidget {
 }
 
 const colorList = {
-  0: Color.fromARGB(90, 152, 178, 255),
-  1: Color.fromARGB(90, 255, 211, 211),
-  2: Color.fromARGB(90, 255, 238, 211),
-  3: Color.fromARGB(90, 254, 255, 211),
-  4: Color.fromARGB(90, 229, 255, 211),
-  5: Color.fromARGB(90, 211, 255, 246),
-  6: Color.fromARGB(90, 248, 249, 255),
-  7: Color.fromARGB(90, 243, 211, 255),
-  8: Color.fromARGB(90, 230, 230, 230),
-  9: Color.fromARGB(90, 186, 186, 186),
+  3: [Color.fromARGB(255, 255, 255, 255), Color.fromARGB(20, 255, 255, 255)],
+  1: [Color.fromARGB(255, 255, 211, 211), Color.fromARGB(20, 255, 211, 211)],
+  2: [Color.fromARGB(255, 255, 238, 211), Color.fromARGB(20, 255, 238, 211)],
+  0: [Color.fromARGB(255, 254, 255, 211), Color.fromARGB(20, 254, 255, 211)],
+  4: [Color.fromARGB(255, 229, 255, 211), Color.fromARGB(20, 229, 255, 211)],
+  5: [Color.fromARGB(255, 152, 178, 255), Color.fromARGB(20, 152, 178, 255)],
+  6: [Color.fromARGB(255, 248, 249, 255), Color.fromARGB(20, 248, 249, 255)],
+  7: [Color.fromARGB(255, 243, 211, 255), Color.fromARGB(20, 243, 211, 255)],
+  8: [Color.fromARGB(255, 230, 230, 230), Color.fromARGB(20, 230, 230, 230)],
+  9: [Color.fromARGB(255, 186, 186, 186), Color.fromARGB(20, 186, 186, 186)],
 };
 
 class _SpeechBubbleState extends State<SpeechBubble> {
@@ -42,14 +43,15 @@ class _SpeechBubbleState extends State<SpeechBubble> {
           ? Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Container(
-                  decoration: BoxDecoration(
-                    // border: Border.all(color: Colors.black26, width: 0.3),
-                    borderRadius: BorderRadius.circular(14),
-                    color: colorList[widget.who],
-                  ),
-                  padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                  margin: EdgeInsets.only(bottom: 10),
+                Bubble(
+                  radius: Radius.circular(14),
+                  elevation: 0.8,
+                  shadowColor: colorList[widget.who]![0],
+                  borderColor: colorList[widget.who]![1],
+                  color: colorList[widget.who]![0],
+                  margin: BubbleEdges.only(top: 5, bottom: 5),
+                  alignment: Alignment.topRight,
+                  nip: BubbleNip.rightTop,
                   child: Text(
                     widget.message,
                     style: TextStyle(fontSize: fonts),
@@ -60,18 +62,19 @@ class _SpeechBubbleState extends State<SpeechBubble> {
           : Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  decoration: BoxDecoration(
-                    // border: Border.all(color: Colors.black26, width: 0.3),
-                    borderRadius: BorderRadius.circular(14),
-                    color: colorList[widget.who],
-                  ),
-                  padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                  margin: EdgeInsets.only(bottom: 10),
+                Bubble(
+                  radius: Radius.circular(14),
+                  elevation: 0.8,
+                  shadowColor: colorList[widget.who]![0],
+                  borderColor: colorList[widget.who]![1],
+                  color: colorList[widget.who]![0],
+                  margin: BubbleEdges.only(top: 5, bottom: 5),
+                  alignment: Alignment.topLeft,
+                  nip: BubbleNip.leftTop,
                   child: Text(
-                      textAlign: TextAlign.left,
-                      widget.message,
-                      style: TextStyle(fontSize: fonts)),
+                    widget.message,
+                    style: TextStyle(fontSize: fonts),
+                  ),
                 ),
               ],
             ),
