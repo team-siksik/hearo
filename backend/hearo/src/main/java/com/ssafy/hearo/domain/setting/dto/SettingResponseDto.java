@@ -1,18 +1,13 @@
 package com.ssafy.hearo.domain.setting.dto;
 
-import com.ssafy.hearo.domain.account.entity.Account;
 import lombok.Builder;
 import lombok.Getter;
 
-import javax.persistence.Column;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-
-public class SettingResDto {
+public class SettingResponseDto {
 
     @Getter
     @Builder
-    public static class SettingInfoResDto {
+    public static class SettingInfoResponseDto {
 
         private long settingSeq;
         private long userSeq;
@@ -24,7 +19,7 @@ public class SettingResDto {
 
     @Getter
     @Builder
-    public static class FrequentResDto {
+    public static class FrequentResponseDto {
 
         private Long frequentSeq;
         private String sentence;
