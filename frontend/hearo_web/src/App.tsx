@@ -9,7 +9,7 @@ function App() {
     console.log("login");
   }
   return (
-    <div className="App">
+    <div className="bg-slate-600">
       <Routes>
         <Route path="/comm" element={<Communication />} />
         <Route path="/login" element={<Login />} />
