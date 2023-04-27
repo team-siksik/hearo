@@ -10,7 +10,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class UserDto {
-    private String userId;
+    private String email;
     private String userName;
     private String userImageUrl;
 }
