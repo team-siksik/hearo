@@ -28,6 +28,7 @@ const colorList = {
   9: [Color.fromARGB(255, 186, 186, 186), Color.fromARGB(20, 186, 186, 186)],
 };
 
+// GPT 기능 더 자세하게 하면 좋을듯
 class _SpeechBubbleState extends State<SpeechBubble> {
   @override
   Widget build(BuildContext context) {
