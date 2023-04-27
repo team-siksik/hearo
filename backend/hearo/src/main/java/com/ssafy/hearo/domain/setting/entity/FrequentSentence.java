@@ -19,22 +19,23 @@ import java.sql.Timestamp;
 @Entity
 @NoArgsConstructor
 @DynamicInsert
-@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
+@Entity
+//@Table(name = "frequent_sentence")
 public class FrequentSentence {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
-    private long frequentSeq;
+    private Long frequentSeq;
 
     @ManyToOne
     @JoinColumn(name = "userSeq", nullable = false)
     private Account account;
 
-    @Column(nullable = false, length = 200)
+    @Column( nullable = false, length = 200)
     private String sentence;
 
-    @Column(nullable = false)
+    @Column( nullable = false)
     @CreationTimestamp
     private Timestamp regDtm;
 
@@ -42,11 +43,12 @@ public class FrequentSentence {
     @UpdateTimestamp
     private Timestamp modDtm;
 
-    @Column(columnDefinition = "TINYINT", length = 1)
-    private byte delYn;
-
-    @Builder
-    public FrequentSentence(String sentence, Byte delYn) {
+    @Column( columnDefinition = "TINYINT", length = 1)
+    private Byte delYn;
+// builder
+    public FrequentSentence(Long frequentSeq, Account accountSeq, String sentence, Timestamp regDtm, Timestamp modDtm, Byte delYn) {
+        this.frequentSeq = frequentSeq;
+        this.accountSeq = accountSeq;
         this.sentence = sentence;
         this.delYn = delYn;
     }
