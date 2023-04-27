@@ -3,6 +3,7 @@ package com.ssafy.hearo.domain.account.repository;
 import com.ssafy.hearo.domain.account.entity.Account;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface AccountRepository extends JpaRepository<Account, Long> {
@@ -14,6 +15,9 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
         Optional<Account> findByNickname(String nickname);
 
         Optional<Account> findByRefreshToken(String refreshToken);
+
+        List<Account> findByEmailContainingIgnoreCase(String userEmail);
+
 
         /**
          * 소셜 타입과 소셜의 식별값으로 회원 찾는 메소드
