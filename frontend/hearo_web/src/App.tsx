@@ -1,19 +1,20 @@
 import { Routes, Route } from "react-router-dom";
-import "./index.css";
 import Google from "./apis/google";
-import LoginPage from "./pages/LoginPage";
-import MyPage from "./pages/MyPage";
-import RecordsPage from "./pages/RecordsPage";
-import CommunicationPage from "./pages/CommunicationPage";
-import MainPage from "./pages/MainPage";
+import {
+  LoginPage,
+  ConversationPage,
+  MainPage,
+  RecordsPage,
+  MyPage,
+} from "./pages";
 
 function App() {
   return (
-    <div>
+    <div className="App">
       <Routes>
-        <Route path="/" element={<MainPage/>} />
+        <Route path="/" element={<MainPage />} />
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/comm" element={<CommunicationPage />} />
+        <Route path="/comm" element={<ConversationPage />} />
         <Route path="/records" element={<RecordsPage />} />
         <Route path="/setting" element={<MyPage />} />
         <Route path="/login/oauth2/code/google" element={<Google />} />
