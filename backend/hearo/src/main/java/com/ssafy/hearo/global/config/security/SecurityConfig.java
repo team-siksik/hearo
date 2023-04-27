@@ -5,11 +5,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.hearo.domain.account.repository.AccountRepository;
 import com.ssafy.hearo.global.config.jwt.JwtService;
 import com.ssafy.hearo.global.config.jwt.JwtAuthenticationProcessingFilter;
+import com.ssafy.hearo.domain.account.handler.LoginSuccessHandler;
+import com.ssafy.hearo.domain.account.service.LoginService;
+import com.ssafy.hearo.domain.account.handler.LoginFailureHandler;
+import com.ssafy.hearo.domain.account.filter.CustomJsonUsernamePasswordAuthenticationFilter;
 
-//import login.oauthtest4.global.login.filter.CustomJsonUsernamePasswordAuthenticationFilter;
-//import login.oauthtest4.global.login.handler.LoginFailureHandler;
-//import login.oauthtest4.global.login.handler.LoginSuccessHandler;
-//import login.oauthtest4.global.login.service.LoginService;
+
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -60,7 +61,7 @@ public class SecurityConfig {
 
                 // 아이콘, css, js 관련
                 // 기본 페이지, css, image, js 하위 폴더에 있는 자료들은 모두 접근 가능, h2-console에 접근 가능
-                .antMatchers("/","/css/**","/images/**","/js/**","/favicon.ico","/h2-console/**", "/jwt-test").permitAll()
+                .antMatchers("/","/css/**","/images/**","/js/**","/favicon.ico","/h2-console/**").permitAll()
                 .antMatchers("/sign-up").permitAll() // 회원가입 접근 가능
                 .anyRequest().authenticated() // 위의 경로 이외에는 모두 인증된 사용자만 접근 가능
                 .and()
@@ -73,6 +74,8 @@ public class SecurityConfig {
         // 원래 스프링 시큐리티 필터 순서가 LogoutFilter 이후에 로그인 필터 동작
         // 따라서, LogoutFilter 이후에 우리가 만든 필터 동작하도록 설정
         // 순서 : LogoutFilter -> JwtAuthenticationProcessingFilter -> CustomJsonUsernamePasswordAuthenticationFilter
+        http.addFilterAfter(customJsonUsernamePasswordAuthenticationFilter(), LogoutFilter.class);
+        http.addFilterBefore(jwtAuthenticationProcessingFilter(), CustomJsonUsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
@@ -99,10 +102,18 @@ public class SecurityConfig {
     /**
      * 로그인 성공 시 호출되는 LoginSuccessJWTProviderHandler 빈 등록
      */
+    @Bean
+    public LoginSuccessHandler loginSuccessHandler() {
+        return new LoginSuccessHandler(jwtService, accountRepository);
+    }
 
     /**
      * 로그인 실패 시 호출되는 LoginFailureHandler 빈 등록
      */
+    @Bean
+    public LoginFailureHandler loginFailureHandler() {
+        return new LoginFailureHandler();
+    }
 
     /**
      * CustomJsonUsernamePasswordAuthenticationFilter 빈 등록
@@ -110,6 +121,16 @@ public class SecurityConfig {
      * setAuthenticationManager(authenticationManager())로 위에서 등록한 AuthenticationManager(ProviderManager) 설정
      * 로그인 성공 시 호출할 handler, 실패 시 호출할 handler로 위에서 등록한 handler 설정
      */
+    @Bean
+    public CustomJsonUsernamePasswordAuthenticationFilter customJsonUsernamePasswordAuthenticationFilter() {
+        CustomJsonUsernamePasswordAuthenticationFilter customJsonUsernamePasswordLoginFilter
+                = new CustomJsonUsernamePasswordAuthenticationFilter(objectMapper);
+        customJsonUsernamePasswordLoginFilter.setAuthenticationManager(authenticationManager());
+        customJsonUsernamePasswordLoginFilter.setAuthenticationSuccessHandler(loginSuccessHandler());
+        customJsonUsernamePasswordLoginFilter.setAuthenticationFailureHandler(loginFailureHandler());
+        return customJsonUsernamePasswordLoginFilter;
+    }
+
 
 
     @Bean
