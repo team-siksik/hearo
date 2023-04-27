@@ -1,18 +1,22 @@
 package com.ssafy.hearo.domain.setting.entity;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.ssafy.hearo.domain.account.entity.Account;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
 
 @Getter
-@Setter
+@Entity
 @NoArgsConstructor
 @DynamicInsert
 @Entity
@@ -25,8 +29,8 @@ public class FrequentSentence {
     private Long frequentSeq;
 
     @ManyToOne
-    @JoinColumn(name = "user_seq", nullable = false)
-    private Account accountSeq;
+    @JoinColumn(name = "userSeq", nullable = false)
+    private Account account;
 
     @Column( nullable = false, length = 200)
     private String sentence;
@@ -46,12 +50,14 @@ public class FrequentSentence {
         this.frequentSeq = frequentSeq;
         this.accountSeq = accountSeq;
         this.sentence = sentence;
-        this.regDtm = regDtm;
-        this.modDtm = modDtm;
         this.delYn = delYn;
     }
-// modify
     public void modify(String sentence) {
         this.sentence = sentence;
     }
+
+    public void remove(byte delYn) {
+        this.delYn = (byte)1;
+    }
+
 }
