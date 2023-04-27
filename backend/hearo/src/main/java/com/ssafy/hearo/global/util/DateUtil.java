@@ -1,36 +1,31 @@
 package com.ssafy.hearo.global.util;
 
+import com.ssafy.hearo.global.error.code.CommonErrorCode;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Locale;
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 @Component
 public class DateUtil {
 
-    private String timeFormat = "hh:mm:a";
-    private String dateFormat = "yyyy-MM-dd";
-    private String dateTimeFormat = "yyyy-MM-dd HH:mm:ss";
-
-    public LocalTime convertToTimeFormat(String time) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(timeFormat, Locale.ENGLISH);
-        return LocalTime.parse(time, formatter);
-    }
-    public String convertToStringType(LocalTime time) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(timeFormat, Locale.ENGLISH);
-        return time.format(formatter);
-    }
-
-    public LocalDate convertToDateFormat(String date) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(dateFormat);
-        return LocalDate.parse(date, formatter);
+    public Timestamp stringToTimestamp(String datetime) {
+        try {
+            SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+            Date formatDatetime = format.parse(datetime);
+            Timestamp result = new Timestamp(formatDatetime.getTime());
+            return result;
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return new Timestamp(1);
+        }
     }
 
-    public String convertToStringType(LocalDate date) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(dateFormat);
-        return date.format(formatter);
+    public String timestampToString(Timestamp datetime) {
+        String result = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(datetime);
+        return result;
     }
 
 }

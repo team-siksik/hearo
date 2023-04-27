@@ -22,4 +22,14 @@ public class ConversationResponseDto {
         private String keywordSentence;
 
     }
+
+    @Getter
+    @Builder
+    public static class RoomResponseDto {
+
+        private long roomSeq;
+        private String regDtm;
+        private String endDtm;
+
+    }
 }
