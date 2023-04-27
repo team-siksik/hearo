@@ -1,16 +1,22 @@
 package com.ssafy.hearo.domain.account.entity;
 
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
 
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Entity
 @Builder
+@Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@DynamicInsert
+@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
+@Table(name = "user")
 public class Account {
 
     @Id
