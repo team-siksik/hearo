@@ -1,7 +1,6 @@
 import React, {useState} from "react";
 import { useNavigate } from "react-router-dom";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/solid";
-import Test from "@/assets/headphone.png"
 import Test1 from "@/assets/Hearo_logo.png"
 import { AnimatePresence, motion, useCycle } from "framer-motion";
 import { SelectedPage } from "@/types/types";
@@ -137,8 +136,22 @@ const Navbar = ({selectedPage, setSelectedPage }: PropsType) => {
           className="mt-[120%] flex flex-col gap-3 text-lg"
           variants={itemVariants}
           >
+          <motion.div
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95}}
+            className="mt-[120%] flex flex-col gap-3 text-lg"
+            variants={itemVariants}
+            >
           <button onClick={handleSettingsClick}>환경설정</button>
+          </motion.div>
+          <motion.div
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95}}
+            className="flex flex-col gap-3 text-lg"
+            variants={itemVariants}
+            >
           <button onClick={handleLogoutClick}>로그아웃</button>
+          </motion.div>
         </motion.div>
       </motion.div>
 
