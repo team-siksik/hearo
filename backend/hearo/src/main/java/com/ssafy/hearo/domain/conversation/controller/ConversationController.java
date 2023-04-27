@@ -1,8 +1,10 @@
 package com.ssafy.hearo.domain.conversation.controller;
 
+import com.ssafy.hearo.domain.account.entity.Account;
 import com.ssafy.hearo.domain.conversation.dto.ConversationRequestDto.*;
 import com.ssafy.hearo.domain.conversation.dto.ConversationResponseDto.*;
 import com.ssafy.hearo.domain.conversation.service.ConversationService;
+import com.ssafy.hearo.global.annotation.LoginUser;
 import com.ssafy.hearo.global.common.response.ResponseService;
 import com.ssafy.hearo.global.common.response.Result;
 import lombok.RequiredArgsConstructor;
@@ -47,4 +49,21 @@ public class ConversationController {
                 .body(responseService.getListResult(result));
     }
 
+    @PostMapping("/room/start")
+    public ResponseEntity<Result> startConversation(@LoginUser Account account) {
+        log.info("[startConversation] 대화 시작 API 호출");
+        RoomResponseDto result = conversationService.startConversation(account);
+        log.info("[startConversation] result: {}", result);
+        return ResponseEntity.ok()
+                .body(responseService.getSingleResult(result));
+    }
+
+    @PutMapping("/conversation/room/{roomSeq}/close")
+    public ResponseEntity<Result> endConversation(@LoginUser Account account, @PathVariable long roomSeq) {
+        log.info("[endConversation] 대화 종료 API 호출");
+        RoomResponseDto result = conversationService.endConversation(account, roomSeq);
+        log.info("[endConversation] result: {}", result);
+        return ResponseEntity.ok()
+                .body(responseService.getSingleResult(result));
+    }
 }
