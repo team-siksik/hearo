@@ -1,22 +1,30 @@
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 
 class MyDataController extends GetxController {
-  List<String> sayings = [
-    "안녕하세요",
-    "반갑습니다.",
-    "좋은 생각인 것 같아요!",
-    "제가 해보겠습니다",
-    "좋은 아침입니다!"
-  ];
+  final sayings = [].obs;
+
+  final box = GetStorage();
+
+  @override
+  void onInit() {
+    super.onInit();
+    if (box.hasData('sayings')) {
+      sayings.assignAll(box.read<List>('sayings')!.cast<String>());
+    }
+  }
+
   // 말 추가
   void addSaying(saying) {
     sayings.add(saying);
+    box.write('sayings', sayings.toList());
     update();
   }
 
   // 말 제거
   void removeSaying(saying) {
     sayings.remove(saying);
+    box.write('sayings', sayings.toList());
     update();
   }
 
@@ -25,6 +33,14 @@ class MyDataController extends GetxController {
     var where = sayings.indexOf(before);
     sayings.remove(before);
     sayings.insert(where, after);
+    box.write('sayings', sayings.toList());
+    update();
+  }
+
+  // 리스트 비우기
+  void clearList() {
+    sayings.clear();
+    box.remove('sayings');
     update();
   }
 }
