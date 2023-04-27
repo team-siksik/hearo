@@ -1,3 +1,3 @@
-import Google from "./google";
+import Google from "./Google";
 
 export default { Google };
