@@ -12,4 +12,5 @@ public class ConversationRequestDto {
         private String keyword;
         private List<String> sentences;
     }
+
 }

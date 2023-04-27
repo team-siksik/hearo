@@ -12,8 +12,6 @@ public class SettingRequestDto {
         private long userSeq;
         private byte wordSize;
         private byte voiceSetting;
-        private byte darkMode;
-        private String mainTheme;
     }
 
     @Getter

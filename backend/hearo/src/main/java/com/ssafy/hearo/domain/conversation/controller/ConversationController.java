@@ -1,6 +1,5 @@
 package com.ssafy.hearo.domain.conversation.controller;
 
-import com.ssafy.hearo.domain.account.entity.Account;
 import com.ssafy.hearo.domain.conversation.dto.ConversationRequestDto.*;
 import com.ssafy.hearo.domain.conversation.dto.ConversationResponseDto.*;
 import com.ssafy.hearo.domain.conversation.service.ConversationService;
@@ -47,4 +46,5 @@ public class ConversationController {
         return ResponseEntity.ok()
                 .body(responseService.getListResult(result));
     }
+
 }

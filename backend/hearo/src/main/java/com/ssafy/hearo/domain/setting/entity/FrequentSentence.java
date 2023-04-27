@@ -22,7 +22,6 @@ import java.sql.Timestamp;
 @Entity
 //@Table(name = "frequent_sentence")
 public class FrequentSentence {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
