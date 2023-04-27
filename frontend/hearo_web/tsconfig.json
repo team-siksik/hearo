@@ -19,6 +19,14 @@
     "noEmit": true,
     "jsx": "react-jsx"
   },
-  "include": ["src"],
+  "include": [
+    "src",
+    "**/*.ts",
+    "**/*.tsx",
+    "custom.d.ts",
+    "styles",
+    "pages",
+    "public"
+  ],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

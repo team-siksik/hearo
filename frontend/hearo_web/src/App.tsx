@@ -1,8 +1,8 @@
 import { Routes, Route } from "react-router-dom";
-import Google from "./apis/google";
+import Google from "./apis/Google";
 import {
   LoginPage,
-  CommunicationPage,
+  ConversationPage,
   MainPage,
   RecordsPage,
   MyPage,
@@ -14,7 +14,7 @@ function App() {
       <Routes>
         <Route path="/" element={<MainPage />} />
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/comm" element={<CommunicationPage />} />
+        <Route path="/comm" element={<ConversationPage />} />
         <Route path="/records" element={<RecordsPage />} />
         <Route path="/setting" element={<MyPage />} />
         <Route path="/login/oauth2/code/google" element={<Google />} />

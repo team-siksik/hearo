@@ -1,14 +1,15 @@
 import React, { useEffect, useRef, useState } from "react";
-import CommunicationStart from "../components/Communication/CommunicationStart";
-import CommunicationComp from "../components/Communication/CommunicationComp";
 import startVoice from "../assets/start.wav";
+import { ReactComponent as Image1 } from "../assets/start_conver.svg";
+import { ConversationInfo, ConversationComp } from "@/components";
 
+// TODO: audio 파일이 mainpage에 있어야 함.
 /**
  *
  * 대화 화면
  * @returns
  */
-function CommunicationPage() {
+function ConversationPage() {
   // const [comp, setComp] = useState<string>("null");
   const [comp, setComp] = useState<string>("start_comm");
   const [isPlaying, setIsPlaying] = useState(false);
@@ -51,21 +52,27 @@ function CommunicationPage() {
       <audio ref={audioRef} src={startVoice} />
 
       {comp === "start_comm" ? (
-        <div className="bg-white ">
+        <div className="flex justify-center">
           <button
             onClick={togglePlay}
-            className="rounded-full border-cyan-600 w-60 m-5 border shadow-md"
+            className="m-5 h-24 w-80 rounded-2xl border border-red-sub bg-red-sub text-white shadow-md"
           >
-            대화 시작하기
+            <div className="flex h-full items-center justify-center">
+              <Image1 />
+              <div className="text-left">
+                <h5 className="mb-2 text-base font-bold">대화 시작하기</h5>
+                <p className="text-xs">상대방과의 대화를 시작해요.</p>
+              </div>
+            </div>
           </button>
         </div>
       ) : comp === "voice_play" ? (
-        <CommunicationStart setComp={setComp} />
+        <ConversationInfo cannotExit={true} />
       ) : comp === "comm" ? (
-        <CommunicationComp />
+        <ConversationComp />
       ) : null}
     </div>
   );
 }
 
-export default CommunicationPage;
+export default ConversationPage;
