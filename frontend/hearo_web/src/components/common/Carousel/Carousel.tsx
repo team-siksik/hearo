@@ -14,37 +14,28 @@ function Carousel() {
     arrows: false,
     infinite: true,
     speed: 500,
-    slidesToShow: 1,
+    slidesToShow: 4,
     slidesToScroll: 1,
     draggable: true,
     touchMove: true,
-    initialSlide: 1,
   };
 
   const arrowRef = useRef(null);
 
   return (
-    <div className="relative">
+    <div>
       <Slider ref={arrowRef} {...settings}>
         {images.map((image, index) => (
           <div key={index}>
             <img
               src={image}
               alt={`slide${index}`}
-              className="h-72 w-full object-cover object-center rounded-md"
+              className="rounded-md"
             />
           </div>
         ))}
       </Slider>
 
-      <div className="bottom-4 left-4 flex space-x-2">
-        {images.map((_, index) => (
-          <button
-            key={index}
-            className="w-2 h-2 rounded-full border-2 border-white focus:outline-none"
-          />
-        ))}
-      </div>
     </div>
   );
 }

@@ -11,6 +11,7 @@ function MainPage() {
   return (
     <div className="bg-gray-200">
       <Navbar selectedPage={selectedPage} setSelectedPage={setSelectedPage} />
+      <div className="mt-14">
       <div> 
         <h1>
         안녕하세요, 김동준님
@@ -19,7 +20,6 @@ function MainPage() {
         히어로에 오신 것을 환영해요.  
         </h3>
       </div>
-      <div className="mt-12">
         <Carousel/>
       </div>
     </div>
