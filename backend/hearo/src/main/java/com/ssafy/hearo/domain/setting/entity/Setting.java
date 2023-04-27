@@ -43,9 +43,9 @@ public class Setting {
     @ColumnDefault("#E63E43")
     private String mainTheme;
 
-    @Column( nullable = false)
-    @UpdateTimestamp
-    private Timestamp modDtm;
+//    @Column( nullable = false)
+//    @UpdateTimestamp
+//    private Timestamp modDtm;
 
     // builder
     @Builder
@@ -56,7 +56,7 @@ public class Setting {
         this.voiceSetting = voiceSetting;
         this.darkMode = darkMode;
         this.mainTheme = mainTheme;
-        this.modDtm = modDtm;
+//        this.modDtm = modDtm;
     }
 
     public void modify(Byte wordSize, Byte voiceSetting, Byte darkMode, String mainTheme) {
