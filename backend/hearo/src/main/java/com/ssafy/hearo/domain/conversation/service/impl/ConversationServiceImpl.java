@@ -44,7 +44,7 @@ public class ConversationServiceImpl implements ConversationService {
         for (String sentence : sentenceList) {
             KeywordSentence keywordSentence = KeywordSentence.builder()
                     .keyword(keyword)
-                    .keywordSentence(sentence)
+                    .sentence(sentence)
                     .build();
             keywordSentenceRepository.save(keywordSentence);
             log.info("[createSituation] 상황 문장 생성 완료 - {}", sentence);
@@ -78,7 +78,7 @@ public class ConversationServiceImpl implements ConversationService {
         for (KeywordSentence sentence : sentenceList) {
             result.add(KeywordSentenceResponseDto.builder()
                             .sentenceSeq(sentence.getSentenceSeq())
-                            .keywordSentence(sentence.getKeywordSentence())
+                            .keywordSentence(sentence.getSentence())
                             .build());
         }
         log.info("[getSituationSentenceList] 상황 키워드 문장 목록 조회 완료");
