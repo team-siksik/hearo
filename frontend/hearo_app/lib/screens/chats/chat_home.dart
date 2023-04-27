@@ -6,6 +6,7 @@ import 'package:hearo_app/widgets/chats/custom_app_bar_chat.dart';
 import 'package:hearo_app/widgets/chats/favorite_star.dart';
 import 'package:hearo_app/widgets/chats/speech_bubble.dart';
 import 'package:wakelock/wakelock.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 
 class ChatHome extends StatefulWidget {
   const ChatHome({super.key});
@@ -19,10 +20,9 @@ class _ChatHomeState extends State<ChatHome> {
   List chattings = [];
   final chatController = Get.put(ChatController());
   TextEditingController textController = TextEditingController();
-
+  final FlutterTts tts = FlutterTts();
   void addChat(chat) {
     // 새로운 항목을 ListView에 추가
-
     setState(() {
       // 말풍선 확인을 위한 랜덤요소 추가
       var random = Random();
@@ -41,6 +41,13 @@ class _ChatHomeState extends State<ChatHome> {
     super.initState();
     // 화면 꺼짐 방지 활성화
     Wakelock.enable();
+    // 언어 설정
+    tts.setLanguage("ko-KR");
+    // 속도지정 (0.0이 제일 느리고 1.0이 제일 빠름)
+    tts.setSpeechRate(0.6);
+    // tts.setVoice({"name": "ko-kr-x-ism-local", "locale": "ko-KR"});
+    tts.setVoice({"name": "ko-kr-x-ism-network", "locale": "ko-KR"});
+    // tts.setVoice({"name": "ko-kr-x-kob-network", "locale": "ko-KR"});
   }
 
   @override
@@ -146,6 +153,7 @@ class _ChatHomeState extends State<ChatHome> {
                               addChat(value);
                               setState(() {
                                 chatController.changeSaying('');
+                                tts.speak(textController.text);
                                 textController.text = '';
                                 _scrollController.jumpTo(
                                     _scrollController.position.maxScrollExtent);

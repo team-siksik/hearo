@@ -11,13 +11,11 @@ class FavoriteSay extends StatefulWidget {
   State<FavoriteSay> createState() => _FavoriteSayState();
 }
 
-String inputText = '';
-final myDataControll = Get.put(MyDataController());
-// final MyDataController myDataControll = Get.find();
-
-TextEditingController textController = TextEditingController();
-
 class _FavoriteSayState extends State<FavoriteSay> {
+  String inputText = '';
+  MyDataController myDataController = Get.put(MyDataController());
+  TextEditingController textController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.sizeOf(context);
@@ -35,23 +33,23 @@ class _FavoriteSayState extends State<FavoriteSay> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  myDataControll.sayings.length < 10
+                  myDataController.sayings.length < 10
                       ? Text(
-                          "${myDataControll.sayings.length} / 10",
+                          "${myDataController.sayings.length} / 10",
                           style: TextStyle(fontSize: 18),
                         )
                       : Text(
-                          "${myDataControll.sayings.length} / 10",
+                          "${myDataController.sayings.length} / 10",
                           style:
                               TextStyle(fontSize: 18, color: Color(0xffe63e43)),
                         ),
-                  myDataControll.sayings.length < 10
+                  myDataController.sayings.length < 10
                       ? TextButton(
                           onPressed: () {
                             setState(() {
                               textController.text = '';
                             });
-                            if (myDataControll.sayings.length < 10) {
+                            if (myDataController.sayings.length < 10) {
                               sayingDialog(context, size, false, '');
                             }
                           },
@@ -70,9 +68,9 @@ class _FavoriteSayState extends State<FavoriteSay> {
                 height: size.height * 0.8,
                 child: Obx(
                   () => ListView.builder(
-                    itemCount: myDataControll.sayings.length,
+                    itemCount: myDataController.sayings.length,
                     itemBuilder: (context, index) {
-                      var saying = myDataControll.sayings[index];
+                      var saying = myDataController.sayings[index];
                       return favoriteSay(context, size, saying);
                     },
                   ),
@@ -153,7 +151,7 @@ class _FavoriteSayState extends State<FavoriteSay> {
                         borderRadius: BorderRadius.all(Radius.circular(30))))),
                 onPressed: () async {
                   if (inputText.trim().isEmpty ||
-                      myDataControll.sayings.contains(inputText.trim())) {
+                      myDataController.sayings.contains(inputText.trim())) {
                     var duple =
                         inputText.trim().isEmpty ? "입력된 말이 없어요" : "중복된 말입니다.";
                     Get.snackbar(duple, say,
@@ -167,9 +165,9 @@ class _FavoriteSayState extends State<FavoriteSay> {
                   }
                   setState(() {
                     if (edit) {
-                      myDataControll.editSaying(say, inputText.trim());
+                      myDataController.editSaying(say, inputText.trim());
                     } else {
-                      myDataControll.addSaying(inputText.trim());
+                      myDataController.addSaying(inputText.trim());
                     }
 
                     textController.text = '';
@@ -265,7 +263,7 @@ class _FavoriteSayState extends State<FavoriteSay> {
                                         Radius.circular(30))))),
                         onPressed: () {
                           setState(() {
-                            myDataControll.removeSaying(saying);
+                            myDataController.removeSaying(saying);
                             Get.back();
                           });
                         },
