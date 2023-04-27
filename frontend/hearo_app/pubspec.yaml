@@ -62,6 +62,9 @@ dependencies:
   fluttertoast: ^8.2.1
   # 말풍선
   bubble: ^1.2.1
+  # 오토 사이즈 텍스트
+  auto_size_text: ^3.0.0
+
   
 dev_dependencies:
   flutter_test:
