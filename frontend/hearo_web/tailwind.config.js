@@ -13,6 +13,8 @@ module.exports = {
         "gray-20": "#F8F4EB",
         "gray-50": "#EFE6E6",
         "gray-100": "#DFCCCC",
+        "yellow-sub": "#FFC542",
+        "green-sub": "#3ED598",
         "red-sub": "#F35D61",
         "red-error": "#BF191E",
         "primary-100": "#FFE1E0",
