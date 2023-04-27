@@ -11,10 +11,9 @@ public class SettingResponseDto {
 
         private long settingSeq;
         private long userSeq;
-        private byte wordSize;
+        private byte fontSize;
         private byte voiceSetting;
-        private byte darkMode;
-        private String mainTheme;
+
     }
 
     @Getter
@@ -23,6 +22,7 @@ public class SettingResponseDto {
 
         private Long frequentSeq;
         private String sentence;
+
     }
 
 }
