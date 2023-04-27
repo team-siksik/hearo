@@ -6,16 +6,12 @@ import Test1 from "@/assets/Hearo_logo.png"
 import { AnimatePresence, motion, useCycle } from "framer-motion";
 import { SelectedPage } from "@/types/types";
 
-// interface PropsType {
-//   children: React.ReactNode;
-// }
-
-type Props = {
+interface PropsType {
   selectedPage: SelectedPage;
   setSelectedPage: (value: SelectedPage) => void;
 }
 
-const Navbar = ({selectedPage, setSelectedPage }: Props) => {
+const Navbar = ({selectedPage, setSelectedPage }: PropsType) => {
   const navigate = useNavigate();
   const flexBetween = "flex items-center justify-between";
   const [isMenuToggled, setIsMenuToggled] = useState<boolean>(false);
