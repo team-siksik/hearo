@@ -9,33 +9,31 @@ import { SelectedPage } from "@/types/types";
 // 캐러셀 적용해야하하고
 // 로고누르면 메인으로 이동
 function MainPage() {
-  const [selectedPage, setSelectedPage] = useState<SelectedPage>(
-    SelectedPage.Mypage
-    );
-    const [isTopOfPage, setIsTopOfPage] = useState<boolean>(true);
+  const [selectedPage, setSelectedPage] = useState<SelectedPage>(SelectedPage.CommunicationPage);
+  const [isTopOfPage, setIsTopOfPage] = useState<boolean>(true);
 
-    useEffect(() => {
-      const handleScroll = () => {
-        if (window.scrollY === 0) {
-          setIsTopOfPage(true);
-          setSelectedPage(SelectedPage.Mypage);
-        }
-        if (window.scrollY !== 0) setIsTopOfPage(false);
-      };
-      window.addEventListener("scroll", handleScroll);
-      return () => window.removeEventListener("scroll", handleScroll);
-    }, []);
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY === 0) {
+        setIsTopOfPage(true);
+        setSelectedPage(SelectedPage.CommunicationPage);
+      }
+      if (window.scrollY !== 0) setIsTopOfPage(false);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
     
     return (
       <div>
-      <Navbar
-        isTopOfPage={isTopOfPage}
-        selectedPage={selectedPage}
-        setSelectedPage={setSelectedPage}
-      />
-      <MyPage/>
-      {/* <RecordsPage/> */}
-      <CommunicationPage/>
+        <Navbar
+          isTopOfPage={isTopOfPage}
+          selectedPage={selectedPage}
+          setSelectedPage={setSelectedPage}
+        />
+        <div className="top-20">
+          메인페이지 해줘~~~ 
+        </div>
       </div>
       )
   } 
