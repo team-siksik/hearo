@@ -23,12 +23,14 @@
     "react-modal": "^3.16.1",
     "react-redux": "^8.0.5",
     "react-router-dom": "^6.10.0",
+    "react-slick": "^0.29.0",
     "use-long-press": "^3.0.4"
   },
   "devDependencies": {
     "@types/node": "^18.16.1",
     "@types/react": "^18.0.28",
     "@types/react-dom": "^18.0.11",
+    "@types/react-slick": "^0.23.10",
     "@vitejs/plugin-react": "^3.1.0",
     "autoprefixer": "^10.4.14",
     "eslint-config-prettier": "^8.8.0",
