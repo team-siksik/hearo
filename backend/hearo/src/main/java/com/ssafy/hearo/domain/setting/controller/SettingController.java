@@ -66,7 +66,7 @@ public class SettingController {
                 .body(responseService.getSuccessResult());
     }
 
-    @PatchMapping("/frequent/{frequentSeq}/delete")
+    @PutMapping("/frequent/{frequentSeq}/delete")
     public ResponseEntity<Result> removeFrequent(@LoginUser Account account, @PathVariable long frequentSeq) {
         log.info("[modifyFrequent] 자주 쓰는 말 삭제 API 호출 - {}", account);
         settingService.removeFrequent(account, frequentSeq);
