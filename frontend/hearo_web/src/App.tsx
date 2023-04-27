@@ -1,5 +1,5 @@
 import { Routes, Route } from "react-router-dom";
-import Google from "./apis/Google";
+import Google from "./apis/google";
 import {
   LoginPage,
   ConversationPage,
@@ -24,3 +24,4 @@ function App() {
 }
 
 export default App;
+
