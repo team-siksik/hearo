@@ -38,4 +38,13 @@ public class ConversationController {
         return ResponseEntity.ok()
                 .body(responseService.getListResult(result));
     }
+
+    @GetMapping("/recommend/situation/{keywordSeq}")
+    public ResponseEntity<Result> getSituationSentenceList(@PathVariable long keywordSeq) {
+        log.info("[getSituationSentenceList] 상황 키워드 문장 목록 조회 API 호출");
+        List<KeywordSentenceResponseDto> result = conversationService.getSituationSentenceList(keywordSeq);
+        log.info("[getSituationSentenceList] result: {}", result);
+        return ResponseEntity.ok()
+                .body(responseService.getListResult(result));
+    }
 }

@@ -10,4 +10,6 @@ public interface ConversationService {
     void createSituation(CreateSituationRequestDto requestDto);
 
     List<KeywordResponseDto> getSituationKeywordList();
+
+    List<KeywordSentenceResponseDto> getSituationSentenceList(long keywordSeq);
 }
