@@ -13,4 +13,13 @@ public class ConversationResponseDto {
         private String keyword;
 
     }
+
+    @Getter
+    @Builder
+    public static class KeywordSentenceResponseDto {
+
+        private long sentenceSeq;
+        private String keywordSentence;
+
+    }
 }

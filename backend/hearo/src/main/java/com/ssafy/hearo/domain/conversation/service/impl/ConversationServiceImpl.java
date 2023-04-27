@@ -7,6 +7,8 @@ import com.ssafy.hearo.domain.conversation.entity.KeywordSentence;
 import com.ssafy.hearo.domain.conversation.repository.KeywordRepository;
 import com.ssafy.hearo.domain.conversation.repository.KeywordSentenceRepository;
 import com.ssafy.hearo.domain.conversation.service.ConversationService;
+import com.ssafy.hearo.global.error.code.CommonErrorCode;
+import com.ssafy.hearo.global.error.exception.ErrorException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -62,6 +65,23 @@ public class ConversationServiceImpl implements ConversationService {
                             .build());
         }
         log.info("[getSituation] 상황 키워드 목록 조회 완료");
+        return result;
+    }
+
+    @Override
+    public List<KeywordSentenceResponseDto> getSituationSentenceList(long keywordSeq) {
+        log.info("[getSituationSentenceList] 상황 키워드 문장 목록 조회 시작");
+        Keyword keyword = keywordRepository.findById(keywordSeq)
+                .orElseThrow(() -> new ErrorException(CommonErrorCode.BAD_REQUEST));
+        List<KeywordSentence> sentenceList = keywordSentenceRepository.findByKeyword(keyword);
+        List<KeywordSentenceResponseDto> result = new ArrayList<>();
+        for (KeywordSentence sentence : sentenceList) {
+            result.add(KeywordSentenceResponseDto.builder()
+                            .sentenceSeq(sentence.getSentenceSeq())
+                            .keywordSentence(sentence.getKeywordSentence())
+                            .build());
+        }
+        log.info("[getSituationSentenceList] 상황 키워드 문장 목록 조회 완료");
         return result;
     }
 
