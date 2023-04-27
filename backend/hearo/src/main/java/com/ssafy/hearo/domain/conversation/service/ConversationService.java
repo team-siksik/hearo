@@ -1,5 +1,6 @@
 package com.ssafy.hearo.domain.conversation.service;
 
+import com.ssafy.hearo.domain.account.entity.Account;
 import com.ssafy.hearo.domain.conversation.dto.ConversationRequestDto.*;
 import com.ssafy.hearo.domain.conversation.dto.ConversationResponseDto.*;
 
@@ -12,4 +13,8 @@ public interface ConversationService {
     List<KeywordResponseDto> getSituationKeywordList();
 
     List<KeywordSentenceResponseDto> getSituationSentenceList(long keywordSeq);
+
+    RoomResponseDto startConversation(Account account);
+
+    RoomResponseDto endConversation(Account account, long roomSeq);
 }
