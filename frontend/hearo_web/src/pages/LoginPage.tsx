@@ -7,29 +7,22 @@ function Login() {
   return (
     <div>
       <div>
-        <img src={Logo} alt="gif" />
+        <img className="m-auto" src={Logo} alt="gif" />
       </div>
       <div>
-        <h2 style={{ margin: "0", color: "#E63E43" }}>Hearo</h2>
-        <p style={{ margin: "4px", color: "#E63E43" }}>소시를 잇는 다리</p>
+        <h2 className="m-auto flex justify-center font-chewy text-5xl text-red-main">
+          Hearo
+        </h2>
+        <p className="m-auto flex justify-center font-nanum text-2xl text-red-main">
+          소리를 잇는 다리
+        </p>
       </div>
-      <div style={{ margin: "32px" }}>
-        <a href={GOOGLE_AUTH_URL}>
-          <button
-            style={{
-              backgroundColor: "white",
-              borderRadius: "20",
-              boxShadow: "0 -1 1 gray",
-            }}
-          >
-            <div style={{ display: "flex" }}>
-              <img
-                src={google_logo}
-                style={{ width: "20px", margin: "0 8px" }}
-              />
-              <p style={{ margin: "auto", fontSize: "12px" }}>
-                구글 아이디로 로그인
-              </p>
+      <div className="flex">
+        <a className="m-auto" href={GOOGLE_AUTH_URL}>
+          <button className="h-8 w-40 rounded-xl bg-white shadow-md shadow-slate-200">
+            <div className="flex">
+              <img className="mx-0 my-2 w-5" src={google_logo} />
+              <p className="m-auto text-xs">구글 아이디로 로그인</p>
             </div>
           </button>
         </a>

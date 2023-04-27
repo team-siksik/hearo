@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-
+import { Input } from "@/components";
 interface TimerProps {
   // props 타입 정의
 }
@@ -29,7 +29,11 @@ function Timer(props: TimerProps) {
     return `${timeFormat.minutes}:${timeFormat.seconds}`;
   };
 
-  return <div>{formatTime(seconds)}</div>;
+  return (
+    <>
+      <p className="text-xl font-bold">{formatTime(seconds)}</p>
+    </>
+  );
 }
 
 export default Timer;
