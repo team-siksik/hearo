@@ -13,10 +13,11 @@ class FavoriteSay extends StatefulWidget {
 
 String inputText = '';
 final myDataControll = Get.put(MyDataController());
+// final MyDataController myDataControll = Get.find();
 
-//
+TextEditingController textController = TextEditingController();
+
 class _FavoriteSayState extends State<FavoriteSay> {
-  TextEditingController textController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.sizeOf(context);
@@ -66,15 +67,16 @@ class _FavoriteSayState extends State<FavoriteSay> {
               ),
             ),
             SizedBox(
-              height: size.height * 0.8,
-              child: ListView.builder(
-                itemCount: myDataControll.sayings.length,
-                itemBuilder: (context, index) {
-                  var saying = myDataControll.sayings[index];
-                  return favoriteSay(context, size, saying);
-                },
-              ),
-            )
+                height: size.height * 0.8,
+                child: Obx(
+                  () => ListView.builder(
+                    itemCount: myDataControll.sayings.length,
+                    itemBuilder: (context, index) {
+                      var saying = myDataControll.sayings[index];
+                      return favoriteSay(context, size, saying);
+                    },
+                  ),
+                ))
           ],
         ),
       ),
@@ -154,8 +156,6 @@ class _FavoriteSayState extends State<FavoriteSay> {
                       myDataControll.sayings.contains(inputText.trim())) {
                     var duple =
                         inputText.trim().isEmpty ? "입력된 말이 없어요" : "중복된 말입니다.";
-                    print("@@@@@@@@@@@@@@@@@@@@@@@@@");
-                    print(inputText);
                     Get.snackbar(duple, say,
                         duration: Duration(seconds: 1),
                         snackPosition: SnackPosition.BOTTOM,
