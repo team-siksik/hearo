@@ -1,12 +1,15 @@
-package com.ssafy.hearo.domain.room.entity;
+package com.ssafy.hearo.domain.conversation.entity;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.ssafy.hearo.domain.account.entity.Account;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.Id;
 
@@ -29,6 +32,7 @@ public class Room {
     private Account account;
 
     @Column(nullable = false)
+    @CreationTimestamp
     private Timestamp regDtm;
 
     @Column()
@@ -36,4 +40,14 @@ public class Room {
 
     @Column(columnDefinition = "TINYINT", length = 1)
     private byte saveCondition;
+
+    @Builder
+    public Room(Account account) {
+        this.account = account;
+    }
+
+    public void end(Timestamp timestamp) {
+        this.endDtm = timestamp;
+    }
+
 }
