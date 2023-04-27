@@ -1,40 +1,36 @@
 package com.ssafy.hearo.domain.conversation.entity;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
 
 @Getter
-@Setter
 @Entity
 @NoArgsConstructor
 @DynamicInsert
-@Table(name = "keyword_sentence")
+@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class KeywordSentence {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "sentence_seq", nullable = false)
+    @Column(nullable = false)
     private Long sentenceSeq;
 
     @ManyToOne
-    @JoinColumn(name = "keyword_seq", nullable = false)
-    private Keyword keywordSeq;
+    @JoinColumn(name = "keywordSeq", nullable = false)
+    private Keyword keyword;
 
-    @Column(name = "keyword_sentence", nullable = false, length = 100)
-    private String keywordSentence;
-//    builder
+    @Column(nullable = false, length = 100)
+    private String sentence;
+
     @Builder
-    public KeywordSentence(Long sentenceSeq, Keyword keywordSeq, String keywordSentence) {
-        this.sentenceSeq = sentenceSeq;
-        this.keywordSeq = keywordSeq;
-        this.keywordSentence = keywordSentence;
+    public KeywordSentence(Keyword keyword, String sentence) {
+        this.keyword = keyword;
+        this.sentence = sentence;
     }
-    //modify
-    public void modify(String keywordSentence) {
-        this.keywordSentence = keywordSentence;
-    }
+
 }

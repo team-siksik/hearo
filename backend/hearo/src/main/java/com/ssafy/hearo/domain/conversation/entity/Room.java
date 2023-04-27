@@ -1,4 +1,4 @@
-package com.ssafy.hearo.domain.setting.entity;
+package com.ssafy.hearo.domain.conversation.entity;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -10,7 +10,8 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.springframework.boot.context.properties.bind.DefaultValue;
+
+import javax.persistence.Id;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -19,41 +20,34 @@ import java.sql.Timestamp;
 @Entity
 @NoArgsConstructor
 @DynamicInsert
-public class FrequentSentence {
+@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
+public class Room {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
-    private Long frequentSeq;
+    private Long roomSeq;
 
     @ManyToOne
     @JoinColumn(name = "userSeq", nullable = false)
     private Account account;
 
-    @Column( nullable = false, length = 200)
-    private String sentence;
-
-    @Column( nullable = false)
+    @Column(nullable = false)
     @CreationTimestamp
     private Timestamp regDtm;
 
-    @Column(nullable = false)
-    @UpdateTimestamp
-    private Timestamp modDtm;
+    @Column()
+    private Timestamp endDtm;
 
-    @Column( columnDefinition = "TINYINT", length = 1)
-    private Byte delYn;
+    @Column(columnDefinition = "TINYINT", length = 1)
+    private byte saveCondition;
 
     @Builder
-    public FrequentSentence(String sentence, Byte delYn) {
-        this.sentence = sentence;
-        this.delYn = delYn;
-    }
-    public void modify(String sentence) {
-        this.sentence = sentence;
+    public Room(Account account) {
+        this.account = account;
     }
 
-    public void remove(byte delYn) {
-        this.delYn = (byte)1;
+    public void end(Timestamp timestamp) {
+        this.endDtm = timestamp;
     }
 
 }
