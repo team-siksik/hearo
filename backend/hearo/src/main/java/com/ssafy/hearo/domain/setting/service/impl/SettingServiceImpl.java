@@ -39,10 +39,8 @@ public class SettingServiceImpl implements SettingService {
         return SettingInfoResponseDto.builder()
                 .settingSeq(setting.getSettingSeq())
                 .userSeq(setting.getAccount().getUserSeq())
-                .wordSize(setting.getWordSize())
+                .wordSize(setting.getFontSize())
                 .voiceSetting(setting.getVoiceSetting())
-                .darkMode(setting.getDarkMode())
-                .mainTheme(setting.getMainTheme())
                 .build();
     }
 
@@ -55,10 +53,8 @@ public class SettingServiceImpl implements SettingService {
 
         byte wordSize = requestDto.getWordSize();
         byte voiceSetting = requestDto.getVoiceSetting();
-        byte darkMode = requestDto.getDarkMode();
-        String mainTheme = requestDto.getMainTheme();
 
-        setting.modify(wordSize, voiceSetting, darkMode, mainTheme);
+        setting.modify(wordSize, voiceSetting);
 
         log.info("[modifySetting] 설정 수정 완료");
     }

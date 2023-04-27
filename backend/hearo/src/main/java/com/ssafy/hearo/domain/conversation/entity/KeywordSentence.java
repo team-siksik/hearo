@@ -25,12 +25,12 @@ public class KeywordSentence {
     private Keyword keyword;
 
     @Column(nullable = false, length = 100)
-    private String keywordSentence;
+    private String sentence;
 
     @Builder
-    public KeywordSentence(Keyword keyword, String keywordSentence) {
+    public KeywordSentence(Keyword keyword, String sentence) {
         this.keyword = keyword;
-        this.keywordSentence = keywordSentence;
+        this.sentence = sentence;
     }
 
 }

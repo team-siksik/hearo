@@ -32,37 +32,25 @@ public class Setting {
 
     @Column(nullable = false)
     @ColumnDefault("2")
-    private Byte wordSize;
+    private Byte fontSize;
 
     @Column(nullable = false)
     @ColumnDefault("1")
     private Byte voiceSetting;
 
     @Column(nullable = false)
-    @ColumnDefault("0")
-    private Byte darkMode;
-
-    @Column(nullable = false, length = 7)
-    @ColumnDefault("#E63E43")
-    private String mainTheme;
-
-    @Column(nullable = false)
     @UpdateTimestamp
     private Timestamp modDtm;
 
     @Builder
-    public Setting(Byte wordSize, Byte voiceSetting, Byte darkMode, String mainTheme) {
-        this.wordSize = wordSize;
+    public Setting(Byte fontSize, Byte voiceSetting) {
+        this.fontSize = fontSize;
         this.voiceSetting = voiceSetting;
-        this.darkMode = darkMode;
-        this.mainTheme = mainTheme;
     }
 
-    public void modify(Byte wordSize, Byte voiceSetting, Byte darkMode, String mainTheme) {
-        this.wordSize = wordSize;
+    public void modify(Byte fontSize, Byte voiceSetting) {
+        this.fontSize = fontSize;
         this.voiceSetting = voiceSetting;
-        this.darkMode = darkMode;
-        this.mainTheme = mainTheme;
     }
 
 
