@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hearo_app/controller/my_data_controller.dart';
 import 'package:hearo_app/widgets/common/custom_app_bar_inner.dart';
 import 'package:get/get.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
 class FavoriteSay extends StatefulWidget {
   const FavoriteSay({super.key});
@@ -13,6 +14,7 @@ class FavoriteSay extends StatefulWidget {
 String inputText = '';
 final myDataControll = Get.put(MyDataController());
 
+//
 class _FavoriteSayState extends State<FavoriteSay> {
   TextEditingController textController = TextEditingController();
   @override
@@ -198,11 +200,15 @@ class _FavoriteSayState extends State<FavoriteSay> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                saying,
-                style: TextStyle(fontSize: 16),
+              Flexible(
+                flex: 8,
+                child: AutoSizeText(
+                  saying,
+                  style: TextStyle(fontSize: 16),
+                  maxLines: 2,
+                ),
               ),
-              sayDelete(context, saying)
+              Flexible(flex: 1, child: sayDelete(context, saying))
             ],
           ),
         ),
