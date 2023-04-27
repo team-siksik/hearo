@@ -19,8 +19,6 @@ import java.sql.Timestamp;
 @Entity
 @NoArgsConstructor
 @DynamicInsert
-@Entity
-//@Table(name = "frequent_sentence")
 public class FrequentSentence {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -44,10 +42,9 @@ public class FrequentSentence {
 
     @Column( columnDefinition = "TINYINT", length = 1)
     private Byte delYn;
-// builder
-    public FrequentSentence(Long frequentSeq, Account accountSeq, String sentence, Timestamp regDtm, Timestamp modDtm, Byte delYn) {
-        this.frequentSeq = frequentSeq;
-        this.accountSeq = accountSeq;
+
+    @Builder
+    public FrequentSentence(String sentence, Byte delYn) {
         this.sentence = sentence;
         this.delYn = delYn;
     }
