@@ -11,16 +11,15 @@ import { SelectedPage } from "@/types/types";
 // }
 
 type Props = {
-  isTopOfPage: boolean;
   selectedPage: SelectedPage;
   setSelectedPage: (value: SelectedPage) => void;
 }
 
-const Navbar = ({ isTopOfPage, selectedPage, setSelectedPage }: Props) => {
+const Navbar = ({selectedPage, setSelectedPage }: Props) => {
   const navigate = useNavigate();
   const flexBetween = "flex items-center justify-between";
   const [isMenuToggled, setIsMenuToggled] = useState<boolean>(false);
-  const navbarBackground = isTopOfPage ? "" : "bg-primary-100 drop-shadow";
+  const navbarBackground = "bg-primary-100 drop-shadow";
   const links = [
     { name: "대화 시작하기", to: "comm", id:1},
     { name: "대화 참여하기", to: "comm", id:2},
@@ -28,6 +27,10 @@ const Navbar = ({ isTopOfPage, selectedPage, setSelectedPage }: Props) => {
     // 로그아웃 만들어야 함
     // { name: "대화 시작하기", to: "records", id:4}
   ]
+
+  const homeClick = () => {
+    navigate('/');
+  }
   const handleSettingsClick = () => {
     navigate('/settings');
     setIsMenuToggled(false);
@@ -70,12 +73,12 @@ const Navbar = ({ isTopOfPage, selectedPage, setSelectedPage }: Props) => {
     <nav>
     {/* 고정나브바 */}
     <div
-      className={`${navbarBackground} ${flexBetween} fixed top-0 z-30 w-full py-2 bg-red-200`}
+      className={`${navbarBackground} ${flexBetween} fixed top-0 z-30 w-full py-2 bg-white`}
       >
       <div className={`${flexBetween} mx-auto w-11/12`}>
         <div className={`${flexBetween} w-full gap-16`}>
           {/* LEFT SIDE */}
-          <img alt="logo" src={Test1} className="h-10 w-30"/>
+          <img onClick={homeClick} alt="logo" src={Test1} className="h-10 w-30"/>
           <button
               className="rounded-full bg-white p-1"
               onClick={() => setIsMenuToggled(!isMenuToggled)}>
