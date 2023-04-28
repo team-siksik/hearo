@@ -10,7 +10,7 @@ public class SettingRequestDto {
 
         private long settingSeq;
         private long userSeq;
-        private byte wordSize;
+        private byte fontSize;
         private byte voiceSetting;
     }
 
