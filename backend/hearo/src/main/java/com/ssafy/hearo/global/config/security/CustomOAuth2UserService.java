@@ -3,8 +3,6 @@ package com.ssafy.hearo.global.config.security;
 
 import com.ssafy.hearo.domain.account.entity.Account;
 import com.ssafy.hearo.domain.account.repository.AccountRepository;
-import com.ssafy.hearo.global.config.security.CustomOAuth2User;
-import com.ssafy.hearo.global.config.security.OAuthAttributes;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -55,11 +53,11 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
 
         // DefaultOAuth2User를 구현한 CustomOAuth2User 객체를 생성해서 반환
         return new CustomOAuth2User(
-                Collections.singleton(new SimpleGrantedAuthority(createdUser.getRole().getKey())),
+                Collections.singleton(new SimpleGrantedAuthority(createdUser.getUserRole().getKey())),
                 attributes,
                 extractAttributes.getNameAttributeKey(),
                 createdUser.getEmail(),
-                createdUser.getRole()
+                createdUser.getUserRole()
         );
     }
 
