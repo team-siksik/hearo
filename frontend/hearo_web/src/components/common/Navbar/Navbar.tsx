@@ -27,8 +27,8 @@ const Navbar = ({selectedPage, setSelectedPage }: PropsType) => {
   const homeClick = () => {
     navigate('/');
   }
-  const handleSettingsClick = () => {
-    navigate('/setting');
+  const handleMypageClick = () => {
+    navigate('/mypage');
     setIsMenuToggled(false);
   };
 
@@ -144,7 +144,7 @@ const Navbar = ({selectedPage, setSelectedPage }: PropsType) => {
             className="mt-[100%] flex flex-col gap-3 text-lg"
             variants={itemVariants}
             >
-          <button onClick={handleSettingsClick}>환경설정</button>
+          <button onClick={handleMypageClick}>내 정보 수정</button>
           </motion.div>
           <motion.div
             whileHover={{ scale: 1.1 }}
