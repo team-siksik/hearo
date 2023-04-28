@@ -71,8 +71,14 @@ dependencies:
   # 오디오 재생
   audioplayers: ^4.0.1
   flutter_sound: ^9.2.13
+  # 구글 로그인
+  google_sign_in: ^6.1.0
+  # 파베
+  firebase_auth: ^4.4.2
+  firebase_analytics: ^10.1.6
+  firebase_core: ^2.10.0
 
-  
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

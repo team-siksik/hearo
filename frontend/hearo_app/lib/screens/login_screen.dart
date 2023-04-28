@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hearo_app/screens/home_screen.dart';
 import 'package:get/get.dart';
 import 'package:hearo_app/skills/text_to_speech.dart';
@@ -31,27 +33,20 @@ class LoginScreen extends StatelessWidget {
                   height: 30,
                 ),
                 Image.asset("assets/images/hearo_text_login.png"),
-                // Text(
-                //   "히어로",
-                //   style: TextStyle(fontSize: 40, fontWeight: FontWeight.w600),
-                // ),
                 SizedBox(
                   height: 40,
                 ),
-                // Text(
-                //   "반갑습니다!",
-                //   style: TextStyle(fontSize: 20),
-                // ),
-                // Text(
-                //   "히어로에 오신 것을 환영해요",
-                //   style: TextStyle(fontSize: 20),
-                // ),
                 SizedBox(
                   height: 40,
                 ),
               ],
             ),
             // 환영 모달
+            TextButton(
+                onPressed: () {
+                  signInWithGoogle();
+                },
+                child: Text("로그인")),
             welcomeModal(context, size)
           ],
         ),
@@ -140,9 +135,6 @@ class LoginScreen extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           color: Colors.white,
-          // border: Border.all(
-          //   color: const Color(0xffEEEEEE),
-          // ),
           borderRadius: const BorderRadius.all(Radius.circular(24)),
           boxShadow: [
             BoxShadow(
@@ -171,5 +163,24 @@ class LoginScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<UserCredential> signInWithGoogle() async {
+    // Trigger the authentication flow
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+    // Obtain the auth details from the request
+    final GoogleSignInAuthentication? googleAuth =
+        await googleUser?.authentication;
+
+    // Create a new credential
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth?.accessToken,
+      idToken: googleAuth?.idToken,
+    );
+    print("@@@@@@@@@@토큰@@@@@@@@@");
+    print(credential);
+    // Once signed in, return the UserCredential
+    return await FirebaseAuth.instance.signInWithCredential(credential);
   }
 }
