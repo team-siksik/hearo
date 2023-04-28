@@ -73,11 +73,12 @@ dependencies:
   flutter_sound: ^9.2.13
   # 구글 로그인
   google_sign_in: ^6.1.0
-  # 파베
+  # 파이어베이스
   firebase_auth: ^4.4.2
   firebase_analytics: ^10.1.6
   firebase_core: ^2.10.0
-
+  # 권한 요청
+  permission_handler: ^10.2.0
 
 dev_dependencies:
   flutter_test:
