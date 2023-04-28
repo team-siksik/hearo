@@ -9,7 +9,7 @@ import os
 
 
 app = Flask(__name__)
-socketio = SocketIO(app)
+socketio = SocketIO(app, logger=True, engineio_logger=True)
 
 
 @app.route('/run/os')
@@ -20,6 +20,8 @@ def check_os():
 @app.route('/run/generate', methods=['POST'])
 def generate_sentence():
     text = request.form['text']
+
+    # GPT 엔진 선택
     engine = "text-davinci-002"
     # engine = "gpt-3.5-turbo"
 
