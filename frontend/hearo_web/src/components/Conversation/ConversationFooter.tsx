@@ -48,7 +48,7 @@ function ConversationFooter({ setNewMessage }: PropsType) {
   }
   return (
     <>
-      <div className="fixed bottom-0 w-full border-t-2 border-gray-300">
+      <div className="fixed bottom-0 z-10 h-12 w-full bg-white">
         <div className="my-2 flex w-full items-center px-4">
           <Button onClick={handleFavClick}>
             <Star />
