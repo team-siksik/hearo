@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 60초마다 설정 파일의 변경을 확인 하여 변경시 갱신 -->
+<configuration scan="true" scanPeriod="60 seconds">
+    <!--springProfile 태그를 사용하면 logback 설정파일에서 복수개의 프로파일을 설정할 수 있다.-->
+    <springProfile name="local">
+        <property resource="logback-local.properties"/>
+    </springProfile>
+    <springProfile name="dev">
+        <property resource="logback-dev.properties"/>
+    </springProfile>
+    <!--Environment 내의 프로퍼티들을 개별적으로 설정할 수도 있다.-->
+    <springProperty scope="context" name="LOG_LEVEL" source="logging.level.root"/>
+
+    <!-- pattern -->
+    <property name="LOG_PATTERN" value="[%-5level] %d{yy-MM-dd HH:mm:ss:SSS} [%thread] [%logger{0}:%line] - %msg%n"/>
+
+    <!-- Console Appender -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <!-- root레벨 설정 -->
+    <root level="${LOG_LEVEL}">
+        <appender-ref ref="CONSOLE"/>
+        <!-- <appender-ref ref="FILE"/>
+        <appender-ref ref="Error"/>  -->
+    </root>
+
+    <!-- 특정패키지 로깅레벨 설정 -->
+    <!-- <logger name="org.apache.ibatis" level="DEBUG" additivity="false"> <appender-ref ref="CONSOLE"/> <appender-ref ref="FILE"/> <appender-ref ref="Error"/> </logger>  -->
+</configuration>
