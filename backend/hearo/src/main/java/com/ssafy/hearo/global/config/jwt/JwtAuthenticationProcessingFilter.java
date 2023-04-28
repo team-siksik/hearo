@@ -2,7 +2,7 @@ package com.ssafy.hearo.global.config.jwt;
 
 import com.ssafy.hearo.domain.account.entity.Account;
 import com.ssafy.hearo.domain.account.repository.AccountRepository;
-import com.ssafy.hearo.global.config.jwt.JwtService;
+import com.ssafy.hearo.global.util.PasswordUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -138,9 +138,14 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
      * setAuthentication()을 이용하여 위에서 만든 Authentication 객체에 대한 인증 허가 처리
      */
     public void saveAuthentication(Account account) {
+        String password = account.getPassword();
+        if (password == null) { // 소셜 로그인 유저의 비밀번호 임의로 설정 하여 소셜 로그인 유저도 인증 되도록 설정
+            password = PasswordUtil.generateRandomPassword();
+        }
 
         UserDetails userDetailsUser = org.springframework.security.core.userdetails.User.builder()
-                .username(account.getNickname())
+                .username(account.getEmail())
+                .password(password)
                 .roles(account.getRole().name())
                 .build();
 
