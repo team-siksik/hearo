@@ -15,7 +15,7 @@ const Navbar = ({selectedPage, setSelectedPage }: PropsType) => {
   const navigate = useNavigate();
   const flexBetween = "flex items-center justify-between";
   const [isMenuToggled, setIsMenuToggled] = useState<boolean>(false);
-  const navbarBackground = "bg-primary-100 drop-shadow";
+  const navbarBackground = "z-10 bg-white drop-shadow";
   const links = [
     { name: "대화 시작하기", to: "comm", id:1},
     { name: "대화 참여하기", to: "comm", id:2},
@@ -70,7 +70,7 @@ const Navbar = ({selectedPage, setSelectedPage }: PropsType) => {
     <nav>
     {/* 고정나브바 */}
     <div
-      className={`${navbarBackground} ${flexBetween} fixed top-0 z-30 w-full py-2 bg-white bg-opacity-25 backdrop-blur-sm`}
+      className={`${navbarBackground} ${flexBetween} fixed top-0 z-10 w-full py-2`}
       >
       <div className={`${flexBetween} mx-auto w-11/12`}>
         <div className={`${flexBetween} w-full gap-16`}>
@@ -93,7 +93,7 @@ const Navbar = ({selectedPage, setSelectedPage }: PropsType) => {
       <motion.aside
         initial={{width: 0}}
         animate={{
-          width: 280,
+          width: 412,
           transition: {
             duration:0.2
           } 
@@ -114,7 +114,7 @@ const Navbar = ({selectedPage, setSelectedPage }: PropsType) => {
             {/* CLOSE ICON */}
               <motion.div className="flex justify-end h-14 p-2" variants={itemVariants}>
                 <button
-                  className="rounded-full bg-white mt-1 mr-2 h-8 p-1"
+                  className="rounded-full bg-primary-100 mt-1 mr-2 h-8 p-1"
                   onClick={() => setIsMenuToggled(!isMenuToggled)}>
                     <XMarkIcon className="h-6 w-6 text-black" />
                 </button>
@@ -156,8 +156,13 @@ const Navbar = ({selectedPage, setSelectedPage }: PropsType) => {
           </motion.div>
         </motion.div>
       </motion.div>
-
-
+      <motion.div
+        className="fixed z-30 w-full h-full bg-slate-950 bg-opacity-10 backdrop-blur-sm"
+        initial="closed"
+        animate='open'
+        exit='closed'
+        >
+      </motion.div>
       </motion.aside>
       )}
     </AnimatePresence>
