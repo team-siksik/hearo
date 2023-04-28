@@ -64,8 +64,8 @@ public class GoogleAuthService {
                             .email(user.getEmail())
                             .nickname(user.getName())
                             .imageUrl(user.getPicture())
-                            .role(Role.USER)
-                            .password(user.getPassword())
+                            .userRole(Role.USER)
+                            .userPassword(user.getPassword())
                             .build();
                     accountRepository.save(account);
                 }
