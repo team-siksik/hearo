@@ -32,7 +32,7 @@ const Navbar = ({selectedPage, setSelectedPage }: Props) => {
     navigate('/');
   }
   const handleSettingsClick = () => {
-    navigate('/settings');
+    navigate('/setting');
     setIsMenuToggled(false);
   };
 
