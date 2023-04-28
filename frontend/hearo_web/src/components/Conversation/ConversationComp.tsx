@@ -9,6 +9,7 @@ import {
 
 function ConversationComp() {
   const [openInfoModal, setOpenInfoModal] = useState<boolean>(false);
+  const [newMessage, setNewMessage] = useState<string>("");
 
   return (
     <div>
@@ -17,8 +18,8 @@ function ConversationComp() {
         openModal={openInfoModal}
         setOpenModal={setOpenInfoModal}
       />
-      <ConversationBody />
-      <ConversationFooter />
+      <ConversationBody message={newMessage} />
+      <ConversationFooter setNewMessage={setNewMessage} />
     </div>
   );
 }
