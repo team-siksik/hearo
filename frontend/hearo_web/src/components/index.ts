@@ -10,8 +10,8 @@ import Timer from "./common/Timer";
 import Modal from "./common/ui/Modal";
 import Button from "./common/ui/Button";
 import Input from "./common/ui/Input";
+import Dialog from "./common/ui/Dialog";
 import Navbar from "./common/Navbar/Navbar";
-
 
 export {
   ConversationComp,
@@ -27,4 +27,5 @@ export {
   Button,
   Input,
   Navbar,
+  Dialog,
 };

@@ -16,6 +16,7 @@ function ConversationPage() {
 
   const audioRef = useRef<HTMLAudioElement>(null);
 
+  // 음성 재생
   const togglePlay = () => {
     if (audioRef.current) {
       if (isPlaying) {
