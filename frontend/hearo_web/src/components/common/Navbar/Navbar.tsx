@@ -4,6 +4,7 @@ import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/solid";
 import Test1 from "@/assets/Hearo_logo.png"
 import { AnimatePresence, motion, useCycle } from "framer-motion";
 import { SelectedPage } from "@/types/types";
+import { ClassNames } from "@emotion/react";
 
 interface PropsType {
   selectedPage: SelectedPage;
@@ -36,12 +37,13 @@ const Navbar = ({selectedPage, setSelectedPage }: PropsType) => {
     setIsMenuToggled(false);
   };
 
+
   const sideVariants = {
     open: {
       transition: {
         duration:0.2,
       },
-      width: 250
+      width: 280
     },
     closed: {
       transition: {
@@ -68,7 +70,7 @@ const Navbar = ({selectedPage, setSelectedPage }: PropsType) => {
     <nav>
     {/* 고정나브바 */}
     <div
-      className={`${navbarBackground} ${flexBetween} fixed top-0 z-30 w-full py-2 bg-white`}
+      className={`${navbarBackground} ${flexBetween} fixed top-0 z-30 w-full py-2 bg-white bg-opacity-25 backdrop-blur-sm`}
       >
       <div className={`${flexBetween} mx-auto w-11/12`}>
         <div className={`${flexBetween} w-full gap-16`}>
@@ -91,10 +93,10 @@ const Navbar = ({selectedPage, setSelectedPage }: PropsType) => {
       <motion.aside
         initial={{width: 0}}
         animate={{
-          width: 250,
+          width: 280,
           transition: {
             duration:0.2
-          }
+          } 
         }}
         exit={{
           width: 0,
@@ -103,7 +105,7 @@ const Navbar = ({selectedPage, setSelectedPage }: PropsType) => {
           }
         }}>
           <motion.div 
-            className="fixed right-0 bottom-0 z-40 h-full w-[250px] bg-primary-100 drop-shadow-xl"
+            className="fixed right-0 bottom-0 z-40 h-full w-[280px] bg-primary-100 drop-shadow-xl"
             initial="closed"
             animate='open'
             exit='closed'
@@ -133,13 +135,13 @@ const Navbar = ({selectedPage, setSelectedPage }: PropsType) => {
            ))}
         </div>
         <motion.div 
-          className="mt-[120%] flex flex-col gap-3 text-lg"
+          className="mt-[100%] flex flex-col gap-3 text-lg"
           variants={itemVariants}
           >
           <motion.div
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95}}
-            className="mt-[120%] flex flex-col gap-3 text-lg"
+            className="mt-[100%] flex flex-col gap-3 text-lg"
             variants={itemVariants}
             >
           <button onClick={handleSettingsClick}>환경설정</button>

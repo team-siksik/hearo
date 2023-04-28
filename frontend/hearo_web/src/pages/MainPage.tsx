@@ -26,10 +26,10 @@ function MainPage() {
       <Navbar selectedPage={selectedPage} setSelectedPage={setSelectedPage} />
       <div className="mt-14">
         <div className="pl-2 pt-2 text-2xl">
-        안녕하세요, 김동준님
+        안녕하세요, 김갓팀장님!!!
         </div>
         <div className="pl-2 pt-1 text-sm">
-        히어로에 오신 것을 환영해요.  
+        히어로에 오신 것을 환영해요 ^____^ 
         </div>
         <div className="ml-8 mr-8 pt-2"> 
           <Carousel/>
