@@ -1,3 +1,4 @@
+// 자주 쓰는 말, 유저 정보
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 const initialState = {

@@ -1,6 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: [ "./src/**/*.{js,ts,jsx,tsx}"],
+  content: ["./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     fontFamily: {
       chewy: ["Chewy", "cursive"],
@@ -9,10 +9,14 @@ module.exports = {
     extend: {
       colors: {
         "red-main": "#E63E43",
+        "red-sub": "#F35D61",
+        "red-error": "#BF191E",
         "red-1": "#E25252",
         "gray-20": "#F8F4EB",
         "gray-50": "#EFE6E6",
         "gray-100": "#DFCCCC",
+        "yellow-sub": "#FFC542",
+        "green-sub": "#3ED598",
         "red-sub": "#F35D61",
         "red-error": "#BF191E",
         "primary-100": "#FFE1E0",

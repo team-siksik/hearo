@@ -3,7 +3,11 @@ import { Button, FavContents, GPTRecommend, Input } from "@/components";
 import { ReactComponent as Star } from "../../assets/Star.svg";
 import { ReactComponent as Send } from "../../assets/Send.svg";
 
-function ConversationFooter() {
+interface PropsType {
+  setNewMessage: React.Dispatch<React.SetStateAction<string>>;
+}
+
+function ConversationFooter({ setNewMessage }: PropsType) {
   const [openFavModal, setOpenFavModal] = useState<boolean>(false);
   const [openGPTModal, setOpenGPTModal] = useState<boolean>(false);
 
@@ -19,7 +23,8 @@ function ConversationFooter() {
   }
   function handleSendClick() {
     // 내가 input창의 내용 보내기 및 읽기
-    console.log(inputRef.current?.value);
+    const msg = inputRef.current?.value ?? "";
+    setNewMessage(msg);
     if (inputRef.current) {
       inputRef.current.value = "";
     }
@@ -38,23 +43,34 @@ function ConversationFooter() {
       e.preventDefault();
     }
   }
+  function handleSubmitEvent(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+  }
   return (
     <>
-      <div className="fixed bottom-0 w-full border-t-2 border-gray-300">
+      <div className="fixed bottom-0 z-10 h-12 w-full bg-white">
         <div className="my-2 flex w-full items-center px-4">
           <Button onClick={handleFavClick}>
             <Star />
           </Button>
-          <div className="mx-2 grow">
-            <Input
-              inputRef={inputRef}
-              type="InputFull"
-              onKeyDown={handleKeyDown}
-            />
-          </div>
-          <Button onClick={handleSendClick}>
-            <Send />
-          </Button>
+          <form
+            onSubmit={(e) => handleSubmitEvent(e)}
+            className="send-msg-form flex w-full items-center"
+          >
+            <label htmlFor="messageInput" hidden>
+              Enter Message
+            </label>
+            <div className="mx-2 grow">
+              <Input
+                inputRef={inputRef}
+                type="InputFull"
+                onKeyDown={handleKeyDown}
+              />
+            </div>
+            <Button onClick={handleSendClick}>
+              <Send />
+            </Button>
+          </form>
         </div>
       </div>
       {openFavModal ? <FavContents /> : null}

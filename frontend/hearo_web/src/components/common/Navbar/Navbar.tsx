@@ -1,25 +1,21 @@
 import React, {useState} from "react";
 import { useNavigate } from "react-router-dom";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/solid";
-import Test from "@/assets/headphone.png"
 import Test1 from "@/assets/Hearo_logo.png"
 import { AnimatePresence, motion, useCycle } from "framer-motion";
 import { SelectedPage } from "@/types/types";
+import { ClassNames } from "@emotion/react";
 
-// interface PropsType {
-//   children: React.ReactNode;
-// }
-
-type Props = {
+interface PropsType {
   selectedPage: SelectedPage;
   setSelectedPage: (value: SelectedPage) => void;
 }
 
-const Navbar = ({selectedPage, setSelectedPage }: Props) => {
+const Navbar = ({selectedPage, setSelectedPage }: PropsType) => {
   const navigate = useNavigate();
   const flexBetween = "flex items-center justify-between";
   const [isMenuToggled, setIsMenuToggled] = useState<boolean>(false);
-  const navbarBackground = "bg-primary-100 drop-shadow";
+  const navbarBackground = "z-10 bg-white drop-shadow";
   const links = [
     { name: "대화 시작하기", to: "comm", id:1},
     { name: "대화 참여하기", to: "comm", id:2},
@@ -31,8 +27,8 @@ const Navbar = ({selectedPage, setSelectedPage }: Props) => {
   const homeClick = () => {
     navigate('/');
   }
-  const handleSettingsClick = () => {
-    navigate('/settings');
+  const handleMypageClick = () => {
+    navigate('/mypage');
     setIsMenuToggled(false);
   };
 
@@ -41,12 +37,13 @@ const Navbar = ({selectedPage, setSelectedPage }: Props) => {
     setIsMenuToggled(false);
   };
 
+
   const sideVariants = {
     open: {
       transition: {
         duration:0.2,
       },
-      width: 250
+      width: 280
     },
     closed: {
       transition: {
@@ -73,7 +70,7 @@ const Navbar = ({selectedPage, setSelectedPage }: Props) => {
     <nav>
     {/* 고정나브바 */}
     <div
-      className={`${navbarBackground} ${flexBetween} fixed top-0 z-30 w-full py-2 bg-white`}
+      className={`${navbarBackground} ${flexBetween} fixed top-0 z-10 w-full py-2`}
       >
       <div className={`${flexBetween} mx-auto w-11/12`}>
         <div className={`${flexBetween} w-full gap-16`}>
@@ -96,10 +93,10 @@ const Navbar = ({selectedPage, setSelectedPage }: Props) => {
       <motion.aside
         initial={{width: 0}}
         animate={{
-          width: 250,
+          width: 412,
           transition: {
             duration:0.2
-          }
+          } 
         }}
         exit={{
           width: 0,
@@ -108,7 +105,7 @@ const Navbar = ({selectedPage, setSelectedPage }: Props) => {
           }
         }}>
           <motion.div 
-            className="fixed right-0 bottom-0 z-40 h-full w-[250px] bg-primary-100 drop-shadow-xl"
+            className="fixed right-0 bottom-0 z-40 h-full w-[280px] bg-primary-100 drop-shadow-xl"
             initial="closed"
             animate='open'
             exit='closed'
@@ -117,7 +114,7 @@ const Navbar = ({selectedPage, setSelectedPage }: Props) => {
             {/* CLOSE ICON */}
               <motion.div className="flex justify-end h-14 p-2" variants={itemVariants}>
                 <button
-                  className="rounded-full bg-white mt-1 mr-2 h-8 p-1"
+                  className="rounded-full bg-primary-100 mt-1 mr-2 h-8 p-1"
                   onClick={() => setIsMenuToggled(!isMenuToggled)}>
                     <XMarkIcon className="h-6 w-6 text-black" />
                 </button>
@@ -138,15 +135,34 @@ const Navbar = ({selectedPage, setSelectedPage }: Props) => {
            ))}
         </div>
         <motion.div 
-          className="mt-[120%] flex flex-col gap-3 text-lg"
+          className="mt-[100%] flex flex-col gap-3 text-lg"
           variants={itemVariants}
           >
-          <button onClick={handleSettingsClick}>환경설정</button>
+          <motion.div
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95}}
+            className="mt-[100%] flex flex-col gap-3 text-lg"
+            variants={itemVariants}
+            >
+          <button onClick={handleMypageClick}>내 정보 수정</button>
+          </motion.div>
+          <motion.div
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95}}
+            className="flex flex-col gap-3 text-lg"
+            variants={itemVariants}
+            >
           <button onClick={handleLogoutClick}>로그아웃</button>
+          </motion.div>
         </motion.div>
       </motion.div>
-
-
+      <motion.div
+        className="fixed z-30 w-full h-full bg-slate-950 bg-opacity-10 backdrop-blur-sm"
+        initial="closed"
+        animate='open'
+        exit='closed'
+        >
+      </motion.div>
       </motion.aside>
       )}
     </AnimatePresence>
