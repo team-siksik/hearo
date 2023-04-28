@@ -3,9 +3,10 @@ import React from "react";
 interface PropsType {
   type?: string;
   children: React.ReactNode;
-  onClick?: () => void;
+  onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
 }
 
+// TODO: 화자별로 색깔 다르게 분리해야 함
 function Dialog({ type, children, onClick }: PropsType) {
   return (
     <>
