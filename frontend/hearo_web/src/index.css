@@ -22,3 +22,20 @@ body,
   font-family: "DM Sans", sans-serif;
   @apply text-gray-950;
 }
+
+/* 캐러셀 좌우 화살표 */
+.slick-prev::before {
+  opacity: 1;
+  background-color: white;
+  border-radius: 100%;
+  font-size: 25px;
+  color: #e25252;
+}
+.slick-next::before {
+  opacity: 1;
+  background-color: white;
+  border-radius: 100%;
+  font-size: 25px;
+  color: #e25252;
+
+}
