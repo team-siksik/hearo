@@ -8,18 +8,19 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class AccountService {
 
-    private final AccountRepository userRepository;
+    private final AccountRepository accountRepository;
 
 
     public void signUp(UserDto userDto) throws Exception {
 
-        if (userRepository.findByEmail(userDto.getEmail()).isPresent()) {
+        if (accountRepository.findByEmail(userDto.getEmail()).isPresent()) {
             throw new Exception("이미 존재하는 이메일입니다.");
         }
 
@@ -28,9 +29,35 @@ public class AccountService {
                 .nickname(userDto.getUserName())
                 .imageUrl(userDto.getUserImageUrl())
                 .role(Role.USER)
+                .password(userDto.getPassword())
                 .delYn("0")
                 .build();
 
-        userRepository.save(account);
+        accountRepository.save(account);
+    }
+
+    public void withdraw(Account account) {
+        Account user = account.getUser();
+        user.withdraw();
+        accountRepository.save(user);
+    }
+
+    public List<Account> findAll() {
+        return accountRepository.findAll();
+    }
+
+    public void signOut(Account account) {
+        Account user = account.getUser();
+        user.signOut();
+        accountRepository.save(user);
+    }
+
+    public List<Account> searchEmail(String userEmail) {
+        List<Account> searchList = accountRepository.findByEmailContainingIgnoreCase(userEmail);
+        if (searchList.isEmpty()) {
+            throw new IllegalArgumentException("해당 이메일을 가진 유저가 없습니다.");
+        }
+        return searchList;
+
     }
 }

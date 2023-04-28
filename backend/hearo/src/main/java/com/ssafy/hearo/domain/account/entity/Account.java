@@ -34,14 +34,14 @@ public class Account {
     @Column(name = "del_yn", length = 1 , columnDefinition = "varchar(1) default '0'")
     @ColumnDefault("0")
     private String delYn;
-
+    private String password;
 
     private String socialId; // 로그인한 소셜 타입의 식별자 값 (일반 로그인인 경우 null)
 
     private String refreshToken; // 리프레시 토큰
 // builder
     @Builder
-    public Account(String email, String nickname, String imageUrl, Role role, String socialId, String refreshToken) {
+    public Account(String email, String nickname, String imageUrl, Role role, String socialId, String refreshToken, String password) {
         this.email = email;
         this.nickname = nickname;
         this.imageUrl = imageUrl;
@@ -49,6 +49,7 @@ public class Account {
         this.delYn = "0";
         this.socialId = socialId;
         this.refreshToken = refreshToken;
+        this.password = password;
     }
     // 유저 권한 설정 메소드
     public void authorizeUser() {
@@ -58,5 +59,17 @@ public class Account {
 
     public void updateRefreshToken(String updateRefreshToken) {
         this.refreshToken = updateRefreshToken;
+    }
+
+    public void withdraw() {
+        this.delYn = "1";
+    }
+
+    public Account getUser() {
+        return this;
+    }
+
+    public void signOut() {
+        this.refreshToken = null;
     }
 }
