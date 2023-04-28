@@ -1,7 +1,8 @@
 package com.ssafy.hearo.domain.account.service;
 
-import com.ssafy.hearo.domain.account.dto.UserDto;
+
 import com.ssafy.hearo.domain.account.entity.Account;
+import com.ssafy.hearo.domain.account.dto.AccountDto;
 import com.ssafy.hearo.domain.account.entity.Role;
 import com.ssafy.hearo.domain.account.repository.AccountRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +19,7 @@ public class AccountService {
     private final AccountRepository accountRepository;
 
 
-    public void signUp(UserDto userDto) throws Exception {
+    public void signUp(AccountDto userDto) throws Exception {
 
         if (accountRepository.findByEmail(userDto.getEmail()).isPresent()) {
             throw new Exception("이미 존재하는 이메일입니다.");
@@ -26,8 +27,8 @@ public class AccountService {
 
         Account account = Account.builder()
                 .email(userDto.getEmail())
-                .nickname(userDto.getUserName())
-                .imageUrl(userDto.getUserImageUrl())
+                .nickname(userDto.getName())
+                .imageUrl(userDto.getPicture())
                 .role(Role.USER)
                 .password(userDto.getPassword())
                 .delYn("0")
