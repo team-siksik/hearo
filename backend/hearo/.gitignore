@@ -4,6 +4,9 @@ build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
+application-google.yml
+application-jwt.yml
+application-mysql.yml
 
 ### STS ###
 .apt_generated

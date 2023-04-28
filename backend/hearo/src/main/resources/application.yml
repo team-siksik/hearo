@@ -1,16 +1,24 @@
 spring:
-  datasource:
-    url: jdbc:mysql://localhost:3306/hearo
-    username: hearo
-    password: 'hearo'
-    driver-class-name: com.mysql.cj.jdbc.Driver
+  profiles:
+    include:
+      - google
+      - jwt
+      - mysql
   jpa:
     hibernate:
-      ddl-auto: update  # ??? ?? ??
-    show-sql: true      # SQL ?? ??
+      ddl-auto: update
+    show-sql: true
     properties:
       hibernate:
-        format_sql: true  # SQL pretty print
+        format_sql: true
+    database: mysql
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
+logging:
+  level:
+    root: info
+    com:
+      example:
+        test: debug
