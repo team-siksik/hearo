@@ -138,7 +138,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
      * setAuthentication()을 이용하여 위에서 만든 Authentication 객체에 대한 인증 허가 처리
      */
     public void saveAuthentication(Account account) {
-        String password = account.getPassword();
+        String password = account.getUserPassword();
         if (password == null) { // 소셜 로그인 유저의 비밀번호 임의로 설정 하여 소셜 로그인 유저도 인증 되도록 설정
             password = PasswordUtil.generateRandomPassword();
         }
@@ -146,7 +146,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
         UserDetails userDetailsUser = org.springframework.security.core.userdetails.User.builder()
                 .username(account.getEmail())
                 .password(password)
-                .roles(account.getRole().name())
+                .roles(account.getUserRole().name())
                 .build();
 
         Authentication authentication =
