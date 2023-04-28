@@ -44,7 +44,8 @@ public class FrequentSentence {
     private Byte delYn;
 
     @Builder
-    public FrequentSentence(String sentence, Byte delYn) {
+    public FrequentSentence(Account account, String sentence, Byte delYn) {
+        this.account = account;
         this.sentence = sentence;
         this.delYn = delYn;
     }
