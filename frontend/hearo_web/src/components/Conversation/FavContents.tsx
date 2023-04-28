@@ -30,17 +30,18 @@ function FavContents() {
   }
   return (
     <Modal open={true} cannotExit={false}>
-      <h4>자주 쓰는 말</h4>
-      <div>
+      <h4 className="mb-3 text-lg font-bold">자주 쓰는 말</h4>
+      <div className="flex flex-col gap-3 ">
         {mockData.map((item) => {
           return (
-            <Button
-              type="contentBtn"
-              onClick={() => handleClick(item.content)}
-              key={item.id}
-            >
-              {item.content}
-            </Button>
+            <div className="flex justify-end" key={item.id}>
+              <Button
+                type="contentBtn"
+                onClick={() => handleClick(item.content)}
+              >
+                {item.content}
+              </Button>
+            </div>
           );
         })}
       </div>
