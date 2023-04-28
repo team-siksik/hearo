@@ -11,18 +11,15 @@ import Dialog from "../common/ui/Dialog";
  */
 const mockdata = {
   1: {
-    id: 1,
-    name: "참가자1",
+    speaker: "other1",
     content: "회의를 시작하겠습니다.",
   },
   2: {
-    id: 2,
-    name: "참가자2",
+    speaker: "other2",
     content: "네, 시작하시죠",
   },
   3: {
-    id: 3,
-    name: "참가자3",
+    speaker: "other3",
     content: "이번 주 실적이 어떻게 되시나요 다들?",
   },
 };
@@ -46,21 +43,35 @@ function ConversationBody({ message }: PropsType) {
       setId((prev) => prev + 1);
       setConversation((prevConversation) => [
         ...prevConversation,
-        { id: id, content: message, speaker: "user" },
+        { id: id + 1, content: message, speaker: "user" },
       ]);
+      setId((prev) => prev + 1);
+      if (id % 3 === 0) {
+        setConversation((prev) => [...prev, { id: id + 2, ...mockdata[2] }]);
+      } else if (id % 2 === 0) {
+        setConversation((prev) => [...prev, { id: id + 2, ...mockdata[3] }]);
+      } else {
+        setConversation((prev) => [...prev, { id: id + 2, ...mockdata[1] }]);
+      }
     }
+    console.log(conversation);
   }, [message]);
-  function handleDialogClick(value: string) {
-    console.log(value);
+
+  function handleDialogClick(e: React.MouseEvent<HTMLDivElement>) {
+    console.log(e.currentTarget.textContent);
+    //TODO: 여기에서 TTS 돌려야돼
   }
   return (
-    <section className="message-sec overflow-y-scroll">
+    <section
+      className="message-sec my-10 overflow-y-scroll"
+      style={{ height: "94vh" }}
+    >
       {conversation ? (
         <div>
           {conversation?.map((item) => {
             return (
               <Dialog
-                onClick={handleDialogClick(item.content)}
+                onClick={handleDialogClick}
                 key={item.id}
                 type={
                   item.speaker === "user"

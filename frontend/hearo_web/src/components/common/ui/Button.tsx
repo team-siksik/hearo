@@ -14,8 +14,8 @@ function Button({ type, children, onClick }: PropsType) {
           대화 종료
         </button>
       ) : // bg-white contentBtnbox-shadow btn
-      type === "" ? (
-        <button className="shadow-sm">{children}</button>
+      type === "contentBtn" ? (
+        <button className="rounded-xl px-4 py-1 shadow-md">{children}</button>
       ) : (
         <button onClick={onClick}>{children}</button>
       )}

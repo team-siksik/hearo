@@ -28,8 +28,8 @@ public class AccountService {
                 .email(userDto.getEmail())
                 .nickname(userDto.getUserName())
                 .imageUrl(userDto.getUserImageUrl())
-                .role(Role.USER)
-                .password(userDto.getPassword())
+                .userRole(Role.USER)
+                .userPassword(userDto.getPassword())
                 .delYn("0")
                 .build();
 

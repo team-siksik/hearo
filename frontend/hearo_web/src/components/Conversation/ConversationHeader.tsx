@@ -20,10 +20,7 @@ function ConversationHeader({ openModal, setOpenModal }: PropsType) {
     // navigate("/");
   }
   return (
-    <section
-      className="flex items-center justify-between text-center"
-      style={{ height: "5vh" }}
-    >
+    <section className="fixed top-0 flex h-12 w-full items-center justify-between bg-white text-center">
       <Button onClick={handleClick}>
         <Info />
       </Button>
