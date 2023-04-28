@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hearo_app/screens/archive/archive_home.dart';
 import 'package:hearo_app/screens/chats/chat_home.dart';
+import 'package:hearo_app/test/screen1.dart';
+import 'package:hearo_app/test/screen2.dart';
 import 'package:hearo_app/widgets/common/carousel_widget.dart';
 import 'package:hearo_app/widgets/common/custom_app_bar.dart';
 
@@ -129,7 +130,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       Container(
                         margin: const EdgeInsets.symmetric(horizontal: 20),
                         child: ElevatedButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              Get.to(() => Screen2());
+                            },
                             style: ElevatedButton.styleFrom(
                                 elevation: 4,
                                 minimumSize:
@@ -157,7 +160,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         margin: const EdgeInsets.symmetric(horizontal: 20),
                         child: ElevatedButton(
                             onPressed: () {
-                              Get.to(() => ArchiveHome());
+                              Get.to(() => Screen1());
                             },
                             style: ElevatedButton.styleFrom(
                                 elevation: 4,

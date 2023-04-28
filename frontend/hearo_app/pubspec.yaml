@@ -64,6 +64,13 @@ dependencies:
   bubble: ^1.2.1
   # 오토 사이즈 텍스트
   auto_size_text: ^3.0.0
+  # 반짝반짝
+  flutter_animate: ^4.1.1+1
+  # 겟 스토리지 로컬 저장소
+  get_storage: ^2.1.1
+  # 오디오 재생
+  audioplayers: ^4.0.1
+  flutter_sound: ^9.2.13
 
   
 dev_dependencies:
@@ -85,6 +92,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/images/
+    - assets/sounds/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
