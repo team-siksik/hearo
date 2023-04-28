@@ -7,8 +7,6 @@ import lombok.Getter;
 @Builder
 public class SignInResponseDto {
 
-    private boolean isProfile;
     private String accessToken;
-    private String refreshToken;
 
 }
