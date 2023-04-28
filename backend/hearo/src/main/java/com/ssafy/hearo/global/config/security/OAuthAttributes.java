@@ -57,7 +57,7 @@ public class OAuthAttributes {
                 .nickname(oauthUserInfo.getname())
                 .email(oauthUserInfo.getemail())
                 .imageUrl(oauthUserInfo.getImageUrl())
-                .role(Role.GUEST)
+                .userRole(Role.GUEST)
                 .delYn("0")
                 .build();
     }
