@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hearo_app/screens/home_screen.dart';
 import 'package:get/get.dart';
-import 'package:hearo_app/skills/text_to_speech.dart';
+import 'package:hearo_app/test/perm_test.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -20,7 +20,7 @@ class LoginScreen extends StatelessWidget {
           children: [
             GestureDetector(
                 onTap: () {
-                  Get.to(TextToSpeech());
+                  Get.to(PermTest());
                 },
                 child: SizedBox(
                     height: size.width * 0.6,
