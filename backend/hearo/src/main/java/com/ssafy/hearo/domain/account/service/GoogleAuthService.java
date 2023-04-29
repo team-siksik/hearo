@@ -5,6 +5,8 @@ import com.ssafy.hearo.domain.account.dto.response.SignInResponseDto;
 import com.ssafy.hearo.domain.account.entity.Account;
 import com.ssafy.hearo.domain.account.entity.Role;
 import com.ssafy.hearo.global.config.jwt.JwtService;
+import com.ssafy.hearo.global.error.code.CommonErrorCode;
+import com.ssafy.hearo.global.error.exception.ErrorException;
 import com.ssafy.hearo.global.error.exception.TokenNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -53,7 +55,7 @@ public class GoogleAuthService {
                 AccountDto user = objectMapper.readValue(response.getBody(), AccountDto.class);
 
                 // user가 이미 등록되어 있는지 확인
-                Optional<Account> existingUser = accountRepository.findByEmail(user.getEmail());
+                Optional<Account> existingUser = accountRepository.findByEmailAndDelYn(user.getEmail(), "0");
                 if (existingUser.isPresent()) {
                     Account account = existingUser.get();
                     account.setnickname(user.getName());
@@ -77,13 +79,13 @@ public class GoogleAuthService {
 
             } catch (IOException e) {
                 // JSON 파싱에 실패했을 경우 예외 처리
-                throw new RuntimeException("Failed to parse response from Google API", e);
+                throw new ErrorException(CommonErrorCode.RESOURCE_NOT_FOUND);
             }
         } else {
             // 에러가 발생한 경우 로그를 남기고 error 리턴
             // 이후 클라이언트에서 예외 처리를 해주어야 합니다.
             log.error("Failed to retrieve user info from Google API. Status code: {}", response.getStatusCode());
-            throw new TokenNotFoundException();
+            throw new ErrorException(CommonErrorCode.BAD_REQUEST);
         }
     }
 
