@@ -9,6 +9,10 @@ function Mypage() {
     navigate('/');
   }
 
+  const FavClick = () => {
+    navigate('/favcontents')
+  }
+
   return (
     <div> 
       <div className={`${mypagebarBackground} flex flex-row p-2.5 w-full h-full`}> 
@@ -28,7 +32,7 @@ function Mypage() {
         </div>
       </div>  
       <hr className="bg-black opacity-10 h-0.5 m-4"/>
-      <div className="p-3 flex flex-row justify-between">
+      <div onClick={FavClick} className="p-3 flex flex-row justify-between">
           <div className="flex flex-row pl-4 pr-4 text-2xl font-bold">
           <BookmarkIcon className="w-6 h-6 m-1 mr-2"/>
             자주쓰는 말
