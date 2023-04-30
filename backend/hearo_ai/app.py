@@ -1,49 +1,19 @@
-from flask import Flask, request, jsonify
-from flask_socketio import SocketIO, emit
+from flask import Flask
+from flask_socketio import SocketIO
 
-from ai_codes.genereate_sentence import *
-from ai_codes.sound_classification import *
-from ai_codes.speaker_diarization import *
+from events import socketio_init
+from routes import main as main_blueprint
 
-import os
 
+socketio = SocketIO(logger=True, engineio_logger=True)
 
 app = Flask(__name__)
-socketio = SocketIO(app, logger=True, engineio_logger=True)
+app.debug = True
+app.config['SECRET KEY'] = 'hearo manse'
 
-
-@app.route('/run/os')
-def check_os():
-    return os.name
-
-
-@app.route('/run/generate', methods=['POST'])
-def generate_sentence():
-    text = request.form['text']
-
-    # GPT 엔진 선택
-    engine = "text-davinci-002"
-    # engine = "gpt-3.5-turbo"
-
-    while True:
-        result = run_generate_sentence(text, engine)
-        if len(result) == 5:
-            break
-    
-    return jsonify(result)
-
-
-@app.route('/run/sound', methods=['POST'])
-def sound_classification():
-    result = True
-    return jsonify(result)
-
-
-@app.route('/run/speaker', methods=['POST'])
-def speaker_diarization():
-    result = True
-    return jsonify(result)
-
+socketio.init_app(app)
+socketio_init(socketio)  # for Socket
+app.register_blueprint(main_blueprint)  # for HTTP
 
 if __name__ == '__main__':
-    socketio.run(app, host='0.0.0.0', port=8090, debug=True)
+    socketio.run(app, host='0.0.0.0', port=8090)
