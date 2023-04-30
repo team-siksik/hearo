@@ -6,6 +6,9 @@ import {
   MainPage,
   RecordsPage,
   MyPage,
+  FavContentsPage,
+  SettingsPage,
+  AgainPage,
 } from "./pages";
 
 function App() {
@@ -17,6 +20,9 @@ function App() {
         <Route path="/comm" element={<ConversationPage />} />
         <Route path="/records" element={<RecordsPage />} />
         <Route path="/mypage" element={<MyPage />} />
+        <Route path="/favcontents" element={<FavContentsPage />} />
+        <Route path="/settings" element={<SettingsPage />} />
+        <Route path="/again" element={<AgainPage/>} />
         <Route path="/login/oauth2/code/google" element={<Google />} />
       </Routes>
     </div>
