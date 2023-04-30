@@ -13,6 +13,14 @@ function Mypage() {
     navigate('/favcontents')
   }
 
+  const SettingClick = () => {
+    navigate('/settings')
+  }
+
+  const AgainClick = () => {
+    navigate('/again')
+  }
+  
   return (
     <div> 
       <div className={`${mypagebarBackground} flex flex-row p-2.5 w-full h-full`}> 
@@ -40,7 +48,7 @@ function Mypage() {
           <ChevronRightIcon className="w-6 h-6 m-1"/>
       </div>
       <hr className="bg-black opacity-20 h-0.5 m-4"/>
-      <div className="p-3 flex flex-row justify-between">
+      <div onClick={SettingClick} className="p-3 flex flex-row justify-between">
           <div className="flex flex-row pl-4 pr-4 text-2xl font-bold">
           <Cog6ToothIcon className="w-6 h-6 m-1 mr-2"/>
             환경설정
@@ -48,7 +56,7 @@ function Mypage() {
           <ChevronRightIcon className="w-6 h-6 m-1"/>
       </div>
       <hr className="bg-black opacity-10 h-0.5 m-4"/>
-      <div className="p-3 flex flex-row justify-between">
+      <div onClick={AgainClick} className="p-3 flex flex-row justify-between">
           <div className="flex flex-row pl-4 pr-4 text-2xl font-bold">
           <InformationCircleIcon className="w-6 h-6 m-1 mr-2"/>
             튜토리얼 다시보기
