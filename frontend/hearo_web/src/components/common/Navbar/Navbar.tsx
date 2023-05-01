@@ -4,7 +4,11 @@ import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/solid";
 import Test1 from "@/assets/Hearo_logo.png"
 import { AnimatePresence, motion, useCycle } from "framer-motion";
 import { SelectedPage } from "@/types/types";
-import { ClassNames } from "@emotion/react";
+import { ReactComponent as Start } from "@/assets/start_conver.svg";
+import { ReactComponent as Join } from "@/assets/join_conver.svg";
+import { ReactComponent as Check } from "@/assets/check_conver.svg";
+import { ReactComponent as SettingIcon} from "@/assets/SettingIcon.svg";
+import { ReactComponent as LogoutIcon} from "@/assets/LogoutIcon.svg";
 
 interface PropsType {
   selectedPage: SelectedPage;
@@ -16,10 +20,12 @@ const Navbar = ({selectedPage, setSelectedPage }: PropsType) => {
   const flexBetween = "flex items-center justify-between";
   const [isMenuToggled, setIsMenuToggled] = useState<boolean>(false);
   const navbarBackground = "z-10 bg-white drop-shadow";
+
+
   const links = [
-    { name: "대화 시작하기", to: "comm", id:1},
-    { name: "대화 참여하기", to: "comm", id:2},
-    { name: "기록 확인하기", to: "records", id:3},
+    { image: <Start width={100} height={100}/>,  name: "대화 시작하기", to: "comm", id:1},
+    { image: <Join width={100} height={100} />, name: "대화 참여하기", to: "comm", id:2},
+    { image: <Check width={100} height={100}/>, name: "기록 확인하기", to: "records", id:3},
     // 로그아웃 만들어야 함
     // { name: "대화 시작하기", to: "records", id:4}
   ]
@@ -105,7 +111,7 @@ const Navbar = ({selectedPage, setSelectedPage }: PropsType) => {
           }
         }}>
           <motion.div 
-            className="fixed right-0 bottom-0 z-40 h-full w-[280px] bg-primary-100 drop-shadow-xl"
+            className="fixed right-0 bottom-0 z-40 h-full w-[280px] bg-white drop-shadow-xl"
             initial="closed"
             animate='open'
             exit='closed'
@@ -114,15 +120,16 @@ const Navbar = ({selectedPage, setSelectedPage }: PropsType) => {
             {/* CLOSE ICON */}
               <motion.div className="flex justify-end h-14 p-2" variants={itemVariants}>
                 <button
-                  className="rounded-full bg-primary-100 mt-1 mr-2 h-8 p-1"
+                  className="rounded-full bg-white mt-1 mr-2 h-8 p-1"
                   onClick={() => setIsMenuToggled(!isMenuToggled)}>
                     <XMarkIcon className="h-6 w-6 text-black" />
                 </button>
               </motion.div>
 
-        {/* MENU ITEMS */}
-        <div className="mt-[5%] ml-[25%] flex flex-col gap-10 text-2xl">
-          {links.map(({ name, to, id }) => (
+
+        {/* Navbar 메뉴 */}
+        <div className="mt-[10%] mx-[5%] flex flex-col gap-5">
+          {links.map(({ image, name, to, id }) => (
             <motion.a
               key={id}
               href={to}
@@ -130,32 +137,38 @@ const Navbar = ({selectedPage, setSelectedPage }: PropsType) => {
               whileTap={{ scale: 0.95}}
               variants={itemVariants}
               >
-              {name}
+            <div className="flex flex-row w-full space-x-12"> 
+              <span className="w-6 h-6">{image}</span>
+              <span className="text-2xl font-bold w-full h-28 pl-10 py-4 pt-10">{name}</span>
+            </div>
             </motion.a>
            ))}
         </div>
         <motion.div 
-          className="mt-[100%] flex flex-col gap-3 text-lg"
+          className="flex flex-col gap-3 text-lg"
           variants={itemVariants}
           >
           <motion.div
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95}}
-            className="mt-[100%] flex flex-col gap-3 text-lg"
+            className="mt-[115%] mx-[25%] flex flex-row gap-3 text-lg"
             variants={itemVariants}
             >
+          <SettingIcon className="h-6 w-6"/>
           <button onClick={handleMypageClick}>내 정보 수정</button>
           </motion.div>
           <motion.div
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95}}
-            className="flex flex-col gap-3 text-lg"
+            className="flex mx-[25%] flex-row gap-3 text-lg"
             variants={itemVariants}
             >
-          <button onClick={handleLogoutClick}>로그아웃</button>
+            <LogoutIcon className="h-6 w-6"/>
+            <button onClick={handleLogoutClick}>로그아웃</button>
           </motion.div>
         </motion.div>
       </motion.div>
+      {/* 뒷배경 흐리게 */}
       <motion.div
         className="fixed z-30 w-full h-full bg-slate-950 bg-opacity-10 backdrop-blur-sm"
         initial="closed"
