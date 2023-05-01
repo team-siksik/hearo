@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hearo_app/controller/login_controller.dart';
 import 'package:hearo_app/screens/chats/chat_home.dart';
 import 'package:hearo_app/test/screen1.dart';
 import 'package:hearo_app/test/screen2.dart';
@@ -14,10 +15,12 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  LoginController loginController = Get.put(LoginController());
   DateTime? firstPress;
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    print(loginController.loginData);
 
     return WillPopScope(
       onWillPop: onWillPop,
@@ -31,13 +34,13 @@ class _HomeScreenState extends State<HomeScreen> {
               // 안녕하세요 ~ 환영해요 부분
               SizedBox(
                 width: size.width,
-                child: const Padding(
+                child: Padding(
                   padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "안녕하세요, 홍나훈님",
+                        "안녕하세요, ${loginController.loginData[0]["nickname"]}님",
                         style: TextStyle(
                             fontSize: 18, fontWeight: FontWeight.w600),
                       ),
