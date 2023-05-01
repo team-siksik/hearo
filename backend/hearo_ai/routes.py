@@ -12,11 +12,27 @@ main = Blueprint('main', __name__, url_prefix='/')
 
 @main.route('/', methods=['GET', 'POST'])
 def index():
-    if request.method == 'POST':
-        session['name'] = request.form['name']
-        session['room'] = request.form['room']
-        return redirect(url_for('main.chat'))
-    return render_template('index.html')
+    if request.method == 'GET':
+        return render_template('index.html')
+    
+    username = request.form['username']
+    room_type = request.form['room_type']
+    room_name = session['username'] + '-' + request.form['room']
+
+    session['username'] = username
+    session['room'] = room_name
+
+    if room_type == 'sd':
+        pass #sl, sc
+
+    return redirect(url_for('main.conversation'))
+
+
+@main.route('/conversation')
+def conversation():
+    name = session.get('name', '')
+    room = session.get('room', '')
+    return render_template('conversation.html', name=name, room=room)
 
 
 @main.route('/chat')
@@ -25,7 +41,7 @@ def chat():
     room = session.get('room', '')
     if name == '' or room == '':
         return redirect(url_for('.index'))
-    return render_template('chat.html', name=name, room=room)
+    return render_template('conversation.html', name=name, room=room)
 
 
 @main.route('/run/os')
