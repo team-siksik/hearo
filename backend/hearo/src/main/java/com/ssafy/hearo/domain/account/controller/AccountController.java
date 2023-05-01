@@ -37,6 +37,7 @@ public class AccountController {
 
     @GetMapping("/jwt-test")
     public String jwtTest(@LoginUser Account account) {
+        log.info(String.valueOf(account));
         return "jwtTest 요청 성공";
     }
 
