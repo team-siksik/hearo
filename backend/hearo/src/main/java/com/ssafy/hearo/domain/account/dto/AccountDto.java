@@ -9,9 +9,13 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class UserDto {
+public class AccountDto {
+    private String id;
     private String email;
-    private String userName;
-    private String userImageUrl;
+    private String name;
+    private String picture;
     private String password;
+    private Boolean verified_email;
+    private String locale;
+    private String given_name;
 }

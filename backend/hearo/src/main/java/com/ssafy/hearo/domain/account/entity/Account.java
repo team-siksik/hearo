@@ -59,11 +59,6 @@ public class Account {
         this.userRole = Role.USER;
     }
 
-
-    public void updateRefreshToken(String updateRefreshToken) {
-        this.refreshToken = updateRefreshToken;
-    }
-
     public void withdraw() {
         this.delYn = "1";
     }
@@ -74,5 +69,17 @@ public class Account {
 
     public void signOut() {
         this.refreshToken = null;
+    }
+
+    public void setRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
+
+    public void setnickname(String name) {
+        this.nickname = name;
+    }
+
+    public void setImageUrl(String picture) {
+        this.imageUrl = picture;
     }
 }
