@@ -1,6 +1,8 @@
 package com.ssafy.hearo.domain.account.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.*;
@@ -16,6 +18,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @DynamicInsert
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "user_seq")
 @Table(name = "user")
 public class Account {
 
@@ -25,40 +28,38 @@ public class Account {
     private Long userSeq;
 
     private String email; // 이메일
+
     private String nickname; // 닉네임
+
     private String imageUrl; // 프로필 이미지
 
     @Enumerated(EnumType.STRING)
-    private Role role;
+    private Role userRole;
 
-    @Column(name = "del_yn", length = 1 , columnDefinition = "varchar(1) default '0'")
-    @ColumnDefault("0")
-    private String delYn;
-    private String password;
+    private String userPassword;
 
     private String socialId; // 로그인한 소셜 타입의 식별자 값 (일반 로그인인 경우 null)
 
     private String refreshToken; // 리프레시 토큰
-// builder
+
+    @Column(name = "del_yn", length = 1 , columnDefinition = "varchar(1) default '0'")
+    @ColumnDefault("0")
+    private String delYn;
+
     @Builder
-    public Account(String email, String nickname, String imageUrl, Role role, String socialId, String refreshToken, String password) {
+    public Account(String email, String nickname, String imageUrl, Role userRole, String socialId, String refreshToken, String userPassword) {
         this.email = email;
         this.nickname = nickname;
         this.imageUrl = imageUrl;
-        this.role = role;
+        this.userRole = userRole;
         this.delYn = "0";
         this.socialId = socialId;
         this.refreshToken = refreshToken;
-        this.password = password;
+        this.userPassword = userPassword;
     }
     // 유저 권한 설정 메소드
     public void authorizeUser() {
-        this.role = Role.USER;
-    }
-
-
-    public void updateRefreshToken(String updateRefreshToken) {
-        this.refreshToken = updateRefreshToken;
+        this.userRole = Role.USER;
     }
 
     public void withdraw() {
@@ -71,5 +72,17 @@ public class Account {
 
     public void signOut() {
         this.refreshToken = null;
+    }
+
+    public void setRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
+
+    public void setnickname(String name) {
+        this.nickname = name;
+    }
+
+    public void setImageUrl(String picture) {
+        this.imageUrl = picture;
     }
 }
