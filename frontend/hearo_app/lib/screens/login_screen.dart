@@ -4,7 +4,6 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hearo_app/apis/login_api.dart';
 import 'package:hearo_app/screens/home_screen.dart';
 import 'package:get/get.dart';
-import 'package:hearo_app/test/perm_test.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -51,7 +50,8 @@ class _LoginScreenState extends State<LoginScreen> {
           children: [
             GestureDetector(
                 onTap: () {
-                  Get.to(PermTest());
+                  // Get.to(PermTest());
+                  tryLogin();
                 },
                 child: SizedBox(
                     height: size.width * 0.6,
@@ -225,6 +225,28 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
+  Future tryLogin() async {
+    GoogleSignIn googleSignIn = GoogleSignIn(
+      scopes: <String>[
+        'email',
+        // 'accessToken',
+      ],
+    );
+
+    try {
+      var data = await googleSignIn.signIn();
+      print(data);
+      print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+      // Navigator.push(
+      //   context,
+      //   MaterialPageRoute(builder: (context) => Login(data.displayName)),
+      // );
+    } catch (error) {
+      print(error);
+      print("^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+    }
+  }
+
   loginWithGoogle() async {
     // Trigger the authentication flow
     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
@@ -239,13 +261,12 @@ class _LoginScreenState extends State<LoginScreen> {
         accessToken: googleAuth?.accessToken,
         idToken: googleAuth?.idToken,
       );
-      await FirebaseAuth.instance.signInWithCredential(credential);
-      print("@@@@@@@@@@토큰@@@@@@@@@");
       print(credential);
       // Once signed in, return the UserCredential
       sendToken(credential.accessToken);
     } catch (e) {
       print(e);
+      print('에러에러에러에러에러에러에러에러에러');
     }
   }
 }
