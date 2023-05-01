@@ -1,5 +1,6 @@
 package com.ssafy.hearo.domain.account.dto.response;
 
+import com.ssafy.hearo.domain.account.entity.Role;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -7,8 +8,11 @@ import lombok.Getter;
 @Builder
 public class SignInResponseDto {
 
-    private boolean isProfile;
     private String accessToken;
-    private String refreshToken;
+    private String nickname;
+    private String email;
+    private String profileImg;
+    private String delYn;
+    private Role role;
 
 }
