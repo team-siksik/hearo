@@ -11,6 +11,7 @@ import com.ssafy.hearo.domain.conversation.repository.KeywordSentenceRepository;
 import com.ssafy.hearo.domain.conversation.repository.RoomRepository;
 import com.ssafy.hearo.domain.conversation.service.ConversationService;
 import com.ssafy.hearo.global.error.code.CommonErrorCode;
+import com.ssafy.hearo.global.error.code.ConversationErrorCode;
 import com.ssafy.hearo.global.error.exception.ErrorException;
 import com.ssafy.hearo.global.util.DateUtil;
 import lombok.RequiredArgsConstructor;
@@ -95,6 +96,11 @@ public class ConversationServiceImpl implements ConversationService {
     @Override
     public RoomResponseDto startConversation(Account account) {
         log.info("[startConversation] 대화 시작 시작");
+        List<Room> userRoomList = roomRepository.findByAccountAndEndDtmIsNull(account);
+        if (userRoomList.size() > 0) {
+            throw new ErrorException(ConversationErrorCode.ROOM_EXIST);
+        }
+        log.info("[startConversation] 진행 중 대화 존재 여부 검증 완료");
         Room room = Room.builder()
                 .account(account)
                 .build();
@@ -111,8 +117,11 @@ public class ConversationServiceImpl implements ConversationService {
     @Override
     public RoomResponseDto endConversation(Account account, long roomSeq) {
         log.info("[endConversation] 대화 종료 시작");
-        Room room = roomRepository.findByAccountAndRoomSeq(account, roomSeq)
-                .orElseThrow(() -> new ErrorException(CommonErrorCode.BAD_REQUEST));
+        roomRepository.findByAccountAndRoomSeq(account, roomSeq)
+                .orElseThrow(() -> new ErrorException(ConversationErrorCode.ROOM_NOT_VALID));
+        Room room = roomRepository.findByAccountAndRoomSeqAndEndDtmIsNull(account, roomSeq)
+                .orElseThrow(() -> new ErrorException(ConversationErrorCode.ROOM_NOT_EXIST));
+        log.info("[endConversation] 종료할 대화 존재 여부 검증 완료");
         room.end(new Timestamp(System.currentTimeMillis()));
 
         RoomResponseDto result = RoomResponseDto.builder()
