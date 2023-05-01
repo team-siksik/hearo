@@ -1,12 +1,43 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:hearo_app/apis/login_api.dart';
 import 'package:hearo_app/screens/home_screen.dart';
 import 'package:get/get.dart';
 import 'package:hearo_app/test/perm_test.dart';
+import 'package:permission_handler/permission_handler.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+void sendToken(data) {
+  // accessToken 값을 전달하고, sendAccessTokenToBackend 함수를 호출합니다.
+  final accessToken = data;
+  loginApi(accessToken);
+}
+
+getPermissionAudio() async {
+  var statusMicrophone = await Permission.microphone.status;
+  if (statusMicrophone.isGranted) {
+    print('허락됨2microphone');
+  } else if (statusMicrophone.isDenied) {
+    print('거절됨2microphone');
+    Permission.microphone.request();
+  }
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  @override
+  void initState() {
+    super.initState();
+    // getPermissionCamera();
+    getPermissionAudio();
+    // getPermission();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +45,7 @@ class LoginScreen extends StatelessWidget {
     return Scaffold(
       body: Container(
         width: size.width,
-        padding: const EdgeInsets.only(top: 100, left: 15),
+        padding: const EdgeInsets.only(top: 120, left: 15),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -41,13 +72,42 @@ class LoginScreen extends StatelessWidget {
                 ),
               ],
             ),
-            // 환영 모달
-            TextButton(
-                onPressed: () {
-                  signInWithGoogle();
-                },
-                child: Text("로그인")),
-            welcomeModal(context, size)
+            GestureDetector(
+              onTap: () => loginWithGoogle(),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: const BorderRadius.all(Radius.circular(24)),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.transparent.withOpacity(0.25),
+                      spreadRadius: 0,
+                      blurRadius: 1.0,
+                      offset: const Offset(0, 2), // changes position of shadow
+                    ),
+                  ],
+                ),
+                width: 300,
+                padding: const EdgeInsets.only(
+                    left: 30, top: 6, bottom: 6, right: 30),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    SizedBox(
+                      width: 50,
+                      height: 50,
+                      child: Image.asset("assets/images/googlelogo1.png"),
+                    ),
+                    const Text(
+                      "구글아이디로 로그인",
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+                    )
+                  ],
+                ),
+              ),
+            ),
+            // welcomeModal(context, size)
           ],
         ),
       ),
@@ -165,7 +225,7 @@ class LoginScreen extends StatelessWidget {
     );
   }
 
-  Future<UserCredential> signInWithGoogle() async {
+  loginWithGoogle() async {
     // Trigger the authentication flow
     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
@@ -174,13 +234,18 @@ class LoginScreen extends StatelessWidget {
         await googleUser?.authentication;
 
     // Create a new credential
-    final credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth?.accessToken,
-      idToken: googleAuth?.idToken,
-    );
-    print("@@@@@@@@@@토큰@@@@@@@@@");
-    print(credential);
-    // Once signed in, return the UserCredential
-    return await FirebaseAuth.instance.signInWithCredential(credential);
+    try {
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth?.accessToken,
+        idToken: googleAuth?.idToken,
+      );
+      await FirebaseAuth.instance.signInWithCredential(credential);
+      print("@@@@@@@@@@토큰@@@@@@@@@");
+      print(credential);
+      // Once signed in, return the UserCredential
+      sendToken(credential.accessToken);
+    } catch (e) {
+      print(e);
+    }
   }
 }
