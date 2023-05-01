@@ -4,10 +4,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.hearo.domain.account.dto.response.SignInResponseDto;
 import com.ssafy.hearo.domain.account.entity.Account;
 import com.ssafy.hearo.domain.account.entity.Role;
+import com.ssafy.hearo.domain.setting.entity.Setting;
+import com.ssafy.hearo.domain.setting.repository.SettingRepository;
 import com.ssafy.hearo.global.config.jwt.JwtService;
 import com.ssafy.hearo.global.error.code.CommonErrorCode;
 import com.ssafy.hearo.global.error.exception.ErrorException;
-import com.ssafy.hearo.global.error.exception.TokenNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,7 @@ import org.springframework.http.HttpEntity;
 public class GoogleAuthService {
 
     private final AccountRepository accountRepository;
+    private final SettingRepository settingRepository;
 
     @Autowired
     private JwtService jwtService;
@@ -71,7 +73,13 @@ public class GoogleAuthService {
                             .delYn("0")
                             .build();
                     accountRepository.save(account);
+
+                    Setting setting = Setting.builder()
+                            .account(account)
+                            .build();
+                    settingRepository.save(setting);
                 }
+
                 String Jwt = jwtService.login(user.getEmail());
                 log.info("Jwt : {}", Jwt);
                 Optional<Account> account = accountRepository.findByEmail(user.getEmail());
