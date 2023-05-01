@@ -58,7 +58,7 @@ public class ConversationController {
                 .body(responseService.getSingleResult(result));
     }
 
-    @PutMapping("/conversation/room/{roomSeq}/close")
+    @PutMapping("/room/{roomSeq}/close")
     public ResponseEntity<Result> endConversation(@LoginUser Account account, @PathVariable long roomSeq) {
         log.info("[endConversation] 대화 종료 API 호출");
         RoomResponseDto result = conversationService.endConversation(account, roomSeq);

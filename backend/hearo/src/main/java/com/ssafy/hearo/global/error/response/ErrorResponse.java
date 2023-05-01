@@ -1,4 +1,4 @@
-package com.ssafy.hearo.global.error;
+package com.ssafy.hearo.global.error.response;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -11,6 +11,5 @@ public class ErrorResponse {
     private final String code;
     private final String error;
     private final String message;
-
 }
 
