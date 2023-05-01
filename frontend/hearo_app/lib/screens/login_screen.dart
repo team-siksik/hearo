@@ -13,12 +13,6 @@ class LoginScreen extends StatefulWidget {
   State<LoginScreen> createState() => _LoginScreenState();
 }
 
-void sendToken(data) {
-  // accessToken 값을 전달하고, sendAccessTokenToBackend 함수를 호출합니다.
-  final accessToken = data;
-  loginApi(accessToken);
-}
-
 getPermissionAudio() async {
   var statusMicrophone = await Permission.microphone.status;
   if (statusMicrophone.isGranted) {
@@ -50,8 +44,7 @@ class _LoginScreenState extends State<LoginScreen> {
           children: [
             GestureDetector(
                 onTap: () {
-                  // Get.to(PermTest());
-                  tryLogin();
+                  showSuccessModal(context, size);
                 },
                 child: SizedBox(
                     height: size.width * 0.6,
@@ -73,7 +66,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ],
             ),
             GestureDetector(
-              onTap: () => loginWithGoogle(),
+              onTap: () => loginWithGoogle(context, size),
               child: Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -115,139 +108,83 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   // 환영 모달
-  GestureDetector welcomeModal(BuildContext context, Size size) {
-    return GestureDetector(
-      onTap: () {
-        showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return Dialog(
-                shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(20))),
-                child: SizedBox(
-                    height: size.width * 0.55,
-                    width: size.width * 0.8,
-                    child: Padding(
-                      padding: const EdgeInsets.only(
-                          top: 30, bottom: 30, left: 20, right: 20),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  void showSuccessModal(BuildContext context, Size size) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Dialog(
+            shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(20))),
+            child: SizedBox(
+                height: size.width * 0.55,
+                width: size.width * 0.8,
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                      top: 30, bottom: 30, left: 20, right: 20),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        "히어로에 오신 것을 환영합니다.",
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                            fontSize: 22, fontWeight: FontWeight.w700),
+                      ),
+                      const Column(
                         children: [
-                          const Text(
-                            "히어로에 오신 것을 환영합니다.",
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                                fontSize: 22, fontWeight: FontWeight.w700),
-                          ),
-                          const Column(
-                            children: [
-                              SizedBox(
-                                height: 20,
-                              ),
-                              Text(
-                                "상대를 초대해서",
-                                style: TextStyle(
-                                  fontSize: 18,
-                                ),
-                              ),
-                              Text(
-                                "대화를 시작해 보세요!",
-                                style: TextStyle(
-                                  fontSize: 18,
-                                ),
-                              ),
-                            ],
-                          ),
                           SizedBox(
-                            width: 250,
-                            child: ElevatedButton(
-                                style: const ButtonStyle(
-                                    iconSize: MaterialStatePropertyAll(20),
-                                    backgroundColor: MaterialStatePropertyAll(
-                                        Color(0xffe63e43)),
-                                    shape: MaterialStatePropertyAll(
-                                        RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(10))))),
-                                onPressed: () {
-                                  Get.to(() => HomeScreen());
-                                },
-                                child: const Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      "시작하기",
-                                      style: TextStyle(fontSize: 20),
-                                    ),
-                                    SizedBox(
-                                      width: 20,
-                                    ),
-                                    Icon(Icons.arrow_forward)
-                                  ],
-                                )),
-                          )
+                            height: 20,
+                          ),
+                          Text(
+                            "상대를 초대해서",
+                            style: TextStyle(
+                              fontSize: 18,
+                            ),
+                          ),
+                          Text(
+                            "대화를 시작해 보세요!",
+                            style: TextStyle(
+                              fontSize: 18,
+                            ),
+                          ),
                         ],
                       ),
-                    )),
-              );
-            });
-      },
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: const BorderRadius.all(Radius.circular(24)),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.transparent.withOpacity(0.25),
-              spreadRadius: 0,
-              blurRadius: 1.0,
-              offset: const Offset(0, 2), // changes position of shadow
-            ),
-          ],
-        ),
-        width: 300,
-        padding: const EdgeInsets.only(left: 30, top: 6, bottom: 6, right: 30),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            SizedBox(
-              width: 50,
-              height: 50,
-              child: Image.asset("assets/images/googlelogo1.png"),
-            ),
-            const Text(
-              "구글아이디로 로그인",
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
-            )
-          ],
-        ),
-      ),
-    );
+                      SizedBox(
+                        width: 250,
+                        child: ElevatedButton(
+                            style: const ButtonStyle(
+                                iconSize: MaterialStatePropertyAll(20),
+                                backgroundColor:
+                                    MaterialStatePropertyAll(Color(0xffe63e43)),
+                                shape: MaterialStatePropertyAll(
+                                    RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(10))))),
+                            onPressed: () {
+                              Get.to(() => HomeScreen());
+                            },
+                            child: const Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  "시작하기",
+                                  style: TextStyle(fontSize: 20),
+                                ),
+                                SizedBox(
+                                  width: 20,
+                                ),
+                                Icon(Icons.arrow_forward)
+                              ],
+                            )),
+                      )
+                    ],
+                  ),
+                )),
+          );
+        });
   }
 
-  Future tryLogin() async {
-    GoogleSignIn googleSignIn = GoogleSignIn(
-      scopes: <String>[
-        'email',
-        // 'accessToken',
-      ],
-    );
-
-    try {
-      var data = await googleSignIn.signIn();
-      print(data);
-      print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-      // Navigator.push(
-      //   context,
-      //   MaterialPageRoute(builder: (context) => Login(data.displayName)),
-      // );
-    } catch (error) {
-      print(error);
-      print("^^^^^^^^^^^^^^^^^^^^^^^^^^^");
-    }
-  }
-
-  loginWithGoogle() async {
+  loginWithGoogle(context, size) async {
     // Trigger the authentication flow
     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
@@ -263,10 +200,20 @@ class _LoginScreenState extends State<LoginScreen> {
       );
       print(credential);
       // Once signed in, return the UserCredential
-      sendToken(credential.accessToken);
+      final data = sendToken(context, size, credential.accessToken);
+      return data;
     } catch (e) {
       print(e);
       print('에러에러에러에러에러에러에러에러에러');
+    }
+  }
+
+  Future sendToken(context, size, data) async {
+    // accessToken 값을 전달하고, sendAccessTokenToBackend 함수를 호출합니다.
+    final accessToken = data;
+    final flag = await loginApi(accessToken);
+    if (flag == true) {
+      showSuccessModal(context, size);
     }
   }
 }

@@ -1,11 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hearo_app/controller/login_controller.dart';
 import 'package:hearo_app/screens/mysettings/favorite_say.dart';
 import 'package:hearo_app/screens/mysettings/setting_screen.dart';
 import 'package:hearo_app/widgets/common/custom_app_bar_inner.dart';
 
-class SettingHome extends StatelessWidget {
-  const SettingHome({super.key});
+class SettingHome extends StatefulWidget {
+  SettingHome({super.key});
+
+  @override
+  State<SettingHome> createState() => _SettingHomeState();
+}
+
+class _SettingHomeState extends State<SettingHome> {
+  LoginController loginController = Get.put(LoginController());
 
   @override
   Widget build(BuildContext context) {
@@ -17,17 +25,27 @@ class SettingHome extends StatelessWidget {
         width: size.width,
         child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
           Flexible(
+              flex: 2,
+              child: ClipOval(
+                child: Image.network(
+                  loginController.loginData[0]["profileImg"],
+                  fit: BoxFit.cover,
+                  width: 100,
+                  height: 100,
+                ),
+              )),
+          Flexible(
             flex: 6,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Text(
-                  "홍나훈",
+                  loginController.loginData[0]["nickname"],
                   style: TextStyle(fontSize: 24, fontWeight: FontWeight.w700),
                 ),
                 Container(
                     padding: EdgeInsets.only(top: 10, bottom: 25),
-                    child: Text("kimnaboog12@gmail.com",
+                    child: Text(loginController.loginData[0]["email"],
                         style: TextStyle(fontSize: 16))),
                 GestureDetector(
                   onTap: () {
