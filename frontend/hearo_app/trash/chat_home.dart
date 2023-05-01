@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hearo_app/controller/chat_coltroller.dart';
+import 'package:hearo_app/controller/chat_controller.dart';
 import 'package:hearo_app/widgets/chats/custom_app_bar_chat.dart';
 import 'package:hearo_app/widgets/chats/speech_bubble.dart';
 import 'package:wakelock/wakelock.dart';
