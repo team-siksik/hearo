@@ -32,10 +32,7 @@ public class SettingServiceImpl implements SettingService {
     @Override
     public SettingInfoResponseDto getSetting(Account account) {
         log.info("[getSetting] 설정 조회 시작");
-        log.info(String.valueOf(account.getUserSeq()));
-        log.info(String.valueOf(settingRepository.findAll()));
-        log.info(String.valueOf(settingRepository.findById(account.getUserSeq())));
-        Setting setting = settingRepository.findById(account.getUserSeq())
+        Setting setting = settingRepository.findByAccount(account)
                         .orElseThrow(() -> new ErrorException(CommonErrorCode.RESOURCE_NOT_FOUND));
         log.info("[getSetting] 설정 조회 완료");
         return SettingInfoResponseDto.builder()
@@ -49,8 +46,8 @@ public class SettingServiceImpl implements SettingService {
     @Override
     public void modifySetting(Account account, ModifySettingRequestDto requestDto) {
         log.info("[modifySetting] 설정 수정 시작");
-        Setting setting = settingRepository.findById(account.getUserSeq())
-                .orElseThrow(() -> new ErrorException(CommonErrorCode.BAD_REQUEST));
+        Setting setting = settingRepository.findByAccount(account)
+                .orElseThrow(() -> new ErrorException(CommonErrorCode.RESOURCE_NOT_FOUND));
         byte fontSize = requestDto.getFontSize();
         byte voiceSetting = requestDto.getVoiceSetting();
         setting.modify(fontSize, voiceSetting);
@@ -61,7 +58,6 @@ public class SettingServiceImpl implements SettingService {
     public List<FrequentResponseDto> getFrequentList(Account account) {
         log.info("[getFrequentList] 자주 쓰는 말 목록 조회 시작");
         List<FrequentSentence> frequentSentenceList = frequentSentenceRepository.findByAccountAndDelYn(account, (byte) 0);
-//        List<FrequentSentence> frequentSentenceList = frequentSentenceRepository.findByAccount_UserSeq((long)1);
         List<FrequentResponseDto> result = new ArrayList<>();
         for (FrequentSentence frequentSentence : frequentSentenceList) {
             result.add(FrequentResponseDto.builder()
