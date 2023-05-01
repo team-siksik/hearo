@@ -13,12 +13,21 @@ class FavoriteSay extends StatefulWidget {
 
 class _FavoriteSayState extends State<FavoriteSay> {
   String inputText = '';
+  int sss = 0;
   MyDataController myDataController = Get.put(MyDataController());
   TextEditingController textController = TextEditingController();
 
   @override
+  void initState() {
+    super.initState();
+
+    sss = myDataController.sayings.length;
+  }
+
+  @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.sizeOf(context);
+
     return Scaffold(
       appBar: CustomAppBarInner(name: "자주 쓰는 말"),
       // scaffold에서 키보드 밀림 방지
@@ -35,11 +44,11 @@ class _FavoriteSayState extends State<FavoriteSay> {
                 children: [
                   myDataController.sayings.length < 10
                       ? Text(
-                          "${myDataController.sayings.length} / 10",
+                          "$sss / 10",
                           style: TextStyle(fontSize: 18),
                         )
                       : Text(
-                          "${myDataController.sayings.length} / 10",
+                          "$sss / 10",
                           style:
                               TextStyle(fontSize: 18, color: Color(0xffe63e43)),
                         ),
