@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
@@ -55,7 +56,7 @@ public class SettingController {
     }
 
     @PostMapping("/frequent")
-    public ResponseEntity<Result> createFrequent(@LoginUser Account account, @RequestBody FrequentRequestDto requestDto) {
+    public ResponseEntity<Result> createFrequent(@LoginUser Account account, @RequestBody @Valid FrequentRequestDto requestDto) {
         log.info("[creatFrequent] 자주 쓰는 말 생성 API 호출 - {}", account.getEmail());
         settingService.createFrequent(account, requestDto);
         return ResponseEntity.ok()
