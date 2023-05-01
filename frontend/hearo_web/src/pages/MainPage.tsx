@@ -3,9 +3,9 @@ import { useNavigate } from "react-router-dom";
 import Navbar from "@/components/common/Navbar/Navbar";
 import Carousel from "@/components/common/Carousel/Carousel";
 import { SelectedPage } from "@/types/types";
-import { ReactComponent as Image1 } from "../assets/start_conver.svg";
-import { ReactComponent as Image2 } from "../assets/join_conver.svg";
-import { ReactComponent as Image3 } from "../assets/check_conver.svg";
+import { ReactComponent as Start } from "../assets/start_conver.svg";
+import { ReactComponent as Join } from "../assets/join_conver.svg";
+import { ReactComponent as Check } from "../assets/check_conver.svg";
 
 function MainPage() {
   const [selectedPage, setSelectedPage] = useState<SelectedPage>(
@@ -41,8 +41,8 @@ function MainPage() {
           onClick={commClick}
           className="m-5 h-24 w-80 rounded-2xl border border-red-sub bg-red-sub text-white shadow-md"
           >
-            <div className="flex h-full items-center justify-center">
-              <Image1 />
+            <div className="image1 flex h-full items-center justify-center">
+              <Start/>
               <div className="text-left">
                 <h5 className="mb-2 text-base font-bold">대화 시작하기</h5>
                 <p className="text-xs">상대방과의 대화를 시작해요.</p>
@@ -55,22 +55,22 @@ function MainPage() {
           onClick={commClick}
           className="m-3 h-48 w-40 rounded-2xl border border-yellow-sub bg-yellow-sub text-white shadow-md"
           >
-            <div className="flex flex-col w-full h-full items-center">
+            <div className="image2 flex flex-col w-full h-full items-center">
               <div className="text-center">
                 <h5 className="mb-2 mt-4 text-base font-bold">대화 참여하기</h5>
               </div>
-              <Image2/>
+              <Join/>
             </div>
           </button>
           <button
           onClick={recordsClick}
           className="m-3 h-48 w-40 rounded-2xl border border-green-sub bg-green-sub text-white shadow-md"
             >
-            <div className="flex flex-col w-full h-full items-center">
+            <div className="image3 flex flex-col w-full h-full items-center">
               <div className="text-center">
                 <h5 className="mb-2 mt-4 text-base font-bold">기록 확인하기</h5>
               </div>
-              <Image3/>
+              <Check/>
             </div>
           </button>
         </div>
