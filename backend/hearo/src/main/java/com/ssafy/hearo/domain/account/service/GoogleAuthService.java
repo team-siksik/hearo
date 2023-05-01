@@ -68,13 +68,20 @@ public class GoogleAuthService {
                             .imageUrl(user.getPicture())
                             .userRole(Role.USER)
                             .userPassword(user.getPassword())
+                            .delYn("0")
                             .build();
                     accountRepository.save(account);
                 }
                 String Jwt = jwtService.login(user.getEmail());
                 log.info("Jwt : {}", Jwt);
+                Optional<Account> account = accountRepository.findByEmail(user.getEmail());
                 return SignInResponseDto.builder()
                         .accessToken(Jwt)
+                        .nickname(account.get().getNickname())
+                        .profileImg(account.get().getImageUrl())
+                        .email(account.get().getEmail())
+                        .delYn(account.get().getDelYn())
+                        .role(account.get().getUserRole())
                         .build();
 
             } catch (IOException e) {

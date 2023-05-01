@@ -1,6 +1,8 @@
 package com.ssafy.hearo.domain.account.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.*;
@@ -16,6 +18,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @DynamicInsert
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "user_seq")
 @Table(name = "user")
 public class Account {
 
