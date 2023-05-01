@@ -3,7 +3,7 @@ import 'package:bubble/bubble.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
-import 'package:hearo_app/controller/chat_coltroller.dart';
+import 'package:hearo_app/controller/chat_controller.dart';
 import 'package:hearo_app/controller/my_data_controller.dart';
 
 class FavoriteStar extends StatefulWidget {
