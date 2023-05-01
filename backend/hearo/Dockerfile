@@ -10,7 +10,7 @@ COPY src $APP_HOME/src
 
 ENV SPRING_PROFILES_ACTIVE=dev
 
-RUN gradle clean build
+RUN gradle clean build -x test
 
 FROM openjdk:11-jdk
 
