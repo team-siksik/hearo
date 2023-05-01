@@ -29,13 +29,7 @@ public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver 
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
         String token = webRequest.getHeader("Authorization");
-        if (token == null || !token.startsWith("Bearer ")) {
-            log.debug("[resolveArgument] 잘못된 토큰입니다.");
-            return null;
-        }
-
-        String jwt = token.substring(7);
-        String email = jwtService.getEmail(jwt);
+        String email = jwtService.getEmail(token);
         if (email == null) {
             log.debug("[resolveArgument] 잘못된 토큰입니다.");
             return null;

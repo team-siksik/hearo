@@ -43,9 +43,10 @@ public class Setting {
     private Timestamp modDtm;
 
     @Builder
-    public Setting(Byte fontSize, Byte voiceSetting) {
-        this.fontSize = fontSize;
-        this.voiceSetting = voiceSetting;
+    public Setting(Account account) {
+        this.account = account;
+        this.fontSize = (byte)2;
+        this.voiceSetting = (byte)1;
     }
 
     public void modify(Byte fontSize, Byte voiceSetting) {
