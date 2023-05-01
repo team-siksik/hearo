@@ -14,7 +14,7 @@ interface MessageType {
 function FavContentsPage () {
   const [id, setId] = useState<number>(0);
   const [showModal, setShowModal] = useState<boolean>(false);
-  const [modalType, setModalType] = useState<'add' | 'edit' | 'delete'>('add');
+  const [modalType, setModalType] = useState<'add' | 'delete'>('add');
   const [contents, setContents] = useState<MessageType[]>([
     { id: 1, content: '안녕하세요 저는 청각장애인입니다.', speaker: 'user' },
     { id: 2, content: '뭐 먹었어?', speaker: 'user' },
@@ -42,7 +42,7 @@ function FavContentsPage () {
     console.log('삭제 안되나?')
   };
   
-  const onModalSave = (content: string) => {
+  const onModalSave = (content: any) => {
     if (modalType === 'add') {
       const newId = contents.length + 1;
       setContents([...contents, { id: newId, content: content, speaker: 'user' }]);
@@ -51,8 +51,11 @@ function FavContentsPage () {
       setContents(newContents);
     }
     setShowModal(false);
-    console.log('왜 저장이 안되니~~')
   };
+  
+  const ModalOff = () => {
+    setShowModal(false);
+  }
 
 
   return (
@@ -65,23 +68,26 @@ function FavContentsPage () {
         <div className="pl-[25%] font-bold text-3xl ">
           자주 쓰는 말
         </div>
-        <div className="ml-auto flex flex-row space-x-2">
-          <button onClick={onAddButtonClick} className="flex flex-row pt-1 text-red-main font-bold text-lg w-8 h-8">
-            추가
+        <div className="ml-auto space-x-2">
+          <button onClick={onAddButtonClick} className="flex flex-row pt-1 text-red-main font-bold text-lg w-10 h-10">
+            추 가
           </button>
         </div>
       </div>
   
       {/* 출력되는 내용 */}
-      <div className="px-4 py-2 space-y-4">
+      <div className="mt-4 px-6 py-2 space-y-6">
         {contents.map((c) => (
-          <div key={c.id} className="flex flex-row">
-            <div className="flex-grow text-gray-500">{c.content}</div>
-            <div className="flex flex-row space-x-2">
-              <button onClick={() => onDeleteButtonClick(c.id)}>
-                <XMarkIcon className="w-6 h-6" />
-              </button>
+          <div>
+            <div key={c.id} className="flex flex-row">
+              <div className="flex-grow text-gray-950">{c.content}</div>
+              <div className="flex flex-row space-x-2">
+                <button onClick={() => onDeleteButtonClick(c.id)}>
+                  <XMarkIcon className="w-6 h-6" />
+                </button>
+              </div>
             </div>
+          <hr className="bg-black opacity-10 h-0.5 my-2 px-6"/>
           </div>
         ))}
       </div>
@@ -91,11 +97,16 @@ function FavContentsPage () {
         <Modal open={true} cannotExit={false}>
           {modalType === 'add' && (
            <div>
-           <div className="mb-2 text-xl font-semibold">자주 쓰는 말 추가</div>
-           <input type="text" className="w-full border border-gray-200 p-2 rounded" autoFocus />
-           <button onClick={onModalSave} className="mt-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-             추가
-           </button>
+            <div className="mb-2 text-xl font-semibold">자주 쓰는 말 추가</div>
+            <input type="text" className="w-full border border-gray-200 p-2 rounded" autoFocus />
+            <div className="flex flex-row text-2xl justify-center m-1 mt-3 font-bold">
+            <button onClick={ModalOff} className="mt-2 pl-4 pr-4 border-gray-950">
+               취소 
+             </button>
+             <button onClick={onModalSave} className="mt-2 bg-blue-500 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded">
+               추가
+             </button>
+            </div>
           </div>
           )}
           {modalType === 'delete' && (
@@ -103,12 +114,12 @@ function FavContentsPage () {
               <div className="mb-2 text-xl font-semibold">자주 쓰는 말 삭제</div>
               <div>정말로 삭제하시겠습니까?</div>
               <div className="flex flex-row text-2xl justify-center m-1 mt-3 font-bold">
-                <div className="pl-4 pr-4">
+                <button onClick={ModalOff} className="mt-2 pl-4 pr-4 border-gray-950">
                   취소 
-                </div>
-                <div onClick={() => onDeleteButtonClick(id)} className="text-red-main pl-4 pr-4"> 
+                </button>
+                <button onClick={() => onDeleteButtonClick(id)} className="mt-2 bg-red-1 hover:bg-red-main text-white py-2 px-4 rounded"> 
                   삭제
-                </div>
+                </button>
               </div>
             </div>
           )}
