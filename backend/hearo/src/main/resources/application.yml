@@ -22,3 +22,6 @@ logging:
     com:
       example:
         test: debug
+server:
+  servlet:
+    contextPath: /api/v1

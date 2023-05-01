@@ -20,7 +20,7 @@ import javax.transaction.Transactional;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-@RequestMapping("/api/v1/accounts")
+@RequestMapping("/accounts")
 public class AccountController {
 
     private final GoogleAuthService googleAuthService;
