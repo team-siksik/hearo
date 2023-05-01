@@ -9,11 +9,11 @@ socketio = SocketIO(logger=True, engineio_logger=True)
 
 app = Flask(__name__)
 app.debug = True
-app.config['SECRET KEY'] = 'hearo manse'
+app.secret_key= 'hearo manse'
 
 socketio.init_app(app)
 socketio_init(socketio)  # for Socket
 app.register_blueprint(main_blueprint)  # for HTTP
 
 if __name__ == '__main__':
-    socketio.run(app, host='0.0.0.0', port=8090)
+    socketio.run(app, host="0.0.0.0", port=8090)
