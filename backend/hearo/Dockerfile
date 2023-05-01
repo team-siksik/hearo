@@ -8,9 +8,7 @@ COPY build.gradle settings.gradle $APP_HOME/
 
 COPY src $APP_HOME/src
 
-ENV SPRING_PROFILES_ACTIVE=dev
-
-RUN gradle clean build -x test
+RUN gradle clean build
 
 FROM openjdk:11-jdk
 
@@ -22,7 +20,5 @@ WORKDIR $APP_HOME
 COPY --from=builder $APP_HOME/$JAR_FILE_PATH $ARTIFACT_NAME
 
 EXPOSE 8080
-
-ENV SPRING_PROFILES_ACTIVE=dev
 
 ENTRYPOINT ["java", "-jar", "app.jar"]
