@@ -32,6 +32,9 @@ public class SettingServiceImpl implements SettingService {
     @Override
     public SettingInfoResponseDto getSetting(Account account) {
         log.info("[getSetting] 설정 조회 시작");
+        log.info(String.valueOf(account.getUserSeq()));
+        log.info(String.valueOf(settingRepository.findAll()));
+        log.info(String.valueOf(settingRepository.findById(account.getUserSeq())));
         Setting setting = settingRepository.findById(account.getUserSeq())
                         .orElseThrow(() -> new ErrorException(CommonErrorCode.RESOURCE_NOT_FOUND));
         log.info("[getSetting] 설정 조회 완료");
