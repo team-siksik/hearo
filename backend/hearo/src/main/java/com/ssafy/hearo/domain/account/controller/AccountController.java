@@ -20,7 +20,7 @@ import javax.transaction.Transactional;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-@RequestMapping("/api/v1/accounts")
+@RequestMapping("/accounts")
 public class AccountController {
 
     private final GoogleAuthService googleAuthService;
@@ -37,6 +37,7 @@ public class AccountController {
 
     @GetMapping("/jwt-test")
     public String jwtTest(@LoginUser Account account) {
+        log.info(String.valueOf(account));
         return "jwtTest 요청 성공";
     }
 

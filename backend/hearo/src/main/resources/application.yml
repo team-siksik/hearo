@@ -7,7 +7,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
-    show-sql: true
+#    show-sql: true
     properties:
       hibernate:
         format_sql: true
@@ -22,3 +22,6 @@ logging:
     com:
       example:
         test: debug
+server:
+  servlet:
+    contextPath: /api/v1
