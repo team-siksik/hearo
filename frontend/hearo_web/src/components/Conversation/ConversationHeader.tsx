@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Timer, Button } from "@/components";
 import { ReactComponent as Info } from "../../assets/Info-rect.svg";
 import { useNavigate } from "react-router-dom";
@@ -24,6 +24,7 @@ function ConversationHeader({
     //TODO: 대화 나가기 -> 저장하고 나가시겠어요?
     setOpenExitModal(!openExitModal);
   }
+
   return (
     <section className="fixed top-0 flex h-12 w-full items-center justify-between bg-white text-center">
       <Button onClick={handleClick}>

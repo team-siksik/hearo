@@ -6,17 +6,25 @@ import {
   ConversationInfo,
   ExitModal,
 } from "@/components";
+import MicrophoneAccess from "@/apis/MicrophoneAccess";
 
 function ConversationPage() {
   const [openInfoModal, setOpenInfoModal] = useState<boolean>(false);
   const [openExitModal, setOpenExitModal] = useState<boolean>(false);
 
+  // const [stream, setStream] = useState<MediaStream>(new MediaStream());
   const [newMessage, setNewMessage] = useState<string>("");
 
   return (
     <div>
       {openInfoModal ? <ConversationInfo cannotExit={false} /> : null}
-      {openExitModal ? <ExitModal setOpenExitModal={setOpenExitModal} /> : null}
+      {openExitModal ? (
+        <ExitModal
+          // stream={stream}
+          setOpenExitModal={setOpenExitModal}
+        />
+      ) : null}
+      {/* <MicrophoneAccess stream={stream} setStream={setStream} /> */}
       <ConversationHeader
         openModal={openInfoModal}
         setOpenModal={setOpenInfoModal}

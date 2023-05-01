@@ -35,13 +35,14 @@ interface PropsType {
 }
 
 function ConversationBody({ message }: PropsType) {
+  const messageEndRef = useRef<HTMLDivElement>(null); // 채팅창 늘어날 수록 스크롤 맨 밑으로 이동
   const [id, setId] = useState<number>(0);
-  const [conversation, setConversation] = useState<MessageType[]>([]);
-  const [openGPTModal, setOpenGPTModal] = useState<boolean>(false);
-  const [openAddFavModal, setOpenAddFavModal] = useState<boolean>(false);
-  const messageEndRef = useRef<HTMLDivElement>(null);
+  const [conversation, setConversation] = useState<MessageType[]>([]); // 전체 대화 텍스트
+  const [openGPTModal, setOpenGPTModal] = useState<boolean>(false); // get GPT 추천
+  const [openAddFavModal, setOpenAddFavModal] = useState<boolean>(false); // 자주 쓰는 말
 
   useEffect(() => {
+    // 채팅창 늘어날 수록 스크롤 맨 밑으로 이동
     if (messageEndRef.current)
       messageEndRef.current.scrollIntoView({ behavior: "smooth" });
   }, [conversation]);
