@@ -19,24 +19,6 @@ public class AccountService {
     private final AccountRepository accountRepository;
 
 
-    public void signUp(AccountDto userDto) throws Exception {
-
-        if (accountRepository.findByEmail(userDto.getEmail()).isPresent()) {
-            throw new Exception("이미 존재하는 이메일입니다.");
-        }
-
-        Account account = Account.builder()
-                .email(userDto.getEmail())
-                .nickname(userDto.getName())
-                .imageUrl(userDto.getPicture())
-                .userRole(Role.USER)
-                .userPassword(userDto.getPassword())
-                .delYn("0")
-                .build();
-
-        accountRepository.save(account);
-    }
-
     public void withdraw(Account account) {
         Account user = account.getUser();
         user.withdraw();
