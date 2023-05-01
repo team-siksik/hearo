@@ -85,6 +85,7 @@ public class GoogleAuthService {
                         .build();
 
             } catch (IOException e) {
+                log.info(String.valueOf(e));
                 // JSON 파싱에 실패했을 경우 예외 처리
                 throw new ErrorException(CommonErrorCode.RESOURCE_NOT_FOUND);
             }
