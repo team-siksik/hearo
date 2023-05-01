@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Button, FavContents, GPTRecommend, Input } from "@/components";
 import { ReactComponent as Star } from "../../assets/Star.svg";
 import { ReactComponent as Send } from "../../assets/Send.svg";
@@ -9,7 +9,6 @@ interface PropsType {
 
 function ConversationFooter({ setNewMessage }: PropsType) {
   const [openFavModal, setOpenFavModal] = useState<boolean>(false);
-  const [openGPTModal, setOpenGPTModal] = useState<boolean>(false);
 
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
@@ -17,10 +16,7 @@ function ConversationFooter({ setNewMessage }: PropsType) {
     // 내가 자주 쓰는 말
     setOpenFavModal(!openFavModal);
   }
-  function handleGPTClick() {
-    // 상대방 말 클릭 -> gpt 추천 -> 추천 리스트
-    setOpenGPTModal(!openGPTModal);
-  }
+
   function handleSendClick() {
     // 내가 input창의 내용 보내기 및 읽기
     const msg = inputRef.current?.value ?? "";
@@ -73,8 +69,9 @@ function ConversationFooter({ setNewMessage }: PropsType) {
           </form>
         </div>
       </div>
-      {openFavModal ? <FavContents /> : null}
-      {openGPTModal ? <GPTRecommend /> : null}
+      {openFavModal ? (
+        <FavContents inputRef={inputRef} setOpenFavModal={setOpenFavModal} />
+      ) : null}
     </>
   );
 }
