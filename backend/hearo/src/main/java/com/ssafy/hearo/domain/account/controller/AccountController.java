@@ -48,7 +48,7 @@ public class AccountController {
 
     @GetMapping("/list")
     public ResponseEntity<Result> getAccountList() {
-        return ResponseEntity.ok().body(responseService.getListResult(accountService.findAll()));
+        return ResponseEntity.ok().body(responseService.getListResult(accountService.accountList()));
     }
 
     @GetMapping("/search")
