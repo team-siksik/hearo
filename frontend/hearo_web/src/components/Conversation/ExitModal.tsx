@@ -3,19 +3,27 @@ import { Button, Modal } from "@/components";
 import { useNavigate } from "react-router-dom";
 
 interface PropsType {
+  stream?: MediaStream;
   setOpenExitModal: React.Dispatch<SetStateAction<boolean>>;
 }
 
-function ExitModal({ setOpenExitModal }: PropsType) {
+function ExitModal({ stream, setOpenExitModal }: PropsType) {
   const navigate = useNavigate();
-  // FIXME: handle click
   function handleExitClick() {
     setOpenExitModal((prev) => !prev);
   }
+
+  // function stopStream() {
+  //   stream.getTracks().forEach((track) => track.stop());
+
+  //   // setPlaying(false);
+  // }
+
   function handleSaveClick() {
     //TODO: 저장 요청도 같이 보내야함
-    // setOpenExitModal((prev) => !prev);
     console.log("저장 후 종료!!");
+    // stopStream();
+    navigate("/");
   }
   return (
     <Modal open={true} cannotExit={false}>
