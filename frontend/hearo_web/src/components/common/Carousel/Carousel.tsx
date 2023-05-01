@@ -5,7 +5,6 @@ import Test2 from "@/assets/carousel2.jpg"
 import Test3 from "@/assets/carousel3.jpg"
 import Test4 from "@/assets/carousel4.jpg"
 import Test5 from "@/assets/carousel5.jpg"
-import { ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/24/solid";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
