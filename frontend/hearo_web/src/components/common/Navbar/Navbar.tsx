@@ -4,9 +4,9 @@ import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/solid";
 import Test1 from "@/assets/Hearo_logo.png"
 import { AnimatePresence, motion, useCycle } from "framer-motion";
 import { SelectedPage } from "@/types/types";
-import { ReactComponent as Start } from "@/assets/start_conver.svg";
-import { ReactComponent as Join } from "@/assets/join_conver.svg";
-import { ReactComponent as Check } from "@/assets/check_conver.svg";
+import { ReactComponent as Start } from "@/assets/StartConver.svg";
+import { ReactComponent as Join } from "@/assets/JoinConver.svg";
+import { ReactComponent as Check } from "@/assets/CheckConver.svg";
 import { ReactComponent as SettingIcon} from "@/assets/SettingIcon.svg";
 import { ReactComponent as LogoutIcon} from "@/assets/LogoutIcon.svg";
 
