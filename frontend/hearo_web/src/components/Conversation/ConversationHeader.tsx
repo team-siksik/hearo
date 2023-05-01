@@ -5,19 +5,24 @@ import { useNavigate } from "react-router-dom";
 
 interface PropsType {
   openModal: boolean;
-  setOpenModal: (open: boolean) => void;
+  setOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
+  openExitModal: boolean;
+  setOpenExitModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
-function ConversationHeader({ openModal, setOpenModal }: PropsType) {
+function ConversationHeader({
+  openModal,
+  setOpenModal,
+  openExitModal,
+  setOpenExitModal,
+}: PropsType) {
   const navigate = useNavigate();
-
   function handleClick() {
     // information
     setOpenModal(!openModal);
   }
   function handleExitClick() {
     //TODO: 대화 나가기 -> 저장하고 나가시겠어요?
-    console.log("i want to get out!!!!");
-    // navigate("/");
+    setOpenExitModal(!openExitModal);
   }
   return (
     <section className="fixed top-0 flex h-12 w-full items-center justify-between bg-white text-center">
