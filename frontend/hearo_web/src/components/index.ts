@@ -13,6 +13,7 @@ import Input from "./common/ui/Input";
 import Dialog from "./common/ui/Dialog";
 import Navbar from "./common/Navbar/Navbar";
 import Carousel from "./common/Carousel/Carousel";
+import DropDown from "./common/ui/Dropdown";
 
 export {
   ConversationComp,
@@ -30,4 +31,5 @@ export {
   Navbar,
   Carousel,
   Dialog,
+  DropDown,
 };
