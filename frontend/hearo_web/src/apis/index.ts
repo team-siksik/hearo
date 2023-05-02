@@ -1,3 +1,5 @@
-import Google from "./Google";
+import Google from "./google";
+import TTS from "./TTS";
+import socket from "./Socket";
 
-export default { Google };
+export { Google, TTS, socket };
