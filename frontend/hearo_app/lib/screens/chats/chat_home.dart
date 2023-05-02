@@ -26,7 +26,7 @@ class _ChatHomeState extends State<ChatHome> {
     setState(() {
       // 말풍선 확인을 위한 랜덤요소 추가
       var random = Random();
-      var randomNumber = random.nextInt(4);
+      var randomNumber = random.nextInt(2);
       chattings.add({"who": randomNumber, "message": chat});
       // chattings.add({"who": 0, "message": chat});
       chatController.changeSaying('');
