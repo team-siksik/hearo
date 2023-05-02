@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:bubble/bubble.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:get/get.dart';
-import 'package:hearo_app/controller/my_data_controller.dart';
+import 'package:hearo_app/apis/say_api.dart';
 
 enum TtsState { playing, stopped, paused, continued }
 
@@ -37,9 +37,12 @@ const colorList = {
 class _SpeechBubbleState extends State<SpeechBubble> {
   late FlutterTts tts;
   late TtsState ttsState;
+  List favorite = [];
+  List favoriteSentences = [];
   @override
   void initState() {
     super.initState();
+    loadfavorites();
     tts = FlutterTts();
     // 언어 설정
     tts.setLanguage("ko-KR");
@@ -66,6 +69,28 @@ class _SpeechBubbleState extends State<SpeechBubble> {
       setState(() {
         ttsState = TtsState.stopped;
       });
+    });
+  }
+
+  Future<void> loadfavorites() async {
+    final favorites = await ApiSay.sayGetApi();
+    setState(() {
+      favorite = favorites;
+      for (var item in favorites) {
+        favoriteSentences.add(item["sentence"]);
+      }
+    });
+  }
+
+  Future<void> createfavorite(saying) async {
+    await ApiSay.sayCreateApi(saying);
+    final favorites = await ApiSay.sayGetApi();
+    setState(() {
+      favorite = favorites;
+      favoriteSentences = [];
+      for (var item in favorites) {
+        favoriteSentences.add(item["sentence"]);
+      }
     });
   }
 
@@ -140,8 +165,6 @@ class _SpeechBubbleState extends State<SpeechBubble> {
   }
 
   Future<dynamic> sayingDialog(BuildContext context, Size size, String say) {
-    MyDataController myDataController = Get.put(MyDataController());
-
     return showDialog(
       context: context,
       builder: (BuildContext context) => AlertDialog(
@@ -181,7 +204,7 @@ class _SpeechBubbleState extends State<SpeechBubble> {
                         borderRadius: BorderRadius.all(Radius.circular(30))))),
                 onPressed: () async {
                   if (say.trim().isEmpty ||
-                      myDataController.sayings.contains(say.trim())) {
+                      favoriteSentences.contains(say.trim())) {
                     var duple = say.trim().isEmpty ? "입력된 말이 없어요" : "중복된 말입니다.";
                     Get.snackbar(duple, say,
                         duration: Duration(seconds: 1),
@@ -191,7 +214,7 @@ class _SpeechBubbleState extends State<SpeechBubble> {
                         margin: EdgeInsets.only(bottom: 10));
                     return;
                   }
-                  if (myDataController.sayings.length >= 10) {
+                  if (favoriteSentences.length >= 10) {
                     Get.snackbar("다 찼어요", "10개의 자주쓰는 말이 이미 등록되어 있어요.",
                         duration: Duration(seconds: 1),
                         snackPosition: SnackPosition.BOTTOM,
@@ -200,16 +223,15 @@ class _SpeechBubbleState extends State<SpeechBubble> {
                         margin: EdgeInsets.only(bottom: 10));
                     return;
                   }
-                  setState(() {
-                    myDataController.addSaying(say.trim());
-                    Get.back();
-                    Get.snackbar("등록 성공",
-                        "총 ${myDataController.sayings.length} 개의 자주 쓰는 말이 있어요",
-                        duration: Duration(seconds: 1),
-                        snackPosition: SnackPosition.BOTTOM,
-                        backgroundColor: Color.fromARGB(136, 174, 255, 92),
-                        margin: EdgeInsets.only(bottom: 10));
-                  });
+
+                  createfavorite(say.trim());
+                  Get.back();
+                  Get.snackbar("등록 성공",
+                      "총 ${favoriteSentences.length + 1} 개의 자주 쓰는 말이 있어요",
+                      duration: Duration(seconds: 1),
+                      snackPosition: SnackPosition.BOTTOM,
+                      backgroundColor: Color.fromARGB(136, 174, 255, 92),
+                      margin: EdgeInsets.only(bottom: 10));
                 },
                 child: Text('추가하기'),
               ),
