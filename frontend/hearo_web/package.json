@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --host 0.0.0.0",
     "build": "tsc && vite build",
     "preview": "vite preview"
   },
@@ -27,6 +27,7 @@
     "react-spinners": "^0.13.8",
     "redux-devtools-extension": "^2.13.9",
     "slick-carousel": "^1.8.1",
+    "socket.io-client": "^4.6.1",
     "twin.macro": "^3.3.1",
     "use-long-press": "^3.0.4",
     "vite-plugin-svgr": "^2.4.0"

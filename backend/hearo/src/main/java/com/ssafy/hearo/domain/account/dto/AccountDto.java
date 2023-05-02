@@ -18,4 +18,5 @@ public class AccountDto {
     private Boolean verified_email;
     private String locale;
     private String given_name;
+    private String family_name;
 }
