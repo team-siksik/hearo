@@ -25,12 +25,11 @@ class WhisperTranscriber:
         self.model = whisper.load_model(model, device=device)
         self._buffer = ""
 
-    def transcribe(self, waveform, language="ko-KR"):
+    def transcribe(self, waveform):
         """Transcribe audio using Whisper"""
         # Pad/trim audio to fit 30 seconds as required by Whisper
         audio = waveform.data.astype("float32").reshape(-1)
         audio = whisper.pad_or_trim(audio)
-        language = language
 
         # Transcribe the given audio while suppressing logs
         with suppress_stdout():
@@ -39,7 +38,8 @@ class WhisperTranscriber:
                 audio,
                 # We use past transcriptions to condition the model
                 initial_prompt=self._buffer,
-                verbose=True  # to avoid progress bar
+                verbose=True,  # to avoid progress bar
+                language="Korean"
             )
 
         return transcription
@@ -88,7 +88,7 @@ class WhisperTranscriber:
 import numpy as np
 from pyannote.core import Annotation, SlidingWindowFeature, SlidingWindow
 
-def concat(chunks, collar=0.05):
+def concat(chunks, collar=0.1):
     """
     Concatenate predictions and audio
     given a list of `(diarization, waveform)` pairs
@@ -138,24 +138,22 @@ import rich
 import rx.operators as ops
 from diart import OnlineSpeakerDiarization, PipelineConfig
 from diart.sources import MicrophoneAudioSource
-import torch
 
 # Suppress whisper-timestamped warnings for a clean output
 logging.getLogger("whisper_timestamped").setLevel(logging.ERROR)
 
 config = PipelineConfig(
-    duration=5,
+    duration=30,
     step=0.5,
     latency="min",
-    tau_active=0.5,
+    tau_active=0.4,
     rho_update=0.1,
-    delta_new=0.57,
-    device=torch.device("cuda")
+    delta_new=0.7,
 )
 dia = OnlineSpeakerDiarization(config)
 source = MicrophoneAudioSource(config.sample_rate)
 
-asr = WhisperTranscriber(model="cuda")
+asr = WhisperTranscriber(model="base")
 
 transcription_duration = 2
 batch_size = int(transcription_duration // config.step)
