@@ -178,6 +178,7 @@ build/
 application-google.yml
 application-jwt.yml
 application-mysql.yml
+docker-compose.yml
 ### STS ###
 .apt_generated
 .classpath
