@@ -1,12 +1,16 @@
 /**
  * tts 연결 및 테스트
  */
-import { useEffect, useState } from "react";
+import React, { SetStateAction, useEffect, useState } from "react";
 
-function TTS() {
-  const [audio, setAudio] = useState(null);
+interface PropsType {
+  text: string;
+  setText: React.Dispatch<SetStateAction<string>>;
+}
+
+function TTS({ text, setText }: PropsType) {
+  const [audio, setAudio] = useState();
   const [playing, setPlaying] = useState<boolean>(false);
-  const [text, setText] = useState<string>("");
 
   function textToSpeeach(_text: string) {
     const url = `https://texttospeech.googleapis.com/v1/text:synthesize?key=${
@@ -16,9 +20,10 @@ function TTS() {
       input: {
         text: _text,
       },
+      //TODO: 추후에 설정을 user정보에 저장하고 값이 바뀌면 음성 바뀌게 할 수 있어야 함
       voice: {
         languageCode: "ko-KR",
-        name: "ko-KR-Neural2-A",
+        name: "ko-KR-Neural2-B",
         ssmlGender: "FEMALE",
       },
       audioConfig: {
@@ -40,44 +45,28 @@ function TTS() {
       .then((res) => {
         setAudio(res.audioContent);
         setPlaying(true);
-        // return res.audioContent; // base64
       })
       .catch((error) => {
         console.log(error);
       });
   }
 
-  function handleButtonClick() {
-    textToSpeeach(text);
-  }
-
-  // function createAudioUrl(mp3Data: Buffer): string {
-  //   // const blob = new Blob([mp3Data], { type: "audio/mp3" });
-  //   // return URL.createObjectURL(blob);
-  //   const base64Data = btoa(String.fromCharCode(...new Uint8Array(mp3Data)));
-  //   return `data:audio/mp3;base64,${base64Data}`;
-  // }
-
-  // const mp3Data = await textToSpeeach("코끼리");
-  // const audioUrl = createAudioUrl(mp3Data);
-  // setAudio(new Audio(audioUrl));
+  useEffect(() => {
+    if (text !== "") {
+      textToSpeeach(text);
+    }
+  }, [text]);
 
   return (
     <div>
-      <input
-        className="border border-red-1"
-        type="text"
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-      />
-      <button onClick={handleButtonClick}>
-        Convert Text to Speech and Play
-      </button>
       {playing ? (
         <audio
           src={`data:audio/mp3;base64,${audio}`}
           autoPlay
-          onEnded={() => setPlaying(false)}
+          onEnded={() => {
+            setPlaying(false);
+            setText("");
+          }}
         />
       ) : null}
     </div>
