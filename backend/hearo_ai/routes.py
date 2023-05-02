@@ -16,32 +16,48 @@ def index():
         return render_template('index.html')
     
     username = request.form['username']
-    room_type = request.form['room_type']
-    room_name = session['username'] + '-' + request.form['room']
+    category = request.form['category']
+    room = username + '-' + category
 
     session['username'] = username
-    session['room'] = room_name
+    session['room'] = room
 
-    if room_type == 'sd':
-        pass #sl, sc
-
-    return redirect(url_for('main.conversation'))
-
-
-@main.route('/conversation')
-def conversation():
-    name = session.get('name', '')
-    room = session.get('room', '')
-    return render_template('conversation.html', name=name, room=room)
+    if category == 'chat':
+        return redirect(url_for('main.chat'))
+    elif category == 'speaker':
+        return redirect(url_for('main.speaker'))
+    elif category == 'sing-language':
+        return redirect(url_for('main.sing_language'))
+    else: # category == 'sound'
+        return redirect(url_for('main.sound'))
 
 
 @main.route('/chat')
 def chat():
-    name = session.get('name', '')
-    room = session.get('room', '')
-    if name == '' or room == '':
-        return redirect(url_for('.index'))
-    return render_template('conversation.html', name=name, room=room)
+    username = session.get('username', '')
+    room = session.get('room')
+    return render_template('chat.html', username=username, room=room)
+
+
+@main.route('/speaker')
+def speaker():
+    username = session.get('username', '')
+    room = session.get('room')
+    return render_template('speaker.html', username=username, room=room)
+
+
+@main.route('/sing-language')
+def sing_language():
+    username = session.get('username', '')
+    room = session.get('room')
+    return render_template('sign-language.html', username=username, room=room)
+
+
+@main.route('/sound')
+def sound():
+    username = session.get('username', '')
+    room = session.get('room')
+    return render_template('sound.html', username=username, room=room)
 
 
 @main.route('/run/os')
