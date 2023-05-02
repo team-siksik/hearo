@@ -4,9 +4,12 @@ import 'package:get/get.dart';
 import 'package:hearo_app/controller/chat_controller.dart';
 import 'package:hearo_app/widgets/chats/custom_app_bar_chat.dart';
 import 'package:hearo_app/widgets/chats/favorite_star.dart';
+import 'package:hearo_app/widgets/chats/show_info.dart';
 import 'package:hearo_app/widgets/chats/speech_bubble.dart';
 import 'package:wakelock/wakelock.dart';
 import 'package:flutter_tts/flutter_tts.dart';
+import 'package:audioplayers/audioplayers.dart';
+import 'package:assets_audio_player/assets_audio_player.dart';
 
 class ChatHome extends StatefulWidget {
   const ChatHome({super.key});
@@ -39,6 +42,11 @@ class _ChatHomeState extends State<ChatHome> {
   @override
   void initState() {
     super.initState();
+    // 들어오자마자 모달
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      showInfo(context);
+    });
+    playAudio();
     // 화면 꺼짐 방지 활성화
     Wakelock.enable();
     // 언어 설정
@@ -50,11 +58,32 @@ class _ChatHomeState extends State<ChatHome> {
     // tts.setVoice({"name": "ko-kr-x-kob-network", "locale": "ko-KR"});
   }
 
+  final AssetsAudioPlayer assetsAudioPlayer = AssetsAudioPlayer.newPlayer();
+  void playAudio() async {
+    await assetsAudioPlayer.open(
+      Audio("assets/audios/hearo_start.wav"),
+      loopMode: LoopMode.none, //반복 여부 (LoopMode.none : 없음)
+      autoStart: false, //자동 시작 여부
+      showNotification: false, //스마트폰 알림 창에 띄울지 여부
+    );
+
+    assetsAudioPlayer.play(); //재생
+    // assetsAudioPlayer.pause(); //멈춤
+    // assetsAudioPlayer.stop(); //정지
+  }
+
   @override
   void dispose() {
     // 화면 꺼짐 방지 비활성화
     Wakelock.disable();
     super.dispose();
+  }
+
+  AudioPlayer player = AudioPlayer();
+  Future playSound() async {
+    // await player.setSourceAsset("assets/audios/hearo_start.wav");
+    await player.play(DeviceFileSource("assets/audios/hearo_start.wav"));
+    // await player.play(DeviceFileSource("assets/audios/hearo_start.wav"));
   }
 
   @override
