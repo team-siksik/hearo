@@ -9,7 +9,7 @@ socketio = SocketIO(logger=True, engineio_logger=True)
 
 app = Flask(__name__)
 app.debug = True
-app.config['SECRET KEY'] = 'hearo manse'
+app.secret_key= 'hearo manse'
 
 socketio.init_app(app)
 socketio_init(socketio)  # for Socket
