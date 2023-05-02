@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:hearo_app/controller/chat_controller.dart';
 import 'package:hearo_app/widgets/chats/custom_app_bar_chat.dart';
 import 'package:hearo_app/widgets/chats/favorite_star.dart';
-import 'package:hearo_app/widgets/chats/show_info.dart';
+import 'package:hearo_app/widgets/chats/show_info_first.dart';
 import 'package:hearo_app/widgets/chats/speech_bubble.dart';
 import 'package:wakelock/wakelock.dart';
 import 'package:flutter_tts/flutter_tts.dart';
@@ -42,11 +42,6 @@ class _ChatHomeState extends State<ChatHome> {
   @override
   void initState() {
     super.initState();
-    // 들어오자마자 모달
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      showInfo(context);
-    });
-    playAudio();
     // 화면 꺼짐 방지 활성화
     Wakelock.enable();
     // 언어 설정
@@ -56,6 +51,15 @@ class _ChatHomeState extends State<ChatHome> {
     // tts.setVoice({"name": "ko-kr-x-ism-local", "locale": "ko-KR"});
     tts.setVoice({"name": "ko-kr-x-ism-network", "locale": "ko-KR"});
     // tts.setVoice({"name": "ko-kr-x-kob-network", "locale": "ko-KR"});
+    // 들어오자마자 모달
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      showInfoFirst(context);
+    });
+    playAudio();
+    Future.delayed(Duration(milliseconds: 3300), () async {
+      playAudioStop();
+      Get.back();
+    });
   }
 
   final AssetsAudioPlayer assetsAudioPlayer = AssetsAudioPlayer.newPlayer();
@@ -70,6 +74,10 @@ class _ChatHomeState extends State<ChatHome> {
     assetsAudioPlayer.play(); //재생
     // assetsAudioPlayer.pause(); //멈춤
     // assetsAudioPlayer.stop(); //정지
+  }
+
+  void playAudioStop() async {
+    assetsAudioPlayer.stop(); //정지
   }
 
   @override
@@ -174,20 +182,20 @@ class _ChatHomeState extends State<ChatHome> {
                           ),
                         ),
                         IconButton(
-                            onPressed: () {
+                            onPressed: () async {
                               var value = chatController.inputSay;
                               if (value.trim().isEmpty) {
                                 return;
                               }
                               addChat(value);
+                              await tts.speak(textController.text);
                               setState(() {
                                 chatController.changeSaying('');
-                                tts.speak(textController.text);
                                 textController.text = '';
-                                _scrollController.jumpTo(
-                                    _scrollController.position.maxScrollExtent);
+                                FocusScope.of(context).unfocus();
                               });
-                              FocusScope.of(context).unfocus();
+                              _scrollController.jumpTo(
+                                  _scrollController.position.maxScrollExtent);
                             },
                             icon: Icon(Icons.send_rounded,
                                 color: Color.fromARGB(255, 97, 97, 97))),
