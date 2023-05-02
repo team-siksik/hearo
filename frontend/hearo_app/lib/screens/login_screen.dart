@@ -211,7 +211,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Future sendToken(context, size, data) async {
     // accessToken 값을 전달하고, sendAccessTokenToBackend 함수를 호출합니다.
     final accessToken = data;
-    final flag = await loginApi(accessToken);
+    final flag = await ApiLog.loginApi(accessToken);
     if (flag == true) {
       showSuccessModal(context, size);
     }
