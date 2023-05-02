@@ -1,16 +1,23 @@
 from flask import session
-from flask_socketio import emit
+from flask_socketio import emit, join_room, leave_room
 
 
 def socketio_init(socketio):
-
-    @socketio.on('connect', namespace='/conversation')
-    def connect(message):
+    @socketio.on('joined', namespace='/chat')
+    def joined(message):
         room = session.get('room')
-        emit('connect', {'msg': session.get('name') + 'connected'}, room=room)
+        join_room(room)
+        emit('status', {'msg': session.get('username') + '님이 입장하셨습니다'}, room=room)
 
-    @socketio.on('disconnect', namespace='/conversation')
-    def disconnect(message):
+
+    @socketio.on('text', namespace='/chat')
+    def text(message):
         room = session.get('room')
-        emit('disconnect', {'msg': session.get(
-            'name') + 'disconnected'}, room=room)
+        emit('message', {'msg': session.get('username') + ':' + message['msg']}, room=room)
+
+
+    @socketio.on('left', namespace='/chat')
+    def left(message):
+        room = session.get('room')
+        leave_room(room)
+        emit('status', {'msg': session.get('username') + '님이 퇴장하셨습니다'}, room=room)
