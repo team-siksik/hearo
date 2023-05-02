@@ -98,7 +98,7 @@ public class SettingServiceImpl implements SettingService {
         log.info("[modifyFrequent] 자주 쓰는 말 수정 시작");
         FrequentSentence frequentSentence = frequentSentenceRepository.findByAccountAndFrequentSeqAndDelYn(account, frequentSeq, (byte)0)
                 .orElseThrow(() -> new ErrorException(CommonErrorCode.RESOURCE_NOT_FOUND));
-        String sentence = frequentSentence.getSentence();
+        String sentence = frequentRequestDto.getSentence();
         frequentSentence.modify(sentence);
         log.info("[modifyFrequent] 자주 쓰는 말 수정 완료");
     }
