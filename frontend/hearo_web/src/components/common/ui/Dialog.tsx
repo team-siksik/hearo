@@ -10,13 +10,15 @@ interface PropsType {
 function Dialog({ type, children, onClick }: PropsType) {
   return (
     <>
-      <div className="flex justify-end">
+      <div>
         {type === "user_text" ? (
-          <div
-            onClick={onClick}
-            className="user_dialog m-2 inline-block h-fit w-fit max-w-sm rounded-xl border border-gray-100 p-2 shadow-md"
-          >
-            {children}
+          <div className="flex justify-end">
+            <div
+              onClick={onClick}
+              className="user_dialog m-2 inline-block h-fit w-fit max-w-sm rounded-xl border border-gray-100 p-2 shadow-md"
+            >
+              {children}
+            </div>
           </div>
         ) : type === "other1_text" ? (
           <div

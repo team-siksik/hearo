@@ -6,14 +6,16 @@ import MainPage from "./MainPage";
 import FavContentsPage from "./FavContetnsPage";
 import SettingsPage from "./SettingsPage";
 import AgainPage from "./AgainPage";
+import NotFound404 from "./NotFound404";
 
-export { 
-  LoginPage, 
+export {
+  LoginPage,
   ConversationPage,
-  RecordsPage, 
-  MyPage, 
-  MainPage, 
+  RecordsPage,
+  MyPage,
+  MainPage,
   FavContentsPage,
   SettingsPage,
   AgainPage,
+  NotFound404,
 };
