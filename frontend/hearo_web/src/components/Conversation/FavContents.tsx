@@ -1,4 +1,4 @@
-import React from "react";
+import React, { SetStateAction } from "react";
 import { Button, Modal } from "@/components";
 
 const mockData = [
@@ -24,9 +24,15 @@ const mockData = [
   },
 ];
 
-function FavContents() {
+interface PropsType {
+  inputRef: React.RefObject<HTMLTextAreaElement>;
+  setOpenFavModal: React.Dispatch<SetStateAction<boolean>>;
+}
+
+function FavContents({ inputRef, setOpenFavModal }: PropsType) {
   function handleClick(value: string) {
-    console.log(value);
+    setOpenFavModal((prev) => !prev);
+    if (inputRef.current) inputRef.current.value = value;
   }
   return (
     <Modal open={true} cannotExit={false}>
