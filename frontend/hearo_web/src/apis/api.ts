@@ -3,7 +3,7 @@ axios.defaults.withCredentials = true;
 
 // 서버 주소
 const api = axios.create({
-  baseURL: "http://localhost:5137", // local 1
+  baseURL: "http://localhost:8080/api/v1", // local 1
 });
 
 export const UserAPI = {
