@@ -26,8 +26,8 @@ def index():
         return redirect(url_for('main.chat'))
     elif category == 'speaker':
         return redirect(url_for('main.speaker'))
-    elif category == 'sing-language':
-        return redirect(url_for('main.sing_language'))
+    elif category == 'sign-language':
+        return redirect(url_for('main.sign_language'))
     else: # category == 'sound'
         return redirect(url_for('main.sound'))
 
@@ -46,8 +46,8 @@ def speaker():
     return render_template('speaker.html', username=username, room=room)
 
 
-@main.route('/sing-language')
-def sing_language():
+@main.route('/sign-language')
+def sign_language():
     username = session.get('username', '')
     room = session.get('room')
     return render_template('sign-language.html', username=username, room=room)
