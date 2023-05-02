@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hearo_app/apis/login_api.dart';
 import 'package:hearo_app/controller/login_controller.dart';
+import 'package:hearo_app/screens/login_screen.dart';
 import 'package:hearo_app/screens/mysettings/favorite_say.dart';
 import 'package:hearo_app/screens/mysettings/setting_screen.dart';
 import 'package:hearo_app/widgets/common/custom_app_bar_inner.dart';
@@ -211,7 +213,8 @@ class _SettingHomeState extends State<SettingHome> {
                                             borderRadius: BorderRadius.all(
                                                 Radius.circular(30))))),
                                 onPressed: () {
-                                  Get.back();
+                                  ApiLog.logoutApi();
+                                  Get.offAll(LoginScreen());
                                 },
                                 child: const Text(
                                   '로그아웃',
@@ -287,7 +290,8 @@ class _SettingHomeState extends State<SettingHome> {
                                             borderRadius: BorderRadius.all(
                                                 Radius.circular(30))))),
                                 onPressed: () {
-                                  Get.back();
+                                  ApiLog.withdrawApi();
+                                  Get.offAll(LoginScreen());
                                 },
                                 child: const Text(
                                   '탈퇴하기',
