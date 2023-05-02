@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { ArrowLeftIcon, SpeakerWaveIcon, ChevronDownIcon} from "@heroicons/react/24/solid";
 import { useNavigate } from "react-router-dom";
-import { ReactComponent as FormatSizeIcon } from '../assets/format_size.svg'
+import { ReactComponent as FormatSizeIcon } from '../assets/Format_size.svg'
 import { DropDown }  from "@/components";
 
 
@@ -121,7 +121,6 @@ function SettingsPage() {
           />
           )}
         </div>
-
       </button>
 
 

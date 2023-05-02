@@ -11,9 +11,6 @@ import { ConversationInfo } from "@/components";
 
 function MainPage() {
   const [comp, setComp] = useState<string>("main");
-  const [selectedPage, setSelectedPage] = useState<SelectedPage>(
-    SelectedPage.CommunicationPage
-  );
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
   const navigate = useNavigate();
@@ -61,14 +58,11 @@ function MainPage() {
 
   return (
     <div>
-      <audio ref={audioRef} src={startVoice} />
-      {comp === "main" ? (
-        <>
-          <Navbar
-            selectedPage={selectedPage}
-            setSelectedPage={setSelectedPage}
-          />
-          <div className="pt-14">
+    <audio ref={audioRef} src={startVoice} />
+    {comp === "main" ? (
+      <>
+        <Navbar/>
+          <div className="pt-14 z-10">
             <div className="pl-[8%] pt-2 text-2xl font-bold">
               안녕하세요, 김갓팀장님!!!
             </div>
@@ -126,7 +120,8 @@ function MainPage() {
           </div>
         </>
       ) : comp === "voice_play" ? (
-        <ConversationInfo cannotExit={true} />
+        <ConversationInfo cannotExit={true} 
+        />
       ) : null}
     </div>
   );
