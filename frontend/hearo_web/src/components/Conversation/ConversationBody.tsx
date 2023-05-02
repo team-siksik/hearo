@@ -2,6 +2,7 @@ import { Message } from "postcss";
 import React, { useEffect, useRef, useState } from "react";
 import Dialog from "../common/ui/Dialog";
 import GPTRecommend from "./GPTRecommend";
+import { TTS } from "@/apis";
 
 /**
  * socket.io 연결
@@ -37,12 +38,17 @@ interface PropsType {
 function ConversationBody({ message }: PropsType) {
   const messageEndRef = useRef<HTMLDivElement>(null); // 채팅창 늘어날 수록 스크롤 맨 밑으로 이동
   const [id, setId] = useState<number>(0);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isRecording, setIsRecording] = useState<boolean>(false);
+  const [recorder, setRecorder] = useState<MediaRecorder>();
+  const [stream, setStream] = useState<MediaStream>();
   const [conversation, setConversation] = useState<MessageType[]>([]); // 전체 대화 텍스트
   const [openGPTModal, setOpenGPTModal] = useState<boolean>(false); // get GPT 추천
-  const [openAddFavModal, setOpenAddFavModal] = useState<boolean>(false); // 자주 쓰는 말
+  const [text, setText] = useState<string>("");
+  // const [openAddFavModal, setOpenAddFavModal] = useState<boolean>(false); // 자주 쓰는 말
 
+  // 채팅창 늘어날 수록 스크롤 맨 밑으로 이동
   useEffect(() => {
-    // 채팅창 늘어날 수록 스크롤 맨 밑으로 이동
     if (messageEndRef.current)
       messageEndRef.current.scrollIntoView({ behavior: "smooth" });
   }, [conversation]);
@@ -51,6 +57,7 @@ function ConversationBody({ message }: PropsType) {
   useEffect(() => {
     if (message) {
       setId((prev) => prev + 1);
+      setText(message);
       setConversation((prevConversation) => [
         ...prevConversation,
         { id: id + 1, content: message, speaker: "user" },
@@ -68,8 +75,11 @@ function ConversationBody({ message }: PropsType) {
   }, [message]);
 
   function handleDialogClick(e: React.MouseEvent<HTMLDivElement>) {
-    console.log(e.currentTarget.textContent);
+    setText("");
     //TODO: 여기에서 TTS 돌려야돼
+    if (e.currentTarget.textContent) {
+      setText(e.currentTarget.textContent);
+    }
   }
 
   function handleGPTClick() {
@@ -77,64 +87,71 @@ function ConversationBody({ message }: PropsType) {
     setOpenGPTModal(!openGPTModal);
   }
   return (
-    <section
-      className="message-sec mb-10 overflow-y-scroll pt-10"
-      style={{ height: "94vh" }}
-    >
-      {conversation ? (
-        <div>
-          {conversation?.map((item) => {
-            return (
-              <>
-                {item.speaker === "user" ? (
-                  <Dialog
-                    onClick={handleDialogClick}
-                    key={item.id}
-                    type={"user_text"}
-                  >
-                    {item.content}
-                  </Dialog>
-                ) : (
-                  <Dialog
-                    onClick={handleGPTClick}
-                    key={item.id}
-                    type={
-                      item.speaker === "other1"
-                        ? "other1_text"
-                        : item.speaker === "other2"
-                        ? "other2_text"
-                        : item.speaker === "other3"
-                        ? "other3_text"
-                        : item.speaker === "other4"
-                        ? "other4_text"
-                        : item.speaker === "other5"
-                        ? "other5_text"
-                        : item.speaker === "other6"
-                        ? "other6_text"
-                        : item.speaker === "other7"
-                        ? "other7_text"
-                        : item.speaker === "other8"
-                        ? "other8_text"
-                        : item.speaker === "other9"
-                        ? "other9_text"
-                        : item.speaker === "other10"
-                        ? "other10_text"
-                        : ""
-                    }
-                  >
-                    {item.content}
-                  </Dialog>
-                )}
-              </>
-            );
-          })}
-          <div className="scroll-bottom" ref={messageEndRef}></div>
-        </div>
+    <>
+      {isLoading ? (
+        <div>isLoading</div>
       ) : (
-        <div></div>
+        <section
+          className="message-sec mb-10 overflow-y-scroll pt-10"
+          style={{ height: "94vh" }}
+        >
+          {conversation ? (
+            <div>
+              {text && <TTS text={text} setText={setText} />}
+              {conversation?.map((item) => {
+                return (
+                  <>
+                    {item.speaker === "user" ? (
+                      <Dialog
+                        onClick={handleDialogClick}
+                        key={item.id}
+                        type={"user_text"}
+                      >
+                        {item.content}
+                      </Dialog>
+                    ) : (
+                      <Dialog
+                        onClick={handleGPTClick}
+                        key={item.id}
+                        type={
+                          item.speaker === "other1"
+                            ? "other1_text"
+                            : item.speaker === "other2"
+                            ? "other2_text"
+                            : item.speaker === "other3"
+                            ? "other3_text"
+                            : item.speaker === "other4"
+                            ? "other4_text"
+                            : item.speaker === "other5"
+                            ? "other5_text"
+                            : item.speaker === "other6"
+                            ? "other6_text"
+                            : item.speaker === "other7"
+                            ? "other7_text"
+                            : item.speaker === "other8"
+                            ? "other8_text"
+                            : item.speaker === "other9"
+                            ? "other9_text"
+                            : item.speaker === "other10"
+                            ? "other10_text"
+                            : ""
+                        }
+                      >
+                        {item.content}
+                      </Dialog>
+                    )}
+                  </>
+                );
+              })}
+              <div className="scroll-bottom" ref={messageEndRef}></div>
+            </div>
+          ) : (
+            <div></div>
+          )}
+          {openGPTModal ? <GPTRecommend /> : null}
+        </section>
       )}
-      {openGPTModal ? <GPTRecommend /> : null}
-    </section>
+    </>
   );
 }
 

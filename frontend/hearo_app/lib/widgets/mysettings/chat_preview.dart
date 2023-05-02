@@ -40,13 +40,6 @@ class ChatPreview extends StatelessWidget {
               ],
             ),
           ),
-          SizedBox(
-            width: size.width,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [],
-            ),
-          )
         ],
       ),
     );

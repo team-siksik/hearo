@@ -72,10 +72,10 @@ const Navbar = () => {
   }, []);
 
   const homeClick = () => {
-    navigate('/');
-  }
+    navigate("/");
+  };
   const handleMypageClick = () => {
-    navigate('/mypage');
+    navigate("/mypage");
     setIsMenuToggled(false);
   };
 
@@ -90,7 +90,6 @@ const Navbar = () => {
     setIsMenuToggled(false);
   };
 
-
   const sideVariants = {
     open: {
       transition: {
@@ -102,20 +101,20 @@ const Navbar = () => {
       transition: {
         duration:0.3,
       },
-      width: 0
-    }
+      width: 0,
+    },
   };
-  
+
   const itemVariants = {
-    open: { 
+    open: {
       opacity: 1,
     },
     closed: {
       opacity: 0,
-      transition:{
-       duration:0.1,
-      }
-    }
+      transition: {
+        duration: 0.1,
+      },
+    },
   };
 
   // TODO : BAR 외부 클릭했을 때만 없어져야함 
@@ -275,4 +274,3 @@ const Navbar = () => {
 }
 
 export default Navbar;
-
