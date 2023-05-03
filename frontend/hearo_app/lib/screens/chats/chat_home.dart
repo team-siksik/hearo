@@ -1,12 +1,15 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hearo_app/controller/chat_coltroller.dart';
+import 'package:hearo_app/controller/chat_controller.dart';
 import 'package:hearo_app/widgets/chats/custom_app_bar_chat.dart';
 import 'package:hearo_app/widgets/chats/favorite_star.dart';
+import 'package:hearo_app/widgets/chats/show_info_first.dart';
 import 'package:hearo_app/widgets/chats/speech_bubble.dart';
 import 'package:wakelock/wakelock.dart';
 import 'package:flutter_tts/flutter_tts.dart';
+import 'package:audioplayers/audioplayers.dart';
+import 'package:assets_audio_player/assets_audio_player.dart';
 
 class ChatHome extends StatefulWidget {
   const ChatHome({super.key});
@@ -26,7 +29,7 @@ class _ChatHomeState extends State<ChatHome> {
     setState(() {
       // 말풍선 확인을 위한 랜덤요소 추가
       var random = Random();
-      var randomNumber = random.nextInt(4);
+      var randomNumber = random.nextInt(2);
       chattings.add({"who": randomNumber, "message": chat});
       // chattings.add({"who": 0, "message": chat});
       chatController.changeSaying('');
@@ -48,6 +51,33 @@ class _ChatHomeState extends State<ChatHome> {
     // tts.setVoice({"name": "ko-kr-x-ism-local", "locale": "ko-KR"});
     tts.setVoice({"name": "ko-kr-x-ism-network", "locale": "ko-KR"});
     // tts.setVoice({"name": "ko-kr-x-kob-network", "locale": "ko-KR"});
+    // 들어오자마자 모달
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      showInfoFirst(context);
+    });
+    playAudio();
+    Future.delayed(Duration(milliseconds: 3300), () async {
+      playAudioStop();
+      Get.back();
+    });
+  }
+
+  final AssetsAudioPlayer assetsAudioPlayer = AssetsAudioPlayer.newPlayer();
+  void playAudio() async {
+    await assetsAudioPlayer.open(
+      Audio("assets/audios/hearo_start.wav"),
+      loopMode: LoopMode.none, //반복 여부 (LoopMode.none : 없음)
+      autoStart: false, //자동 시작 여부
+      showNotification: false, //스마트폰 알림 창에 띄울지 여부
+    );
+
+    assetsAudioPlayer.play(); //재생
+    // assetsAudioPlayer.pause(); //멈춤
+    // assetsAudioPlayer.stop(); //정지
+  }
+
+  void playAudioStop() async {
+    assetsAudioPlayer.stop(); //정지
   }
 
   @override
@@ -55,6 +85,13 @@ class _ChatHomeState extends State<ChatHome> {
     // 화면 꺼짐 방지 비활성화
     Wakelock.disable();
     super.dispose();
+  }
+
+  AudioPlayer player = AudioPlayer();
+  Future playSound() async {
+    // await player.setSourceAsset("assets/audios/hearo_start.wav");
+    await player.play(DeviceFileSource("assets/audios/hearo_start.wav"));
+    // await player.play(DeviceFileSource("assets/audios/hearo_start.wav"));
   }
 
   @override
@@ -92,6 +129,7 @@ class _ChatHomeState extends State<ChatHome> {
                         itemBuilder: (context, index) {
                           var saying = chattings[index];
                           return SpeechBubble(
+                              textController: textController,
                               message: saying["message"],
                               who: saying["who"],
                               textSize: textSize);
@@ -118,7 +156,7 @@ class _ChatHomeState extends State<ChatHome> {
                                   _scrollController.position.maxScrollExtent);
                             },
                             controller: textController,
-                            onSubmitted: (value) {
+                            onSubmitted: (value) async {
                               if (value.trim().isEmpty) {
                                 return;
                               }
@@ -126,9 +164,9 @@ class _ChatHomeState extends State<ChatHome> {
                               setState(() {
                                 chatController.changeSaying('');
                                 textController.text = '';
-                                _scrollController.jumpTo(
-                                    _scrollController.position.maxScrollExtent);
                               });
+                              _scrollController.jumpTo(
+                                  _scrollController.position.maxScrollExtent);
                             },
                             onChanged: (text) {
                               setState(() {
@@ -145,20 +183,20 @@ class _ChatHomeState extends State<ChatHome> {
                           ),
                         ),
                         IconButton(
-                            onPressed: () {
+                            onPressed: () async {
                               var value = chatController.inputSay;
                               if (value.trim().isEmpty) {
                                 return;
                               }
                               addChat(value);
+                              await tts.speak(textController.text);
                               setState(() {
                                 chatController.changeSaying('');
-                                tts.speak(textController.text);
                                 textController.text = '';
-                                _scrollController.jumpTo(
-                                    _scrollController.position.maxScrollExtent);
+                                FocusScope.of(context).unfocus();
                               });
-                              FocusScope.of(context).unfocus();
+                              _scrollController.jumpTo(
+                                  _scrollController.position.maxScrollExtent);
                             },
                             icon: Icon(Icons.send_rounded,
                                 color: Color.fromARGB(255, 97, 97, 97))),
