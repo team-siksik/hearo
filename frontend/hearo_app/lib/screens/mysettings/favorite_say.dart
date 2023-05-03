@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hearo_app/controller/my_data_controller.dart';
+import 'package:hearo_app/apis/say_api.dart';
 import 'package:hearo_app/widgets/common/custom_app_bar_inner.dart';
 import 'package:get/get.dart';
 import 'package:auto_size_text/auto_size_text.dart';
@@ -13,12 +13,65 @@ class FavoriteSay extends StatefulWidget {
 
 class _FavoriteSayState extends State<FavoriteSay> {
   String inputText = '';
-  MyDataController myDataController = Get.put(MyDataController());
+  List favorite = [];
   TextEditingController textController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    loadfavorites();
+  }
+
+  Future<void> loadfavorites() async {
+    final favorites = await ApiSay.sayGetApi();
+    setState(() {
+      favorite = favorites;
+    });
+  }
+
+  Future<void> createfavorite(saying) async {
+    await ApiSay.sayCreateApi(saying);
+    final favorites = await ApiSay.sayGetApi();
+    setState(() {
+      favorite = favorites;
+    });
+  }
+
+  Future<void> updatefavorite(before, after) async {
+    var where = 0;
+    for (var item in favorite) {
+      if (item["sentence"] == before) {
+        where = item["frequentSeq"];
+        break;
+      }
+    }
+    await ApiSay.sayUpdateApi(after, where);
+    final favorites = await ApiSay.sayGetApi();
+    setState(() {
+      favorite = favorites;
+    });
+  }
+
+  Future<void> deletefavorite(saying) async {
+    var where = 0;
+    for (var item in favorite) {
+      if (item["sentence"] == saying) {
+        where = item["frequentSeq"];
+        break;
+      }
+    }
+    await ApiSay.sayDeleteApi(where);
+    final favorites = await ApiSay.sayGetApi();
+    setState(() {
+      favorite = favorites;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.sizeOf(context);
+    print(favorite);
+    print("@@@@@@@@@@@@@@@@@@@@");
     return Scaffold(
       appBar: CustomAppBarInner(name: "자주 쓰는 말"),
       // scaffold에서 키보드 밀림 방지
@@ -33,23 +86,23 @@ class _FavoriteSayState extends State<FavoriteSay> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  myDataController.sayings.length < 10
+                  favorite.length < 10
                       ? Text(
-                          "${myDataController.sayings.length} / 10",
+                          "${favorite.length} / 10",
                           style: TextStyle(fontSize: 18),
                         )
                       : Text(
-                          "${myDataController.sayings.length} / 10",
+                          "${favorite.length} / 10",
                           style:
                               TextStyle(fontSize: 18, color: Color(0xffe63e43)),
                         ),
-                  myDataController.sayings.length < 10
+                  favorite.length < 10
                       ? TextButton(
                           onPressed: () {
                             setState(() {
                               textController.text = '';
                             });
-                            if (myDataController.sayings.length < 10) {
+                            if (favorite.length < 10) {
                               sayingDialog(context, size, false, '');
                             }
                           },
@@ -65,16 +118,15 @@ class _FavoriteSayState extends State<FavoriteSay> {
               ),
             ),
             SizedBox(
-                height: size.height * 0.8,
-                child: Obx(
-                  () => ListView.builder(
-                    itemCount: myDataController.sayings.length,
-                    itemBuilder: (context, index) {
-                      var saying = myDataController.sayings[index];
-                      return favoriteSay(context, size, saying);
-                    },
-                  ),
-                ))
+              height: size.height * 0.8,
+              child: ListView.builder(
+                itemCount: favorite.length,
+                itemBuilder: (context, index) {
+                  var saying = favorite[index]["sentence"];
+                  return favoriteSay(context, size, saying);
+                },
+              ),
+            )
           ],
         ),
       ),
@@ -151,7 +203,7 @@ class _FavoriteSayState extends State<FavoriteSay> {
                         borderRadius: BorderRadius.all(Radius.circular(30))))),
                 onPressed: () async {
                   if (inputText.trim().isEmpty ||
-                      myDataController.sayings.contains(inputText.trim())) {
+                      favorite.contains(inputText.trim())) {
                     var duple =
                         inputText.trim().isEmpty ? "입력된 말이 없어요" : "중복된 말입니다.";
                     Get.snackbar(duple, say,
@@ -163,16 +215,16 @@ class _FavoriteSayState extends State<FavoriteSay> {
 
                     return;
                   }
-                  setState(() {
-                    if (edit) {
-                      myDataController.editSaying(say, inputText.trim());
-                    } else {
-                      myDataController.addSaying(inputText.trim());
-                    }
 
-                    textController.text = '';
-                    inputText = '';
-                  });
+                  if (edit) {
+                    updatefavorite(say, inputText.trim());
+                  } else {
+                    createfavorite(inputText.trim());
+                  }
+                  // createfavorite(inputText.trim());
+                  textController.text = '';
+                  inputText = '';
+
                   Get.back();
                 },
                 child: edit ? Text('변경하기') : Text('추가하기'),
@@ -263,7 +315,7 @@ class _FavoriteSayState extends State<FavoriteSay> {
                                         Radius.circular(30))))),
                         onPressed: () {
                           setState(() {
-                            myDataController.removeSaying(saying);
+                            deletefavorite(saying);
                             Get.back();
                           });
                         },
