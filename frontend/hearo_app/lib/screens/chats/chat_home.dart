@@ -129,6 +129,7 @@ class _ChatHomeState extends State<ChatHome> {
                         itemBuilder: (context, index) {
                           var saying = chattings[index];
                           return SpeechBubble(
+                              textController: textController,
                               message: saying["message"],
                               who: saying["who"],
                               textSize: textSize);
@@ -155,7 +156,7 @@ class _ChatHomeState extends State<ChatHome> {
                                   _scrollController.position.maxScrollExtent);
                             },
                             controller: textController,
-                            onSubmitted: (value) {
+                            onSubmitted: (value) async {
                               if (value.trim().isEmpty) {
                                 return;
                               }
@@ -163,9 +164,9 @@ class _ChatHomeState extends State<ChatHome> {
                               setState(() {
                                 chatController.changeSaying('');
                                 textController.text = '';
-                                _scrollController.jumpTo(
-                                    _scrollController.position.maxScrollExtent);
                               });
+                              _scrollController.jumpTo(
+                                  _scrollController.position.maxScrollExtent);
                             },
                             onChanged: (text) {
                               setState(() {

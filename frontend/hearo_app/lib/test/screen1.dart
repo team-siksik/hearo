@@ -2,6 +2,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:assets_audio_player/assets_audio_player.dart';
+import 'package:hearo_app/apis/gpt_api.dart';
 import 'string_list_controller.dart';
 
 class Screen1 extends StatelessWidget {
@@ -29,6 +30,10 @@ class Screen1 extends StatelessWidget {
     // assetsAudioPlayer.stop(); //정지
   }
 
+  Future getSentence(text) async {
+    await ApiGpt.sayCreateApi(text);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,7 +46,8 @@ class Screen1 extends StatelessWidget {
           ElevatedButton(
             onPressed: () {
               // playSound();
-              playAudio();
+              // playAudio();
+              getSentence("이 안건에 대해 어떻게 생각하세요?");
             },
             child: Text('Clear'),
           ),
