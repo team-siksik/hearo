@@ -27,8 +27,8 @@ const Navbar = () => {
   
   const links = [
     { image: <Start width={100} height={100}/>,  name: "대화 시작하기", to:"comm", id:1},
-    { image: <Join width={100} height={100} />, name: "대화 참여하기", to: "comm", id:2},
-    { image: <Check width={100} height={100}/>, name: "기록 확인하기", to: "records", id:3},
+    { image: <Join width={100} height={100} />, name: "수어 인식 대화", to: "comm", id:2},
+    { image: <Check width={100} height={100}/>, name: "주변 소음 인식", to: "records", id:3},
   ]
 
 
@@ -37,18 +37,24 @@ const Navbar = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
 
+  // TODO : 음성재생 모달도 로그인된 상태에서만 접근 가능하도록 조치해야함
   // 음성재생 함수
-  const togglePlay = () => {
-    if (audioRef.current) {
-      if (isPlaying) {
-        audioRef.current.pause();
-      } else {
-        setComp("voice_play");
-        audioRef.current.play();
+  const togglePlay = () => 
+    // { if (isLoggedin) 
+      {
+      if (audioRef.current) {
+        if (isPlaying) {  
+          audioRef.current.pause();
+        } else {
+          setComp("voice_play");
+          audioRef.current.play();
+        }
+        setIsPlaying(!isPlaying);
       }
-      setIsPlaying(!isPlaying);
-    }
-  };
+    } 
+    // else {
+    //   navigate("/login")
+    // }};
 
   useEffect(() => {
     function handleAudioEnded() {
@@ -70,21 +76,29 @@ const Navbar = () => {
     };
   }, []);
 
+  // 로고클릭 시 메인페이지로 이동
   const homeClick = () => {
     navigate("/");
   };
+
+  // 로그인된 상태에서만 MyPage로 이동
   const handleMypageClick = () => {
-    navigate("/mypage");
-    setIsMenuToggled(false);
+    if (isLoggedin) {
+      navigate("/mypage");
+      setIsMenuToggled(false);
+    } else {
+      // 로그인되어 있지 않은 경우 로그인 페이지로 이동하도록 처리
+      navigate("/login");
+    }
   };
 
-  // 로그인 버튼 클릭
-  // TODO : access token 들고와야해 
+  // 로그인 버튼 클릭 
+  // 여기서도 accesstoken이 필요한가? 들고오도록 적용해야하나?
   const handleLoginClick = () => {
     navigate('/login')
-    setIsMenuToggled(false);
   }
 
+  // 로그아웃 버튼 클릭, accesstoken 삭제
   const handleLogoutClick = () => {
     localStorage.removeItem('access_token');
     setIsMenuToggled(false);
@@ -94,7 +108,7 @@ const Navbar = () => {
   const sideVariants = {
     open: {
       transition: {
-        duration:0.4,
+        duration:0.5,
       },
       width:280
     },
@@ -109,11 +123,14 @@ const Navbar = () => {
   const itemVariants = {
     open: {
       opacity: 1,
+      transition: {
+        duration: 0.4,
+      },
     },
     closed: {
       opacity: 0,
       transition: {
-        duration: 0.1,
+        duration: 0.3,
       },
     },
   };
@@ -167,7 +184,7 @@ const Navbar = () => {
               exit={{
                   width: 0,
                   transition: {
-                  duration:0.2
+                    duration:0.2
                   }
                 }}>
                 <motion.div 
@@ -188,6 +205,7 @@ const Navbar = () => {
 
                   {/* Navbar 메뉴 */}
                   <div className="mt-[10%] mx-[5%] flex flex-col gap-5">
+                    {/* 대화 시작하기 */}
                     <motion.div
                       key={links[0].id}
                       whileHover={{ scale: 1.1 }}
@@ -202,21 +220,35 @@ const Navbar = () => {
                         <span className="text-2xl font-bold w-full h-28 pl-10 py-4 pt-10">{links[0].name}</span>
                       </div>
                     </motion.div>
-                    {links.slice(1).map(({ image, name, to, id }) => (
-                      <motion.a
-                      key={id}
-                      href={to}
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.95}}
-                        variants={itemVariants}
-                      >
-                        <div className="flex flex-row w-full space-x-12"> 
-                          <span className="w-6 h-6">{image}</span>
-                          <span className="text-2xl font-bold w-full h-28 pl-10 py-4 pt-10">{name}</span>
-                        </div>
-                      </motion.a>
-                    ))}
+                    {/* 수어 인식 대화 */}
+                    <motion.div
+                      key={links[1].id}
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.95}}
+                      variants={itemVariants}
+                      onClick={() => {
+                        togglePlay();
+                        setIsMenuToggled(!isMenuToggled);
+                      }}>
+                      <div className="flex flex-row w-full space-x-12"> 
+                        <span className="w-6 h-6">{links[1].image}</span>
+                        <span className="text-2xl font-bold w-full h-28 pl-10 py-4 pt-10">{links[1].name}</span>
+                      </div>
+                    </motion.div>
+                    {/* 주변 소음 인식 */}
+                    <motion.div
+                      key={links[2].id}
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.95}}
+                      variants={itemVariants}>
+                      <div className="flex flex-row w-full space-x-12"> 
+                        <span className="w-6 h-6">{links[2].image}</span>
+                        <span className="text-2xl font-bold w-full h-28 pl-10 py-4 pt-10">{links[2].name}</span>
+                      </div>
+                    </motion.div>
                   </div>
+
+
                   <motion.div 
                     className="flex flex-col gap-3 text-lg"
                     variants={itemVariants}
@@ -224,19 +256,20 @@ const Navbar = () => {
                     <motion.div
                       whileHover={{ scale: 1.1 }}
                       whileTap={{ scale: 0.95}}
-                      className="mt-[60%] mx-[25%] flex flex-row gap-3 text-lg"
+                      className="mt-[50%] mx-[25%] flex flex-row gap-3 text-lg"
                       variants={itemVariants}
                       >
                     <SettingIcon className="h-6 w-6"/>
                     <button onClick={handleMypageClick}>내 정보 수정</button>
                     </motion.div>
 
+                    {/* 로그인상태면 로그아웃버튼 도출, 반대 포함 */}
                     { isLoggedin ? (
-                    <motion.div
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.95}}
-                    className="flex mx-[25%] flex-row gap-3 text-lg"
-                    variants={itemVariants}
+                      <motion.div
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.95}}
+                      className="flex mx-[25%] flex-row gap-3 text-lg"
+                      variants={itemVariants}
                     >
                       <LogoutIcon className="h-6 w-6"/>
                     <button onClick={handleLogoutClick}>로그아웃</button>
@@ -267,9 +300,9 @@ const Navbar = () => {
               </AnimatePresence>
               </>
             ) : comp === "voice_play" ? (
-            <ConversationInfo cannotExit={true} 
-            />
-            ) : null}
+              <ConversationInfo cannotExit={true} 
+              />
+              ) : null}
         </div>
   );
 }
