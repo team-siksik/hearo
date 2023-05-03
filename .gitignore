@@ -179,6 +179,8 @@ application-google.yml
 application-jwt.yml
 application-mysql.yml
 docker-compose.yml
+nginx.conf
+
 ### STS ###
 .apt_generated
 .classpath
