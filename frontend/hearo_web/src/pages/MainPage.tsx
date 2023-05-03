@@ -13,6 +13,7 @@ import { useAppSelector } from "@/redux/hooks";
 import type { RootState } from "@/redux/configStore";
 
 // TODO : 캐러셀 위에 로그인 여부에 따라 멘트가 달라져야함
+// TODO : 로그인이 필요할 때 바로 로그인페이지? 혹은 모달 띄워서 로그인이 필요합니다 예 아니오 클릭? 
 
 function MainPage() {
   const [comp, setComp] = useState<string>("main");
@@ -20,23 +21,31 @@ function MainPage() {
   const audioRef = useRef<HTMLAudioElement>(null);
   const navigate = useNavigate();
 
-  // 로그인여, redux에서 가져옴
-  const { isLoggedIn, user } = useAppSelector((state: RootState) => state.user);
+  // redux에서 닉네임을 가져오기 위해 사용함
+  const { isLoggedIn, user } = useAppSelector((state) => state.user);
   const nickname = isLoggedIn ? user.nickname : "";
 
+  // 로그인 여부 판단
+  const isLogin = !!localStorage.getItem('access_token');
 
-  // 음성 재생
-  const togglePlay = () => {
-    if (audioRef.current) {
-      if (isPlaying) {
-        audioRef.current.pause();
-      } else {
-        setComp("voice_play");
-        audioRef.current.play();
+  // TODO : 음성재생 모달도 로그인된 상태에서만 접근 가능하도록 조치해야함
+  // 음성재생 함수
+  const togglePlay = () => 
+    // { if (isLoggedin) 
+      {
+      if (audioRef.current) {
+        if (isPlaying) {  
+          audioRef.current.pause();
+        } else {
+          setComp("voice_play");
+          audioRef.current.play();
+        }
+        setIsPlaying(!isPlaying);
       }
-      setIsPlaying(!isPlaying);
-    }
-  };
+    } 
+    // else {
+    //   navigate("/login")
+    // }};
 
   useEffect(() => {
     function handleAudioEnded() {
