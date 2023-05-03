@@ -27,6 +27,7 @@ interface UserDataType {
   singleId: string;
 }
 
+// 초기상태
 const initialState: UserType = {
   user: {
     nickname: "",
