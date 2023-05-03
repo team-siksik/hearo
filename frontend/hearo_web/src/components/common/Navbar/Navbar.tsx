@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/solid";
 import Test1 from "@/assets/Hearo_logo.png"
 import { AnimatePresence, motion } from "framer-motion";
-import { SelectedPage } from "@/types/types";
 import { ReactComponent as Start } from "@/assets/StartConver.svg";
 import { ReactComponent as Join } from "@/assets/JoinConver.svg";
 import { ReactComponent as Check } from "@/assets/CheckConver.svg";
@@ -12,11 +11,9 @@ import { ReactComponent as LogoutIcon} from "@/assets/LogoutIcon.svg";
 import { ReactComponent as LoginIcon} from "@/assets/LoginIcon.svg";
 import { ConversationInfo } from "@/components";
 import startVoice from "@/assets/start.wav";
+import { SelectedPage } from "@/types/types";
 
-// 유저정보가 있으면 로그인상태, 없으면 로그아웃상태 
-
-// 로그인, 로그아웃 여부를 위한 token 함수
-const insertedToken = localStorage.getItem('access_token');
+// TODO : 로그인을 하면 useParams 써서 로그인정보를 버튼들 위에다가 띄워줘야함 
 
 // TODO : 로그인 설정 다 해놔야됨
 // TODO : 대화 시작하기 클릭할 때 전체가 가려져야 함
@@ -25,7 +22,9 @@ const Navbar = () => {
   const flexBetween = "flex items-center justify-between";
   const [isMenuToggled, setIsMenuToggled] = useState<boolean>(false);
   const navbarBackground = "z-10 bg-white drop-shadow";
-
+  // 로그인여부
+  const isLoggedin = !!localStorage.getItem('access_token');
+  
   const links = [
     { image: <Start width={100} height={100}/>,  name: "대화 시작하기", to:"comm", id:1},
     { image: <Join width={100} height={100} />, name: "대화 참여하기", to: "comm", id:2},
@@ -79,6 +78,8 @@ const Navbar = () => {
     setIsMenuToggled(false);
   };
 
+  // 로그인 버튼 클릭
+  // TODO : access token 들고와야해 
   const handleLoginClick = () => {
     navigate('/login')
     setIsMenuToggled(false);
@@ -86,8 +87,8 @@ const Navbar = () => {
 
   const handleLogoutClick = () => {
     localStorage.removeItem('access_token');
-    navigate('/logout');
     setIsMenuToggled(false);
+    navigate('/login');
   };
 
   const sideVariants = {
@@ -230,7 +231,7 @@ const Navbar = () => {
                     <button onClick={handleMypageClick}>내 정보 수정</button>
                     </motion.div>
 
-                    {/* { token ? (
+                    { isLoggedin ? (
                     <motion.div
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.95}}
@@ -240,7 +241,7 @@ const Navbar = () => {
                       <LogoutIcon className="h-6 w-6"/>
                     <button onClick={handleLogoutClick}>로그아웃</button>
                   </motion.div>
-                  ) : ( */}
+                  ) : (
                     <motion.div
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.95}}
@@ -250,7 +251,7 @@ const Navbar = () => {
                       <LoginIcon className="h-6 w-6"/>
                     <button onClick={handleLoginClick}> 로그인</button>
                   </motion.div>
-                  {/* )} */}
+                  )} 
                 </motion.div>
               </motion.div>
               {/* 뒷배경 흐리게 */}
