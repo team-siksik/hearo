@@ -1,30 +1,34 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:bubble/bubble.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:get/get.dart';
+import 'package:hearo_app/apis/gpt_api.dart';
 import 'package:hearo_app/apis/say_api.dart';
+import 'package:hearo_app/controller/chat_controller.dart';
 
 enum TtsState { playing, stopped, paused, continued }
 
 class SpeechBubble extends StatefulWidget {
   final String message;
   final int who, textSize;
-  const SpeechBubble({
-    super.key,
-    required this.message,
-    required this.who,
-    required this.textSize,
-  });
+  final TextEditingController textController;
+  const SpeechBubble(
+      {super.key,
+      required this.message,
+      required this.who,
+      required this.textSize,
+      required this.textController});
 
   @override
   State<SpeechBubble> createState() => _SpeechBubbleState();
 }
 
 const colorList = {
-  3: [Color.fromARGB(255, 255, 255, 255), Color.fromARGB(20, 255, 255, 255)],
+  0: [Color.fromARGB(255, 254, 255, 211), Color.fromARGB(20, 254, 255, 211)],
   1: [Color.fromARGB(255, 255, 211, 211), Color.fromARGB(20, 255, 211, 211)],
   2: [Color.fromARGB(255, 255, 238, 211), Color.fromARGB(20, 255, 238, 211)],
-  0: [Color.fromARGB(255, 254, 255, 211), Color.fromARGB(20, 254, 255, 211)],
+  3: [Color.fromARGB(255, 213, 161, 255), Color.fromARGB(20, 255, 255, 255)],
   4: [Color.fromARGB(255, 229, 255, 211), Color.fromARGB(20, 229, 255, 211)],
   5: [Color.fromARGB(255, 152, 178, 255), Color.fromARGB(20, 152, 178, 255)],
   6: [Color.fromARGB(255, 248, 249, 255), Color.fromARGB(20, 248, 249, 255)],
@@ -33,8 +37,37 @@ const colorList = {
   9: [Color.fromARGB(255, 186, 186, 186), Color.fromARGB(20, 186, 186, 186)],
 };
 
-// GPT 기능 더 자세하게 하면 좋을듯
 class _SpeechBubbleState extends State<SpeechBubble> {
+// GPT 기능 더 자세하게 하면 좋을듯
+  Future getSentence(context, size, text) async {
+    List sentences = await ApiGpt.sayCreateApi(text);
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        title: Text(
+          "추천 답변",
+          textAlign: TextAlign.center,
+          style: TextStyle(fontWeight: FontWeight.w700),
+        ),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(25))),
+        content: SizedBox(
+          height: size.width * 0.8,
+          width: size.width * 0.8,
+          child: ListView.separated(
+            separatorBuilder: (context, index) => SizedBox(
+              height: size.height * 0.017,
+            ),
+            itemCount: sentences.length,
+            itemBuilder: (context, index) {
+              return recommendSay(context, size, sentences[index]);
+            },
+          ),
+        ),
+      ),
+    );
+  }
+
   late FlutterTts tts;
   late TtsState ttsState;
   List favorite = [];
@@ -145,18 +178,23 @@ class _SpeechBubbleState extends State<SpeechBubble> {
           : Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Bubble(
-                  radius: Radius.circular(14),
-                  elevation: 0.8,
-                  shadowColor: colorList[widget.who]![0],
-                  borderColor: colorList[widget.who]![1],
-                  color: colorList[widget.who]![0],
-                  margin: BubbleEdges.only(top: 5, bottom: 5),
-                  alignment: Alignment.topLeft,
-                  nip: BubbleNip.leftTop,
-                  child: Text(
-                    widget.message,
-                    style: TextStyle(fontSize: fonts),
+                GestureDetector(
+                  onTap: () {
+                    getSentence(context, size, widget.message);
+                  },
+                  child: Bubble(
+                    radius: Radius.circular(14),
+                    elevation: 0.8,
+                    shadowColor: colorList[widget.who]![0],
+                    borderColor: colorList[widget.who]![1],
+                    color: colorList[widget.who]![0],
+                    margin: BubbleEdges.only(top: 5, bottom: 5),
+                    alignment: Alignment.topLeft,
+                    nip: BubbleNip.leftTop,
+                    child: Text(
+                      widget.message,
+                      style: TextStyle(fontSize: fonts),
+                    ),
                   ),
                 ),
               ],
@@ -237,6 +275,41 @@ class _SpeechBubbleState extends State<SpeechBubble> {
               ),
             ],
           )
+        ],
+      ),
+    );
+  }
+
+  GestureDetector recommendSay(BuildContext context, Size size, saying) {
+    final chatController = Get.put(ChatController());
+    return GestureDetector(
+      onTap: () {
+        widget.textController.text = saying;
+        chatController.changeSaying(saying);
+        Get.back();
+      },
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          SizedBox(
+            width: size.width * 0.6,
+            child: Bubble(
+              radius: Radius.circular(14),
+              elevation: 0.8,
+              shadowColor: Colors.black45,
+              borderColor: Colors.black26,
+              color: Colors.white,
+              padding: BubbleEdges.fromLTRB(15, 10, 15, 10),
+              alignment: Alignment.centerRight,
+              nip: BubbleNip.rightTop,
+              child: AutoSizeText(
+                saying,
+                style: TextStyle(fontSize: 20),
+                maxLines: 3,
+                textAlign: TextAlign.right,
+              ),
+            ),
+          ),
         ],
       ),
     );
