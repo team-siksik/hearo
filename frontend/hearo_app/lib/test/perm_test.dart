@@ -8,20 +8,6 @@ class PermTest extends StatefulWidget {
   State<PermTest> createState() => _PermTestState();
 }
 
-// Future<bool> permission() async {
-//   Map<Permission, PermissionStatus> status = await [
-//     Permission.camera.status,
-//     Permission.microphone.status,
-//     Permission.audio.status,
-//   ].request(); // [] 권한배열에 권한을 작성
-
-//   print(status);
-//   if (await Permission.location.isGranted) {
-//     return Future.value(true);
-//   } else {
-//     return Future.value(false);
-//   }
-// }
 getPermissionCamera() async {
   var statusCamera = await Permission.camera.status;
   if (statusCamera.isGranted) {
@@ -59,9 +45,9 @@ class _PermTestState extends State<PermTest> {
   @override
   void initState() {
     super.initState();
-    getPermissionCamera();
+    // getPermissionCamera();
     getPermissionAudio();
-    getPermission();
+    // getPermission();
   }
 
   @override

@@ -3,8 +3,8 @@ import 'package:bubble/bubble.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
-import 'package:hearo_app/controller/chat_coltroller.dart';
-import 'package:hearo_app/controller/my_data_controller.dart';
+import 'package:hearo_app/apis/say_api.dart';
+import 'package:hearo_app/controller/chat_controller.dart';
 
 class FavoriteStar extends StatefulWidget {
   final Size size;
@@ -16,19 +16,34 @@ class FavoriteStar extends StatefulWidget {
 }
 
 class _FavoriteStarState extends State<FavoriteStar> {
-  final chatController = Get.put(ChatController());
-  final myDataControll = Get.put(MyDataController());
-  // final MyDataController myDataController = Get.find();
+  // final chatController = Get.put(ChatController());
+  List favorite = [];
+  List favoriteSentences = [];
 
-  @override // 알람 디테일 받아오기
+  @override
   void initState() {
     super.initState();
+    loadfavorites();
+  }
+
+  Future<void> loadfavorites() async {
+    final favorites = await ApiSay.sayGetApi();
+    setState(() {
+      favorite = favorites;
+      favoriteSentences = [];
+      for (var item in favorites) {
+        favoriteSentences.add(item["sentence"]);
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return IconButton(
-        onPressed: () => chatDialog(context),
+        onPressed: () async {
+          await loadfavorites();
+          await chatDialog();
+        },
         icon: Animate(
           effects: [ScaleEffect(), FadeEffect()],
           autoPlay: true,
@@ -36,34 +51,33 @@ class _FavoriteStarState extends State<FavoriteStar> {
         ));
   }
 
-  Future<dynamic> chatDialog(BuildContext context) {
+  Future<dynamic> chatDialog() {
     return showDialog(
-        context: context,
-        builder: (BuildContext context) => AlertDialog(
-              title: Text(
-                "자주 쓰는 말",
-                textAlign: TextAlign.center,
-                style: TextStyle(fontWeight: FontWeight.w700),
-              ),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(25))),
-              content: SizedBox(
-                height: widget.size.width * 0.8,
-                width: widget.size.width * 0.8,
-                child: Obx(
-                  () => ListView.separated(
-                    separatorBuilder: (context, index) => SizedBox(
-                      height: widget.size.height * 0.017,
-                    ),
-                    itemCount: myDataControll.sayings.length,
-                    itemBuilder: (context, index) {
-                      var saying = myDataControll.sayings[index];
-                      return favoriteSay(context, widget.size, saying);
-                    },
-                  ),
-                ),
-              ),
-            ));
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        title: Text(
+          "자주 쓰는 말",
+          textAlign: TextAlign.center,
+          style: TextStyle(fontWeight: FontWeight.w700),
+        ),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(25))),
+        content: SizedBox(
+          height: widget.size.width * 0.8,
+          width: widget.size.width * 0.8,
+          child: ListView.separated(
+            separatorBuilder: (context, index) => SizedBox(
+              height: widget.size.height * 0.017,
+            ),
+            itemCount: favoriteSentences.length,
+            itemBuilder: (context, index) {
+              var saying = favorite[index]["sentence"];
+              return favoriteSay(context, widget.size, saying);
+            },
+          ),
+        ),
+      ),
+    );
   }
 
   GestureDetector favoriteSay(BuildContext context, Size size, saying) {
