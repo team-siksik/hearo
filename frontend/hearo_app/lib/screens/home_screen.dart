@@ -119,7 +119,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     style: TextStyle(
                                         fontSize: 18,
                                         fontWeight: FontWeight.w600)),
-                                Text("상대방을 초대하여 대화를 시작해요.",
+                                Text("누가 말하는지 알 수 있어요.",
                                     style: TextStyle(fontSize: 12)),
                               ],
                             )
@@ -147,7 +147,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 const Padding(
                                   padding: EdgeInsets.only(bottom: 12),
                                   child: Text(
-                                    "대화 참여하기",
+                                    "수어인식 대화",
                                     style: TextStyle(
                                         fontWeight: FontWeight.w600,
                                         fontSize: 18),
@@ -176,7 +176,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 const Padding(
                                   padding: EdgeInsets.only(bottom: 12),
                                   child: Text(
-                                    "기록 확인하기",
+                                    "주변 소음인식",
                                     style: TextStyle(
                                         fontWeight: FontWeight.w600,
                                         fontSize: 18),

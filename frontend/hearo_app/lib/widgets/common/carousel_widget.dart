@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 
 final adList = {
   "list": [
-    {"image": "assets/images/temp1.png", "name": "1"},
-    {"image": "assets/images/temp2.png", "name": "2"},
-    {"image": "assets/images/temp3.png", "name": "3"},
+    {"image": "assets/images/Carousel1 (2).png", "name": "1"},
+    {"image": "assets/images/Carousel2 (2).png", "name": "2"},
+    {"image": "assets/images/Carousel3 (2).png", "name": "3"},
   ]
 };
 
@@ -34,7 +34,7 @@ class _CarouselWidgetState extends State<CarouselWidget> {
         return Builder(builder: (BuildContext context) {
           return Image.asset(
             item["image"]!,
-            fit: BoxFit.cover,
+            fit: BoxFit.fill,
           );
         });
       }).toList(),
