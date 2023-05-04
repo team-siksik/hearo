@@ -2,6 +2,16 @@ from diart import OnlineSpeakerDiarization
 from diart.sources import MicrophoneAudioSource
 from diart.inference import RealTimeInference
 from diart.sinks import RTTMWriter
+from typing import Union, Text, Optional, Tuple
+
+
+def _extract_annotation(value: Union[Tuple, Annotation]) -> Annotation:
+    if isinstance(value, tuple):
+        return value[0]
+    if isinstance(value, Annotation):
+        return value
+    msg = f"Expected tuple or Annotation, but got {type(value)}"
+    raise ValueError(msg)
 
 class PrintResultObserver:
     def on_next(self, result):
