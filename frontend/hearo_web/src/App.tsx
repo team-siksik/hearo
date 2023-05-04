@@ -4,7 +4,7 @@ import {
   LoginPage,
   ConversationPage,
   MainPage,
-  RecordsPage,
+  RecognizePage,
   MyPage,
   FavContentsPage,
   SettingsPage,
@@ -24,7 +24,7 @@ function App() {
           element={user === null ? <LoginPage /> : <MainPage />}
         />
         <Route path="/comm" element={<ConversationPage />} />
-        <Route path="/records" element={<RecordsPage />} />
+        <Route path="/recognize" element={<RecognizePage />} />
         <Route path="/mypage" element={<MyPage />} />
         <Route path="/favcontents" element={<FavContentsPage />} />
         <Route path="/settings" element={<SettingsPage />} />
