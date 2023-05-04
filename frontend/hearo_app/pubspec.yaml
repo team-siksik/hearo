@@ -85,6 +85,10 @@ dependencies:
   # flutter_reactive_ble: ^5.0.3
   intl:
   path:
+  # stt
+  speech_to_text:
+  highlight_text:
+  avatar_glow:
 
 dev_dependencies:
   flutter_test:
