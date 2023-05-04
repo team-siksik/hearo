@@ -14,6 +14,8 @@ import Dialog from "./common/ui/Dialog";
 import Navbar from "./common/Navbar/Navbar";
 import Carousel from "./common/Carousel/Carousel";
 import DropDown from "./common/ui/Dropdown";
+import TutorialBalloon from "./common/ui/TutorialBalloon";
+import BackgroundHider from "./common/ui/BackgroundHider";
 
 export {
   ConversationInfo,
@@ -32,4 +34,6 @@ export {
   Carousel,
   Dialog,
   DropDown,
+  TutorialBalloon,
+  BackgroundHider,
 };
