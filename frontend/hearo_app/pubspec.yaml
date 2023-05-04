@@ -83,7 +83,8 @@ dependencies:
   # 블루투스
   flutter_blue_plus: 
   # flutter_reactive_ble: ^5.0.3
-
+  intl:
+  path:
 
 dev_dependencies:
   flutter_test:

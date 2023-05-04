@@ -15,13 +15,13 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-getPermissionBlue() async {
-  var statusBlue = await Permission.bluetooth.status;
-  if (statusBlue.isGranted) {
-    print('허락됨2bluetooth');
-  } else if (statusBlue.isDenied) {
-    print('거절됨2bluetooth');
-    Permission.bluetooth.request();
+getPermissionCamera() async {
+  var statusCamera = await Permission.camera.status;
+  if (statusCamera.isGranted) {
+    print('허락됨2Cameratooth');
+  } else if (statusCamera.isDenied) {
+    print('거절됨2Cameratooth');
+    Permission.camera.request();
   }
 }
 
@@ -29,7 +29,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    getPermissionBlue();
+    getPermissionCamera();
   }
 
   LoginController loginController = Get.put(LoginController());
