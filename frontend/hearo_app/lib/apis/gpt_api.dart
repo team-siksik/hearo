@@ -1,30 +1,24 @@
-// import 'package:dio/dio.dart';
-// import 'package:dio'
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:get/get.dart';
+import 'package:hearo_app/controller/login_controller.dart';
 
-// Future<String> getAnswerFromGpt(String question) async {
-//   final apiUrl = 'https://api.openai.com/v1/engines/davinci-codex/completions';
-//   final apiKey = 'YOUR_API_KEY'; // OpenAI API 키 입력
+LoginController loginController = Get.put(LoginController());
+// const base = 'http://10.0.2.2:8080/api/v1/profile/frequent';
+const base = 'http://k8a603.p.ssafy.io:8090/run/generate';
 
-//   final dio = Dio();
-//   dio.interceptors.add(DioCacheManager(
-//       CacheConfig(baseUrl: apiUrl, defaultMaxAge: Duration(minutes: 5)))
-//       .interceptor);
-
-//   final data = {
-//     'prompt': question,
-//     'max_tokens': 100
-//   };
-
-//   final response = await dio.post(apiUrl,
-//       options: buildCacheOptions(Duration(minutes: 5)),
-//       headers: {'Authorization': 'Bearer $apiKey', 'Content-Type': 'application/json'},
-//       data: data);
-//   if (response.statusCode == 200) {
-//     final result = response.data;
-//     final answer = result['choices'][0]['text'].toString();
-//     return answer;
-//   } else {
-//     // API 호출에 실패한 경우 예외 처리
-//     throw Exception('Failed to get answer from GPT API');
-//   }
-// }
+class ApiGpt {
+  static Future sayCreateApi(sentence) async {
+    final response = await http.post(
+      Uri.parse(base),
+      body: {"text": sentence},
+    );
+    if (response.statusCode == 200) {
+      final responseData = jsonDecode(utf8.decode(response.bodyBytes));
+      print("생성 성공!");
+      return responseData;
+    } else {
+      print("생성 실패!");
+    }
+  }
+}
