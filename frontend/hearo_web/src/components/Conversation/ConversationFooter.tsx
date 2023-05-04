@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Button, FavContents, GPTRecommend, Input } from "@/components";
-import { ReactComponent as Star } from "../../assets/Star.svg";
-import { ReactComponent as Send } from "../../assets/Send.svg";
+import { ReactComponent as Star } from "@/assets/Icon/StarIcon.svg";
+import { ReactComponent as Send } from "@/assets/Icon/SendIcon.svg";
 
 interface PropsType {
   setNewMessage: React.Dispatch<React.SetStateAction<string>>;

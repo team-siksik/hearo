@@ -4,7 +4,7 @@ import Navbar from "@/components/common/Navbar/Navbar";
 import Carousel from "@/components/common/Carousel/Carousel";
 
 import { SelectedPage } from "@/types/types";
-import startVoice from "../assets/start.wav";
+import startVoice from "@/assets/Sounds/start.wav";
 import { ReactComponent as StartConver } from "../assets/StartConver.svg";
 import { ReactComponent as JoinConver } from "../assets/JoinConver.svg";
 import { ReactComponent as CheckConver } from "../assets/CheckConver.svg";
@@ -14,28 +14,27 @@ import { useAppSelector } from "@/redux/hooks";
 import type { RootState } from "@/redux/configStore";
 
 // TODO: 캐러셀 위에 로그인 여부에 따라 멘트가 달라져야함
-// TODO: 로그인이 필요할 때 바로 로그인페이지? 혹은 모달 띄워서 로그인이 필요합니다 예 아니오 클릭? 
+// TODO: 로그인이 필요할 때 바로 로그인페이지? 혹은 모달 띄워서 로그인이 필요합니다 예 아니오 클릭?
 
 function MainPage() {
   const [comp, setComp] = useState<string>("main");
-  const [isPlaying, setIsPlaying] = useState(false);
+  const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const audioRef = useRef<HTMLAudioElement>(null);
   const navigate = useNavigate();
 
   // redux에서 닉네임을 가져오기 위해 사용함
   const { isLoggedIn, user } = useAppSelector((state) => state.user);
-  const nickname = isLoggedIn ? user.nickname : "";
+  const nickname = isLoggedIn ? user?.nickname : "";
 
   // 로그인 여부 판단
-  const isLogin = !!localStorage.getItem('access_token');
+  const isLoggedin = !!localStorage.getItem("accessToken");
 
   // TODO : 음성재생 모달도 로그인된 상태에서만 접근 가능하도록 조치해야함
   // 음성재생 함수
-  const togglePlay = () => 
-    // { if (isLoggedin) 
-      {
+  const togglePlay = () => {
+    if (isLoggedin) {
       if (audioRef.current) {
-        if (isPlaying) {  
+        if (isPlaying) {
           audioRef.current.pause();
         } else {
           setComp("voice_play");
@@ -43,16 +42,16 @@ function MainPage() {
         }
         setIsPlaying(!isPlaying);
       }
-    } 
-    // else {
-    //   navigate("/login")
-    // }};
+    } else {
+      // TODO: 알림 주고 login 페이지로 보내기
+      navigate("/login");
+    }
+  };
 
   useEffect(() => {
     function handleAudioEnded() {
       setIsPlaying(false);
       setTimeout(() => {
-        // setComp("comm");
         navigate("/comm");
       }, 1000);
     }
@@ -78,56 +77,45 @@ function MainPage() {
 
   return (
     <div>
-    <audio ref={audioRef} src={startVoice} />
-    {comp === "main" ? (
-      <>
-        <Navbar/>
-          <div className="pt-14 z-10">
+      <audio ref={audioRef} src={startVoice} />
+      {comp === "main" ? (
+        <>
+          <Navbar />
+          <div className="z-10 pt-14">
             {isLoggedIn ? (
               <>
-            <div className="pl-[8%] pt-2 text-2xl font-bold">
-              안녕하세요, ""{user.nickname}님!!!&nbsp;
-            </div>
-            <div className="pl-[8%] flex flex-row pt-1 text-sm font-medium">
-              <div className="text-red-main">
-                히어로
-              </div>
-              <div>
-                에 오신 것을 환영해요 ^____^
-              </div>
-            </div>
-              </> 
-              ) : ( 
-              <>
-            <div className="pl-[8%] pt-2 text-2xl font-bold">
-              어서오세요.
-            </div>
-            <div className="pl-[8%] pt-1 flex flex-row text-sm font-medium">
-              <div>
-                회원가입 후&nbsp;
-              </div>
-              <div className="text-red-main">
-                히어로
-              </div>
-              <div>
-                를 이용해보세요.
-              </div>
-            </div>
+                <div className="pl-[8%] pt-2 text-2xl font-bold">
+                  안녕하세요, ""{user?.nickname}님!!!&nbsp;
+                </div>
+                <div className="flex flex-row pl-[8%] pt-1 text-sm font-medium">
+                  <div className="text-red-main">히어로</div>
+                  <div>에 오신 것을 환영해요 ^____^</div>
+                </div>
               </>
-              )
-            }
-            <div className="ml-8 mr-8 pt-2">
+            ) : (
+              <>
+                <div className="pl-[8%] pt-2 text-2xl font-bold">
+                  어서오세요.
+                </div>
+                <div className="flex flex-row pl-[8%] pt-1 text-sm font-medium">
+                  <div>회원가입 후&nbsp;</div>
+                  <div className="text-red-main">히어로</div>
+                  <div>를 이용해보세요.</div>
+                </div>
+              </>
+            )}
+            {/* <div className="ml-8 mr-8 pt-2">
               <Carousel />
-            </div>
+            </div> */}
 
             {/* 대화 시작하기 버튼 */}
-            <div className="mt-4 flex justify-center">
+            {/* <div className="mt-4 flex justify-center">
               <button
                 onClick={togglePlay}
                 // onClick={commClick}
                 className="m-4 mx-0 h-24 w-5/6 rounded-2xl border border-red-sub bg-red-sub text-white shadow-md"
               >
-                <div className="flex w-full h-full items-center justify-center">
+                <div className="flex h-full w-full items-center justify-center">
                   <StartConver />
                   <div className="text-left">
                     <h5 className="mb-2 text-xl font-bold">대화 시작하기</h5>
@@ -135,9 +123,9 @@ function MainPage() {
                   </div>
                 </div>
               </button>
-            </div>
+            </div> */}
             {/* 수어 인식 대화 버튼, 주변 소음인식 버튼 */}
-            <div className="mx-2 flex flex-row items-center justify-center">
+            {/* <div className="mx-2 flex flex-row items-center justify-center">
               <button
                 onClick={commClick}
                 className="m-3 h-48 w-2/5 rounded-2xl border border-yellow-sub bg-yellow-sub text-white shadow-md"
@@ -145,7 +133,7 @@ function MainPage() {
                 <div className="flex h-full w-full flex-col items-center">
                   <div className="text-center">
                     <h5 className="mb-5 mt-4 text-xl font-bold">
-                      수어 인식 대화  
+                      수어 인식 대화
                     </h5>
                   </div>
                   <JoinConver />
@@ -158,18 +146,17 @@ function MainPage() {
                 <div className="flex h-full w-full flex-col items-center">
                   <div className="text-center">
                     <h5 className="mb-5 mt-4 text-xl font-bold">
-                      주변 소음 인식 
+                      주변 소음 인식
                     </h5>
                   </div>
                   <CheckConver />
                 </div>
               </button>
-            </div>
+          </div> */}
           </div>
         </>
       ) : comp === "voice_play" ? (
-        <ConversationInfo cannotExit={true} 
-        />
+        <ConversationInfo cannotExit={true} />
       ) : null}
     </div>
   );
