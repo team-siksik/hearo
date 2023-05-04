@@ -6,6 +6,7 @@ import 'package:hearo_app/test/screen1.dart';
 import 'package:hearo_app/test/screen2.dart';
 import 'package:hearo_app/widgets/common/carousel_widget.dart';
 import 'package:hearo_app/widgets/common/custom_app_bar.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -14,7 +15,23 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
+getPermissionBlue() async {
+  var statusBlue = await Permission.bluetooth.status;
+  if (statusBlue.isGranted) {
+    print('허락됨2bluetooth');
+  } else if (statusBlue.isDenied) {
+    print('거절됨2bluetooth');
+    Permission.bluetooth.request();
+  }
+}
+
 class _HomeScreenState extends State<HomeScreen> {
+  @override
+  void initState() {
+    super.initState();
+    getPermissionBlue();
+  }
+
   LoginController loginController = Get.put(LoginController());
   DateTime? firstPress;
   @override
