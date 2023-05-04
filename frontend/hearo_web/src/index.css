@@ -39,3 +39,16 @@ body,
   color: #e25252;
 
 }
+
+.popover-bottom {
+  @apply after:border-[10px] after:border-b-transparent after:border-r-transparent after:border-l-transparent after:border-t-white;
+}
+.popover-top {
+  @apply before:border-[10px] before:border-b-white before:border-r-transparent before:border-l-transparent before:border-t-transparent;
+}
+.popover-left {
+  @apply before:border-[10px] before:border-b-transparent before:border-r-white before:border-l-transparent before:border-t-transparent;
+}
+.popover-right {
+  @apply after:border-[10px] after:border-b-transparent after:border-r-transparent after:border-l-white after:border-t-transparent;
+}
