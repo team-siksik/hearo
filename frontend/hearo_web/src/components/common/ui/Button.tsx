@@ -1,9 +1,10 @@
+import { css } from "@emotion/react";
 import React, { SetStateAction } from "react";
 
 interface PropsType {
   children?: React.ReactNode;
   type?: string;
-  onClick: () => void | React.Dispatch<SetStateAction<boolean>>;
+  onClick?: () => void | React.Dispatch<SetStateAction<boolean>>;
 }
 
 function Button({ type, children, onClick }: PropsType) {
@@ -13,22 +14,31 @@ function Button({ type, children, onClick }: PropsType) {
         <button className=" text-red-error" onClick={onClick}>
           대화 종료
         </button>
-      ) : // bg-white contentBtnbox-shadow btn
-      type === "contentBtn" ? (
+      ) : type === "contentBtn" ? ( // bg-white contentBtnbox-shadow btn
         <button onClick={onClick} className="rounded-xl px-4 py-1 shadow-md">
           {children}
         </button>
       ) : type === "redBgBtn" ? (
         <button
-          className="w-full rounded-xl bg-red-main px-4 py-2 text-white shadow-md"
+          className="w-full rounded-xl bg-blue-main px-4 py-2 text-white shadow-md"
           onClick={onClick}
         >
           {children}
         </button>
       ) : type === "redTextBtn" ? (
         <button
-          className="w-full rounded-xl border border-red-main px-4 py-2 shadow-md"
+          className="w-full rounded-xl border border-blue-main px-4 py-2 shadow-md"
           onClick={onClick}
+        >
+          {children}
+        </button>
+      ) : type === "whiteButton" ? (
+        <button
+          className="h-10 rounded-xl bg-white shadow-md shadow-slate-200 "
+          onClick={onClick}
+          // css={css`
+          //   width: 90vw;
+          // `}
         >
           {children}
         </button>
