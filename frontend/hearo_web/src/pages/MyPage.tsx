@@ -11,9 +11,6 @@ function Mypage() {
   const [showModal, setShowModal] = useState<boolean>(false);
   const [modalType, setModalType] = useState<'logout' | 'delete'>('logout');
   const navigate = useNavigate();
-  const homeClick = () => {
-    navigate('/');
-  }
 
   const FavClick = () => {
     navigate('/favcontents')
@@ -30,7 +27,6 @@ function Mypage() {
   const onLogoutButton = () => {
     setModalType('logout');
     setShowModal(true);
-    
   }
 
   const onDeleteButtonClick = (id: any) => {
@@ -44,12 +40,17 @@ function Mypage() {
     setShowModal(false);
   }
 
+  const handleLogoutClick = () => {
+    localStorage.removeItem('access_token');
+    navigate('/login');
+  };
+
   
   return (
     <div> 
       <div className={`${mypagebarBackground} flex flex-row p-2.5 w-full h-full`}> 
         <div>
-          <ArrowLeftIcon className="w-8 h-8" onClick={homeClick}/>
+          <ArrowLeftIcon className="w-8 h-8" onClick={() => navigate(-1)}/>
         </div>
         <div className="pl-[30%] font-bold text-3xl ">
           내 정보
@@ -108,7 +109,7 @@ function Mypage() {
                 <button onClick={ModalOff} className=" bg-red-1 hover:bg-red-main text-white w-28 mt-2 mx-2 pl-4 px-4 border-gray-950 rounded-full">
                   아니오 
                 </button>
-                <button className="mt-2 text-gray-950 border border-black rounded-full mx-2 w-28 py-2 px-4">
+                <button onClick={handleLogoutClick} className="mt-2 text-gray-950 border border-black rounded-full mx-2 w-28 py-2 px-4">
                   네
                 </button>
               </div>
