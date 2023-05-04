@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import startVoice from "../../assets/start.wav";
 import { ReactComponent as Info } from "../../assets/Info-rect.svg";
 import Modal from "../common/ui/Modal";
 
