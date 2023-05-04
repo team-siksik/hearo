@@ -10,7 +10,13 @@ interface UserType {
     profileImg: string;
     delYn: string;
     role: string;
-  };
+  } | null;
+  setting: {
+    settingSeq: Number;
+    userSeq: Number;
+    fontSize: Number;
+    voiceSetting: Number;
+  } | null;
   isLoading: boolean;
 }
 
@@ -36,6 +42,12 @@ const initialState: UserType = {
     delYn: "",
     role: "",
   },
+  setting: {
+    settingSeq: 0,
+    userSeq: 0,
+    fontSize: 0,
+    voiceSetting: 0,
+  },
   isLoggedIn: false,
   isLoading: false,
 };
@@ -60,6 +72,7 @@ const googleLogout = createAsyncThunk(
     if (!response) {
       throw new Error();
     }
+    localStorage.removeItem("accessToken");
     return response;
   }
 );
@@ -104,14 +117,9 @@ const userSlice = createSlice({
   initialState,
   reducers: {
     logoutAction(state: UserType) {
+      console.log("logoutReducer");
       state.isLoggedIn = false;
-      state.user = {
-        nickname: "",
-        email: "",
-        profileImg: "",
-        delYn: "",
-        role: "",
-      };
+      state.user = null;
     },
   },
 
@@ -130,6 +138,17 @@ const userSlice = createSlice({
       })
       .addCase(googleLogin.rejected, (state) => {
         state.isLoading = false;
+      })
+      .addCase(googleWithdraw.fulfilled, (state, action) => {
+        localStorage.removeItem("accessToken");
+        state.isLoggedIn = false;
+        state.user = null;
+      })
+      .addCase(getUserInfo.fulfilled, (state, action) => {
+        state.user = action.payload.data;
+      })
+      .addCase(getUserEmail.fulfilled, (state, action) => {
+        state.user = action.payload.data;
       });
   },
 });

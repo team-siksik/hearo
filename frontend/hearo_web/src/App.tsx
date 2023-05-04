@@ -20,8 +20,12 @@ function App() {
     <div className="App">
       <Routes>
         <Route path="/" element={<MainPage />} />
+<<<<<<< Updated upstream
         <Route path="/login" element={<LoginPage />}/>
         <Route path="/tutorial" element={<TutorialPage />}/>
+=======
+        <Route path="/login" element={<LoginPage />} />
+>>>>>>> Stashed changes
         <Route path="/comm" element={<ConversationPage />} />
         <Route path="/recognize" element={<RecognizePage />} />
         <Route path="/mypage" element={<MyPage />} />

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import ReactModal from "react-modal";
-import { ReactComponent as Exit } from "../../../assets/Cross.svg";
+import { ReactComponent as Exit } from "@/assets/Icon/CrossIcon.svg";
 
 /**
  * 알림에 사용되는 모달 컴포넌트
