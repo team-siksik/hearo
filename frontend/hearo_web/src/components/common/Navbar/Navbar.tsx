@@ -13,17 +13,17 @@ import { ConversationInfo } from "@/components";
 import startVoice from "@/assets/start.wav";
 import { SelectedPage } from "@/types/types";
 
-// TODO : 로그인을 하면 useParams 써서 로그인정보를 버튼들 위에다가 띄워줘야함 
+// TODO: 로그인을 하면 useParams 써서 로그인정보를 버튼들 위에다가 띄워줘야함 
 
-// TODO : 로그인 설정 다 해놔야됨
-// TODO : 대화 시작하기 클릭할 때 전체가 가려져야 함
+// TODO: 로그인 설정 다 해놔야됨
+// TODO: 대화 시작하기 클릭할 때 전체가 가려져야 함
 const Navbar = () => {
   const navigate = useNavigate();
   const flexBetween = "flex items-center justify-between";
   const [isMenuToggled, setIsMenuToggled] = useState<boolean>(false);
   const navbarBackground = "z-10 bg-white drop-shadow";
   // 로그인여부
-  const isLoggedin = !!localStorage.getItem('access_token');
+  const isLoggedin = !!localStorage.getItem('accessToken');
   
   const links = [
     { image: <Start width={100} height={100}/>,  name: "대화 시작하기", to:"comm", id:1},
