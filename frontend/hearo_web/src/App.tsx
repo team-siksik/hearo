@@ -10,6 +10,7 @@ import {
   SettingsPage,
   AgainPage,
   NotFound404,
+  TutorialPage,
 } from "./pages";
 import { useAppSelector } from "./redux/hooks";
 
@@ -19,10 +20,8 @@ function App() {
     <div className="App">
       <Routes>
         <Route path="/" element={<MainPage />} />
-        <Route
-          path="/login"
-          element={user === null ? <LoginPage /> : <MainPage />}
-        />
+        <Route path="/login" element={<LoginPage />}/>
+        <Route path="/tutorial" element={<TutorialPage />}/>
         <Route path="/comm" element={<ConversationPage />} />
         <Route path="/recognize" element={<RecognizePage />} />
         <Route path="/mypage" element={<MyPage />} />

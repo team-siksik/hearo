@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "@/components/common/Navbar/Navbar";
 import Carousel from "@/components/common/Carousel/Carousel";
+
 import { SelectedPage } from "@/types/types";
 import startVoice from "../assets/start.wav";
 import { ReactComponent as StartConver } from "../assets/StartConver.svg";
@@ -12,8 +13,8 @@ import { ConversationInfo } from "@/components";
 import { useAppSelector } from "@/redux/hooks";
 import type { RootState } from "@/redux/configStore";
 
-// TODO : 캐러셀 위에 로그인 여부에 따라 멘트가 달라져야함
-// TODO : 로그인이 필요할 때 바로 로그인페이지? 혹은 모달 띄워서 로그인이 필요합니다 예 아니오 클릭? 
+// TODO: 캐러셀 위에 로그인 여부에 따라 멘트가 달라져야함
+// TODO: 로그인이 필요할 때 바로 로그인페이지? 혹은 모달 띄워서 로그인이 필요합니다 예 아니오 클릭? 
 
 function MainPage() {
   const [comp, setComp] = useState<string>("main");
