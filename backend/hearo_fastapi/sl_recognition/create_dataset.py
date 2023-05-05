@@ -4,7 +4,7 @@ import numpy as np
 import time
 import os
 
-from util import get_words_list, joint_to_angle, time_to_string
+from utils import get_words_list, joint_to_angle, time_to_string
 
 
 words = get_words_list()
