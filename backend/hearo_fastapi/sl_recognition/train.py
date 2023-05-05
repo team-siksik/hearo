@@ -8,7 +8,7 @@ from tensorflow.keras.utils import to_categorical
 from sklearn.metrics import multilabel_confusion_matrix
 from sklearn.model_selection import train_test_split
 
-from util import get_words_list
+from utils import get_words_list
 
 
 words = get_words_list()
