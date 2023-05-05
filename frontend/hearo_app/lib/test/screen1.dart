@@ -1,58 +1,102 @@
-import 'package:audioplayers/audioplayers.dart';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:assets_audio_player/assets_audio_player.dart';
-import 'package:hearo_app/apis/gpt_api.dart';
-import 'string_list_controller.dart';
+import 'package:flutter_sound/flutter_sound.dart';
+import 'package:permission_handler/permission_handler.dart';
 
-class Screen1 extends StatelessWidget {
-  final controller = Get.put(StringListController());
-
+class Screen1 extends StatefulWidget {
   Screen1({super.key});
-  final AudioPlayer player = AudioPlayer();
-  Future playSound() async {
-    // await player.setSourceAsset("assets/audios/hearo_start.wav");
-    await player.setSource(AssetSource("assets/audios/hearo_start.wav"));
-    // await player.play(DeviceFileSource("assets/audios/hearo_start.wav"));
+
+  @override
+  State<Screen1> createState() => _Screen1State();
+}
+
+class _Screen1State extends State<Screen1> {
+  final recorder = FlutterSoundRecorder();
+  bool isRecorderReady = false;
+  @override
+  void initState() {
+    initRecorder();
+    super.initState();
   }
 
-  final AssetsAudioPlayer assetsAudioPlayer = AssetsAudioPlayer.newPlayer();
-  void playAudio() async {
-    await assetsAudioPlayer.open(
-      Audio("assets/audios/hearo_start.wav"),
-      loopMode: LoopMode.none, //반복 여부 (LoopMode.none : 없음)
-      autoStart: false, //자동 시작 여부
-      showNotification: false, //스마트폰 알림 창에 띄울지 여부
-    );
-
-    assetsAudioPlayer.play(); //재생
-    // assetsAudioPlayer.pause(); //멈춤
-    // assetsAudioPlayer.stop(); //정지
+  @override
+  void dispose() {
+    recorder.closeRecorder();
+    super.dispose();
   }
 
-  Future getSentence(text) async {
-    await ApiGpt.sayCreateApi(text);
+  Future initRecorder() async {
+    final status = await Permission.microphone.request();
+    if (status != PermissionStatus.granted) {
+      throw "마이크 권한이 필요합니다.";
+    }
+    await recorder.openRecorder();
+    isRecorderReady = true;
+    recorder.setSubscriptionDuration(const Duration(milliseconds: 500));
+  }
+
+  Future record() async {
+    if (!isRecorderReady) return;
+    await recorder.startRecorder(toFile: "audio");
+  }
+
+  Future stop() async {
+    if (!isRecorderReady) return;
+    final path = await recorder.stopRecorder();
+    final audioFile = File(path!);
+    print("Recorded audio: $audioFile");
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Screen 1'),
-      ),
-      body: Column(
-        children: [
-          // AudioTest(),
-          ElevatedButton(
-            onPressed: () {
-              // playSound();
-              // playAudio();
-              getSentence("이 안건에 대해 어떻게 생각하세요?");
-            },
-            child: Text('Clear'),
+        appBar: AppBar(
+          title: Text('Screen 1'),
+        ),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              StreamBuilder<RecordingDisposition>(
+                stream: recorder.onProgress,
+                builder: (context, snapshot) {
+                  final duration = snapshot.hasData
+                      ? snapshot.data!.duration
+                      : Duration.zero;
+
+                  String twoDigits(int n) => n.toString().padLeft(0);
+                  final twoDigitMinutes =
+                      twoDigits(duration.inMinutes.remainder(60));
+                  final twoDigitSeconds =
+                      twoDigits(duration.inSeconds.remainder(60));
+
+                  return Text(
+                    "$twoDigitMinutes:$twoDigitSeconds",
+                    style: const TextStyle(
+                      fontSize: 80,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  );
+                },
+              ),
+              const SizedBox(height: 30),
+              ElevatedButton(
+                  onPressed: () async {
+                    if (recorder.isRecording) {
+                      await stop();
+                    } else {
+                      await record();
+                    }
+
+                    setState(() {});
+                  },
+                  child: Icon(
+                    recorder.isRecording ? Icons.stop : Icons.mic,
+                    size: 80,
+                  )),
+            ],
           ),
-        ],
-      ),
-    );
+        ));
   }
 }
