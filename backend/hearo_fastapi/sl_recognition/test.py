@@ -82,7 +82,7 @@ with mp_hands.Hands(
                 continue
 
             input_data = np.expand_dims(
-                np.array(seq[-seq_length:], dtype=mp.float32), axis=0
+                np.array(seq[-seq_length:], dtype=np.float32), axis=0
             )
 
             y_pred = model.predict(input_data).squeeze()
