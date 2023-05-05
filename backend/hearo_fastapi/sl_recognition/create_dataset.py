@@ -78,7 +78,7 @@ with mp_hands.Hands(model_complexity=0,
                     angle = np.arccos(np.einsum('nt,nt->n',
                                                 v[[0, 1, 2, 4, 5, 6, 8, 9, 10,
                                                     12, 13, 14, 16, 17, 18], :],
-                                                v[[1, 2, 3, 5, 6, 7, 9, 10, 11, 13, 14, 15, 17, 18, 19], :]))  # [15,]
+                                                v[[1, 2, 3, 5, 6, 7, 9, 10, 11, 13, 14, 15, 17, 18, 19], :]))  # (15,)
 
                     # Convert radian to degree
                     globals()['{}_angle'.format(hand)] = np.degrees(angle)
@@ -94,7 +94,7 @@ with mp_hands.Hands(model_complexity=0,
                 d = np.concatenate(
                     [left_joint.flatten(), left_angle, right_joint.flatten(), right_angle])
                 d = np.append(d, idx)
-                data.append(d)  # [199,]
+                data.append(d)  # (199,)
 
                 cv2.imshow(word.upper(), image)
                 if cv2.waitKey(5) & 0xFF == 27:
