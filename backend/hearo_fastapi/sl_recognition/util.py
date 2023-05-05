@@ -1,4 +1,5 @@
 import time
+import numpy as np
 
 
 def get_words_list():
@@ -35,7 +36,7 @@ def joint_to_angle(joint):
         ],
         :3,
     ]  # Parent joint
-    v2 = globals()["{}_joint".format(hand)][
+    v2 = joint[
         [
             1,
             2,
@@ -75,8 +76,10 @@ def joint_to_angle(joint):
     )  # (15,)
 
     # Convert radian to degree
-    globals()["{}_angle".format(hand)] = np.degrees(angle)
-    globals()["{}_angle".format(hand)] = np.array(angle, dtype=np.float32)
+    angle = np.degrees(angle)
+    angle = np.array(angle, dtype=np.float32)
+
+    return angle
 
 
 def time_to_string(timestamp):
