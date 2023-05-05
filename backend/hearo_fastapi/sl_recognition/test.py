@@ -78,42 +78,42 @@ with mp_hands.Hands(
                 mp_drawing_styles.get_default_hand_connections_style(),
             )
 
-            if len(seq) < seq_length:
-                continue
+        if len(seq) < seq_length:
+            continue
 
-            input_data = np.expand_dims(
-                np.array(seq[-seq_length:], dtype=np.float32), axis=0
-            )
+        input_data = np.expand_dims(
+            np.array(seq[-seq_length:], dtype=np.float32), axis=0
+        )
 
-            y_pred = model.predict(input_data).squeeze()
-            i_pred = int(np.argmax(y_pred))
-            conf = y_pred[i_pred]
+        y_pred = model.predict(input_data).squeeze()
+        i_pred = int(np.argmax(y_pred))
+        conf = y_pred[i_pred]
 
-            if conf < 0.9:
-                continue
+        if conf < 0.9:
+            continue
 
-            word = words[i_pred]
-            word_seq.append(word)
+        word = words[i_pred]
+        word_seq.append(word)
 
-            if len(word_seq) < 3:
-                continue
+        if len(word_seq) < 3:
+            continue
 
-            this_word = "?"
-            if word_seq[-1] == word_seq[-2] == word_seq[-3]:
-                this_word = word
+        this_word = "?"
+        if word_seq[-1] == word_seq[-2] == word_seq[-3]:
+            this_word = word
 
-            cv2.putText(
-                image,
-                f"{this_word.upper()}",
-                org=(
-                    int(landmarks.landmark[0].x * image.shape[1]),
-                    int(landmarks.landmark[0].y * image.shape[0] + 20),
-                ),
-                fontFace=cv2.FONT_HERSHEY_SIMPLEX,
-                fontScale=1,
-                color=(255, 255, 255),
-                thickness=2,
-            )
+        cv2.putText(
+            image,
+            f"{this_word.upper()}",
+            org=(
+                int(landmarks.landmark[0].x * image.shape[1]),
+                int(landmarks.landmark[0].y * image.shape[0] + 20),
+            ),
+            fontFace=cv2.FONT_HERSHEY_SIMPLEX,
+            fontScale=1,
+            color=(255, 255, 255),
+            thickness=2,
+        )
 
         cv2.imshow("image", image)
         if cv2.waitKey(5) & 0xFF == 27:
