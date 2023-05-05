@@ -6,6 +6,7 @@ import 'package:hearo_app/screens/login_screen.dart';
 import 'package:hearo_app/screens/mysettings/favorite_say.dart';
 import 'package:hearo_app/screens/mysettings/setting_screen.dart';
 import 'package:hearo_app/widgets/common/custom_app_bar_inner.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class SettingHome extends StatefulWidget {
   SettingHome({super.key});
@@ -28,12 +29,15 @@ class _SettingHomeState extends State<SettingHome> {
         child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
           Flexible(
               flex: 2,
-              child: ClipOval(
-                child: Image.network(
-                  loginController.loginData[0]["profileImg"],
-                  fit: BoxFit.cover,
-                  width: 100,
-                  height: 100,
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 10),
+                child: ClipOval(
+                  child: Image.network(
+                    loginController.loginData[0]["profileImg"],
+                    fit: BoxFit.cover,
+                    width: 100,
+                    height: 100,
+                  ),
                 ),
               )),
           Flexible(
@@ -111,6 +115,44 @@ class _SettingHomeState extends State<SettingHome> {
                               Padding(
                                 padding: const EdgeInsets.only(left: 15),
                                 child: Text("음성 설정",
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w600)),
+                              )
+                            ],
+                          ),
+                          Icon(Icons.arrow_forward_ios_rounded)
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () async {
+                    await openAppSettings();
+                  },
+                  child: Container(
+                    width: size.width * 0.9,
+                    padding: EdgeInsets.symmetric(vertical: 22),
+                    decoration: BoxDecoration(
+                        border: Border(
+                            top: BorderSide(color: Colors.black12, width: 1))),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.perm_camera_mic_outlined,
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 15),
+                                child: Text("앱 권한 설정",
                                     style: TextStyle(
                                         fontSize: 20,
                                         fontWeight: FontWeight.w600)),
