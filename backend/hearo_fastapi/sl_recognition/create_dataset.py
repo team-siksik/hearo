@@ -4,12 +4,10 @@ import numpy as np
 import time
 import os
 
-from util import time_to_string
+from util import get_words_list, time_to_string
 
 
-with open("words.txt", "r") as f:
-    words = f.readlines()
-    words = [word.strip() for word in words]
+words = get_words_list()
 seq_length = 30
 secs_for_action = 30
 

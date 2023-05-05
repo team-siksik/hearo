@@ -8,10 +8,10 @@ from tensorflow.keras.utils import to_categorical
 from sklearn.metrics import multilabel_confusion_matrix
 from sklearn.model_selection import train_test_split
 
-with open("words.txt", "r") as f:
-    words = f.readlines()
-    words = [word.strip() for word in words]
-words = np.array(words)
+from util import get_words_list
+
+
+words = get_words_list()
 
 path = "./dataset"
 files = os.listdir(path)
@@ -20,7 +20,7 @@ files = [os.path.join(path, file) for file in files if file.startswith("seq")]
 data = np.concatenate([np.load(file) for file in files], axis=0)  # (total, 30, 199)
 
 x_data = data[:, :, :-1]  # (total, 30, 198)
-y_data = to_categorical(data[:, 0, -1], num_classes=words.shape[0])  # (total, class)
+y_data = to_categorical(data[:, 0, -1], num_classes=len(words))  # (total, class)
 
 x_data = x_data.astype(np.float32)
 y_data = y_data.astype(np.float32)
@@ -42,7 +42,7 @@ model = Sequential(
         LSTM(64, return_sequences=False, activation="relu"),
         Dense(64, activation="relu"),
         Dense(32, activation="relu"),
-        Dense(words.shape[0], activation="softmax"),
+        Dense(len(words), activation="softmax"),
     ]
 )
 model.compile(optimizer="adam", loss="categorical_crossentropy", metrics=["acc"])
@@ -64,7 +64,7 @@ history = model.fit(
         ReduceLROnPlateau(
             monitor="val_acc", factor=0.5, patience=50, verbose=1, mode="auto"
         ),
-        EarlyStopping(monitor="val_acc", patience=100),
+        EarlyStopping(monitor="val_acc", patience=10),
     ],
 )
 
