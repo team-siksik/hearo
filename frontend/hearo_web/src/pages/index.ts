@@ -7,7 +7,7 @@ import SettingsPage from "./SettingsPage";
 import AgainPage from "./AgainPage";
 import NotFound404 from "./NotFound404";
 import RecognizePage from "./RecognizePage";
-import TutorialPage from "./TutorialPage";
+// import TutorialPage from "./TutorialPage";
 
 export {
   LoginPage,
@@ -19,5 +19,4 @@ export {
   SettingsPage,
   AgainPage,
   NotFound404,
-  TutorialPage,
 };
