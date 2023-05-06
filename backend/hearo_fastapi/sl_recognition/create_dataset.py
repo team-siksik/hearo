@@ -105,7 +105,6 @@ with mp_hands.Hands(
                     break
 
             data = np.array(data)
-            print(word, data.shape)
             np.save(os.path.join(
                 "dataset", f"raw_{word}_{created_time}"), data)
 
