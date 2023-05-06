@@ -50,7 +50,7 @@
 //                       : Text(
 //                           "$sss / 10",
 //                           style:
-//                               TextStyle(fontSize: 18, color: Color(0xffe63e43)),
+//                               TextStyle(fontSize: 18, color: Color(0xff1A73E8)),
 //                         ),
 //                   myDataController.sayings.length < 10
 //                       ? TextButton(
@@ -226,7 +226,7 @@
 //   // 자주 쓰는 말 삭제 아이콘 버튼
 //   IconButton sayDelete(BuildContext context, saying) {
 //     return IconButton(
-//         color: Color(0xffE63E43),
+//         color: Color(0xff1A73E8),
 //         onPressed: () => showDialog(
 //               context: context,
 //               builder: (BuildContext context) => AlertDialog(
@@ -265,7 +265,7 @@
 //                       ElevatedButton(
 //                         style: ButtonStyle(
 //                             backgroundColor:
-//                                 MaterialStatePropertyAll(Color(0xffe63e43)),
+//                                 MaterialStatePropertyAll(Color(0xff1A73E8)),
 //                             shape: MaterialStatePropertyAll(
 //                                 RoundedRectangleBorder(
 //                                     borderRadius: BorderRadius.all(
