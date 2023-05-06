@@ -1,8 +1,8 @@
 import cv2
-import mediapipe as mp
 import numpy as np
-import time
+import mediapipe as mp
 import os
+import time
 
 from utils import get_words_list, joint_to_angle, time_to_string
 
@@ -30,7 +30,7 @@ with mp_hands.Hands(
             success, image = cap.read()
 
             if not success:
-                print("Ignoring empty camera frame.")
+                print("EMPTY CAMERA FRAME")
                 continue
 
             image = cv2.flip(image, 1)
