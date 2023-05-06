@@ -61,7 +61,7 @@ with mp_hands.Hands(
                 if not results.multi_hand_landmarks:
                     continue
 
-                left_joint, right_joint = np.zeros((21, 4)), np.zeros((21, 4))
+                left_joint, right_joint = np.zeros((21, 3)), np.zeros((21, 3))
                 left_angle, right_angle = np.zeros((15,)), np.zeros((15,))
 
                 for landmarks, hand in zip(
@@ -70,12 +70,10 @@ with mp_hands.Hands(
                     hand = hand.classification[0].label.lower()
 
                     for j, lm in enumerate(landmarks.landmark):
-                        print(lm.visibility)
                         globals()["{}_joint".format(hand)][j] = [
                             lm.x,
                             lm.y,
                             lm.z,
-                            1,
                         ]
 
                     globals()["{}_angle".format(hand)] = joint_to_angle(
@@ -99,7 +97,7 @@ with mp_hands.Hands(
                     ]
                 )
                 d = np.append(d, idx)
-                data.append(d)  # (199,)
+                data.append(d)  # (157,)
 
                 cv2.imshow(word.upper(), image)
                 if cv2.waitKey(5) & 0xFF == 27:
