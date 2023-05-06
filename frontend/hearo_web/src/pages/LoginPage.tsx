@@ -7,7 +7,7 @@ import { Button } from "@/components";
 import { css } from "@emotion/react";
 import { ReactComponent as CaretLeft } from "@/assets/Icon/CaretLeft.svg";
 
-function Login() {
+function LoginPage() {
   const navigate = useNavigate();
   const isLoggedIn = localStorage.getItem("accessToken") ? true : false;
 
@@ -64,4 +64,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default LoginPage;
