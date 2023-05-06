@@ -40,7 +40,7 @@ with mp_hands.Hands(
         if not results.multi_hand_landmarks:
             continue
 
-        left_joint, right_joint = np.zeros((21, 4)), np.zeros((21, 4))
+        left_joint, right_joint = np.zeros((21, 3)), np.zeros((21, 3))
         left_angle, right_angle = np.zeros((15,)), np.zeros((15,))
 
         for landmarks, hand in zip(
@@ -53,7 +53,6 @@ with mp_hands.Hands(
                     lm.x,
                     lm.y,
                     lm.z,
-                    lm.visibility,
                 ]
 
             globals()["{}_angle".format(hand)] = joint_to_angle(

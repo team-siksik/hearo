@@ -18,9 +18,9 @@ files = os.listdir(path)
 files = [os.path.join(path, file) for file in files if file.startswith("seq")]
 
 data = np.concatenate([np.load(file)
-                      for file in files], axis=0)  # (total, 30, 199)
+                      for file in files], axis=0)  # (total, 30, 157)
 
-x_data = data[:, :, :-1]  # (total, 30, 198)
+x_data = data[:, :, :-1]  # (total, 30, 156)
 y_data = to_categorical(
     data[:, 0, -1], num_classes=len(words))  # (total, class)
 
@@ -30,9 +30,9 @@ y_data = y_data.astype(np.float32)
 x_train, x_val, y_train, y_val = train_test_split(
     x_data, y_data, test_size=0.1, random_state=2021)
 
-# (train, 30, 198) (train, class)
+# (train, 30, 156) (train, class)
 print("train data: ", x_train.shape, y_train.shape)
-# (val, 30, 198) (val, class)
+# (val, 30, 156) (val, class)
 print("validation data: ", x_val.shape, y_val.shape)
 
 model = Sequential(
