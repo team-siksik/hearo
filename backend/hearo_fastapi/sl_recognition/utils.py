@@ -76,7 +76,8 @@ def joint_to_angle(joint):
     )  # (15,)
 
     # Convert radian to degree
-    angle = np.degrees(angle)
+    # angle = np.degrees(angle) # 학습 저해하여 제외
+
     angle = np.array(angle, dtype=np.float32)
 
     return angle
