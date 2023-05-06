@@ -3,8 +3,8 @@ axios.defaults.withCredentials = true;
 
 // 서버 주소
 const api = axios.create({
-  baseURL: "http://localhost:8080/api/v1", // local 1
-  // baseURL: "http://k8a603.p.ssafy.io:8080/api/v1",
+  // baseURL: "http://localhost:8080/api/v1", // local 1
+  baseURL: "http://k8a603.p.ssafy.io:8080/api/v1",
 });
 
 export const UserAPI = {
