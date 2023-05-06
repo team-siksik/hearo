@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Timer, Button } from "@/components";
 import { ReactComponent as Info } from "../../assets/Info-rect.svg";
 import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 
 interface PropsType {
   openModal: boolean;
@@ -15,7 +16,6 @@ function ConversationHeader({
   openExitModal,
   setOpenExitModal,
 }: PropsType) {
-  const navigate = useNavigate();
   function handleClick() {
     // information
     setOpenModal(!openModal);
@@ -26,12 +26,13 @@ function ConversationHeader({
   }
 
   return (
-    <section className="fixed top-0 flex h-12 w-full items-center justify-between bg-white text-center">
-      <Button onClick={handleClick}>
+    <section className="flex h-12 items-center justify-between bg-white px-4 text-center">
+      <motion.button whileHover={{ scale: 1.1 }} onClick={handleClick}>
         <Info />
-      </Button>
-      <Timer />
-      <Button type="exitConversation" onClick={handleExitClick} />
+      </motion.button>
+      <div className="w-full">
+        <Timer />
+      </div>
     </section>
   );
 }

@@ -9,6 +9,6 @@ export default function Layout({ type, children }: PropsType) {
   if (type === "default") {
     return <div>{children}</div>;
   } else {
-    return <div>{children}</div>;
+    return <div className="m-auto w-[90%] p-4">{children}</div>;
   }
 }
