@@ -1,4 +1,3 @@
-// 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
 import 'package:flutter/material.dart';
 import 'package:chat_gpt_api/chat_gpt.dart';
 

@@ -155,7 +155,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             style: const ButtonStyle(
                                 iconSize: MaterialStatePropertyAll(20),
                                 backgroundColor:
-                                    MaterialStatePropertyAll(Color(0xffe63e43)),
+                                    MaterialStatePropertyAll(Color(0xff1A73E8)),
                                 shape: MaterialStatePropertyAll(
                                     RoundedRectangleBorder(
                                         borderRadius: BorderRadius.all(
@@ -187,10 +187,11 @@ class _LoginScreenState extends State<LoginScreen> {
   loginWithGoogle(context, size) async {
     // Trigger the authentication flow
     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-
+    print('$googleUser @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
     // Obtain the auth details from the request
     final GoogleSignInAuthentication? googleAuth =
         await googleUser?.authentication;
+    print('$googleAuth ###################################');
 
     // Create a new credential
     try {
@@ -198,7 +199,7 @@ class _LoginScreenState extends State<LoginScreen> {
         accessToken: googleAuth?.accessToken,
         idToken: googleAuth?.idToken,
       );
-      print(credential);
+      print('$credential ****************************');
       // Once signed in, return the UserCredential
       final data = sendToken(context, size, credential.accessToken);
       return data;
