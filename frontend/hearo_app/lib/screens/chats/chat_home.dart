@@ -89,9 +89,7 @@ class _ChatHomeState extends State<ChatHome> {
 
   AudioPlayer player = AudioPlayer();
   Future playSound() async {
-    // await player.setSourceAsset("assets/audios/hearo_start.wav");
     await player.play(DeviceFileSource("assets/audios/hearo_start.wav"));
-    // await player.play(DeviceFileSource("assets/audios/hearo_start.wav"));
   }
 
   @override
