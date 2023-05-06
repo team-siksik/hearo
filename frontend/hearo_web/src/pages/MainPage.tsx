@@ -1,22 +1,21 @@
-import React, { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import Navbar from "@/components/common/Navbar/Navbar";
-import Carousel from "@/components/common/Carousel/Carousel";
-
-import { SelectedPage } from "@/types/types";
+import React, { SetStateAction, useEffect, useRef, useState } from "react";
 import startVoice from "@/assets/Sounds/start.wav";
-import { ReactComponent as StartConver } from "../assets/StartConver.svg";
-import { ReactComponent as JoinConver } from "../assets/JoinConver.svg";
-import { ReactComponent as CheckConver } from "../assets/CheckConver.svg";
-import { ConversationInfo } from "@/components";
-
+import { useNavigate } from "react-router-dom";
 import { useAppSelector } from "@/redux/hooks";
-import type { RootState } from "@/redux/configStore";
+import { css } from "@emotion/react";
+import {
+  Navbar,
+  Layout,
+  Button,
+  ConversationInfo,
+  LoginModal,
+} from "@/components";
+import Carousel2 from "@/assets/Carousel2.png";
 
-// TODO: 캐러셀 위에 로그인 여부에 따라 멘트가 달라져야함
-// TODO: 로그인이 필요할 때 바로 로그인페이지? 혹은 모달 띄워서 로그인이 필요합니다 예 아니오 클릭?
-
-function MainPage() {
+interface PropsType {
+  setLoginModal: React.Dispatch<SetStateAction<boolean>>;
+}
+function MainPage({ setLoginModal }: PropsType) {
   const [comp, setComp] = useState<string>("main");
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const audioRef = useRef<HTMLAudioElement>(null);
@@ -32,7 +31,7 @@ function MainPage() {
   // TODO : 음성재생 모달도 로그인된 상태에서만 접근 가능하도록 조치해야함
   // 음성재생 함수
   const togglePlay = () => {
-    if (isLoggedin) {
+    if (!isLoggedin) {
       if (audioRef.current) {
         if (isPlaying) {
           audioRef.current.pause();
@@ -67,95 +66,195 @@ function MainPage() {
     };
   }, []);
 
-  const commClick = () => {
-    navigate("/comm");
-  };
-
-  const recognizeClick = () => {
-    navigate("/recognize");
-  };
-
   return (
     <div>
       <audio ref={audioRef} src={startVoice} />
       {comp === "main" ? (
         <>
-          <Navbar />
-          <div className="z-10 pt-14">
-            {isLoggedIn ? (
-              <>
-                <div className="pl-[8%] pt-2 text-2xl font-bold">
-                  안녕하세요, ""{user?.nickname}님!!!&nbsp;
+          {/* <Navbar setLoginModal={setLoginModal} /> */}
+          <Layout>
+            <div className="relative">
+              {/* 안녕하세요, 000 님 */}
+              <div className="sticky top-0 m-4 flex h-72 flex-col items-center justify-center bg-white">
+                {isLoggedIn ? (
+                  <>
+                    <div>안녕하세요, ""{user?.nickname}님!!!&nbsp;</div>
+                    <div>
+                      <div className="text-red-main">히어로</div>
+                      <div>에 오신 것을 환영해요 ^____^</div>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className=" text-sm">반가워요.</div>
+                    <div className="flex flex-row text-sm font-medium">
+                      <Button onClick={() => setLoginModal(true)}>
+                        <span>로그인 후&nbsp;</span>
+                        <span className="font-semibold text-blue-main">
+                          히어로
+                        </span>
+                      </Button>
+                      <span>를 이용해보세요.</span>
+                    </div>
+                  </>
+                )}
+                <div>
+                  <p>
+                    <span className="font-semibold">
+                      회사에서, 학교에서, 단체에서
+                    </span>{" "}
+                    회의를 위해 소리를 잇는 다리{" "}
+                    <span className="text-xl font-bold text-blue-main">
+                      히어로
+                    </span>
+                    입니다.{" "}
+                  </p>
                 </div>
-                <div className="flex flex-row pl-[8%] pt-1 text-sm font-medium">
-                  <div className="text-red-main">히어로</div>
-                  <div>에 오신 것을 환영해요 ^____^</div>
-                </div>
-              </>
-            ) : (
-              <>
-                <div className="pl-[8%] pt-2 text-2xl font-bold">
-                  어서오세요.
-                </div>
-                <div className="flex flex-row pl-[8%] pt-1 text-sm font-medium">
-                  <div>회원가입 후&nbsp;</div>
-                  <div className="text-red-main">히어로</div>
-                  <div>를 이용해보세요.</div>
-                </div>
-              </>
-            )}
-            {/* <div className="ml-8 mr-8 pt-2">
-              <Carousel />
-            </div> */}
-
-            {/* 대화 시작하기 버튼 */}
-            {/* <div className="mt-4 flex justify-center">
-              <button
-                onClick={togglePlay}
-                // onClick={commClick}
-                className="m-4 mx-0 h-24 w-5/6 rounded-2xl border border-red-sub bg-red-sub text-white shadow-md"
-              >
-                <div className="flex h-full w-full items-center justify-center">
-                  <StartConver />
-                  <div className="text-left">
-                    <h5 className="mb-2 text-xl font-bold">대화 시작하기</h5>
-                    <p className="text-sm">누가 말하는지 알 수 있어요.</p>
+              </div>
+              {/* body */}
+              <section className="mx-4 flex flex-col gap-10">
+                <div className="sticky top-0 m-4 flex h-screen flex-col items-center justify-center bg-white  pb-8">
+                  <div className="grid grid-cols-2 ">
+                    <div className="col1">
+                      {/* 회의 시작하기 */}
+                      <div className="startMeeting">
+                        <h3 className="text-xl font-bold">회의 기록하기</h3>
+                        <p className="my-4">
+                          일반 speech-to-text 앱들과는 달리, 히어로에서는{" "}
+                          <span className="font-bold">실시간</span> 으로{" "}
+                          <span className="font-bold">화자</span>를{" "}
+                          <span className="font-bold">분리</span>
+                          하여 보여줍니다. 어쩌구 저쩌구 쏼라쏼라 어쩌구 저쩌구
+                          쏼라쏼라 어쩌구 저쩌구 쏼라쏼라 어쩌구 저쩌구 쏼라쏼라
+                          어쩌구 저쩌구 쏼라쏼라 어쩌구 저쩌구 쏼라쏼라 어쩌구
+                          저쩌구 쏼라쏼라 어쩌구 저쩌구 쏼라쏼라 어쩌구 저쩌구
+                          쏼라쏼라 어쩌구 저쩌구 쏼라쏼라 어쩌구 저쩌구 쏼라쏼라
+                          어쩌구 저쩌구 쏼라쏼라 어쩌구 저쩌구 쏼라쏼라 어쩌구
+                          저쩌구 쏼라쏼라 어쩌구 저쩌구 쏼라쏼라 어쩌구 저쩌구
+                          쏼라쏼라 어쩌구 저쩌구 쏼라쏼라
+                        </p>
+                        <div className="w-1/3">
+                          <Button onClick={togglePlay} type="blueTextBtn">
+                            회의 시작하기
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="col2 flex items-center justify-center">
+                      <div
+                        css={css`
+                          background-image: url(${Carousel2});
+                          background-repeat: no-repeat;
+                          background-position: center;
+                          background-size: contain;
+                          width: 600px;
+                          height: 200px;
+                        `}
+                      ></div>
+                    </div>
                   </div>
                 </div>
-              </button>
-            </div> */}
-            {/* 수어 인식 대화 버튼, 주변 소음인식 버튼 */}
-            {/* <div className="mx-2 flex flex-row items-center justify-center">
-              <button
-                onClick={commClick}
-                className="m-3 h-48 w-2/5 rounded-2xl border border-yellow-sub bg-yellow-sub text-white shadow-md"
-              >
-                <div className="flex h-full w-full flex-col items-center">
-                  <div className="text-center">
-                    <h5 className="mb-5 mt-4 text-xl font-bold">
-                      수어 인식 대화
-                    </h5>
+                <div className="sticky top-0 m-4 flex h-screen flex-col items-center justify-center bg-white  pb-8">
+                  <div className="grid grid-cols-2">
+                    {/* 기록 확인하기 */}
+                    <div className="col1 flex items-center justify-center">
+                      <div
+                        css={css`
+                          background-image: url(${Carousel2});
+                          background-repeat: no-repeat;
+                          background-position: center;
+                          background-size: contain;
+                          width: 600px;
+                          height: 200px;
+                        `}
+                      ></div>
+                    </div>
+                    <div className="col2">
+                      <h3 className="text-xl font-bold">회의 기록 확인하기</h3>
+                      <p className="my-4">
+                        기록한 회의를 확인해보세요. 회의 중에 남긴 메모도 확인할
+                        수 있고, 회의록에 따라{" "}
+                        <span className="font-bold">chatGPT</span> 으로부터{" "}
+                        <span className="font-bold">todo-list도 추천</span> 받을
+                        수 있어요! 어쩌구 저쩌구 쏼라쏼라 어쩌구 저쩌구 쏼라쏼라
+                        어쩌구 저쩌구 쏼라쏼라 어쩌구 저쩌구 쏼라쏼라 어쩌구
+                        저쩌구 쏼라쏼라 어쩌구 저쩌구 쏼라쏼라 어쩌구 저쩌구
+                        쏼라쏼라 어쩌구 저쩌구 쏼라쏼라 어쩌구 저쩌구 쏼라쏼라
+                        어쩌구 저쩌구 쏼라쏼라 어쩌구 저쩌구 쏼라쏼라 어쩌구
+                        저쩌구 쏼라쏼라 어쩌구 저쩌구 쏼라쏼라 어쩌구 저쩌구
+                        쏼라쏼라 어쩌구 저쩌구 쏼라쏼라 어쩌구 저쩌구 쏼라쏼라
+                        어쩌구 저쩌구 쏼라쏼라
+                      </p>
+                      <div className="w-1/3">
+                        <Button type="blueTextBtn">회의 기록 확인하기</Button>
+                      </div>
+                    </div>
                   </div>
-                  <JoinConver />
                 </div>
-              </button>
-              <button
-                onClick={recognizeClick}
-                className="m-3 h-48 w-2/5 rounded-2xl border border-green-sub bg-green-sub text-white shadow-md"
-              >
-                <div className="flex h-full w-full flex-col items-center">
-                  <div className="text-center">
-                    <h5 className="mb-5 mt-4 text-xl font-bold">
-                      주변 소음 인식
-                    </h5>
+                <div className="sticky top-0 m-4 flex h-screen flex-col items-center justify-center bg-white  pb-8">
+                  <div className="grid grid-cols-2">
+                    <div className="col1">
+                      {/* 회의 시작하기 */}
+                      <div className="writeReport">
+                        <h3 className="text-xl font-bold">회의록 작성하기</h3>
+                        <p className="my-4">
+                          저장되어있는 회의 기록을 바탕으로
+                          <span className="font-bold"> 회의록</span>을 작성 및
+                          수정해보세요. 어쩌구 저쩌구 쏼라쏼라 어쩌구 저쩌구
+                          쏼라쏼라 어쩌구 저쩌구 쏼라쏼라 어쩌구 저쩌구 쏼라쏼라
+                          어쩌구 저쩌구 쏼라쏼라 어쩌구 저쩌구 쏼라쏼라 어쩌구
+                          저쩌구 쏼라쏼라 어쩌구 저쩌구 쏼라쏼라 어쩌구 저쩌구
+                          쏼라쏼라 어쩌구 저쩌구 쏼라쏼라 어쩌구 저쩌구 쏼라쏼라
+                          어쩌구 저쩌구 쏼라쏼라 어쩌구 저쩌구 쏼라쏼라 어쩌구
+                          저쩌구 쏼라쏼라 어쩌구 저쩌구 쏼라쏼라 어쩌구 저쩌구
+                          쏼라쏼라 어쩌구 저쩌구 쏼라쏼라
+                        </p>
+                        <div className="w-1/3">
+                          <Button type="blueTextBtn">회의록 작성하기</Button>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="col2 flex items-center justify-center">
+                      <div
+                        css={css`
+                          background-image: url(${Carousel2});
+                          background-repeat: no-repeat;
+                          background-position: center;
+                          background-size: contain;
+                          width: 600px;
+                          height: 200px;
+                        `}
+                      ></div>
+                    </div>
                   </div>
-                  <CheckConver />
                 </div>
-              </button>
-          </div> */}
-          </div>
+              </section>
+              <div className="h-24 w-full"></div>
+            </div>
+          </Layout>
+          {/* footer */}
+          <footer className="h-72 bg-slate-700">
+            <div className="p-4">
+              <h5 className="font-chewy text-2xl text-white">Hearo</h5>
+              <p className="font-nanum text-white">소리를 잇는 연결고리</p>
+            </div>
+            <div className="grid grid-cols-3 p-4">
+              <div>
+                <div>CICD / AI</div>
+              </div>
+              <div>
+                <div>IoT</div>
+                <div>백엔드</div>
+              </div>
+              <div>
+                <div>웹 프론트엔드</div>
+                <div>앱 프론트엔드</div>
+              </div>
+            </div>
+          </footer>
         </>
       ) : comp === "voice_play" ? (
+        // 음성 재생 -> 회의 시작 페이지로 자동 이동
         <ConversationInfo cannotExit={true} />
       ) : null}
     </div>
