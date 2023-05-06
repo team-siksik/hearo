@@ -5,34 +5,56 @@ import {
   ConversationFooter,
   ConversationInfo,
   ExitModal,
+  MeetingSidebar,
+  FloatingButton,
 } from "@/components";
-import MicrophoneAccess from "@/apis/MicrophoneAccess";
+import MicrophoneAccess from "@/apis/STT";
+import STT from "@/apis/STT";
 
 function ConversationPage() {
   const [openInfoModal, setOpenInfoModal] = useState<boolean>(false);
   const [openExitModal, setOpenExitModal] = useState<boolean>(false);
 
-  // const [stream, setStream] = useState<MediaStream>(new MediaStream());
   const [newMessage, setNewMessage] = useState<string>("");
+  const [isRecording, setIsRecording] = useState<boolean>(false);
+
+  function finishMeeting() {
+    setIsRecording(false);
+    console.log(isRecording);
+  }
+
+  useEffect(() => {
+    console.log(isRecording);
+    setIsRecording(true);
+  }, []);
 
   return (
     <div>
-      {openInfoModal ? <ConversationInfo cannotExit={false} /> : null}
+      {openInfoModal ? (
+        <ConversationInfo
+          cannotExit={false}
+          setOpenInfoModal={setOpenInfoModal}
+        />
+      ) : null}
       {openExitModal ? (
         <ExitModal
           // stream={stream}
           setOpenExitModal={setOpenExitModal}
         />
       ) : null}
-      {/* <MicrophoneAccess stream={stream} setStream={setStream} /> */}
-      <ConversationHeader
-        openModal={openInfoModal}
-        setOpenModal={setOpenInfoModal}
-        openExitModal={openExitModal}
-        setOpenExitModal={setOpenExitModal}
-      />
-      <ConversationBody message={newMessage} />
-      <ConversationFooter setNewMessage={setNewMessage} />
+      {/* <STT isRecording={isRecording} setIsRecording={setIsRecording} /> */}
+      <MeetingSidebar />
+      <div className="fixed right-0 w-[82%]">
+        <ConversationHeader
+          openModal={openInfoModal}
+          setOpenModal={setOpenInfoModal}
+          openExitModal={openExitModal}
+          setOpenExitModal={setOpenExitModal}
+        />
+        <ConversationBody message={newMessage} />
+        <FloatingButton onClick={finishMeeting} />
+        <ConversationFooter setNewMessage={setNewMessage} />
+      </div>
     </div>
   );
 }

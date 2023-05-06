@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { SetStateAction, useState } from "react";
 import ReactModal from "react-modal";
-import { ReactComponent as Exit } from "@/assets/Icon/CrossIcon.svg";
+import { ReactComponent as CrossIconRed } from "@/assets/Icon/CrossIconRed.svg";
 
 /**
  * 알림에 사용되는 모달 컴포넌트
@@ -13,6 +13,8 @@ interface PropsType {
   cannotExit: boolean;
   type?: string;
   children: React.ReactNode;
+  setLoginModal?: React.Dispatch<SetStateAction<boolean>>;
+  setOpenInfoModal?: React.Dispatch<SetStateAction<boolean>>;
 }
 
 const customModalStyles: ReactModal.Styles = {
@@ -29,7 +31,7 @@ const customModalStyles: ReactModal.Styles = {
   },
   content: {
     // 모달 박스의 스타일
-    width: "80%",
+    width: "30%",
     height: "fit-content",
     padding: "32px",
     zIndex: "150",
@@ -46,25 +48,46 @@ const customModalStyles: ReactModal.Styles = {
   },
 };
 
-function Modal({ open, type, cannotExit, children }: PropsType) {
+function Modal({
+  open,
+  type,
+  cannotExit,
+  children,
+  setLoginModal,
+  setOpenInfoModal,
+}: PropsType) {
   const [openModal, setOpenModal] = useState<boolean>(open);
 
   // x버튼이나, 나가기 혹은 취소 버튼을 누르면 modal을 닫게 하기 위한 함수입니다.
   function handleModal() {
     setOpenModal(!openModal);
+    if (setLoginModal) {
+      setLoginModal(false);
+    }
+    if (setOpenInfoModal) {
+      setOpenInfoModal(false);
+    }
   }
   return (
     <ReactModal
       isOpen={openModal}
       style={customModalStyles} // 개별 스타일링을 줄 수 있습니다.
-      onRequestClose={() => setOpenModal(false)}
+      onRequestClose={() => {
+        setOpenModal(false);
+        if (setLoginModal) {
+          setLoginModal(false);
+        }
+        if (setOpenInfoModal) {
+          setOpenInfoModal(false);
+        }
+      }}
       shouldCloseOnOverlayClick={cannotExit ? false : true}
       ariaHideApp={false}
     >
-      <div className="absolute right-0 top-0 flex">
+      <div className="absolute right-2 top-1 flex">
         {cannotExit ? null : (
           <button onClick={handleModal}>
-            <Exit />
+            <CrossIconRed />
           </button>
         )}
       </div>
