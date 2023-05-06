@@ -14,8 +14,10 @@ import Carousel2 from "@/assets/Carousel2.png";
 
 interface PropsType {
   setLoginModal: React.Dispatch<SetStateAction<boolean>>;
+  setOpenInfoModal: React.Dispatch<SetStateAction<boolean>>;
 }
-function MainPage({ setLoginModal }: PropsType) {
+
+function MainPage({ setLoginModal, setOpenInfoModal }: PropsType) {
   const [comp, setComp] = useState<string>("main");
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const audioRef = useRef<HTMLAudioElement>(null);
@@ -255,7 +257,7 @@ function MainPage({ setLoginModal }: PropsType) {
         </>
       ) : comp === "voice_play" ? (
         // 음성 재생 -> 회의 시작 페이지로 자동 이동
-        <ConversationInfo cannotExit={true} />
+        <ConversationInfo cannotExit={true} setOpenInfoModal={setOpenInfoModal} />
       ) : null}
     </div>
   );
