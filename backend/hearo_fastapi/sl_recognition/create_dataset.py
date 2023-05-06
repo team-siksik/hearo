@@ -106,17 +106,19 @@ with mp_hands.Hands(
 
             data = np.array(data)
             print(word, data.shape)
-            np.save(os.path.join("dataset", f"raw_{word}_{created_time}"), data)
+            np.save(os.path.join(
+                "dataset", f"raw_{word}_{created_time}"), data)
 
             # Create sequence data
             full_seq_data = []
             for seq in range(len(data) - seq_length):
-                full_seq_data.append(data[seq : seq + seq_length])
+                full_seq_data.append(data[seq: seq + seq_length])
 
             full_seq_data = np.array(full_seq_data)
             print(word, full_seq_data.shape)
             np.save(
-                os.path.join("dataset", f"seq_{word}_{created_time}"), full_seq_data
+                os.path.join(
+                    "dataset", f"seq_{word}_{created_time}"), full_seq_data
             )
         break
 
