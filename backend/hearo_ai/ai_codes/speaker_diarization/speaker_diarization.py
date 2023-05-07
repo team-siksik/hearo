@@ -1,5 +1,3 @@
-# source = WebSocketAudioSource(pipeline.config.sample_rate, "localhost", 8090)
-
 import os
 import sys
 import numpy as np
@@ -143,7 +141,7 @@ from diart.sources import MicrophoneAudioSource
 logging.getLogger("whisper_timestamped").setLevel(logging.ERROR)
 
 config = PipelineConfig(
-    duration=30,
+    duration=2,
     step=0.5,
     latency="min",
     tau_active=0.4,
@@ -154,20 +152,6 @@ dia = OnlineSpeakerDiarization(config)
 source = MicrophoneAudioSource(config.sample_rate)
 
 asr = WhisperTranscriber(model="base")
-
-transcription_duration = 2
-batch_size = int(transcription_duration // config.step)
-source.stream.pipe(
-    dops.rearrange_audio_stream(
-        config.duration, config.step, config.sample_rate
-    ),
-    ops.buffer_with_count(count=batch_size),
-    ops.map(dia),
-    ops.map(concat),
-    ops.filter(lambda ann_wav: ann_wav[0].get_timeline().duration() > 0),
-    ops.starmap(asr),
-    ops.map(colorize_transcription),
-).subscribe(on_next=rich.print, on_error=lambda _: traceback.print_exc())
 
 # combining and show the result
 import traceback
