@@ -58,7 +58,7 @@ history = model.fit(
     epochs=200,
     callbacks=[
         ModelCheckpoint(
-            "model/model.h5",
+            "model/sl_recognizer.h5",
             monitor="val_acc",
             verbose=1,
             save_best_only=True,
@@ -71,7 +71,7 @@ history = model.fit(
     ],
 )
 
-model = load_model("model/model.h5")
+model = load_model("model/sl_recognizer.h5")
 y_pred = model.predict(x_val)
 print(multilabel_confusion_matrix(
     np.argmax(y_val, axis=1), np.argmax(y_pred, axis=1)))
