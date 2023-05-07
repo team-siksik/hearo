@@ -10,7 +10,7 @@ from utils import get_words_list, joint_to_angle
 words = get_words_list()
 seq_length = 30
 
-model = load_model("model/model.h5")
+model = load_model("model/sl_recognizer.h5")
 
 mp_drawing = mp.solutions.drawing_utils
 mp_drawing_styles = mp.solutions.drawing_styles
