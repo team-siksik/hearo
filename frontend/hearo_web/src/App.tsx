@@ -13,16 +13,17 @@ import {
   // TutorialPage,
 } from "./pages";
 import { useAppSelector } from "./redux/hooks";
-import { LoginModal, Navbar } from "./components";
+import { LoginModal, ProfileModal, Navbar } from "./components";
 import { useState } from "react";
 
 function App() {
   const user = useAppSelector((state) => state.user);
   const [loginModal, setLoginModal] = useState<boolean>(false);
+  const [openProfileModal, setOpenProfileModal] = useState<boolean>(false);
 
   return (
     <div className="App">
-      <Navbar setLoginModal={setLoginModal} />
+      <Navbar setLoginModal={setLoginModal} setOpenProfileModal={setOpenProfileModal} />
       <Routes>
         <Route path="/" element={<MainPage setLoginModal={setLoginModal} />} />
         <Route path="/comm" element={<ConversationPage />} />
@@ -35,6 +36,7 @@ function App() {
       </Routes>
       {/* 로그인 창 */}
       {loginModal && <LoginModal setLoginModal={setLoginModal} />}
+      {openProfileModal && <ProfileModal setOpenProfileModal={setOpenProfileModal}/>}
     </div>
   );
 }

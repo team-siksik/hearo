@@ -17,6 +17,7 @@ import { motion } from "framer-motion";
 
 interface PropsType {
   setLoginModal: React.Dispatch<SetStateAction<boolean>>;
+  setOpenProfileModal?: React.Dispatch<SetStateAction<boolean>>;
 }
 function MainPage({ setLoginModal }: PropsType) {
   const [comp, setComp] = useState<string>("main");
@@ -74,7 +75,6 @@ function MainPage({ setLoginModal }: PropsType) {
       <audio ref={audioRef} src={startVoice} />
       {comp === "main" ? (
         <>
-          {/* <Navbar setLoginModal={setLoginModal} /> */}
           <Layout>
             <div className="relative">
               {/* 안녕하세요, 000 님 */}
