@@ -13,5 +13,5 @@ docker build -t fastapi ./S08P31A603/backend/hearo_fastapi/.
 echo "5. re-run container"
 docker run -d -p 80:80 --shm-size 2000000000 --name hearo-fastapi fastapi
 
-echo "6. check! i'm the korean topclass hiphop mobeom nobless"
+echo "6. check!"
 docker ps -a
