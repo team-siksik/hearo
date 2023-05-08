@@ -11,6 +11,8 @@ import {
 import MicrophoneAccess from "@/apis/STT";
 import STT from "@/apis/STT";
 
+// TODO: 좌측 기능, 우측 버튼, 챗봇버튼(?)
+
 function ConversationPage() {
   const [openInfoModal, setOpenInfoModal] = useState<boolean>(false);
   const [openExitModal, setOpenExitModal] = useState<boolean>(false);

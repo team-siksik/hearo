@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 
 interface PropsType {
   cannotExit: boolean;
-  setOpenInfoModal: React.Dispatch<SetStateAction<boolean>>;
+  setOpenInfoModal?: React.Dispatch<SetStateAction<boolean>>;
 }
 
 function ConversationInfo({ cannotExit, setOpenInfoModal }: PropsType) {
