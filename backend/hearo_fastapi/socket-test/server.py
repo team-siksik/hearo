@@ -18,13 +18,6 @@ app.add_middleware(
 socket_manager = SocketManager(app=app)
 
 
-@app.get("/test", response_class=HTMLResponse)
-async def test():
-    f = open("example.html", encoding="UTF-8")
-    r = f.read()
-    return HTMLResponse(content=r)
-
-
 @socket_manager.on("connect")
 async def connect(sid, environ):
     await socket_manager.emit("info", f"{sid} connected")
