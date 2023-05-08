@@ -70,6 +70,22 @@ function MainPage({ setLoginModal }: PropsType) {
     };
   }, []);
 
+  // // 로그인된 상태에서만 MyPage로 이동
+  // const handleRecordPageClick = () => {
+  //   if (isLoggedin) {
+  //     navigate("/records");
+  //   } else {
+  //     // 로그인되어 있지 않은 경우 로그인 페이지로 이동하도록 처리
+  //     // navigate("/login");
+  //     setLoginModal(true);
+  //   }
+  // };
+
+  const handleRecordPageClick = () => {
+    navigate('/records')
+  }
+
+
   return (
     <div>
       <audio ref={audioRef} src={startVoice} />
@@ -162,7 +178,11 @@ function MainPage({ setLoginModal }: PropsType) {
                     </div>
                   </div>
                 </motion.div>
-                <div className="sticky top-0 m-4 flex h-screen flex-col items-center justify-center bg-white  pb-8">
+                <motion.div className="sticky top-0 m-4 flex h-screen flex-col items-center justify-center bg-white pb-8"
+                initial={{ opacity: 0, x: "100vw" }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 1 }}                    
+                >
                   <div className="grid grid-cols-2">
                     {/* 기록 확인하기 */}
                     <div className="col1 flex items-center justify-center">
@@ -194,12 +214,16 @@ function MainPage({ setLoginModal }: PropsType) {
                         어쩌구 저쩌구 쏼라쏼라
                       </p>
                       <div className="w-1/3">
-                        <Button type="blueTextBtn">회의 기록 확인하기</Button>
+                        <Button onClick={handleRecordPageClick} type="blueTextBtn">회의 기록 확인하기</Button>
                       </div>
                     </div>
                   </div>
-                </div>
-                <div className="sticky top-0 m-4 flex h-screen flex-col items-center justify-center bg-white  pb-8">
+                </motion.div>
+                <motion.div className="sticky top-0 m-4 flex h-screen flex-col items-center justify-center bg-white  pb-8"
+                initial={{ opacity: 0, x: "-100vw" }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 1 }}                    
+                >                
                   <div className="grid grid-cols-2">
                     <div className="col1">
                       {/* 회의 시작하기 */}
@@ -235,7 +259,7 @@ function MainPage({ setLoginModal }: PropsType) {
                       ></div>
                     </div>
                   </div>
-                </div>
+                </motion.div>
               </section>
               <div className="h-24 w-full"></div>
             </div>
@@ -243,23 +267,23 @@ function MainPage({ setLoginModal }: PropsType) {
           {/* footer */}
           <footer className="h-72 bg-slate-700">
             <div className="p-4">
-              <h5 className="font-chewy text-2xl text-white">Hearo</h5>
-              <p className="font-nanum text-white">소리를 잇는 연결고리</p>
+              <h5 className="text-white font-chewy text-2xl">Hearo</h5>
+              <p className="text-white font-nanum">소리를 잇는 연결고리</p>
             </div>
-            <div className="grid grid-cols-3 p-4">
-              <div>
-                <div>CICD / AI</div>
+            <div className="grid grid-cols-3 gap-4 p-4">
+              <div className="flex flex-col justify-center items-center text-white font-nanum">
+                <div className="text-lg font-bold">CICD / AI</div>
               </div>
-              <div>
-                <div>IoT</div>
-                <div>백엔드</div>
+              <div className="flex flex-col justify-center items-center text-white font-nanum">
+                <div className="text-lg font-bold">IoT</div>
+                <div className="text-lg font-bold">백엔드</div>
               </div>
-              <div>
-                <div>웹 프론트엔드</div>
-                <div>앱 프론트엔드</div>
+              <div className="flex flex-col justify-center items-center text-white font-nanum">
+                <div className="text-lg font-bold">웹 프론트엔드</div>
+                <div className="text-lg font-bold">앱 프론트엔드</div>
               </div>
             </div>
-          </footer>
+          </footer>        
         </>
       ) : comp === "voice_play" ? (
         // 음성 재생 -> 회의 시작 페이지로 자동 이동
