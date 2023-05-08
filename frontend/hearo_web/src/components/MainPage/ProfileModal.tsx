@@ -20,7 +20,7 @@ function profileModal({ setOpenProfileModal }: PropsType) {
   }
   const gorecognizebutton = () => {
     setOpenProfileModal(false);
-    navigate("/recognize")
+    navigate("/records")
   }
   const gomypagebutton = () => {
     setOpenProfileModal(false);

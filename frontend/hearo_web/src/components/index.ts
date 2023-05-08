@@ -19,7 +19,7 @@ import Carousel from "./common/Carousel/Carousel";
 import DropDown from "./common/ui/Dropdown";
 import TutorialBalloon from "./common/ui/TutorialBalloon";
 import BackgroundHider from "./common/ui/BackgroundHider";
-import LoginModal from "./MainPage/ProfileModal";
+import LoginModal from "./MainPage/LoginModal";
 import ProfileModal from "./MainPage/ProfileModal";
 
 export {

@@ -4,7 +4,7 @@ import {
   LoginPage,
   ConversationPage,
   MainPage,
-  RecognizePage,
+  RecordPage,
   MyPage,
   FavContentsPage,
   SettingsPage,
@@ -27,7 +27,7 @@ function App() {
       <Routes>
         <Route path="/" element={<MainPage setLoginModal={setLoginModal} />} />
         <Route path="/comm" element={<ConversationPage />} />
-        <Route path="/recognize" element={<RecognizePage />} />
+        <Route path="/records" element={<RecordPage />} />
         <Route path="/mypage" element={<MyPage />} />
         <Route path="/favcontents" element={<FavContentsPage />} />
         <Route path="/settings" element={<SettingsPage />} />
@@ -35,7 +35,7 @@ function App() {
         <Route path="*" element={<NotFound404 />} />
       </Routes>
       {/* 로그인 창 */}
-      {loginModal && <LoginModal setLoginModal={setLoginModal} />}
+      {loginModal && <LoginModal setLoginModal={setLoginModal}/>}
       {openProfileModal && <ProfileModal setOpenProfileModal={setOpenProfileModal}/>}
     </div>
   );

@@ -4,7 +4,7 @@ import { GOOGLE_AUTH_URL } from "@/apis/oAuthGoogle";
 import google_logo from "@/assets/Google_Logo.svg";
 import Button from "../common/ui/Button";
 interface PropsType {
-  setLoginModal?: React.Dispatch<SetStateAction<boolean>>;
+  setLoginModal: React.Dispatch<SetStateAction<boolean>>;
 }
 function LoginModal({ setLoginModal }: PropsType) {
   return (
