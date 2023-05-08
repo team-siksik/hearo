@@ -3,12 +3,11 @@ import { googleLogin } from "@/redux/modules/user";
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-interface PropsType {}
-
-function Google({}: PropsType) {
+function Google() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const parsedHash = new URLSearchParams(window.location.hash.substring(1));
+  console.log(parsedHash);
   const accessToken = parsedHash.get("access_token");
   if (accessToken) {
     console.log(accessToken);
