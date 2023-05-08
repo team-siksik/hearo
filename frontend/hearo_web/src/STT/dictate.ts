@@ -401,12 +401,12 @@ export class Dictate {
       errorCallback
     ) {
       const headers = {};
-      if (config.user_id) {
-        headers["User-Id"] = config.user_id;
-      }
-      if (config.content_id) {
-        headers["Content-Id"] = config.content_id;
-      }
+      // if (config.user_id) {
+      //   headers["User-Id"] = config.user_id;
+      // }
+      // if (config.content_id) {
+      //   headers["Content-Id"] = config.content_id;
+      // }
       // $.ajax({
       //   url: config.referenceHandler,
       //   type: "POST",
