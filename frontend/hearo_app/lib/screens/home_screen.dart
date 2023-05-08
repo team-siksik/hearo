@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hearo_app/controller/login_controller.dart';
 import 'package:hearo_app/screens/chats/chat_home.dart';
 import 'package:hearo_app/test/screen1.dart';
 import 'package:hearo_app/test/screen2.dart';
@@ -14,6 +15,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  LoginController loginController = Get.put(LoginController());
   DateTime? firstPress;
   @override
   Widget build(BuildContext context) {
@@ -31,13 +33,13 @@ class _HomeScreenState extends State<HomeScreen> {
               // 안녕하세요 ~ 환영해요 부분
               SizedBox(
                 width: size.width,
-                child: const Padding(
+                child: Padding(
                   padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "안녕하세요, 홍나훈님",
+                        "안녕하세요, ${loginController.loginData[0]["nickname"]}님",
                         style: TextStyle(
                             fontSize: 18, fontWeight: FontWeight.w600),
                       ),
@@ -117,7 +119,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     style: TextStyle(
                                         fontSize: 18,
                                         fontWeight: FontWeight.w600)),
-                                Text("상대방을 초대하여 대화를 시작해요.",
+                                Text("누가 말하는지 알 수 있어요.",
                                     style: TextStyle(fontSize: 12)),
                               ],
                             )
@@ -145,7 +147,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 const Padding(
                                   padding: EdgeInsets.only(bottom: 12),
                                   child: Text(
-                                    "대화 참여하기",
+                                    "수어인식 대화",
                                     style: TextStyle(
                                         fontWeight: FontWeight.w600,
                                         fontSize: 18),
@@ -174,7 +176,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 const Padding(
                                   padding: EdgeInsets.only(bottom: 12),
                                   child: Text(
-                                    "기록 확인하기",
+                                    "주변 소음인식",
                                     style: TextStyle(
                                         fontWeight: FontWeight.w600,
                                         fontSize: 18),
