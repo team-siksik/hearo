@@ -6,13 +6,13 @@ import FavContentsPage from "./FavContetnsPage";
 import SettingsPage from "./SettingsPage";
 import AgainPage from "./AgainPage";
 import NotFound404 from "./NotFound404";
-import RecognizePage from "./RecognizePage";
+import RecordPage from "./RecordPage";
 // import TutorialPage from "./TutorialPage";
 
 export {
   LoginPage,
   ConversationPage,
-  RecognizePage,
+  RecordPage,
   MyPage,
   MainPage,
   FavContentsPage,

@@ -21,6 +21,7 @@ interface PropsType {
   setLoginModal: React.Dispatch<SetStateAction<boolean>>;
   setOpenProfileModal: React.Dispatch<SetStateAction<boolean>>;
 }
+
 const Navbar = ({ setLoginModal, setOpenProfileModal }: PropsType) => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
@@ -162,7 +163,7 @@ const Navbar = ({ setLoginModal, setOpenProfileModal }: PropsType) => {
       {isLoggedin 
         ? 
                 (
-          <section className="user-box">
+          <section>
           <div className="px-3 mr-10">
             <Button type="accountButton" onClick={openLoginModal}>
               <img className="mx-3 w-5" src={google_logo} />
@@ -179,13 +180,13 @@ const Navbar = ({ setLoginModal, setOpenProfileModal }: PropsType) => {
         ( 
           <section
             onClick={openProfileModal}
-            className="user-box mx-6 flex items-center"
+            className="mx-6 flex items-center rounded-xl hover:text-xl hover:cursor-pointer transition-all duration-[250ms] ease-out"
             >
-            <div className="w-7">
-              <UserIcon/>
+            <div>
+            <UserIcon className="w-8"/>
             </div>
-            {/* <p>{username} 님</p> */}
             <p>김야옹 님</p> 
+            {/* <p>{username} 님</p> */}
           </section>
           ) 
       }
