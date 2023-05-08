@@ -1,15 +1,13 @@
 import React, {useState, useEffect, useRef } from "react";
 import Slider from "react-slick";
-import Test1 from "@/assets/carousel1.jpg"
-import Test2 from "@/assets/carousel2.jpg"
-import Test3 from "@/assets/carousel3.jpg"
-import Test4 from "@/assets/carousel4.jpg"
-import Test5 from "@/assets/carousel5.jpg"
+import Carousel1 from "@/assets/Carousel1.png";
+import Carousel2 from "@/assets/Carousel2.png";
+import Carousel3 from "@/assets/Carousel3.png";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
 
-const images = [Test1, Test2, Test3, Test4,Test5]
+const images = [Carousel1, Carousel2, Carousel3]
 
 function Carousel() {
   const [sliderRef, setSliderRef] = useState<Slider | null>(null);
@@ -28,15 +26,17 @@ function Carousel() {
   };  
 
   return (
-    <div className="object-fill">
-      <Slider {...settings}  ref={(slider) => setSliderRef(slider)}>
-        {images.map((images, index) => (
-          <div key={index} className="w-full max-w-fit">
-            <img src={images} alt={`slide=${index}`} className="border-white rounded-md w-full max-h-56"/>            
-          </div>
-        ))}
-      </Slider>
-    </div>
+<div className="object-fill">
+  <Slider {...settings}  ref={(slider) => setSliderRef(slider)}>
+    {images.map((image, index) => (
+      <div key={index} className="max-w-fit">
+        <div className="max-h-screen">
+          <img src={image} alt={`slide=${index}`} className="border-white rounded-lg w-full h-full object-cover"/>            
+        </div>
+      </div>
+    ))}
+  </Slider>
+</div>
   );
 }
 

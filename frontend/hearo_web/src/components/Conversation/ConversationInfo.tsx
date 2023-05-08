@@ -1,15 +1,20 @@
-import React, { useEffect, useRef, useState } from "react";
-import startVoice from "../../assets/start.wav";
+import React, { SetStateAction, useEffect, useRef, useState } from "react";
 import { ReactComponent as Info } from "../../assets/Info-rect.svg";
 import Modal from "../common/ui/Modal";
+import { motion } from "framer-motion";
 
 interface PropsType {
   cannotExit: boolean;
+  setOpenInfoModal?: React.Dispatch<SetStateAction<boolean>>;
 }
 
-function ConversationInfo({ cannotExit }: PropsType) {
+function ConversationInfo({ cannotExit, setOpenInfoModal }: PropsType) {
   return (
-    <Modal open={true} cannotExit={cannotExit}>
+    <Modal
+      open={true}
+      cannotExit={cannotExit}
+      setOpenInfoModal={setOpenInfoModal}
+    >
       <section className="mb-3 flex items-center justify-center">
         <Info />
         <h5 className="ml-2 text-base font-bold">

@@ -11,9 +11,12 @@ import { DropDown } from "@/components";
 function SettingsPage() {
   const mypagebarBackground = "z-10 bg-white drop-shadow";
   const navigate = useNavigate();
+<<<<<<< HEAD
   const backClick = () => {
     navigate("/mypage");
   };
+=======
+>>>>>>> 39ef0d2caece5e6687a0aa2d56c9ad14ead306c6
 
   // useState를 사용하여 현재 선택된 글자크기를 저장합니다.
   const [fontSize, setFontSize] = useState("medium");
@@ -48,6 +51,7 @@ function SettingsPage() {
   };
 
   return (
+<<<<<<< HEAD
     <div>
       <div
         className={`${mypagebarBackground} flex h-full w-full flex-row p-2.5`}
@@ -56,6 +60,12 @@ function SettingsPage() {
           <ArrowLeftIcon className="h-8 w-8" onClick={backClick} />
         </div>
         <div className="pl-[30%] text-3xl font-bold ">환경설정</div>
+=======
+  <div>
+    <div className={`${mypagebarBackground} flex flex-row p-2.5 w-full h-full`}>
+      <div>
+        <ArrowLeftIcon className="w-8 h-8" onClick={() => navigate(-1)} />
+>>>>>>> 39ef0d2caece5e6687a0aa2d56c9ad14ead306c6
       </div>
 
       <div className="m-4 flex flex-row justify-start pt-4 text-center">
