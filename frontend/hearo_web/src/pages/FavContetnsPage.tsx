@@ -28,9 +28,7 @@ function FavContentsPage () {
   // 상단bar 스타일
   const mypagebarBackground = "z-10 bg-white drop-shadow";
   const navigate = useNavigate();
-  const backClick = () => {
-    navigate('/mypage');
-  }
+
 
   // 추가 버튼
   const onAddButtonClick = () => {
@@ -86,7 +84,7 @@ function FavContentsPage () {
       {/* 상단footer */}
       <div className={`${mypagebarBackground} flex flex-row p-2.5 w-full h-full`}>
         <div>
-          <ArrowLeftIcon className="w-8 h-8" onClick={backClick} />
+          <ArrowLeftIcon className="w-8 h-8" onClick={() => navigate(-1)} />
         </div>
         <div className="pl-[25%] font-bold text-3xl ">
           자주 쓰는 말
