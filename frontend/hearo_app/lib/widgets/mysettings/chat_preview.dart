@@ -5,12 +5,12 @@ class ChatPreview extends StatelessWidget {
   final Size size;
   // 투두: 나중에는 개인정보에서 textSize를 가져와야함
   final int textSize;
-
-  const ChatPreview({
-    super.key,
-    required this.size,
-    required this.textSize,
-  });
+  final TextEditingController textController;
+  const ChatPreview(
+      {super.key,
+      required this.size,
+      required this.textSize,
+      required this.textController});
 
   @override
   Widget build(BuildContext context) {
@@ -33,10 +33,25 @@ class ChatPreview extends StatelessWidget {
             child: ListView(
               children: [
                 SpeechBubble(
-                    textSize: textSize, message: "회의를 시작하겠습니다.", who: 1),
-                SpeechBubble(textSize: textSize, message: "좋은 아침이에요.", who: 3),
-                SpeechBubble(textSize: textSize, message: "안녕하세요!!", who: 0),
-                SpeechBubble(textSize: textSize, message: "안녕하세요~~!!", who: 4),
+                    textController: textController,
+                    textSize: textSize,
+                    message: "회의를 시작하겠습니다.",
+                    who: 1),
+                SpeechBubble(
+                    textController: textController,
+                    textSize: textSize,
+                    message: "좋은 아침이에요.",
+                    who: 3),
+                SpeechBubble(
+                    textController: textController,
+                    textSize: textSize,
+                    message: "안녕하세요!!",
+                    who: 0),
+                SpeechBubble(
+                    textController: textController,
+                    textSize: textSize,
+                    message: "안녕하세요~~!!",
+                    who: 4),
               ],
             ),
           ),

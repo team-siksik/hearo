@@ -1,22 +1,32 @@
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:hearo_app/apis/say_api.dart';
+import 'package:hearo_app/controller/login_controller.dart';
+
+LoginController loginController = Get.put(LoginController());
 
 class MyDataController extends GetxController {
   final sayings = [].obs;
-
   final box = GetStorage();
 
   @override
-  void onInit() {
+  void onInit() async {
     super.onInit();
-    if (box.hasData('sayings')) {
-      sayings.assignAll(box.read<List>('sayings')!.cast<String>());
+    print("온잇잇");
+    final data = await ApiSay.sayGetApi();
+    if (data != null) {
+      sayings
+          .assignAll(data.map<String>((e) => e['sentence'] as String).toList());
+      box.write('sayings', data);
+    } else {
+      sayings.assignAll(box.read<List>('sayings')?.cast<String>() ?? []);
     }
   }
 
   // 말 추가
   void addSaying(saying) {
     sayings.add(saying);
+    ApiSay.sayCreateApi(saying);
     box.write('sayings', sayings.toList());
     update();
   }
@@ -31,6 +41,7 @@ class MyDataController extends GetxController {
   // 말 편집
   void editSaying(before, after) async {
     var where = sayings.indexOf(before);
+    sayings[where];
     sayings.remove(before);
     sayings.insert(where, after);
     box.write('sayings', sayings.toList());
