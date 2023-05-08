@@ -8,6 +8,7 @@ module.exports = {
     },
     extend: {
       colors: {
+        "blue-main": "#1A73E8",
         "red-main": "#E63E43",
         "red-sub": "#F35D61",
         "red-error": "#BF191E",
@@ -28,6 +29,7 @@ module.exports = {
     },
     screens: {
       sm: "768px",
+      desktop: "1920px",
     },
   },
   plugins: [],
