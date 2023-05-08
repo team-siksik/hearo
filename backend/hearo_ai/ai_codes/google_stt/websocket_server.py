@@ -1,20 +1,9 @@
-# import asyncio
-# import websockets
-# import json
-# import threading
-
-
-
 IP = 'localhost'
 PORT = 8000
-
 
 import os
 
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "C:/Coding/S08P31A603/backend/hearo_ai/credential.json"
-
-
-# [START speech_transcribe_infinite_streaming]
 
 import re
 import sys
@@ -46,6 +35,7 @@ class ResumableMicrophoneStream:
     """Opens a recording stream as a generator yielding the audio chunks."""
 
     def __init__(self, rate, chunk_size):
+        self.transcript = None
         self._rate = rate
         self.chunk_size = chunk_size
         self._num_channels = 1
@@ -227,16 +217,21 @@ def listen_print_loop(responses, stream):
 
             stream.last_transcript_was_final = False
 
-
-def main():
+import json
+async def main(websocket, path):
     """start bidirectional streaming from microphone input to speech API"""
-
+    socket = await websocket.recv()
+    if not isinstance(socket, str):
+        print("ERROR, no config")
+        return
+    socket = json.loads(socket)
+    
     client = speech.SpeechClient()
     config = types.RecognitionConfig(
-    encoding=enums.RecognitionConfig.AudioEncoding.LINEAR16,
+        encoding=enums.RecognitionConfig.AudioEncoding.LINEAR16,
         sample_rate_hertz=SAMPLE_RATE,
         language_code="ko-KR",
-        max_alternatives=1,
+        max_alternatives=1
     )
     streaming_config = types.StreamingRecognitionConfig(
         config=config, interim_results=True
@@ -248,6 +243,7 @@ def main():
     sys.stdout.write('\nListening, say "그만" or "중지" to stop.\n\n')
     sys.stdout.write("End (ms)       Transcript Results/Status\n")
     sys.stdout.write("=====================================================\n")
+    
 
     with mic_manager as stream:
 
@@ -282,9 +278,12 @@ def main():
                 sys.stdout.write("\n")
             stream.new_stream = True
 
-
+import websockets
+import asyncio
 if __name__ == "__main__":
-
-    main()
+    print("시작됨")
+    start_server = websockets.serve(main, IP, PORT)
+    asyncio.get_event_loop().run_until_complete(start_server)
+    asyncio.get_event_loop().run_forever()
 
 # [END speech_transcribe_infinite_streaming]

@@ -4,18 +4,30 @@ import sys
 import wave
 import base64
 import time
+import pyaudio
+CHUNK = 1024
+FORMAT = pyaudio.paInt16
+CHANNELS = 1
+RATE = 44100
+p = pyaudio.PyAudio()
 
+stream = p.open(format=FORMAT,
+                channels=CHANNELS,
+                rate=RATE,
+                input=True,
+                frames_per_buffer=CHUNK)
 async def run_test(uri):
     async with websockets.connect(uri) as websocket:
-
-        wf = wave.open(sys.argv[1], "rb")
         while True:
-            encoded_string = base64.encodebytes(wf.readframes(1024))
-            print(encoded_string)
-            if len(encoded_string) == 0:
+            data = stream.read(CHUNK)
+            encoded_string = base64.b64encode(data)
+            # print(encoded_string)
+            if len(data) == 0:
                  break
-            
-            await websocket.send(str(encoded_string))
+            print("sending")
+            await websocket.send(str(encoded_string)[1:])
             time.sleep(0.1)
+            print("receiving")
+            print(websocket.recv())
 
-asyncio.run(run_test('ws://localhost:7007'))
+asyncio.run(run_test('ws://localhost:8000'))
