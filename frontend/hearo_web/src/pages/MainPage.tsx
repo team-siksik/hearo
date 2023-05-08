@@ -11,13 +11,14 @@ import {
   LoginModal,
 } from "@/components";
 import Carousel2 from "@/assets/Carousel2.png";
+import { motion } from "framer-motion";
+
+// TODO: 스크롤 시 좌우에서 나타나게
 
 interface PropsType {
   setLoginModal: React.Dispatch<SetStateAction<boolean>>;
-  setOpenInfoModal: React.Dispatch<SetStateAction<boolean>>;
 }
-
-function MainPage({ setLoginModal, setOpenInfoModal }: PropsType) {
+function MainPage({ setLoginModal }: PropsType) {
   const [comp, setComp] = useState<string>("main");
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const audioRef = useRef<HTMLAudioElement>(null);
@@ -77,7 +78,7 @@ function MainPage({ setLoginModal, setOpenInfoModal }: PropsType) {
           <Layout>
             <div className="relative">
               {/* 안녕하세요, 000 님 */}
-              <div className="sticky top-0 m-4 flex h-72 flex-col items-center justify-center bg-white">
+              <div className="sticky top-0 m-4 flex h-96 flex-col items-center justify-center bg-white">
                 {isLoggedIn ? (
                   <>
                     <div>안녕하세요, ""{user?.nickname}님!!!&nbsp;</div>
@@ -113,9 +114,14 @@ function MainPage({ setLoginModal, setOpenInfoModal }: PropsType) {
                   </p>
                 </div>
               </div>
+
               {/* body */}
-              <section className="mx-4 flex flex-col gap-10">
-                <div className="sticky top-0 m-4 flex h-screen flex-col items-center justify-center bg-white  pb-8">
+              <section className="mx-4 flex flex-col gap-10 relative">
+                <motion.div className="sticky top-0 m-4 flex h-screen flex-col items-center justify-center bg-white pb-8"
+                initial={{ opacity: 0, x: "-100vw" }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 1 }}        
+                >
                   <div className="grid grid-cols-2 ">
                     <div className="col1">
                       {/* 회의 시작하기 */}
@@ -155,7 +161,7 @@ function MainPage({ setLoginModal, setOpenInfoModal }: PropsType) {
                       ></div>
                     </div>
                   </div>
-                </div>
+                </motion.div>
                 <div className="sticky top-0 m-4 flex h-screen flex-col items-center justify-center bg-white  pb-8">
                   <div className="grid grid-cols-2">
                     {/* 기록 확인하기 */}
@@ -257,7 +263,7 @@ function MainPage({ setLoginModal, setOpenInfoModal }: PropsType) {
         </>
       ) : comp === "voice_play" ? (
         // 음성 재생 -> 회의 시작 페이지로 자동 이동
-        <ConversationInfo cannotExit={true} setOpenInfoModal={setOpenInfoModal} />
+        <ConversationInfo cannotExit={true} />
       ) : null}
     </div>
   );
