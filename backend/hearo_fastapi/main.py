@@ -24,11 +24,4 @@ async def root():
     return {"message": "hearo!"}
 
 
-from router import sl_recognition, sound_classification, speaker_diarization
-
-
-router.include_router(sl_recognition.router)
-router.include_router(sound_classification.router)
-router.include_router(speaker_diarization.router)
-
 app.include_router(router)
