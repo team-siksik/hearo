@@ -5,10 +5,7 @@ import { io } from "socket.io-client";
 // when try to connect socket -> *socket.connect()*
 // const socket = io("/", { autoConnect: false }); // client domain === server domain
 
-const socket = io(
-  "http://localhost:8080/"
-  // { autoConnect: false }
-); // client domain !== server domain
+const socket = io("http://localhost:8080/", { autoConnect: false }); // client domain !== server domain
 
 // socket이 연결이 되었으면 실행
 socket.on("connect", () => {});

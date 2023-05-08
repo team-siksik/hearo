@@ -1,8 +1,8 @@
-import { Message } from "postcss";
 import React, { useEffect, useRef, useState } from "react";
 import Dialog from "../common/ui/Dialog";
 import GPTRecommend from "./GPTRecommend";
-import { TTS } from "@/apis";
+import { TTS, STT } from "@/apis";
+import FloatingButton from "../common/ui/FloatingButton";
 
 /**
  * socket.io 연결
@@ -36,7 +36,6 @@ interface PropsType {
 }
 
 function ConversationBody({ message }: PropsType) {
-  const messageEndRef = useRef<HTMLDivElement>(null); // 채팅창 늘어날 수록 스크롤 맨 밑으로 이동
   const [id, setId] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isRecording, setIsRecording] = useState<boolean>(false);
@@ -46,6 +45,7 @@ function ConversationBody({ message }: PropsType) {
   const [openGPTModal, setOpenGPTModal] = useState<boolean>(false); // get GPT 추천
   const [text, setText] = useState<string>("");
   // const [openAddFavModal, setOpenAddFavModal] = useState<boolean>(false); // 자주 쓰는 말
+  const messageEndRef = useRef<HTMLDivElement>(null); // 채팅창 늘어날 수록 스크롤 맨 밑으로 이동
 
   // 채팅창 늘어날 수록 스크롤 맨 밑으로 이동
   useEffect(() => {
@@ -74,9 +74,13 @@ function ConversationBody({ message }: PropsType) {
     console.log(conversation);
   }, [message]);
 
+  useEffect(() => {
+    setIsRecording(true);
+  }, []);
+
+  // when my dialog clicked -> Text To Speech play
   function handleDialogClick(e: React.MouseEvent<HTMLDivElement>) {
     setText("");
-    //TODO: 여기에서 TTS 돌려야돼
     if (e.currentTarget.textContent) {
       setText(e.currentTarget.textContent);
     }
@@ -91,10 +95,8 @@ function ConversationBody({ message }: PropsType) {
       {isLoading ? (
         <div>isLoading</div>
       ) : (
-        <section
-          className="message-sec mb-10 overflow-y-scroll pt-10"
-          style={{ height: "94vh" }}
-        >
+        <section className="message-sec h-100 mb-10 overflow-y-scroll pt-10">
+          {/* <STT /> */}
           {conversation ? (
             <div>
               {text && <TTS text={text} setText={setText} />}
