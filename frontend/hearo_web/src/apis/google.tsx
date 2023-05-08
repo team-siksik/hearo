@@ -11,6 +11,7 @@ function Google({}: PropsType) {
   const parsedHash = new URLSearchParams(window.location.hash.substring(1));
   const accessToken = parsedHash.get("access_token");
   if (accessToken) {
+    console.log(accessToken);
     const login = async () => {
       try {
         const result = await dispatch(googleLogin(accessToken));
