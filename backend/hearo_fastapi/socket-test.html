@@ -10,7 +10,7 @@
     ></script>
     <script>
       // Socket.IO 클라이언트 객체 생성
-      var socket = io("http://127.0.0.1:80");
+      var socket = io("http://k8a6032.p.ssafy.io:80");
 
       // 방에 들어가는 함수
       function joinRoom() {
@@ -36,6 +36,12 @@
 
       // 서버에서 보낸 메시지를 받는 함수
       socket.on("message", function (data) {
+        var message = data;
+        var messageDiv = document.createElement("div");
+        messageDiv.innerHTML = message;
+        document.getElementById("messages").appendChild(messageDiv);
+      });
+      socket.on("info", function (data) {
         var message = data;
         var messageDiv = document.createElement("div");
         messageDiv.innerHTML = message;
