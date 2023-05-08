@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:hearo_app/apis/login_api.dart';
 import 'package:hearo_app/controller/login_controller.dart';
 import 'package:hearo_app/screens/login_screen.dart';
+import 'package:hearo_app/test/socket_test.dart';
 import 'package:hearo_app/widgets/common/custom_app_bar_inner.dart';
 
 class SettingHome extends StatefulWidget {
@@ -27,26 +28,25 @@ class _SettingHomeState extends State<SettingHome> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             Flexible(
-                flex: 2,
-                child: Padding(
-                  padding: const EdgeInsets.only(bottom: 10),
-                  child: ClipOval(
-                    child: Image.network(
-                      loginController.loginData[0]["profileImg"],
-                      fit: BoxFit.cover,
-                      width: 120,
-                      height: 120,
-                    ),
-                  ),
-                )),
-            Flexible(
               flex: 3,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Text(
-                    loginController.loginData[0]["nickname"],
-                    style: TextStyle(fontSize: 28, fontWeight: FontWeight.w700),
+                  ClipOval(
+                    child: Image.network(
+                      loginController.loginData[0]["profileImg"],
+                      fit: BoxFit.cover,
+                      width: 150,
+                      height: 150,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 20),
+                    child: Text(
+                      loginController.loginData[0]["nickname"],
+                      style:
+                          TextStyle(fontSize: 28, fontWeight: FontWeight.w700),
+                    ),
                   ),
                   Container(
                       padding: EdgeInsets.only(top: 10, bottom: 25),
@@ -55,6 +55,13 @@ class _SettingHomeState extends State<SettingHome> {
                 ],
               ),
             ),
+            Flexible(
+                flex: 1,
+                child: TextButton(
+                    onPressed: () {
+                      Get.to(SocketTest());
+                    },
+                    child: Text("소켓 실험"))),
             Flexible(
               flex: 1,
               child: Padding(
