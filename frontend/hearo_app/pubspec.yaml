@@ -89,6 +89,9 @@ dependencies:
   speech_to_text:
   highlight_text:
   avatar_glow:
+  # 소켓
+  socket_io_client: ^2.0.2
+  
 
 dev_dependencies:
   flutter_test:
