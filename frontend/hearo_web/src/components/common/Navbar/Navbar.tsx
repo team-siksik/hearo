@@ -19,11 +19,12 @@ import { ReactComponent as UserIcon } from "@/assets/Icon/UserIcon.svg";
 
 interface PropsType {
   setLoginModal: React.Dispatch<SetStateAction<boolean>>;
+  setOpenProfileModal: React.Dispatch<SetStateAction<boolean>>;
 }
-const Navbar = ({ setLoginModal }: PropsType) => {
+const Navbar = ({ setLoginModal, setOpenProfileModal }: PropsType) => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const [openProfileModal, setOpenProfileModal] = useState<boolean>(false);
+
   const flexBetween = "flex items-center justify-between";
   const [isMenuToggled, setIsMenuToggled] = useState<boolean>(false);
   const navbarBackground = "z-10 bg-white drop-shadow";
@@ -128,39 +129,105 @@ const Navbar = ({ setLoginModal }: PropsType) => {
     navigate("/");
   };
 
+  const [showModal, setShowModal] = useState(false);
   function openLoginModal() {
-    setLoginModal(true);
+    setLoginModal(true); 
+    setShowModal(true);
   }
+  
+  function closeLoginModal() {
+    setLoginModal(false);
+    setShowModal(false);
+  }
+
+  function openProfileModal() {
+    setOpenProfileModal(true);
+    setShowModal(true);
+  }
+  
+  function closeProfileModal() {
+    setOpenProfileModal(false);
+    setShowModal(false);
+  }
+
 
   return (
     <header className="flex justify-between border border-gray-200 py-2">
       <div className="logo font-chewy text-3xl font-extrabold text-blue-main">
         <button onClick={homeClick} className="flex items-center ">
           <Player src={MainLogo} loop autoplay style={{ width: "60px" }} />
-          <h1>HEARO</h1>
+          <h1>HEARO</h1>  
         </button>
       </div>
-      <nav></nav>
-      {isLoggedin ? (
-        <section
-          onClick={() => setOpenProfileModal(true)}
-          className="user-box mx-4 flex items-center"
-        >
-          <div className="w-7">
-            <UserIcon />
-          </div>
-          {/* <p>{username} 님</p> */}
-          <p>김야옹 님</p>
-        </section>
-      ) : (
-        <section className="user-box">
-          <div className="px-3">
-            <Button type="whiteButton" onClick={openLoginModal}>
+      {isLoggedin 
+        ? 
+                (
+          <section className="user-box">
+          <div className="px-3 mr-10">
+            <Button type="accountButton" onClick={openLoginModal}>
               <img className="mx-3 w-5" src={google_logo} />
             </Button>
+            {showModal && 
+              <Button type="accountButton" onClick={closeLoginModal}>
+              <img className="mx-3 w-5" src={google_logo} />
+              </Button>
+            }
           </div>
         </section>
-      )}
+        )
+        : 
+        ( 
+          <section
+            onClick={openProfileModal}
+            className="user-box mx-6 flex items-center"
+            >
+            <div className="w-7">
+              <UserIcon/>
+            </div>
+            {/* <p>{username} 님</p> */}
+            <p>김야옹 님</p> 
+          </section>
+          ) 
+      }
+{/*
+        {isLoggedin ? ( 
+          <>
+            <section
+            onClick={openProfileModal}
+            className="user-box mx-4 flex items-center"
+            >
+            <div className="w-7">
+              <UserIcon/>
+            </div>
+            <p>김야옹 님</p> 
+          </section>
+          {showModal &&
+            <section
+            onClick={closeProfileModal}
+            className="user-box mx-4 flex items-center">
+            <div className="w-7">
+              <UserIcon/>
+            </div>
+            <p>김야옹 님</p> 
+          </section>
+          }
+          </>
+          ) : (
+          <section className="user-box">
+          <div className="px-3 mr-10">
+            <Button type="accountButton" onClick={openLoginModal}>
+              <img className="mx-3 w-5" src={google_logo} />
+            </Button>
+            {showModal && 
+              <Button type="accountButton" onClick={closeLoginModal}>
+              <img className="mx-3 w-5" src={google_logo} />
+              </Button>
+            }
+          </div>
+        </section>
+        )
+      }
+    */}
     </header>
   );
 };

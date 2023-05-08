@@ -7,6 +7,7 @@ interface PropsType {
   onClick?: () => void | React.Dispatch<SetStateAction<boolean>>;
 }
 
+
 function Button({ type, children, onClick }: PropsType) {
   return (
     <>
@@ -48,10 +49,31 @@ function Button({ type, children, onClick }: PropsType) {
         >
           {children}
         </button>
-      ) : (
-        <button onClick={onClick}>{children}</button>
-      )}
-    </>
+      ) : type === "accountButton" ? (
+        <button
+        className="absolute z-100 h-10 rounded-xl bg-white shadow-md shadow-slate-200"
+        onClick={onClick}
+        >
+          {children}
+        </button> 
+        ) : type === "accountModalButton" ? (
+          <button
+          className="group w-full transform overflow-hidden rounded-xl bg-white my-2 px-2 py-2"
+          onClick={onClick}
+        >
+          <div className="absolute inset-0 w-0 bg-blue-200 transition-all duration-[250ms] ease-out opacity-80 group-hover:w-full"></div>
+          <span className="relative text-black">
+            <div className="text-start"> 
+            {children}
+            </div>
+          </span>
+        </button>
+        ) :
+        <button onClick={onClick}>
+          {children}</button>
+
+      } 
+      </>
   );
 }
 
