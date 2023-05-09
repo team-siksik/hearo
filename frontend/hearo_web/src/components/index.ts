@@ -21,9 +21,9 @@ import TutorialBalloon from "./common/ui/TutorialBalloon";
 import BackgroundHider from "./common/ui/BackgroundHider";
 import LoginModal from "./MainPage/LoginModal";
 import ProfileModal from "./MainPage/ProfileModal";
-import RecordpageSideBar from "./Record/RecordPageSideBar";
 import MypageSideBar from "./Mypage/MypageSideBar";
 import RecordsItem from "./Record/RecordsItem";
+import RecordpageSideBar from "./Record/RecordpageSideBar";
 import RemoveRecordModal from "./Record/RemoveModal";
 
 export {
@@ -32,7 +32,6 @@ export {
   ConversationBody,
   MeetingSidebar,
   ConversationFooter,
-  RecordpageSideBar,
   FavContents,
   GPTRecommend,
   ExitModal,
@@ -53,5 +52,6 @@ export {
   ProfileModal,
   MypageSideBar,
   RecordsItem,
+  RecordpageSideBar,
   RemoveRecordModal,
 };
