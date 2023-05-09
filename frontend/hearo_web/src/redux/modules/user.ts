@@ -63,7 +63,7 @@ const googleLogin = createAsyncThunk(
     if (!response) {
       throw new Error();
     }
-    console.log(response.data);
+    console.log(response.data.data);
     return response.data.data;
   }
 );
