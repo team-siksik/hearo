@@ -24,11 +24,11 @@ function Mypage() {
   const navigate = useNavigate();
 
   const FavClick = () => {
-    navigate("/favcontents");
+    navigate("/mypage/favcontents");
   };
 
   const SettingClick = () => {
-    navigate("/settings");
+    navigate("/mypage/settings");
   };
 
   const AgainClick = () => {
