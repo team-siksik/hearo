@@ -69,6 +69,7 @@ dependencies:
   # 겟 스토리지 로컬 저장소
   get_storage: ^2.1.1
   # 오디오 재생
+  assets_audio_player: ^3.0.6
   audioplayers: ^4.0.1
   flutter_sound: ^9.2.13
   # 구글 로그인
@@ -84,7 +85,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  flutter_lints: ^2.0.0
+  flutter_lints: ^2.0.1
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
@@ -99,7 +100,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/images/
-    - assets/sounds/
+    - assets/audios/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
