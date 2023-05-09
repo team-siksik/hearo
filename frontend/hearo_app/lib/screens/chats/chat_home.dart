@@ -1,3 +1,4 @@
+import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hearo_app/controller/chat_controller.dart';
@@ -51,12 +52,12 @@ class _ChatHomeState extends State<ChatHome> {
         onResult: _onSpeechResult,
         listenFor: Duration(minutes: 3),
         pauseFor: Duration(seconds: 50));
-    setState(() {});
     if (_lastWords.trim() != "") {
       chattings.add({"who": 1, "message": _lastWords});
       _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
       _lastWords = '';
     }
+    setState(() {});
   }
 
   void _stopListening() async {
@@ -143,12 +144,24 @@ class _ChatHomeState extends State<ChatHome> {
           return false;
         },
         child: Scaffold(
-          floatingActionButton: FloatingActionButton(
-            onPressed:
-                _speechToText.isNotListening ? _startListening : _stopListening,
-            tooltip: '마이크를 켜서 음성인식',
-            child:
-                Icon(_speechToText.isNotListening ? Icons.mic_off : Icons.mic),
+          floatingActionButton: AvatarGlow(
+            animate: !_speechToText.isNotListening,
+            glowColor: const Color(0xffE63E43),
+            endRadius: 75.0,
+            duration: Duration(milliseconds: 2000),
+            repeatPauseDuration: Duration(milliseconds: 100),
+            repeat: true,
+            child: FloatingActionButton(
+              backgroundColor: _speechToText.isNotListening
+                  ? Colors.black45
+                  : Color(0xffe63e43),
+              onPressed: _speechToText.isNotListening
+                  ? _startListening
+                  : _stopListening,
+              tooltip: '마이크를 켜서 음성인식',
+              child: Icon(
+                  _speechToText.isNotListening ? Icons.mic_off : Icons.mic),
+            ),
           ),
           floatingActionButtonLocation:
               FloatingActionButtonLocation.miniCenterTop,
