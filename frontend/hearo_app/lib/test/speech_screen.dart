@@ -1,57 +1,64 @@
 import 'package:flutter/material.dart';
-import 'package:speech_to_text/speech_to_text.dart' as stt;
+import 'package:speech_to_text/speech_recognition_result.dart';
+import 'package:speech_to_text/speech_to_text.dart';
 
 class SpeechScreen extends StatefulWidget {
-  const SpeechScreen({super.key});
+  SpeechScreen({Key? key}) : super(key: key);
 
   @override
   State<SpeechScreen> createState() => _SpeechScreenState();
 }
 
 class _SpeechScreenState extends State<SpeechScreen> {
-  late stt.SpeechToText _speech;
-  bool _isListening = false;
-  String _text = '';
+  final SpeechToText _speechToText = SpeechToText();
+  bool _speechEnabled = false;
+  String _lastWords = '';
 
   @override
   void initState() {
     super.initState();
-    _speech = stt.SpeechToText();
+    _initSpeech();
   }
 
-  void _listen() async {
-    if (!_isListening) {
-      bool available = await _speech.initialize(
-        onStatus: (status) {
-          if (status == 'done') {
-            _isListening = false;
-          }
-          setState(() {});
-        },
-        onError: (error) {
-          print('Error: $error');
-        },
-      );
+  /// This has to happen only once per app
+  void _initSpeech() async {
+    _speechEnabled = await _speechToText.initialize();
+    setState(() {});
+  }
 
-      if (available) {
-        setState(() {
-          _isListening = true;
-        });
+  /// Each time to start a speech recognition session
+  void _startListening() async {
+    await _speechToText.listen(
+        onResult: _onSpeechResult,
+        listenFor: Duration(minutes: 3),
+        pauseFor: Duration(seconds: 50));
+    setState(() {});
+  }
 
-        _speech.listen(
-          onResult: (result) {
-            setState(() {
-              _text = result.recognizedWords;
-            });
-          },
-        );
-      }
-    } else {
-      setState(() {
-        _isListening = false;
-      });
+  /// Manually stop the active speech recognition session
+  /// Note that there are also timeouts that each platform enforces
+  /// and the SpeechToText plugin supports setting timeouts on the
+  /// listen method.
+  void _stopListening() async {
+    await _speechToText.stop();
+    setState(() {});
+  }
 
-      _speech.stop();
+  /// This is the callback that the SpeechToText plugin calls when
+  /// the platform returns recognized words.
+  void _onSpeechResult(SpeechRecognitionResult result) {
+    setState(() {
+      _lastWords = result.recognizedWords;
+    });
+
+    // If speech is not enabled, enable it
+    if (!_speechEnabled) {
+      _initSpeech();
+    }
+
+    // If not listening, start listening
+    if (_speechToText.isNotListening) {
+      _startListening();
     }
   }
 
@@ -59,20 +66,27 @@ class _SpeechScreenState extends State<SpeechScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('STT Example'),
+        title: Text('Speech Demo'),
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(_text),
-            SizedBox(height: 20),
-            FloatingActionButton(
-              onPressed: _listen,
-              child: Icon(_isListening ? Icons.stop : Icons.mic),
+          children: <Widget>[
+            Expanded(
+              child: Container(
+                padding: EdgeInsets.all(16),
+                child: Text(_lastWords),
+              ),
             ),
           ],
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed:
+            // If not yet listening for speech start, otherwise stop
+            _speechToText.isNotListening ? _startListening : _stopListening,
+        tooltip: 'Listen',
+        child: Icon(_speechToText.isNotListening ? Icons.mic_off : Icons.mic),
       ),
     );
   }

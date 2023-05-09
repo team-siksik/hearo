@@ -9,27 +9,13 @@ class SocketTest extends StatefulWidget {
 }
 
 class _SocketTestState extends State<SocketTest> {
-  late so_io.Socket socket;
+  final so_io.Socket socket =
+      so_io.io('http://k8a6031.p.ssafy.io:80/ws', <String, dynamic>{
+    'transports': ['websocket'],
+    'autoConnect': false,
+    'path': '/ws/socket.io',
+  });
   List messages = [];
-  @override
-  void initState() {
-    super.initState();
-
-    // Connect to the server
-    socket = so_io.io('http://k8a6031.p.ssafy.io:80/ws', <String, dynamic>{
-      'transports': ['websocket'],
-      'autoConnect': false,
-      'path': '/ws/socket.io',
-    });
-    connect();
-    // socket.onConnect((_) {
-    //   print('connect');
-    //   socket.emit('msg', 'test');
-    // });
-    // socket.on('event', (data) => print(data));
-    // socket.onDisconnect((_) => print('disconnect'));
-    // socket.on('fromServer', (_) => print(_));
-  }
 
   @override
   void dispose() {
@@ -61,16 +47,19 @@ class _SocketTestState extends State<SocketTest> {
     print("메세지보냄");
   }
 
-  void onConnect(Function(dynamic) callback) {
+  void onConnect(Function(dynamic) callback) async {
     socket.on('connect', (_) {
       print('connected');
-      print(socket.connected); // 연결 여부 확인
       callback(_);
+      print(socket.connected); // 연결 여부 확인
     });
+    // print(socket.connected); // 연결 여부 확인
   }
 
   void onDisconnect(Function(dynamic) callback) {
-    socket.on('disconnect', callback);
+    socket.on('disconnect', (data) {
+      callback(data);
+    });
   }
 
   void onInfo(Function(dynamic) callback) {
@@ -78,9 +67,11 @@ class _SocketTestState extends State<SocketTest> {
   }
 
   void onMessage(Function(dynamic) callback) {
-    socket.on('message', callback);
-    setState(() {
-      messages.add(callback);
+    socket.on('message', (data) {
+      callback(data);
+      setState(() {
+        messages.add(data);
+      });
     });
   }
 
@@ -93,33 +84,42 @@ class _SocketTestState extends State<SocketTest> {
       body: Center(
         child: Column(
           children: [
-            TextButton(
-                onPressed: () {
-                  connect();
-                },
-                child: Text("소켓연결")),
-            TextButton(
-                onPressed: () {
-                  enterRoom('1111');
-                },
-                child: Text("소켓방드가기")),
-            TextButton(
-                onPressed: () {
-                  onConnect((p0) => print(p0));
-                },
-                child: Text("소켓확인")),
-            TextButton(
-                onPressed: () {
-                  sendMessageToRoom("1111", "어뜨케된겨");
-                },
-                child: Text("메시지전송")),
-            TextButton(
-                onPressed: () {
-                  onMessage(
-                    (p0) {},
-                  );
-                },
-                child: Text("메시지확인")),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                TextButton(
+                    onPressed: () {
+                      connect();
+                    },
+                    child: Text("소켓연결")),
+                TextButton(
+                    onPressed: () {
+                      enterRoom('1111');
+                    },
+                    child: Text("소켓방드가기")),
+                TextButton(
+                  onPressed: () {
+                    onConnect((p0) {
+                      print(p0);
+                      print(socket.connected); // 연결 여부 확인
+                    });
+                  },
+                  child: Text("소켓확인"),
+                ),
+                TextButton(
+                    onPressed: () {
+                      sendMessageToRoom("1111", "어뜨케된겨");
+                    },
+                    child: Text("메시지전송")),
+                TextButton(
+                    onPressed: () {
+                      onMessage(
+                        (p0) {},
+                      );
+                    },
+                    child: Text("메시지확인")),
+              ],
+            ),
             Expanded(
               child: ListView.builder(
                 itemCount: messages.length,

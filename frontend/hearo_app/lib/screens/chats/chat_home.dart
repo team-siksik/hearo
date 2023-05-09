@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hearo_app/controller/chat_controller.dart';
@@ -10,6 +9,8 @@ import 'package:wakelock/wakelock.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:assets_audio_player/assets_audio_player.dart';
+import 'package:speech_to_text/speech_recognition_result.dart';
+import 'package:speech_to_text/speech_to_text.dart';
 
 class ChatHome extends StatefulWidget {
   const ChatHome({super.key});
@@ -19,6 +20,9 @@ class ChatHome extends StatefulWidget {
 }
 
 class _ChatHomeState extends State<ChatHome> {
+  final SpeechToText _speechToText = SpeechToText();
+  bool _speechEnabled = false;
+  String _lastWords = '';
   final _scrollController = ScrollController();
   List chattings = [];
   final chatController = Get.put(ChatController());
@@ -27,16 +31,51 @@ class _ChatHomeState extends State<ChatHome> {
   void addChat(chat) {
     // 새로운 항목을 ListView에 추가
     setState(() {
-      // 말풍선 확인을 위한 랜덤요소 추가
-      var random = Random();
-      var randomNumber = random.nextInt(2);
-      chattings.add({"who": randomNumber, "message": chat});
-      // chattings.add({"who": 0, "message": chat});
+      chattings.add({"who": 0, "message": chat});
       chatController.changeSaying('');
     });
 
     // ListView를 맨 하단으로 스크롤
     _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+  }
+
+  /// This has to happen only once per app
+  void _initSpeech() async {
+    _speechEnabled = await _speechToText.initialize();
+    setState(() {});
+  }
+
+  /// Each time to start a speech recognition session
+  void _startListening() async {
+    await _speechToText.listen(
+        onResult: _onSpeechResult,
+        listenFor: Duration(minutes: 3),
+        pauseFor: Duration(seconds: 50));
+    setState(() {});
+    if (_lastWords.trim() != "") {
+      chattings.add({"who": 1, "message": _lastWords});
+      _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+      _lastWords = '';
+    }
+  }
+
+  void _stopListening() async {
+    await _speechToText.stop();
+    setState(() {});
+  }
+
+  void _onSpeechResult(SpeechRecognitionResult result) {
+    setState(() {
+      _lastWords = result.recognizedWords;
+    });
+
+    if (!_speechEnabled) {
+      _initSpeech();
+    }
+
+    if (_speechToText.isNotListening) {
+      _startListening();
+    }
   }
 
   @override
@@ -56,6 +95,8 @@ class _ChatHomeState extends State<ChatHome> {
       showInfoFirst(context);
     });
     playAudio();
+    _initSpeech();
+    _startListening();
     Future.delayed(Duration(milliseconds: 3300), () async {
       playAudioStop();
       Get.back();
@@ -84,6 +125,7 @@ class _ChatHomeState extends State<ChatHome> {
   void dispose() {
     // 화면 꺼짐 방지 비활성화
     Wakelock.disable();
+    _stopListening();
     super.dispose();
   }
 
@@ -101,6 +143,15 @@ class _ChatHomeState extends State<ChatHome> {
           return false;
         },
         child: Scaffold(
+          floatingActionButton: FloatingActionButton(
+            onPressed:
+                _speechToText.isNotListening ? _startListening : _stopListening,
+            tooltip: '마이크를 켜서 음성인식',
+            child:
+                Icon(_speechToText.isNotListening ? Icons.mic_off : Icons.mic),
+          ),
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.miniCenterTop,
           appBar: CustomAppBarChat(),
           body: GestureDetector(
             onTap: () {
