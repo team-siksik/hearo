@@ -57,7 +57,7 @@ async def disconnect(sid):
 async def enter_room(sid, data):
     room_id = data["room_id"]
     logger.info(f"enter_room: {sid} wants to enter room '{room_id}'")
-    await socket_manager.enter_room(sid, room_id)
+    socket_manager.enter_room(sid, room_id)
     await socket_manager.emit("info", f"{sid} entered room '{room_id}'")
     logger.info(f"enter_room: {sid} entered room '{room_id}'")
 
@@ -66,7 +66,7 @@ async def enter_room(sid, data):
 async def leave_room(sid, data):
     room_id = data["room_id"]
     logger.info(f"leave_room: {sid} wants to leave room '{room_id}'")
-    await socket_manager.leave_room(sid, room_id)
+    socket_manager.leave_room(sid, room_id)
     await socket_manager.emit("info", f"{sid} left room '{room_id}'")
     logger.info(f"leave_room: {sid} left room '{room_id}'")
 
