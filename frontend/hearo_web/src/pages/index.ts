@@ -6,8 +6,9 @@ import FavContentsPage from "./FavContetnsPage";
 import SettingsPage from "./SettingsPage";
 import AgainPage from "./AgainPage";
 import NotFound404 from "./NotFound404";
-import RecordPage from "./RecordPage";
+import RecordPage from "./TotalRecordsPage";
 // import TutorialPage from "./TutorialPage";
+import TotalRecordsPage from "./TotalRecordsPage";
 
 export {
   LoginPage,
@@ -19,5 +20,6 @@ export {
   SettingsPage,
   AgainPage,
   NotFound404,
+  TotalRecordsPage,
   // TutorialPage,
 };
