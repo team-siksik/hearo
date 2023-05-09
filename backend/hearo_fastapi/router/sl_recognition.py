@@ -1,8 +1,19 @@
-from main import socket_manager
+from fastapi import APIRouter
 
 import base64
 import cv2
 import numpy as np
+
+from main import socket_manager, logger
+
+
+router = APIRouter(prefix="/sl")
+
+
+@router.get("/test")
+async def root():
+    logger.info("root: sl router api 호출")
+    return {"message": "hearo!"}
 
 
 async def decode_image(base64_string):
