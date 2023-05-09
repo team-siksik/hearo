@@ -44,6 +44,15 @@ async def leave_room(sid, data):
     logger.info(f"leave_room: {sid} left room '{room_id}'")
 
 
+@socket_manager.on("close_room")
+async def close_room(sid, data):
+    room_id = data["room_id"]
+    logger.info(f"leave_room: {sid} wants to close room '{room_id}'")
+    await socket_manager.close_room(sid, room_id)
+    await socket_manager.emit("info", f"{sid} closed room '{room_id}'")
+    logger.info(f"leave_room: {sid} closed room '{room_id}'")
+
+
 @socket_manager.on("send_message_to_room")
 async def send_message_to_room(sid, data):
     room_id = data["room_id"]
