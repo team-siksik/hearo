@@ -5,7 +5,6 @@ import {
   ConversationPage,
   MainPage,
   TotalRecordsPage,
-  RecordPage,
   MyPage,
   FavContentsPage,
   SettingsPage,
@@ -30,8 +29,8 @@ function App() {
         <Route path="/comm" element={<ConversationPage />} />
         <Route path="/records" element={<TotalRecordsPage/>} />
         <Route path="/mypage" element={<MyPage />} />
-        <Route path="/favcontents" element={<FavContentsPage/>}/>
-        <Route path="/settings" element={<SettingsPage />} />
+        <Route path="/mypage/favcontents" element={<FavContentsPage/>}/>
+        <Route path="/mypage/settings" element={<SettingsPage />} />
         <Route path="/login/oauth2/code/google" element={<Google />} />
         <Route path="*" element={<NotFound404 />} />
       </Routes>
