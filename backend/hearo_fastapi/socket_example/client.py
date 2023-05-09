@@ -14,12 +14,10 @@ def test(data):
 
 
 sio.connect("http://localhost:8000/ws", socketio_path="/ws/socket.io", wait_timeout=5)
-# sio.connect(
-#     "http://k8a6031.p.ssafy.io:80/ws", socketio_path="/ws/socket.io", wait_timeout=5
-# )
-# sio.wait()
+# sio.connect("http://k8a6031.p.ssafy.io:80/ws", socketio_path="/ws/socket.io", wait_timeout=5)
 
 sio.emit("enter_room", {"room_id": "hi"})
-sio.emit("leave_room", {"room_id": "hi"})
-
+# sio.emit("leave_room", {"room_id": "hi"})
+sio.emit("send_message_to_room", {"room_id": "hi", "message": "yaong"})
+sio.emit("close_room", {"room_id": "hi"})
 sio.emit("disconnect")
