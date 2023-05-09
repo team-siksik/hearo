@@ -6,10 +6,10 @@ interface UserType {
   isLoggedIn: boolean;
   user: {
     nickname: string;
+    accessToken: string;
     email: string;
     profileImg: string;
     delYn: string;
-    token: string;
     role: string;
   } | null;
   setting: {
@@ -24,7 +24,7 @@ interface UserType {
 interface LoginPayloadType {
   nickname: string;
   email: string;
-  token: string;
+  accessToken: string;
   profileImg: string;
   delYn: string;
   role: string;
@@ -40,7 +40,7 @@ const initialState: UserType = {
   user: {
     nickname: "",
     email: "",
-    token: "",
+    accessToken: "",
     profileImg: "",
     delYn: "",
     role: "",
@@ -138,7 +138,7 @@ const userSlice = createSlice({
         state.isLoggedIn = true;
         localStorage.setItem("accessToken", action.payload.accessToken);
         state.user = action.payload; // TODO: payload 데이터를 그대로 user에 넣어도 되는지 체크!
-        state.user.accessToken = "";
+        state.user!.accessToken = "";
       })
       .addCase(googleLogin.rejected, (state) => {
         state.isLoading = false;
