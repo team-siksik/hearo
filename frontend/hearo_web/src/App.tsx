@@ -4,6 +4,7 @@ import {
   LoginPage,
   ConversationPage,
   MainPage,
+  TotalRecordsPage,
   RecordPage,
   MyPage,
   FavContentsPage,
@@ -27,9 +28,9 @@ function App() {
       <Routes>
         <Route path="/" element={<MainPage setLoginModal={setLoginModal} />} />
         <Route path="/comm" element={<ConversationPage />} />
-        <Route path="/records" element={<RecordPage />} />
+        <Route path="/records" element={<TotalRecordsPage/>} />
         <Route path="/mypage" element={<MyPage />} />
-        <Route path="/favcontents" element={<FavContentsPage />} />
+        <Route path="/favcontents" element={<FavContentsPage/>}/>
         <Route path="/settings" element={<SettingsPage />} />
         <Route path="/login/oauth2/code/google" element={<Google />} />
         <Route path="*" element={<NotFound404 />} />

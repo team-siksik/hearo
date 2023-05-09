@@ -32,6 +32,7 @@ function MainPage({ setLoginModal }: PropsType) {
   // 로그인 여부 판단
   const isLoggedin = !!localStorage.getItem("accessToken");
 
+
   // TODO : 음성재생 모달도 로그인된 상태에서만 접근 가능하도록 조치해야함
   // 음성재생 함수
   const togglePlay = () => {
@@ -80,10 +81,26 @@ function MainPage({ setLoginModal }: PropsType) {
   //     setLoginModal(true);
   //   }
   // };
-
   const handleRecordPageClick = () => {
     navigate('/records')
   }
+
+  // 스크롤 위치에 따른 motion.div 애니메이션 구현
+
+  const [scrollPosition, setScrollPosition] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrollPosition(window.scrollY);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
 
 
   return (
@@ -135,8 +152,12 @@ function MainPage({ setLoginModal }: PropsType) {
               <section className="mx-4 flex flex-col gap-10 relative">
                 <motion.div className="sticky top-0 m-4 flex h-screen flex-col items-center justify-center bg-white pb-8"
                 initial={{ opacity: 0, x: "-100vw" }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 1 }}        
+                animate={
+                  scrollPosition > 0 
+                  ? { opacity: 1, x: 0 }
+                  : { opacity: 0, x: "-100vw"}
+                }
+                transition={{ duration: 1.5 }}        
                 >
                   <div className="grid grid-cols-2 ">
                     <div className="col1">
@@ -180,8 +201,12 @@ function MainPage({ setLoginModal }: PropsType) {
                 </motion.div>
                 <motion.div className="sticky top-0 m-4 flex h-screen flex-col items-center justify-center bg-white pb-8"
                 initial={{ opacity: 0, x: "100vw" }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 1 }}                    
+                animate={
+                  scrollPosition > 400
+                  ? { opacity: 1, x: 0 }
+                  : { opacity: 0, x: "100vw"}
+                }
+                transition={{ duration: 1.5 }}                    
                 >
                   <div className="grid grid-cols-2">
                     {/* 기록 확인하기 */}
@@ -221,8 +246,12 @@ function MainPage({ setLoginModal }: PropsType) {
                 </motion.div>
                 <motion.div className="sticky top-0 m-4 flex h-screen flex-col items-center justify-center bg-white  pb-8"
                 initial={{ opacity: 0, x: "-100vw" }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 1 }}                    
+                animate={
+                  scrollPosition > 800
+                  ? { opacity: 1, x: 0 }
+                  : { opacity: 0, x: "-100vw"}
+                }
+                transition={{ duration: 1.5 }}                    
                 >                
                   <div className="grid grid-cols-2">
                     <div className="col1">
@@ -282,6 +311,9 @@ function MainPage({ setLoginModal }: PropsType) {
                 <div className="text-lg font-bold">웹 프론트엔드</div>
                 <div className="text-lg font-bold">앱 프론트엔드</div>
               </div>
+            </div>
+            <div className="flex justify-center align-baseline text-white text-2xl font-chewy bottom-0 mt-10">
+                &copy; Hearo by SSAFY A603 srp
             </div>
           </footer>        
         </>
