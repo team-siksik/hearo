@@ -10,6 +10,7 @@ import {
   SettingsPage,
   AgainPage,
   NotFound404,
+  RecordPage,
   // TutorialPage,
 } from "./pages";
 import { useAppSelector } from "./redux/hooks";
@@ -28,6 +29,7 @@ function App() {
         <Route path="/" element={<MainPage setLoginModal={setLoginModal} />} />
         <Route path="/comm" element={<ConversationPage />} />
         <Route path="/records" element={<TotalRecordsPage/>} />
+        <Route path="/records/:id" element={<RecordPage/>} />
         <Route path="/mypage" element={<MyPage />} />
         <Route path="/mypage/favcontents" element={<FavContentsPage/>}/>
         <Route path="/mypage/settings" element={<SettingsPage />} />
