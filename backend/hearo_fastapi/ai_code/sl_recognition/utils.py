@@ -2,8 +2,15 @@ import time
 import numpy as np
 
 
-async def get_words_list():
+def get_words_list():
     with open("words.txt", "r") as f:
+        words = f.readlines()
+        words = [word.strip() for word in words]
+    return words
+
+
+def get_words_list_from_router():
+    with open("ai_code/sl_recognition/words.txt", "r") as f:
         words = f.readlines()
         words = [word.strip() for word in words]
     return words
