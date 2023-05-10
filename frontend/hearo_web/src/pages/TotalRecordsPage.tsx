@@ -1,26 +1,21 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
-  ConversationInfo,
-  ExitModal,
-  MeetingSidebar,
   RecordpageSideBar,
+
 } from "@/components";
-import MicrophoneAccess from "@/apis/STT";
-import STT from "@/apis/STT";
-import InfiniteScroll from "react-infinite-scroll-component";
 import { RecordsItem } from "@/components";
 
 interface RecordsItemProps {
-  id : number;
+  id: number;
   title: string;
   date: string;
   description: string;
 }
 
 function TotalRecordsPage() {
-  const [openRemoveRecordModal, setOpenRemoveRecordModal] = useState<boolean>(false);
-  const [id, setId] = useState<number>(0);
-  // 더미데이터
+  const [openRemoveRecordModal, setOpenRemoveRecordModal] =
+    useState<boolean>(false);
+  const [idToDelete, setIdToDelete] = useState<number>(0);
   const [records, setRecords] = useState<RecordsItemProps[]>([
     {
       id: 1,
@@ -84,34 +79,36 @@ function TotalRecordsPage() {
     },
   ]);
 
-  const [idToDelete, setIdToDelete] = useState(0);
-  const handleDeleteRecord = (id:number) => {
-    const updatedRecords = records.filter((record) => record.id !== id);
-    setOpenRemoveRecordModal(true)
+  const handleDeleteRecord = (id: number) => {
     setIdToDelete(id);
-    setId(id)
+    setOpenRemoveRecordModal(true);
+  };
+
+  const handleRemoveRecord = (id:number) => {
+    const updatedRecords = records.filter((record) => record.id !== idToDelete);
     setRecords(updatedRecords);
-  }
+    setOpenRemoveRecordModal(false);
+  };
 
   return (
     <div>
       <RecordpageSideBar/>
-      <div className="fixed mt-8 right-0 w-[82%]">
-      <div className="space-y-4">
-        {records.map((record) => (
-        <RecordsItem
-        key={record.id}
-        id={record.id}
-        title={record.title}
-        date={record.date}
-        description={record.description}
-        onDelete={() => handleDeleteRecord(record.id)}
-        />
-        ))}
+      <div className="absolute right-0 mt-20 w-[82%] overflow-auto">
+        <div className="space-y-4">
+          {records.map((record) => (
+            <RecordsItem
+              key={record.id}
+              id={record.id}
+              title={record.title}
+              date={record.date}
+              description={record.description}
+              onRemove={() => handleRemoveRecord(record.id)}
+            />
+          ))}
         </div>
       </div>
     </div>
-  );
+  )  
 }
 
 export default TotalRecordsPage;

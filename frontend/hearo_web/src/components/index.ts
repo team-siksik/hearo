@@ -22,9 +22,9 @@ import BackgroundHider from "./common/ui/BackgroundHider";
 import LoginModal from "./MainPage/LoginModal";
 import ProfileModal from "./MainPage/ProfileModal";
 import MypageSideBar from "./Mypage/MypageSideBar";
-import RecordsItem from "./Record/RecordsItem";
-import RecordpageSideBar from "./Record/RecordpageSideBar";
-import RemoveRecordModal from "./Record/RemoveModal";
+import RecordsItem from "./TotalRecords/RecordsItem";
+import RecordpageSideBar from "./TotalRecords/RecordpageSideBar";
+import RemoveRecordModal from "./TotalRecords/RemoveRecordModal";
 
 export {
   ConversationInfo,
