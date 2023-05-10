@@ -120,8 +120,6 @@ function Modal({
     if (setOpenExitModal) {
       setOpenExitModal(false);
     }
-    else {
-      setOpenModal(false);
   }
   return (
     <>
@@ -162,31 +160,23 @@ function Modal({
     <ReactModal
     isOpen={openModal}
     style={customModalStyles} // 개별 스타일링을 줄 수 있습니다.
-    onRequestClose={() => {
-      setOpenModal(false);
-      if (setLoginModal) {
-        setLoginModal(false);
-      }
-      if (setOpenInfoModal) {
-        setOpenInfoModal(false);
-      }
-    }}
+    onRequestClose={() => setOpenModal(false)}
     shouldCloseOnOverlayClick={cannotExit ? false : true}
     ariaHideApp={false}
-      >
-      <div className="absolute right-2 top-1 flex">
-        {cannotExit ? null : (
+    >
+    <div className="absolute right-0 top-0 flex">
+    {cannotExit ? null : (
           <button onClick={handleModal}>
             <CrossIconRed />
           </button>
         )}
-      </div>
-      {children}
+    </div>
+    {children}
     </ReactModal>
     }
     </>
   );
-  }
 }
+
 
 export default Modal;

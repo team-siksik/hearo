@@ -25,7 +25,6 @@ const Navbar = ({ setLoginModal, setOpenProfileModal }: PropsType) => {
 
   const flexBetween = "flex items-center justify-between";
   const [isMenuToggled, setIsMenuToggled] = useState<boolean>(false);
-  const navbarBackground = "z-10 bg-white drop-shadow";
   const user = useAppSelector((state) => state.user.user);
   // 로그인여부
   const isLoggedIn = localStorage.getItem("accessToken") ? true : false;
@@ -160,14 +159,15 @@ const Navbar = ({ setLoginModal, setOpenProfileModal }: PropsType) => {
       ) : (
         <section className="user-box">
           <div className="px-3">
-            <Button type="whiteButton" onClick={openLoginModal}>
-              <img className="mx-3 w-5" src={google_logo} />
-            </Button>
-            {showModal && 
+            {showModal ? (
               <Button type="accountButton" onClick={closeLoginModal}>
               <img className="mx-3 w-5" src={google_logo} />
               </Button>
-            }
+            ) :
+            <Button type="accountButton" onClick={openLoginModal}>
+            <img className="mx-3 w-5" src={google_logo} />
+          </Button>
+          }
           </div>
         </section>
         )
