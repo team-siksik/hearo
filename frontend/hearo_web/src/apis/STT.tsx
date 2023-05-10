@@ -130,7 +130,7 @@ export default function STT({}: PropsType) {
       MeetingAPI.finishMeeting(
         localStorage.getItem("accessToken")!,
         roomSeq,
-        audioData
+        blob
       ).then((response) => {
         console.log(response);
         //TODO: 회의를 성공적으로 기록하였습니다.
