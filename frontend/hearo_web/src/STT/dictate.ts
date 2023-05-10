@@ -180,16 +180,16 @@ export class Dictate {
           if (navigator.mediaDevices.getUserMedia !== undefined) {
             // 마이크를 이용하여 녹음
             if (type === 0) {
-              const audioSourceConstraints: AudioSourceConstraints = {};
-              if (config.audioSourceId) {
-                audioSourceConstraints.audio = {
-                  optional: [{ sourceId: config.audioSourceId }],
-                };
-              } else {
-                audioSourceConstraints.audio = true;
-              }
+              // const audioSourceConstraints: AudioSourceConstraints = {};
+              // if (config.audioSourceId) {
+              //   audioSourceConstraints.audio = {
+              //     optional: [{ sourceId: config.audioSourceId }],
+              //   };
+              // } else {
+              //   audioSourceConstraints.audio = true;
+              // }
               navigator.mediaDevices
-                .getUserMedia(audioSourceConstraints)
+                .getUserMedia({ audio: true })
                 .then((stream) => {
                   setStream(stream);
                   /* use the stream */
@@ -400,8 +400,9 @@ export class Dictate {
       successCallback,
       errorCallback
     ) {
-      const headers = {};
+      const headers: any = {};
       if (config.user_id) {
+        //TODO: 여기 에러 고쳐야함
         headers["User-Id"] = config.user_id;
       }
       if (config.content_id) {

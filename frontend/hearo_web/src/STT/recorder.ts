@@ -1,6 +1,5 @@
-import worker_script from "./recorderWorker.js";
-
-const WORKER_PATH = "recorderWorker.js";
+import workercode from "./resampler.js";
+const WORKER_PATH = "resampler.js";
 
 export class Recorder {
   context: BaseAudioContext;
@@ -13,7 +12,6 @@ export class Recorder {
   exportWAV: (cb: any, type: any) => void;
   exportRAW: (cb: any, type: any) => void;
   export16kMono: (cb: any, type: any) => void;
-  exportSpeex: (cb: any, type: any) => void;
   forceDownload: (blob: any, filename: any) => void;
 
   constructor(source: MediaStreamAudioSourceNode, cfg: any) {
@@ -21,7 +19,7 @@ export class Recorder {
     const bufferLen = config.bufferLen || 4096;
     this.context = source.context;
     this.node = this.context.createScriptProcessor(bufferLen, 1, 1);
-    const worker: Worker = new Worker(worker_script);
+    const worker: Worker = new Worker(workercode.worker_script);
     worker.postMessage({
       command: "init",
       config: {
@@ -96,17 +94,6 @@ export class Recorder {
       if (!currCallback) throw new Error("Callback not set");
       worker.postMessage({
         command: "export16kMono",
-        type,
-      });
-    };
-
-    // FIXME: doesn't work yet
-    this.exportSpeex = function (cb, type) {
-      currCallback = cb || config.callback;
-      type = type || config.type || "audio/speex";
-      if (!currCallback) throw new Error("Callback not set");
-      worker.postMessage({
-        command: "exportSpeex",
         type,
       });
     };

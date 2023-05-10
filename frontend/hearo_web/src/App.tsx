@@ -1,5 +1,5 @@
 import { Routes, Route } from "react-router-dom";
-import { Google, socket } from "@/apis";
+import { Google, STT, socket } from "@/apis";
 import {
   LoginPage,
   ConversationPage,
@@ -10,11 +10,13 @@ import {
   SettingsPage,
   AgainPage,
   NotFound404,
+  SocketPage,
   // TutorialPage,
 } from "./pages";
 import { useAppSelector } from "./redux/hooks";
 import { LoginModal, Navbar } from "./components";
 import { useState } from "react";
+import STTTest from "./pages/STTTest";
 
 function App() {
   const user = useAppSelector((state) => state.user);
@@ -25,6 +27,9 @@ function App() {
       <Navbar setLoginModal={setLoginModal} />
       <Routes>
         <Route path="/" element={<MainPage setLoginModal={setLoginModal} />} />
+        <Route path="/test" element={<STT />} />
+        <Route path="/socket" element={<SocketPage />} />
+        <Route path="/stt" element={<STTTest />} />
         <Route path="/comm" element={<ConversationPage />} />
         <Route path="/recognize" element={<RecognizePage />} />
         <Route path="/mypage" element={<MyPage />} />
