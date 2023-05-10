@@ -23,12 +23,12 @@ const customModalStyles: ReactModal.Styles = {
     // 검은색으로 칠해지는 모달 아래부분
     backgroundColor: " rgba(0, 0, 0, 0.4)",
     width: "100%",
-    height: "100vh",
+    height: "100%",
     zIndex: "10",
-    position: "absolute",
+    position: "fixed",
     top: "0",
     left: "0",
-    boxShadow: "0 8 10",
+    boxShadow: "0 8px 10px",
   },
   content: {
     // 모달 박스의 스타일
