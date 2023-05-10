@@ -48,7 +48,7 @@ function RecordpageSideBar() {
           </Button>
           </div>
         </div>
-        <div onClick={handleRecordPageClick} className="h-[10%] w-full items-center border-b border-slate-200 hover:bg-blue-main hover:text-white hover:cursor-pointer">
+        <div onClick={handleRecordPageClick} className="flex h-[10%] w-full items-center border-b border-slate-200 hover:bg-blue-main hover:text-white hover:cursor-pointer">
           <div className="m-6 flex flex-row">
             <div className="w-7 h-7 p-1">
             <BookOpenIcon/>
