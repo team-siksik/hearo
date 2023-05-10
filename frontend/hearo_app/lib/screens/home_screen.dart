@@ -3,8 +3,8 @@ import 'package:get/get.dart';
 import 'package:hearo_app/controller/login_controller.dart';
 import 'package:hearo_app/screens/chats/chat_home.dart';
 import 'package:hearo_app/screens/mysettings/favorite_say.dart';
+import 'package:hearo_app/test/camera_test.dart';
 import 'package:hearo_app/test/screen2.dart';
-import 'package:hearo_app/test/speech_screen.dart';
 import 'package:hearo_app/widgets/common/custom_app_bar.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -30,6 +30,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     getPermissionCamera();
+    // WidgetsFlutterBinding.ensureInitialized();
   }
 
   LoginController loginController = Get.put(LoginController());
@@ -120,13 +121,15 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     InkWell(
                       onTap: () {
-                        Get.to(Screen2());
+                        Get.to(() => Screen2());
                       },
                       child: naviButton(size, 1),
                     ),
                     InkWell(
                       onTap: () {
-                        Get.to(SpeechScreen());
+                        // Get.to(() => SpeechScreen());
+                        // Get.to(() => Screen1());
+                        Get.to(() => CameraTest());
                       },
                       child: naviButton(size, 2),
                     ),
@@ -138,7 +141,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           InkWell(
                               focusColor: Color(0xff1A73E8),
                               onTap: () {
-                                Get.to(FavoriteSay());
+                                Get.to(() => FavoriteSay());
                               },
                               child: settingButton(size, 0)),
                           InkWell(

@@ -59,7 +59,7 @@ class _SettingHomeState extends State<SettingHome> {
                 flex: 1,
                 child: TextButton(
                     onPressed: () {
-                      Get.to(SocketTest());
+                      Get.to(() => SocketTest());
                     },
                     child: Text("소켓 실험"))),
             Flexible(

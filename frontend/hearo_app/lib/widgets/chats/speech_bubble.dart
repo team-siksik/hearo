@@ -179,7 +179,7 @@ class _SpeechBubbleState extends State<SpeechBubble> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 GestureDetector(
-                  onTap: () {
+                  onLongPress: () {
                     getSentence(context, size, widget.message);
                   },
                   child: Bubble(

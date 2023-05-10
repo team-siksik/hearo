@@ -91,7 +91,12 @@ dependencies:
   avatar_glow:
   # 소켓
   socket_io_client: ^2.0.2
-  
+  # 마이크
+  microphone: ^0.1.0
+  # 경로
+  path_provider:
+  # 카메라
+  camera:
 
 dev_dependencies:
   flutter_test:
