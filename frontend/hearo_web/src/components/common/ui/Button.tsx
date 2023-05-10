@@ -39,15 +39,15 @@ function Button({ type, children, onClick }: PropsType) {
             {children}
           </span>
         </button>
-      ) : type === "whiteButton" ? (
+      ) : type === "backButton" ? (
         <button
-          className="h-10 rounded-xl bg-white shadow-md shadow-slate-200 "
+          className="group relative w-full overflow-hidden rounded-xl border bg-white text-blue-main border-blue-main px-4 py-2 shadow-md hover:bg-blue-50 transition-all duration-[250ms] ease-out"
           onClick={onClick}
-          // css={css`
-          //   width: 90vw;
-          // `}
         >
-          {children}
+          <div className="absolute inset-0 w-3  "></div>
+          <span className="relative">
+            {children}
+          </span>
         </button>
       ) : type === "accountButton" ? (
         <button
@@ -66,6 +66,17 @@ function Button({ type, children, onClick }: PropsType) {
             <div className="text-start"> 
             {children}
             </div>
+          </span>
+        </button>
+        ) : type === "deleteButton" ? (
+          <button
+          className="group relative w-full overflow-hidden rounded-xl border text-white border-red-main px-4 py-2 
+          shadow-md bg-red-500 hover:bg-red-main transition-all duration-[250ms] ease-out"
+          onClick={onClick}
+        >
+          <div className="absolute inset-0 w-3  "></div>
+          <span className="relative">
+            {children}
           </span>
         </button>
         ) :

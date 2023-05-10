@@ -38,7 +38,7 @@ function RecordpageSideBar() {
 
 
   return (
-    <div className="fixed left-0 h-full w-[18%] border border-slate-200 bg-slate-50">
+    <div className="fixed z-10 left-0 top-16 h-full w-[18%] border border-slate-200 bg-slate-50">
       <div className="flex h-full flex-col text-xl font-semibold">
         <div className="w-full border-b border-slate-200">
           <div className="h-[10%] w-[80%] m-6 items-center">
