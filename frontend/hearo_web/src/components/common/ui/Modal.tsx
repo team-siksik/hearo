@@ -15,6 +15,7 @@ interface PropsType {
   children: React.ReactNode;
   setLoginModal?: React.Dispatch<SetStateAction<boolean>>;
   setOpenInfoModal?: React.Dispatch<SetStateAction<boolean>>;
+  setOpenProfileModal?: React.Dispatch<SetStateAction<boolean>>;
   setOpenGPTModal?: React.Dispatch<SetStateAction<boolean>>;
   setOpenAddFavModal?: React.Dispatch<SetStateAction<boolean>>;
   setOpenExitModal?: React.Dispatch<SetStateAction<boolean>>;
@@ -25,12 +26,12 @@ const customModalStyles: ReactModal.Styles = {
     // 검은색으로 칠해지는 모달 아래부분
     backgroundColor: " rgba(0, 0, 0, 0.4)",
     width: "100%",
-    height: "100vh",
-    zIndex: "100",
-    position: "absolute",
+    height: "100%",
+    zIndex: "10",
+    position: "fixed",
     top: "0",
     left: "0",
-    boxShadow: "0 8 10",
+    boxShadow: "0 8px 10px",
   },
   content: {
     // 모달 박스의 스타일
@@ -51,6 +52,38 @@ const customModalStyles: ReactModal.Styles = {
   },
 };
 
+// 프로필모달 스타일
+const profileModalStyles: ReactModal.Styles = {
+  overlay: {
+    // 검은색으로 칠해지는 모달 아래부분
+    backgroundColor: " rgba(0, 0, 0, 0.4)",
+    width: "100%",
+    height: "100vh",
+    zIndex: "10",
+    position: "absolute",
+    top: "0",
+    left: "0",
+    boxShadow: "0 8 10",
+  },
+  content: {
+    // 모달 박스의 스타일
+    width: "18%",
+    height: "fit-content",
+    zIndex: "150",
+    position: "absolute",
+    textAlign: "center",
+    top: "30%",
+    left: "90%",
+    transform: "translate(-50%, -50%)",
+    borderRadius: "20px",
+    boxShadow: "2px 2px 2px rgba(0, 0, 0, 0.25)",
+    backgroundColor: "white",
+    overflow: "auto",
+    transition: "opacity 1.0s ease-in-out",
+    },
+};
+
+
 function Modal({
   open,
   type,
@@ -58,12 +91,14 @@ function Modal({
   children,
   setLoginModal,
   setOpenInfoModal,
+  setOpenProfileModal,
   setOpenGPTModal,
   setOpenAddFavModal,
   setOpenExitModal,
 }: PropsType) {
-  const [openModal, setOpenModal] = useState<boolean>(open);
 
+  const [openModal, setOpenModal] = useState<boolean>(open);
+  
   // x버튼이나, 나가기 혹은 취소 버튼을 누르면 modal을 닫게 하기 위한 함수입니다.
   function handleModal() {
     setOpenModal(!openModal);
@@ -73,6 +108,9 @@ function Modal({
     if (setOpenInfoModal) {
       setOpenInfoModal(false);
     }
+    if (setOpenProfileModal) {
+      setOpenProfileModal(false);
+    } 
     if (setOpenGPTModal) {
       setOpenGPTModal(false);
     }
@@ -82,15 +120,19 @@ function Modal({
     if (setOpenExitModal) {
       setOpenExitModal(false);
     }
+    else {
+      setOpenModal(false);
   }
   return (
-    <ReactModal
+    <>
+    {type === "profileModal" ? (
+      <ReactModal
       isOpen={openModal}
-      style={customModalStyles} // 개별 스타일링을 줄 수 있습니다.
+      style={profileModalStyles}
       onRequestClose={() => {
         setOpenModal(false);
-        if (setLoginModal) {
-          setLoginModal(false);
+        if (setOpenProfileModal) {
+          setOpenProfileModal(false);
         }
         if (setOpenInfoModal) {
           setOpenInfoModal(false);
@@ -107,7 +149,31 @@ function Modal({
       }}
       shouldCloseOnOverlayClick={cannotExit ? false : true}
       ariaHideApp={false}
-    >
+      >
+      <div className="absolute right-2 top-1 flex">
+        {cannotExit ? null : (
+          <button onClick={handleModal}>
+          </button>
+        )}
+      </div>
+      {children}        
+      </ReactModal>
+    ) : 
+    <ReactModal
+    isOpen={openModal}
+    style={customModalStyles} // 개별 스타일링을 줄 수 있습니다.
+    onRequestClose={() => {
+      setOpenModal(false);
+      if (setLoginModal) {
+        setLoginModal(false);
+      }
+      if (setOpenInfoModal) {
+        setOpenInfoModal(false);
+      }
+    }}
+    shouldCloseOnOverlayClick={cannotExit ? false : true}
+    ariaHideApp={false}
+      >
       <div className="absolute right-2 top-1 flex">
         {cannotExit ? null : (
           <button onClick={handleModal}>
@@ -117,7 +183,10 @@ function Modal({
       </div>
       {children}
     </ReactModal>
+    }
+    </>
   );
+  }
 }
 
 export default Modal;
