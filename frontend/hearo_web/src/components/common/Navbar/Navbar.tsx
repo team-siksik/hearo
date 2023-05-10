@@ -28,7 +28,7 @@ const Navbar = ({ setLoginModal }: PropsType) => {
   const [isMenuToggled, setIsMenuToggled] = useState<boolean>(false);
   const navbarBackground = "z-10 bg-white drop-shadow";
   // 로그인여부
-  const isLoggedin = !!localStorage.getItem("accessToken");
+  const isLoggedin = localStorage.getItem("accessToken") ? true : false;
   const user = useAppSelector((state) => state.user);
 
   // 음성재생 컴포넌트 활용
