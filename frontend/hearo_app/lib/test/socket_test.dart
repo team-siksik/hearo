@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:socket_io_client/socket_io_client.dart' as so_io;
 import 'package:flutter_sound/flutter_sound.dart';
+import 'package:hearo_app/skills/socket_overall.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:camera/camera.dart';
 
 class SocketTest extends StatefulWidget {
   const SocketTest({super.key});
@@ -12,49 +11,28 @@ class SocketTest extends StatefulWidget {
 }
 
 class _SocketTestState extends State<SocketTest> {
-  final so_io.Socket socket =
-      so_io.io('http://k8a6031.p.ssafy.io:80/', <String, dynamic>{
-    'transports': ['websocket'],
-    'autoConnect': true,
-    'path': '/ws/socket.io',
-  });
+  final SocketOverall audioSocket = SocketOverall();
   List messages = [];
   final FlutterSoundRecorder _audioRecorder = FlutterSoundRecorder();
   final FlutterSoundPlayer _audioPlayer = FlutterSoundPlayer();
   late String _recordingFilePath;
-  late List _cameras;
-  late CameraController controller;
-
-  Future<void> runCamera() async {
-    _cameras = await availableCameras();
-  }
-
   @override
   void initState() {
     super.initState();
-    initializeCamera();
     _initializeAudioRecorder();
     _initializeAudioPlayer();
-    enterRoom("1111");
+    audioSocket.connect();
+    audioSocket.enterRoom("1111");
     setState(() {});
   }
 
   @override
   void dispose() {
-    closeRoom("1111");
-    disconnect();
+    audioSocket.closeRoom("1111");
+    audioSocket.disconnect();
     _audioRecorder.closeRecorder();
     _audioPlayer.closePlayer();
-    controller.dispose();
     super.dispose();
-  }
-
-  Future<void> initializeCamera() async {
-    _cameras = await availableCameras();
-    setState(() {
-      controller = CameraController(_cameras[0], ResolutionPreset.medium);
-      controller.initialize();
-    });
   }
 
   Future<void> _initializeAudioRecorder() async {
@@ -97,64 +75,11 @@ class _SocketTestState extends State<SocketTest> {
     }
   }
 
-  void connect() {
-    socket.open();
-    print("소켓연결");
-  }
-
-  void disconnect() {
-    socket.disconnect();
-  }
-
-  void enterRoom(String roomId) {
-    socket.emit('enter_room', {'room_id': roomId});
-    print("방 입장");
-  }
-
-  void closeRoom(String roomId) {
-    socket.emit('close_room', {'room_id': roomId});
-  }
-
-  void sendMessageToRoom(String roomId, String message) {
-    socket
-        .emit('send_message_to_room', {'room_id': roomId, 'message': message});
-    print(message);
-    print("메세지보냄");
-  }
-
-  void onConnect(Function(dynamic) callback) async {
-    socket.on('connect', (_) {
-      print('connected');
-      callback(_);
-      print(socket.connected); // 연결 여부 확인
-    });
-    // print(socket.connected); // 연결 여부 확인
-  }
-
-  void onDisconnect(Function(dynamic) callback) {
-    socket.on('disconnect', (data) {
-      callback(data);
-    });
-  }
-
-  void onInfo(Function(dynamic) callback) {
-    socket.on('info', callback);
-  }
-
-  void onMessage(Function(dynamic) callback) {
-    socket.on('message', (data) {
-      callback(data);
-      setState(() {
-        messages.add(data);
-      });
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('SocketIO Flutter Example'),
+        title: Text('음성소켓 연습'),
       ),
       body: Center(
         child: Column(
@@ -164,45 +89,35 @@ class _SocketTestState extends State<SocketTest> {
               children: [
                 TextButton(
                     onPressed: () {
-                      connect();
+                      audioSocket.connect();
                     },
                     child: Text("소켓연결")),
                 TextButton(
                     onPressed: () {
-                      enterRoom('1111');
+                      audioSocket.enterRoom('1111');
                     },
                     child: Text("소켓방드가기")),
                 TextButton(
                   onPressed: () {
-                    onConnect((p0) {
+                    audioSocket.onConnect((p0) {
                       print(p0);
-                      print(socket.connected); // 연결 여부 확인
+                      print(audioSocket.socket.connected); // 연결 여부 확인
                     });
                   },
                   child: Text("소켓확인"),
                 ),
                 TextButton(
                     onPressed: () {
-                      sendMessageToRoom("1111", "어뜨케된겨");
+                      audioSocket.sendMessageToRoom("1111", "어뜨케된겨");
                     },
                     child: Text("메시지전송")),
                 TextButton(
                     onPressed: () {
-                      onMessage(
+                      audioSocket.onMessage(
                         (p0) {},
                       );
                     },
                     child: Text("메시지확인")),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                TextButton(
-                    onPressed: () {
-                      closeRoom('1111');
-                    },
-                    child: Text("소켓방나가기")),
               ],
             ),
             Row(
@@ -224,7 +139,6 @@ class _SocketTestState extends State<SocketTest> {
                 ),
               ],
             ),
-            Expanded(child: CameraPreview(controller)),
           ],
         ),
       ),
