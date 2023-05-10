@@ -97,13 +97,16 @@ function Modal({
     setOpenModal(!openModal);
     if (setLoginModal) {
       setLoginModal(false);
-    };
-    if (setOpenInfoModal) {
+    }
+    else if (setOpenInfoModal) {
       setOpenInfoModal(false);
-    };
-    if (setOpenProfileModal) {
+    }
+    else if (setOpenProfileModal) {
       setOpenProfileModal(false);
-    };
+    } 
+    else {
+      setOpenModal(false);
+    }
   }
   return (
     <>
