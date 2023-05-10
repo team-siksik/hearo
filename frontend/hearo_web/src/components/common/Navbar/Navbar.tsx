@@ -6,16 +6,13 @@ import startVoice from "@/assets/Sounds/start.wav";
 import google_logo from "@/assets/Google_Logo.svg";
 import { GOOGLE_AUTH_URL } from "@/apis/oAuthGoogle";
 import { css } from "@emotion/react";
-import { useAppDispatch } from "@/redux/hooks";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { googleLogout, userActions } from "@/redux/modules/user";
 import { Player } from "@lottiefiles/react-lottie-player";
 import Button from "../ui/Button";
 import { ReactComponent as UserIcon } from "@/assets/Icon/UserIcon.svg";
 
 // TODO: 로그인을 하면 useParams 써서 로그인정보를 버튼들 위에다가 띄워줘야함
-
-// TODO: 로그인 설정 다 해놔야됨
-// TODO: 대화 시작하기 클릭할 때 전체가 가려져야 함
 
 interface PropsType {
   setLoginModal: React.Dispatch<SetStateAction<boolean>>;
@@ -29,29 +26,9 @@ const Navbar = ({ setLoginModal, setOpenProfileModal }: PropsType) => {
   const flexBetween = "flex items-center justify-between";
   const [isMenuToggled, setIsMenuToggled] = useState<boolean>(false);
   const navbarBackground = "z-10 bg-white drop-shadow";
+  const user = useAppSelector((state) => state.user.user);
   // 로그인여부
-  const isLoggedin = !!localStorage.getItem("access_token");
-
-  const links = [
-    {
-      // image: <Start width={100} height={100} />,
-      name: "대화 시작하기",
-      to: "comm",
-      id: 1,
-    },
-    {
-      // image: <Join width={100} height={100} />,
-      name: "수어 인식 대화",
-      to: "comm",
-      id: 2,
-    },
-    {
-      // image: <Check width={100} height={100} />,
-      name: "주변 소음 인식",
-      to: "records",
-      id: 3,
-    },
-  ];
+  const isLoggedIn = localStorage.getItem("accessToken") ? true : false;
 
   // 음성재생 컴포넌트 활용
   const [comp, setComp] = useState<string>("main");
@@ -61,7 +38,7 @@ const Navbar = ({ setLoginModal, setOpenProfileModal }: PropsType) => {
   // TODO : 음성재생 모달도 로그인된 상태에서만 접근 가능하도록 조치해야함
   // 음성재생 함수
   const togglePlay = () => {
-    if (isLoggedin) {
+    if (isLoggedIn) {
       if (audioRef.current) {
         if (isPlaying) {
           audioRef.current.pause();
@@ -105,7 +82,7 @@ const Navbar = ({ setLoginModal, setOpenProfileModal }: PropsType) => {
   // 로그인된 상태에서만 MyPage로 이동
   const handleMypageClick = () => {
     setIsMenuToggled(false);
-    if (isLoggedin) {
+    if (isLoggedIn) {
       navigate("/mypage");
     } else {
       // 로그인되어 있지 않은 경우 로그인 페이지로 이동하도록 처리
@@ -160,12 +137,30 @@ const Navbar = ({ setLoginModal, setOpenProfileModal }: PropsType) => {
           <h1>HEARO</h1>  
         </button>
       </div>
-      {isLoggedin 
-        ? 
-                (
-          <section>
-          <div className="px-3 mr-10">
-            <Button type="accountButton" onClick={openLoginModal}>
+      <nav></nav>
+      {isLoggedIn && user ? (
+        <section
+          onClick={() => setOpenProfileModal(true)}
+          className="user-box mx-4 flex items-center"
+        >
+          <div className="w-7" onClick={handleLogoutClick}>
+            <UserIcon />
+            <div
+              className="h-5 w-5 rounded"
+              css={css`
+                background-image: url(${user?.profileImg});
+                background-position: center;
+                background-size: cover;
+              `}
+            ></div>
+          </div>
+          <p>{user?.nickname} 님</p>
+          {/* <p>김야옹 님</p> */}
+        </section>
+      ) : (
+        <section className="user-box">
+          <div className="px-3">
+            <Button type="whiteButton" onClick={openLoginModal}>
               <img className="mx-3 w-5" src={google_logo} />
             </Button>
             {showModal && 
@@ -176,20 +171,7 @@ const Navbar = ({ setLoginModal, setOpenProfileModal }: PropsType) => {
           </div>
         </section>
         )
-        : 
-        ( 
-          <section
-            onClick={openProfileModal}
-            className="mx-6 flex items-center rounded-xl hover:text-xl hover:cursor-pointer transition-all duration-[250ms] ease-out"
-            >
-            <div>
-            <UserIcon className="w-8"/>
-            </div>
-            <p>김야옹 님</p> 
-            {/* <p>{username} 님</p> */}
-          </section>
-          ) 
-      }
+    }
 {/*
         {isLoggedin ? ( 
           <>
@@ -229,6 +211,7 @@ const Navbar = ({ setLoginModal, setOpenProfileModal }: PropsType) => {
         )
       }
     */}
+
     </header>
   );
 };
