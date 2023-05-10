@@ -6,14 +6,15 @@ import FavContentsPage from "./FavContetnsPage";
 import SettingsPage from "./SettingsPage";
 import AgainPage from "./AgainPage";
 import NotFound404 from "./NotFound404";
-import RecognizePage from "./RecognizePage";
+// import RecognizePage from "./RecognizePage";
 import SocketPage from "./SocketTest";
 // import TutorialPage from "./TutorialPage";
+import TotalRecordsPage from "./TotalRecordsPage";
+import RecordPage from "./RecordPage";
 
 export {
   LoginPage,
   ConversationPage,
-  RecognizePage,
   MyPage,
   MainPage,
   FavContentsPage,
@@ -21,5 +22,7 @@ export {
   AgainPage,
   SocketPage,
   NotFound404,
+  TotalRecordsPage,
+  RecordPage,
   // TutorialPage,
 };

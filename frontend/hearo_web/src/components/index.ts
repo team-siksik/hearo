@@ -20,6 +20,11 @@ import DropDown from "./common/ui/Dropdown";
 import TutorialBalloon from "./common/ui/TutorialBalloon";
 import BackgroundHider from "./common/ui/BackgroundHider";
 import LoginModal from "./MainPage/LoginModal";
+import ProfileModal from "./MainPage/ProfileModal";
+import MypageSideBar from "./Mypage/MypageSideBar";
+import RecordsItem from "./TotalRecords/RecordsItem";
+import RecordpageSideBar from "./TotalRecords/RecordpageSideBar";
+import RemoveRecordModal from "./TotalRecords/RemoveRecordModal";
 import AddFavModal from "./Conversation/MeetingBody/AddFavModal";
 
 export {
@@ -45,5 +50,10 @@ export {
   TutorialBalloon,
   BackgroundHider,
   LoginModal,
+  ProfileModal,
+  MypageSideBar,
+  RecordsItem,
+  RecordpageSideBar,
+  RemoveRecordModal,
   AddFavModal,
 };
