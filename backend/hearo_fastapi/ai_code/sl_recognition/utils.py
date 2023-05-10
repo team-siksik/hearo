@@ -2,65 +2,17 @@ import time
 import numpy as np
 
 
-def get_words_list():
+async def get_words_list():
     with open("words.txt", "r") as f:
         words = f.readlines()
         words = [word.strip() for word in words]
     return words
 
 
-def joint_to_angle(joint):
+async def joint_to_angle(joint):
     # Compute angles between joints
-    v1 = joint[
-        [
-            0,
-            1,
-            2,
-            3,
-            0,
-            5,
-            6,
-            7,
-            0,
-            9,
-            10,
-            11,
-            0,
-            13,
-            14,
-            15,
-            0,
-            17,
-            18,
-            19,
-        ],
-        :3,
-    ]  # Parent joint
-    v2 = joint[
-        [
-            1,
-            2,
-            3,
-            4,
-            5,
-            6,
-            7,
-            8,
-            9,
-            10,
-            11,
-            12,
-            13,
-            14,
-            15,
-            16,
-            17,
-            18,
-            19,
-            20,
-        ],
-        :3,
-    ]  # Child joint
+    v1 = joint[[0, 1, 2, 3, 0, 5, 6, 7, 0, 9, 10, 11, 0, 13, 14, 15, 0, 17, 18, 19,], :3,]  # Parent joint
+    v2 = joint[[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,], :3,]  # Child joint
     v = v2 - v1  # [20, 3]
 
     # Normalize v
@@ -76,7 +28,7 @@ def joint_to_angle(joint):
     )  # (15,)
 
     # Convert radian to degree
-    # angle = np.degrees(angle) # 학습 저해하여 제외
+    # angle = np.degrees(angle)  # 학습 저해하여 제외
 
     angle = np.array(angle, dtype=np.float32)
 
