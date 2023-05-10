@@ -15,6 +15,7 @@ export const UserAPI = {
         Authorization: `${token}`,
       },
     }),
+
   // google logout
   googleLogout: (token: string) =>
     api.put(
@@ -149,9 +150,9 @@ export const GPTAPI = {
     ),
 };
 
-export const ChatAPI = {
-  // start communication
-  startCommunication: (accessToken: string) =>
+export const MeetingAPI = {
+  // start meeting
+  startMeeting: (accessToken: string) =>
     api.post(
       `/conversation/room/start`,
       {},
@@ -161,8 +162,8 @@ export const ChatAPI = {
         },
       }
     ),
-  finishCommunication: (accessToken: string, roomSeq: number) =>
-    api.post(
+  finishMeeting: (accessToken: string, roomSeq: number, audioBlob: Blob) =>
+    api.put(
       `/conversation/room/${roomSeq}/close`,
       {},
       {

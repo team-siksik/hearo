@@ -14,9 +14,6 @@ import { ReactComponent as UserIcon } from "@/assets/Icon/UserIcon.svg";
 
 // TODO: 로그인을 하면 useParams 써서 로그인정보를 버튼들 위에다가 띄워줘야함
 
-// TODO: 로그인 설정 다 해놔야됨
-// TODO: 대화 시작하기 클릭할 때 전체가 가려져야 함
-
 interface PropsType {
   setLoginModal: React.Dispatch<SetStateAction<boolean>>;
 }
@@ -27,9 +24,9 @@ const Navbar = ({ setLoginModal }: PropsType) => {
   const flexBetween = "flex items-center justify-between";
   const [isMenuToggled, setIsMenuToggled] = useState<boolean>(false);
   const navbarBackground = "z-10 bg-white drop-shadow";
+  const user = useAppSelector((state) => state.user.user);
   // 로그인여부
-  const isLoggedin = localStorage.getItem("accessToken") ? true : false;
-  const user = useAppSelector((state) => state.user);
+  const isLoggedIn = localStorage.getItem("accessToken") ? true : false;
 
   // 음성재생 컴포넌트 활용
   const [comp, setComp] = useState<string>("main");
@@ -39,7 +36,7 @@ const Navbar = ({ setLoginModal }: PropsType) => {
   // TODO : 음성재생 모달도 로그인된 상태에서만 접근 가능하도록 조치해야함
   // 음성재생 함수
   const togglePlay = () => {
-    if (isLoggedin) {
+    if (isLoggedIn) {
       if (audioRef.current) {
         if (isPlaying) {
           audioRef.current.pause();
@@ -83,7 +80,7 @@ const Navbar = ({ setLoginModal }: PropsType) => {
   // 로그인된 상태에서만 MyPage로 이동
   const handleMypageClick = () => {
     setIsMenuToggled(false);
-    if (isLoggedin) {
+    if (isLoggedIn) {
       navigate("/mypage");
     } else {
       // 로그인되어 있지 않은 경우 로그인 페이지로 이동하도록 처리
@@ -121,13 +118,21 @@ const Navbar = ({ setLoginModal }: PropsType) => {
         </button>
       </div>
       <nav></nav>
-      {isLoggedin ? (
+      {isLoggedIn && user ? (
         <section
           onClick={() => setOpenProfileModal(true)}
           className="user-box mx-4 flex items-center"
         >
           <div className="w-7" onClick={handleLogoutClick}>
             <UserIcon />
+            <div
+              className="h-5 w-5 rounded"
+              css={css`
+                background-image: url(${user?.profileImg});
+                background-position: center;
+                background-size: cover;
+              `}
+            ></div>
           </div>
           <p>{user?.user?.nickname} 님</p>
           {/* <p>김야옹 님</p> */}
