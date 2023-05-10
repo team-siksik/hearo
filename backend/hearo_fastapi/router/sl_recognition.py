@@ -1,9 +1,25 @@
-from main import socket_manager
+from fastapi import APIRouter
 
 import base64
 import cv2
 import numpy as np
+import mediapipe as mp
 
+from main import socket_manager, logger
+
+
+router = APIRouter(prefix="/sl")
+
+
+@router.get("/test")
+async def root():
+    logger.info("root: sl router api 호출")
+    return {"message": "hearo!"}
+
+
+mp_drawing = mp.solutions.drawing_utils
+mp_drawing_styles = mp.solutions.drawing_styles
+mp_hands = mp.solutions.hands
 
 async def decode_image(base64_string):
     # base64 -> numpy array

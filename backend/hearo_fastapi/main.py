@@ -1,10 +1,12 @@
-from fastapi import FastAPI, APIRouter
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi_socketio import SocketManager
 
-import logging, sys
+import logging
+import sys
 
 
+# logger 설정
 logger = logging.getLogger("hearo_logger")
 logger.setLevel(logging.DEBUG)
 
@@ -15,14 +17,13 @@ console_handler.setFormatter(formatter)
 
 logger.addHandler(console_handler)
 
-
-router = APIRouter(prefix="/api/v1")
-
+# fastapi app 생성
 app = FastAPI()
 
+# socket 설정
 socket_manager = SocketManager(app)
 
-
+# cors 설정
 origins = ["*"]
 app.add_middleware(
     CORSMiddleware,
@@ -33,58 +34,12 @@ app.add_middleware(
 )
 
 
-@router.get("/")
-async def root():
-    logger.info("root: api 호출")
-    return {"message": "hearo!"}
+from router import common, sl_recognition, sound_classification, speaker_diarization
 
 
-@socket_manager.on("connect")
-async def connect(sid, environ):
-    logger.info(f"connect: {sid} wants to connect")
-    await socket_manager.emit("info", f"{sid} connected")
-    logger.info(f"connect: {sid} connected")
+# 라우터 설정
+common.router.include_router(sl_recognition.router)
+common.router.include_router(sound_classification.router)
+common.router.include_router(speaker_diarization.router)
 
-
-@socket_manager.on("disconnect")
-async def disconnect(sid):
-    logger.info(f"disconnect: {sid} wants to disconnect")
-    await socket_manager.emit("info", f"{sid} disconnected")
-    logger.info(f"disconnect: {sid} disconnected")
-
-
-@socket_manager.on("enter_room")
-async def enter_room(sid, data):
-    room_id = data["room_id"]
-    logger.info(f"enter_room: {sid} wants to enter room '{room_id}'")
-    socket_manager.enter_room(sid, room_id)
-    await socket_manager.emit("info", f"{sid} entered room '{room_id}'")
-    logger.info(f"enter_room: {sid} entered room '{room_id}'")
-
-
-@socket_manager.on("leave_room")
-async def leave_room(sid, data):
-    room_id = data["room_id"]
-    logger.info(f"leave_room: {sid} wants to leave room '{room_id}'")
-    socket_manager.leave_room(sid, room_id)
-    await socket_manager.emit("info", f"{sid} left room '{room_id}'")
-    logger.info(f"leave_room: {sid} left room '{room_id}'")
-
-
-@socket_manager.on("send_message_to_room")
-async def send_message_to_room(sid, data):
-    room_id = data["room_id"]
-    message = data["message"]
-    logger.info(
-        f"send_message_to_room: {sid} wants to send message '{message}' to room '{room_id}'"
-    )
-    await socket_manager.emit("message", message, room_id, skip_sid=sid)
-    await socket_manager.emit(
-        "info", f"{sid} sent message '{message}' to room '{room_id}'"
-    )
-    logger.info(
-        f"send_message_to_room: {sid} sent message '{message}' to room '{room_id}'"
-    )
-
-
-app.include_router(router)
+app.include_router(common.router)
