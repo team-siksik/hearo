@@ -134,7 +134,7 @@ const Navbar = ({ setLoginModal }: PropsType) => {
               `}
             ></div>
           </div>
-          <p>{user?.user?.nickname} 님</p>
+          <p>{user?.nickname} 님</p>
           {/* <p>김야옹 님</p> */}
         </section>
       ) : (
