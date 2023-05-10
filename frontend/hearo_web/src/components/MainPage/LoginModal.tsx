@@ -27,7 +27,7 @@ function LoginModal({ setLoginModal }: PropsType) {
             <Button type="whiteButton">
               <div className="flex justify-center">
                 <img className="mx-3 w-5" src={google_logo} />
-                <p className="  mr-3 text-sm text-gray-600 ">
+                <p className=" mr-3 text-sm text-gray-600 ">
                   Sign in with Google
                 </p>
               </div>
