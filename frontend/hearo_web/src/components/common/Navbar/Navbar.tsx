@@ -28,28 +28,8 @@ const Navbar = ({ setLoginModal }: PropsType) => {
   const [isMenuToggled, setIsMenuToggled] = useState<boolean>(false);
   const navbarBackground = "z-10 bg-white drop-shadow";
   // 로그인여부
-  const isLoggedin = !!localStorage.getItem("access_token");
+  const isLoggedin = !!localStorage.getItem("accessToken");
   const user = useAppSelector((state) => state.user);
-  const links = [
-    {
-      // image: <Start width={100} height={100} />,
-      name: "대화 시작하기",
-      to: "comm",
-      id: 1,
-    },
-    {
-      // image: <Join width={100} height={100} />,
-      name: "수어 인식 대화",
-      to: "comm",
-      id: 2,
-    },
-    {
-      // image: <Check width={100} height={100} />,
-      name: "주변 소음 인식",
-      to: "records",
-      id: 3,
-    },
-  ];
 
   // 음성재생 컴포넌트 활용
   const [comp, setComp] = useState<string>("main");
