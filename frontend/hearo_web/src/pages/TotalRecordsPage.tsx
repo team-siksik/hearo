@@ -4,6 +4,7 @@ import {
 
 } from "@/components";
 import { RecordsItem } from "@/components";
+import axios from "axios";
 
 interface RecordsItemProps {
   id: number;
@@ -15,7 +16,8 @@ interface RecordsItemProps {
 function TotalRecordsPage() {
   const [openRemoveRecordModal, setOpenRemoveRecordModal] =
     useState<boolean>(false);
-  const [idToDelete, setIdToDelete] = useState<number>(0);
+  // const [idToDelete, setIdToDelete] = useState<number>(0);
+  // const [noRecords, setNoRecords] = useState<boolean>(false);
   const [records, setRecords] = useState<RecordsItemProps[]>([
     {
       id: 1,
@@ -79,32 +81,47 @@ function TotalRecordsPage() {
     },
   ]);
 
-  const handleDeleteRecord = (id: number) => {
-    setIdToDelete(id);
-    setOpenRemoveRecordModal(true);
-  };
-
-  const handleRemoveRecord = (id:number) => {
+  const handleRemoveRecord = (idToDelete:number) => {
     const updatedRecords = records.filter((record) => record.id !== idToDelete);
     setRecords(updatedRecords);
     setOpenRemoveRecordModal(false);
   };
 
+  // const getRecords = async () => {
+  //   const response = await axios.get('v1/record/??', {
+  //     headers : { Authorization: `Bearer ${authToken}`}, 
+  // }), 
+  // let data : 
+
+  // const records = data.map()
+
+  // const showRecords = () => {
+  //   if (noRecords) 
+  //     return ('no record') 
+  //   else 
+  //     return( 
+  //       {records}
+  //     )
+  //   }  
+
+
   return (
     <div>
       <RecordpageSideBar/>
-      <div className="absolute right-0 mt-20 w-[82%] overflow-auto">
-        <div className="space-y-4">
-          {records.map((record) => (
-            <RecordsItem
-              key={record.id}
-              id={record.id}
-              title={record.title}
-              date={record.date}
-              description={record.description}
-              onRemove={() => handleRemoveRecord(record.id)}
-            />
-          ))}
+      <div className="absolute right-0 mt-20 w-[82%] overflow-auto" style={{ paddingTop: "16px" }}>
+        <div className="fixed right-0 top-20 bottom-0 overflow-y-scroll" style={{ width: "calc(82% - 1rem)" }}>
+          <div className="space-y-4">
+            {records.map((record) => (
+              <RecordsItem
+                key={record.id}
+                recordId={record.id}
+                title={record.title}
+                date={record.date}
+                description={record.description}
+                onRemove={() => handleRemoveRecord(record.id)}
+              />
+            ))}
+          </div>
         </div>
       </div>
     </div>
