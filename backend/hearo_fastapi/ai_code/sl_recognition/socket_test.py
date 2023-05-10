@@ -28,7 +28,7 @@ image = cv2.imread("example.jpg")
 buffer = cv2.imencode('.jpg', image)[1]
 image_string = base64.b64encode(buffer).decode('utf-8')
 for _ in range(30):
-    sio.emit("image", image_string)
+    sio.emit("image", {"room_id": "sl_recognition_test", "base64_string": image_string})
 
 # # 4. 방 퇴장 및 삭제
 # sio.emit("close_room", {"room_id": "sl_recognition_test"})
