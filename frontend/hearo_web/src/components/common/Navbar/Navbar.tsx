@@ -153,7 +153,7 @@ const Navbar = ({ setLoginModal, setOpenProfileModal }: PropsType) => {
 
 
   return (
-    <header className="flex justify-between border border-gray-200 py-2">
+    <header className="fixed z-10 top-0 left-0 w-full bg-white flex justify-between border border-gray-200 py-2">
       <div className="logo font-chewy text-3xl font-extrabold text-blue-main">
         <button onClick={homeClick} className="flex items-center ">
           <Player src={MainLogo} loop autoplay style={{ width: "60px" }} />
