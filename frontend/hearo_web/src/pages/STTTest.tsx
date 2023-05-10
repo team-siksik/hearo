@@ -5,10 +5,11 @@ import { Socket, io } from "socket.io-client";
 
 //FIXME: accessToken 연결 전 수정해야함
 const accessToken =
-  "eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJub2hoeXVuamVvbmc5M0BnbWFpbC5jb20iLCJpYXQiOjE2ODM2OTE4NTIsImV4cCI6MTY4MzcxMzQ1Mn0.DrWzRuqOQozjXDntP43aZSZp5X2SA8qMSzJIyv8P9QQ";
+  "eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJub2hoeXVuamVvbmc5M0BnbWFpbC5jb20iLCJpYXQiOjE2ODM3MjMxMDcsImV4cCI6MTY4Mzc0NDcwN30.M9_pQkZvr5lqH9tEHpUoqWgTTN0x5l7wOTZ0iFKwnPw";
 
 const socketURl = "http://ubuntu@k8a6031.p.ssafy.io:80";
-const recorderWorkerPath = "@/STT/recorder.ts";
+const recorderWorkerPath = "recorderWorker.js";
+const roomNo = 1343;
 
 // Error codes (mostly following Android error names and codes)
 const ERR_SOCKET = 1;
@@ -53,10 +54,6 @@ export default function STTTest() {
     console.log(`Error: ${code} : ${data}\n`);
   }
 
-  //TODO: start meeting api 통신
-  //TODO: start meeting socket io 방 열기
-  //TODO: start record
-
   function createSocket() {
     const socket = io(socketURl, {
       reconnectionDelayMax: 10000,
@@ -65,8 +62,11 @@ export default function STTTest() {
       path: "/ws/socket.io",
     });
 
+    if (!socket) {
+      throw new Error("socket error!");
+    }
+
     //TODO: server에서 보내주는 메시지 형식이나 내용에 대해서 이야기 해봐야 할 듯
-    // message 라는 이벤트 메시지를 받았을 때
     socket.on("message", (e) => {
       const { data } = e;
       onEvent(MSG_WEB_SOCKET, data);
@@ -80,13 +80,14 @@ export default function STTTest() {
       }
       // socket server에서 보낸 데이터가 string이나 나머지일 때
       else {
-        const response = JSON.parse(data);
-        console.log(response);
+        // const response = JSON.parse(data);
+        console.log(data);
       }
     });
 
     // info 라는 이벤트 메시지를 받았을 때
     socket.on("info", (e) => {
+      console.log(e);
       const { data } = e;
       onEvent(MSG_WEB_SOCKET, data);
       // socket server에서 보낸 데이터가 object일 때
@@ -99,13 +100,16 @@ export default function STTTest() {
       }
       // socket server에서 보낸 데이터가 string이나 나머지일 때
       else {
-        const response = JSON.parse(data);
-        console.log(response);
+        // const response = JSON.parse(data);
+        console.log(data);
       }
     });
 
     // start recording if socket is connected
     socket.on("connect", () => {
+      socket.emit("enter_room", {
+        room_id: roomNo, //FIXME: random room key로 들어감 추후 수정
+      });
       const intervalKey = setInterval(() => {
         subRecorder?.exportWAV((blob: Blob) => {
           socketSend(blob);
@@ -148,12 +152,12 @@ export default function STTTest() {
 
     setIsRecording(true);
 
-    //TODO: 이렇게 recorder를 두개 만들어야 할까 ?
-    // socket으로 보내는 recorder
+    //TODO: socket으로 보내는 recorder
     const recorder = new Recorder(input, {
       workerPath: { recorderWorkerPath },
     });
     setSubRecorder(recorder);
+    console.log("subRecorder", subRecorder);
 
     // MediaRecorder 생성
     const mediaRecorder = new MediaRecorder(mediaStream);
@@ -212,9 +216,11 @@ export default function STTTest() {
         });
     }
   }
+
   function socketSend(item: any) {
     if (socket && socket.connected) {
       // If item is an audio blob
+      console.log(item);
       if (item instanceof Blob) {
         if (item.size > 0) {
           socket.emit("audio", { audio: item });
@@ -224,7 +230,10 @@ export default function STTTest() {
         }
         //If item is like string or sth
       } else {
-        socket.emit("message", { message: item });
+        socket.emit("send_message_to_room", {
+          room_id: roomNo,
+          message: item,
+        });
         onEvent(MSG_SEND, `Send tag: ${item}`);
       }
     } else {
@@ -250,9 +259,9 @@ export default function STTTest() {
       // Push the remaining audio to the server
       subRecorder.exportWAV((blob: Blob) => {
         // socket send audio
-        //   socketSend(blob);
+        socketSend(blob);
         // socket send recording finish sign
-        //   socketSend('finish_audio');
+        socketSend("finish_audio");
         subRecorder.clear();
       }, "audio/wav");
       console.log("end of meeting");
@@ -281,6 +290,7 @@ export default function STTTest() {
       onEvent(MSG_STOP, "Stopped recording");
     }
     if (socket) {
+      socket.emit("close_room", { room_id: roomNo });
       socket.close();
       setSocket(null);
     }
@@ -307,9 +317,9 @@ export default function STTTest() {
         >
           녹음 종료
         </button>
+        <button onClick={cancel}>소켓 닫기</button>
       </div>
       <button onClick={closeRoomAPI}>방 닫기</button>
-      <button onClick={socketSend}>socket으로 메시지 보내기</button>
       {audio && <audio src={audio} controls />}
     </div>
   );
