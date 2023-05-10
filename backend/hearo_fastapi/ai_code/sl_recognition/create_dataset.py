@@ -7,6 +7,8 @@ import os
 from utils import get_words_list, joint_to_angle, time_to_string
 
 
+name = 'ny'
+
 words = get_words_list()
 seq_length = 30
 secs_for_action = 30
@@ -16,13 +18,11 @@ os.makedirs("dataset", exist_ok=True)
 
 mp_drawing = mp.solutions.drawing_utils
 mp_drawing_styles = mp.solutions.drawing_styles
-mp_hands = mp.solutions.hands
+mp_holistic = mp.solutions.holistic
 
 cap = cv2.VideoCapture(0)
 
-with mp_hands.Hands(
-    model_complexity=0, min_detection_confidence=0.5, min_tracking_confidence=0.5
-) as hands:
+with mp_holistic.Holistic(min_detection_confidence=0.5, min_tracking_confidence=0.5) as holistic:
     while cap.isOpened():
         for idx, word in enumerate(words):
             data = []
@@ -55,49 +55,59 @@ with mp_hands.Hands(
                 image = cv2.flip(image, 1)
                 image.flags.writeable = False
                 image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-                results = hands.process(image)
-                image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+                results = holistic.process(image)
 
-                if not results.multi_hand_landmarks:
+                if not results.left_hand_landmarks and not results.right_hand_landmarks:
                     continue
 
+                # print(results.pose_landmarks, results.left_hand_landmarks, results.right_hand_landmarks)
+
+                pose = np.zeros((12, 3))
                 left_joint, right_joint = np.zeros((21, 3)), np.zeros((21, 3))
                 left_angle, right_angle = np.zeros((15,)), np.zeros((15,))
 
-                for landmarks, hand in zip(
-                    results.multi_hand_landmarks, results.multi_handedness
-                ):
-                    hand = hand.classification[0].label.lower()
 
-                    for j, lm in enumerate(landmarks.landmark):
-                        globals()["{}_joint".format(hand)][j] = [
-                            lm.x,
-                            lm.y,
-                            lm.z,
-                        ]
+                for idx, lm in enumerate(results.pose_landmarks.landmark):
+                    if 10 < idx < 23:
+                        pose[idx - 11] = [lm.x, lm.y, lm.z]
 
-                    globals()["{}_angle".format(hand)] = joint_to_angle(
-                        globals()["{}_joint".format(hand)]
-                    )
+                if results.left_hand_landmarks:
+                    for idx, lm in enumerate(results.left_hand_landmarks.landmark):
+                        left_joint[idx] = [lm.x, lm.y, lm.z]
+                    left_angle = joint_to_angle(left_joint)
 
-                    mp_drawing.draw_landmarks(
-                        image,
-                        landmarks,
-                        mp_hands.HAND_CONNECTIONS,
-                        mp_drawing_styles.get_default_hand_landmarks_style(),
-                        mp_drawing_styles.get_default_hand_connections_style(),
-                    )
+                if results.right_hand_landmarks:
+                    for idx, lm in enumerate(results.right_hand_landmarks.landmark):
+                        right_joint[idx] = [lm.x, lm.y, lm.z]
+                    right_angle = joint_to_angle(right_joint)
 
-                d = np.concatenate(
-                    [
-                        left_joint.flatten(),
-                        left_angle,
-                        right_joint.flatten(),
-                        right_angle,
-                    ]
+                image.flags.writeable = True
+                image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+                mp_drawing.draw_landmarks(
+                    image,
+                    results.pose_landmarks,
+                    mp_holistic.POSE_CONNECTIONS,
+                    landmark_drawing_spec=mp_drawing_styles.get_default_pose_landmarks_style())
+                mp_drawing.draw_landmarks(
+                    image,
+                    results.left_hand_landmarks,
+                    mp_holistic.HAND_CONNECTIONS,
+                    mp_drawing_styles.get_default_hand_landmarks_style(),
+                    mp_drawing_styles.get_default_hand_connections_style(),
                 )
+                mp_drawing.draw_landmarks(
+                    image,
+                    results.right_hand_landmarks,
+                    mp_holistic.HAND_CONNECTIONS,
+                    mp_drawing_styles.get_default_hand_landmarks_style(),
+                    mp_drawing_styles.get_default_hand_connections_style(),
+                )
+
+                d = np.concatenate([pose.flatten(), left_joint.flatten(), left_angle, right_joint.flatten(), right_angle])
                 d = np.append(d, idx)
-                data.append(d)  # (157,)
+                print(d)
+                print(d.shape)
+                data.append(d)  # (193,)
 
                 cv2.imshow(word.upper(), image)
                 if cv2.waitKey(5) & 0xFF == 27:
@@ -105,20 +115,15 @@ with mp_hands.Hands(
 
             data = np.array(data)
             print(word, data.shape)
-            np.save(os.path.join(
-                "dataset", f"raw_{word}_{created_time}"), data)
 
-            # Create sequence data
-            full_seq_data = []
+            sequence_data = []
             for seq in range(len(data) - seq_length):
-                full_seq_data.append(data[seq: seq + seq_length])
+                sequence_data.append(data[seq: seq + seq_length])
 
-            full_seq_data = np.array(full_seq_data)
-            print(word, full_seq_data.shape)
-            np.save(
-                os.path.join(
-                    "dataset", f"seq_{word}_{created_time}"), full_seq_data
-            )
+            sequence_data = np.array(sequence_data)
+            print(word, sequence_data.shape)
+
+            np.save(os.path.join("dataset", f"{word}_{name}_{created_time}"), sequence_data)
         break
 
 cap.release()
