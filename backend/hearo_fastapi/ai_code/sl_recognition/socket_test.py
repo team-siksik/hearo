@@ -16,6 +16,11 @@ def word(data):
     print(f"word: {data}")
 
 
+@sio.on("sentence")
+def sentence(data):
+    print(f"sentence: {data}")
+
+
 # 1. 소켓 연결
 sio.connect("http://localhost:8000/ws", socketio_path="/ws/socket.io", wait_timeout=5)  # 로컬 테스트
 # sio.connect("http://k8a6031.p.ssafy.io:80/ws", socketio_path="/ws/socket.io", wait_timeout=5)  # 서버 테스트
