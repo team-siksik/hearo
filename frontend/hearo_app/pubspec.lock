@@ -406,6 +406,38 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.4.0"
+  flutter_image_compress:
+    dependency: "direct main"
+    description:
+      name: flutter_image_compress
+      sha256: "4b80be6d6bb067d5551dae5648be3f141beafbfed1f8b6fcfc3c03fa6d808aa0"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.2"
+  flutter_image_compress_common:
+    dependency: transitive
+    description:
+      name: flutter_image_compress_common
+      sha256: "8a846f03d645fb77370b2a89b9aefe9e1f3b52cf8f9f7787b1c32f57a12b15d5"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
+  flutter_image_compress_platform_interface:
+    dependency: transitive
+    description:
+      name: flutter_image_compress_platform_interface
+      sha256: "06f9bf98fd076b2706ab04fdec5f19759e73e159a54ba5c59940303d092399f3"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
+  flutter_image_compress_web:
+    dependency: transitive
+    description:
+      name: flutter_image_compress_web
+      sha256: "00db5f6b4be354c3453707b59af0cd96fe30988b7aac0ac6a98f3ef6fdf10d56"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.1"
   flutter_lints:
     dependency: "direct dev"
     description:
