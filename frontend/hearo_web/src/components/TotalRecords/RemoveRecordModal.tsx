@@ -7,7 +7,19 @@ interface PropsType {
   handleRemoveClick: () => void;
 }
 
+
+
 function RemoveRecordModal({ setOpenRemoveRecordModal, handleRemoveClick }: PropsType) {
+
+  const handleCloseModal = () => {
+    setOpenRemoveRecordModal(false);
+    };
+
+  const handleRemove = () => {
+    handleRemoveClick();
+    setOpenRemoveRecordModal(false);
+    };
+
   return (
     <Modal open={true} cannotExit={false}>
       <div>
@@ -18,9 +30,7 @@ function RemoveRecordModal({ setOpenRemoveRecordModal, handleRemoveClick }: Prop
       </div>
       <div className="grid w-full grid-flow-col grid-cols-2 justify-center gap-2 px-4 ">
         <div className="flex w-full">
-          <Button onClick={() => {
-            setOpenRemoveRecordModal(false);
-          }} 
+          <Button onClick={handleCloseModal} 
           type="backButton"
           >
             취소
@@ -28,10 +38,7 @@ function RemoveRecordModal({ setOpenRemoveRecordModal, handleRemoveClick }: Prop
         </div>
         <div className="flex w-full">
           <Button 
-          onClick={() => {
-            handleRemoveClick();
-            setOpenRemoveRecordModal(false);
-          }}
+          onClick={handleRemove}
           type="deleteButton"
           >
             삭제
