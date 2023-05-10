@@ -6,6 +6,7 @@ interface UserType {
   isLoggedIn: boolean;
   user: {
     nickname: string;
+    accessToken: string;
     email: string;
     profileImg: string;
     delYn: string;
@@ -23,6 +24,7 @@ interface UserType {
 interface LoginPayloadType {
   nickname: string;
   email: string;
+  accessToken: string;
   profileImg: string;
   delYn: string;
   role: string;
@@ -38,6 +40,7 @@ const initialState: UserType = {
   user: {
     nickname: "",
     email: "",
+    accessToken: "",
     profileImg: "",
     delYn: "",
     role: "",
@@ -56,12 +59,12 @@ const initialState: UserType = {
 const googleLogin = createAsyncThunk(
   "users/googleLogin",
   async (accessToken: string, thunkAPI) => {
-    console.log("redux", accessToken);
     const response = await UserAPI.googleLogin(accessToken);
     if (!response) {
       throw new Error();
     }
-    return response.data;
+    console.log(response.data.data);
+    return response.data.data;
   }
 );
 
@@ -133,8 +136,9 @@ const userSlice = createSlice({
       .addCase(googleLogin.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isLoggedIn = true;
-        state.user = action.payload; // TODO: payload 데이터를 그대로 user에 넣어도 되는지 체크!
         localStorage.setItem("accessToken", action.payload.accessToken);
+        state.user = action.payload; // TODO: payload 데이터를 그대로 user에 넣어도 되는지 체크!
+        state.user!.accessToken = "";
       })
       .addCase(googleLogin.rejected, (state) => {
         state.isLoading = false;
