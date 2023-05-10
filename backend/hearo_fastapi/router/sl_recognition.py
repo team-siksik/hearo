@@ -103,9 +103,12 @@ word_sequence = deque()  # 추론된 단어 저장
 
 
 @socket_manager.on("image")
-async def image(sid, base64_string):
+async def image(sid, data):
     await socket_manager.emit("info", f"{sid} sent image")
     logger.info(f"image: {sid} sent image")
+
+    room_id = data["room_id"]
+    base64_string = data["base64_string"]
 
     # 이미지 변환, 전처리 및 시퀀스에 저장
     image = await decode_image(base64_string)
@@ -154,7 +157,7 @@ async def image(sid, base64_string):
     result = None
     if word_sequence[-1] == word_sequence[-2] == word_sequence[-3]:
         result = word
-    socket_manager.emit("word", result)
+    socket_manager.emit("word", result, room_id, skip_sid=sid)
     socket_manager.emit("info", f"{sid} received result '{result}'")
     logger.info(f"image: {sid} received result '{result}'")
     
