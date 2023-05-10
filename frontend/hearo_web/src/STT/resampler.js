@@ -1,4 +1,4 @@
-const workercode = () => {
+export const workercode = () => {
   //  JavaScript Audio Resampler (c) 2011 - Grant Galitz
   function Resampler(
     fromSampleRate,
@@ -232,14 +232,6 @@ const workercode = () => {
     this.postMessage(audioBlob);
   }
 
-  //  FIXME: doesn't work yet
-  // function exportSpeex(type){
-  //   const buffer = mergeBuffers(recBuffers, recLength);
-  //   const speexData = Speex.process(buffer);
-  //   const audioBlob = new Blob([speexData], { type });
-  //   this.postMessage(audioBlob);
-  // }
-
   function getBuffer() {
     const buffers = [];
     buffers.push(mergeBuffers(recBuffers, recLength));
@@ -352,4 +344,6 @@ code = code.substring(code.indexOf("{") + 1, code.lastIndexOf("}"));
 const blob = new Blob([code], { type: "application/javascript" });
 const worker_script = URL.createObjectURL(blob);
 
-module.exports = worker_script;
+// module.exports = worker_script;
+
+export default { worker_script };

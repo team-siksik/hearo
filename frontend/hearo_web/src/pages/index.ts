@@ -7,6 +7,7 @@ import SettingsPage from "./SettingsPage";
 import AgainPage from "./AgainPage";
 import NotFound404 from "./NotFound404";
 import RecognizePage from "./RecognizePage";
+import SocketPage from "./SocketTest";
 // import TutorialPage from "./TutorialPage";
 
 export {
@@ -18,6 +19,7 @@ export {
   FavContentsPage,
   SettingsPage,
   AgainPage,
+  SocketPage,
   NotFound404,
   // TutorialPage,
 };

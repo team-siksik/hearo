@@ -15,6 +15,9 @@ interface PropsType {
   children: React.ReactNode;
   setLoginModal?: React.Dispatch<SetStateAction<boolean>>;
   setOpenInfoModal?: React.Dispatch<SetStateAction<boolean>>;
+  setOpenGPTModal?: React.Dispatch<SetStateAction<boolean>>;
+  setOpenAddFavModal?: React.Dispatch<SetStateAction<boolean>>;
+  setOpenExitModal?: React.Dispatch<SetStateAction<boolean>>;
 }
 
 const customModalStyles: ReactModal.Styles = {
@@ -55,6 +58,9 @@ function Modal({
   children,
   setLoginModal,
   setOpenInfoModal,
+  setOpenGPTModal,
+  setOpenAddFavModal,
+  setOpenExitModal,
 }: PropsType) {
   const [openModal, setOpenModal] = useState<boolean>(open);
 
@@ -66,6 +72,15 @@ function Modal({
     }
     if (setOpenInfoModal) {
       setOpenInfoModal(false);
+    }
+    if (setOpenGPTModal) {
+      setOpenGPTModal(false);
+    }
+    if (setOpenAddFavModal) {
+      setOpenAddFavModal(false);
+    }
+    if (setOpenExitModal) {
+      setOpenExitModal(false);
     }
   }
   return (
@@ -79,6 +94,15 @@ function Modal({
         }
         if (setOpenInfoModal) {
           setOpenInfoModal(false);
+        }
+        if (setOpenGPTModal) {
+          setOpenGPTModal(false);
+        }
+        if (setOpenAddFavModal) {
+          setOpenAddFavModal(false);
+        }
+        if (setOpenExitModal) {
+          setOpenExitModal(false);
         }
       }}
       shouldCloseOnOverlayClick={cannotExit ? false : true}
