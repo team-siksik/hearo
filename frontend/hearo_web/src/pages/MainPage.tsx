@@ -34,7 +34,7 @@ function MainPage({ setLoginModal }: PropsType) {
   // TODO : 음성재생 모달도 로그인된 상태에서만 접근 가능하도록 조치해야함
   // 음성재생 함수
   const togglePlay = () => {
-    if (!isLoggedin) {
+    if (isLoggedin) {
       if (audioRef.current) {
         if (isPlaying) {
           audioRef.current.pause();
@@ -46,7 +46,7 @@ function MainPage({ setLoginModal }: PropsType) {
       }
     } else {
       // TODO: 알림 주고 login 페이지로 보내기
-      navigate("/login");
+      navigate("/");
     }
   };
 
