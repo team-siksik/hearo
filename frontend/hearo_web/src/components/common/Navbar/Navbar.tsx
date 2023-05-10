@@ -6,7 +6,7 @@ import startVoice from "@/assets/Sounds/start.wav";
 import google_logo from "@/assets/Google_Logo.svg";
 import { GOOGLE_AUTH_URL } from "@/apis/oAuthGoogle";
 import { css } from "@emotion/react";
-import { useAppDispatch } from "@/redux/hooks";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { googleLogout, userActions } from "@/redux/modules/user";
 import { Player } from "@lottiefiles/react-lottie-player";
 import Button from "../ui/Button";
@@ -29,7 +29,7 @@ const Navbar = ({ setLoginModal }: PropsType) => {
   const navbarBackground = "z-10 bg-white drop-shadow";
   // 로그인여부
   const isLoggedin = !!localStorage.getItem("access_token");
-
+  const user = useAppSelector((state) => state.user);
   const links = [
     {
       // image: <Start width={100} height={100} />,
@@ -146,11 +146,11 @@ const Navbar = ({ setLoginModal }: PropsType) => {
           onClick={() => setOpenProfileModal(true)}
           className="user-box mx-4 flex items-center"
         >
-          <div className="w-7">
+          <div className="w-7" onClick={handleLogoutClick}>
             <UserIcon />
           </div>
-          {/* <p>{username} 님</p> */}
-          <p>김야옹 님</p>
+          <p>{user?.user?.nickname} 님</p>
+          {/* <p>김야옹 님</p> */}
         </section>
       ) : (
         <section className="user-box">
