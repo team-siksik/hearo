@@ -9,7 +9,7 @@ from collections import deque
 from tensorflow.keras.models import load_model
 
 from main import socket_manager, logger
-from ai_code.sl_recognition.utils import get_words_list_from_router, joint_to_angle
+from ai_code.sl_recognition.utils import get_words_list_from_router, joint_to_angle_from_router
 
 
 router = APIRouter(prefix="/sl")
@@ -76,11 +76,11 @@ async def preprocess_image(image):
             if hand == "right":
                 for j, lm in enumerate(landmarks.landmark):
                     right_joint[j] = [lm.x, lm.y, lm.z,]
-                right_angle = await joint_to_angle(right_joint)
+                right_angle = await joint_to_angle_from_router(right_joint)
             else:
                 for j, lm in enumerate(landmarks.landmark):
                     left_joint[j] = [lm.x, lm.y, lm.z,]
-                left_angle = await joint_to_angle(left_joint)
+                left_angle = await joint_to_angle_from_router(left_joint)
 
         return np.concatenate([left_joint.flatten(), left_angle, right_joint.flatten(), right_angle,])
 
