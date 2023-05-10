@@ -1,9 +1,13 @@
-import React from "react";
+import React, { SetStateAction } from "react";
 import { Modal } from "@/components";
 
-function GPTRecommend() {
+interface PropsType {
+  setOpenGPTModal: React.Dispatch<SetStateAction<boolean>>;
+}
+
+function GPTRecommend({ setOpenGPTModal }: PropsType) {
   return (
-    <Modal open={true} cannotExit={false}>
+    <Modal open={true} cannotExit={false} setOpenGPTModal={setOpenGPTModal}>
       "gpt추천"
     </Modal>
   );

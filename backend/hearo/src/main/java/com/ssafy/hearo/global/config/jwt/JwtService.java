@@ -20,7 +20,7 @@ public class JwtService {
     private AccountRepository accountRepository;
 
     public String login(String email) {
-        Optional<Account> optionalAccount = accountRepository.findByEmail(email);
+        Optional<Account> optionalAccount = accountRepository.findByEmailAndDelYn(email,"0");
 
         // 해당 이메일의 계정이 없는 경우
         if (!optionalAccount.isPresent()) {

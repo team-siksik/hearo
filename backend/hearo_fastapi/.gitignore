@@ -23,3 +23,7 @@ archive.zip
 # vim temporary files
 *~
 .*.sw?
+
+# custom
+.bashrc
+human_jenkins_test.sh
