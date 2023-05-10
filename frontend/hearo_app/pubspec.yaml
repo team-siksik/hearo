@@ -97,6 +97,8 @@ dependencies:
   path_provider:
   # 카메라
   camera:
+  # 용량 줄이기
+  flutter_image_compress: ^2.0.2
 
 dev_dependencies:
   flutter_test:
