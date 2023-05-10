@@ -9,6 +9,7 @@ import NotFound404 from "./NotFound404";
 // import RecordPage from "./RecordsPage";
 // import TutorialPage from "./TutorialPage";
 import TotalRecordsPage from "./TotalRecordsPage";
+import RecordPage from "./RecordPage";
 
 export {
   LoginPage,
@@ -20,6 +21,6 @@ export {
   AgainPage,
   NotFound404,
   TotalRecordsPage,
-  // RecordPage,
+  RecordPage,
   // TutorialPage,
 };
