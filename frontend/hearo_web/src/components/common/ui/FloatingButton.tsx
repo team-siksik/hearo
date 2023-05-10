@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { ReactComponent as CrossIcon } from "@/assets/Icon/CrossIcon.svg";
 
 interface PropsType {
-  onClick?: () => void;
+  onClick?: (e: React.MouseEvent) => void;
 }
 export default function FloatingButton({ onClick }: PropsType) {
   return (

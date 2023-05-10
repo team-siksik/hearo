@@ -16,6 +16,9 @@ interface PropsType {
   setLoginModal?: React.Dispatch<SetStateAction<boolean>>;
   setOpenInfoModal?: React.Dispatch<SetStateAction<boolean>>;
   setOpenProfileModal?: React.Dispatch<SetStateAction<boolean>>;
+  setOpenGPTModal?: React.Dispatch<SetStateAction<boolean>>;
+  setOpenAddFavModal?: React.Dispatch<SetStateAction<boolean>>;
+  setOpenExitModal?: React.Dispatch<SetStateAction<boolean>>;
 }
 
 const customModalStyles: ReactModal.Styles = {
@@ -89,7 +92,11 @@ function Modal({
   setLoginModal,
   setOpenInfoModal,
   setOpenProfileModal,
+  setOpenGPTModal,
+  setOpenAddFavModal,
+  setOpenExitModal,
 }: PropsType) {
+
   const [openModal, setOpenModal] = useState<boolean>(open);
   
   // x버튼이나, 나가기 혹은 취소 버튼을 누르면 modal을 닫게 하기 위한 함수입니다.
@@ -98,15 +105,23 @@ function Modal({
     if (setLoginModal) {
       setLoginModal(false);
     }
-    else if (setOpenInfoModal) {
+    if (setOpenInfoModal) {
       setOpenInfoModal(false);
     }
-    else if (setOpenProfileModal) {
+    if (setOpenProfileModal) {
       setOpenProfileModal(false);
     } 
+    if (setOpenGPTModal) {
+      setOpenGPTModal(false);
+    }
+    if (setOpenAddFavModal) {
+      setOpenAddFavModal(false);
+    }
+    if (setOpenExitModal) {
+      setOpenExitModal(false);
+    }
     else {
       setOpenModal(false);
-    }
   }
   return (
     <>
@@ -121,6 +136,15 @@ function Modal({
         }
         if (setOpenInfoModal) {
           setOpenInfoModal(false);
+        }
+        if (setOpenGPTModal) {
+          setOpenGPTModal(false);
+        }
+        if (setOpenAddFavModal) {
+          setOpenAddFavModal(false);
+        }
+        if (setOpenExitModal) {
+          setOpenExitModal(false);
         }
       }}
       shouldCloseOnOverlayClick={cannotExit ? false : true}
@@ -162,6 +186,7 @@ function Modal({
     }
     </>
   );
+  }
 }
 
 export default Modal;

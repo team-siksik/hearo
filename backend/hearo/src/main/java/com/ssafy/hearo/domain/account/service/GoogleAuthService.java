@@ -82,7 +82,7 @@ public class GoogleAuthService {
 
                 String Jwt = jwtService.login(user.getEmail());
                 log.info("Jwt : {}", Jwt);
-                Optional<Account> account = accountRepository.findByEmail(user.getEmail());
+                Optional<Account> account = accountRepository.findByEmailAndDelYn(user.getEmail(),"0");
                 return SignInResponseDto.builder()
                         .accessToken(Jwt)
                         .nickname(account.get().getNickname())
