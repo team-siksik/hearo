@@ -51,6 +51,6 @@ class PrintResultObserver:
 pipeline = OnlineSpeakerDiarization()
 source = WebSocketAudioSource(pipeline.config.sample_rate, "localhost", 8000)
 inference = RealTimeInference(pipeline, source)
-inference.attach_observers(PrintResultObserver(source.uri, source))
-# inference.attach_hooks(lambda ann_wav: source.send(ann_wav[0].to_rttm()))
+# inference.attach_observers(PrintResultObserver(source.uri, source))
+inference.attach_hooks(lambda ann_wav: source.send(ann_wav[0].to_rttm()))
 prediction = inference()
