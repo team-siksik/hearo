@@ -1,5 +1,5 @@
 export const GOOGLE_OAUTH_REDIRECT_URI =
-  "http://localhost:5173/login/oauth2/code/google"; // deploy
+  "https://k8a603.p.ssafy.io/login/oauth2/code/google"; // deploy
 
 export const GOOGLE_AUTH_URL =
   "https://accounts.google.com/o/oauth2/auth?" +
