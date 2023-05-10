@@ -15,3 +15,6 @@ docker run -d -p 80:80 --shm-size 2000000000 --name hearo-fastapi fastapi
 
 echo "6. check!"
 docker ps -a
+
+echo "7. log!"
+docker logs -f hearo-fastapi
