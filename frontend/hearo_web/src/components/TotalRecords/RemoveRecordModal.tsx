@@ -8,7 +8,6 @@ interface PropsType {
 }
 
 
-
 function RemoveRecordModal({ setOpenRemoveRecordModal, handleRemoveClick }: PropsType) {
 
   const handleCloseModal = () => {
@@ -21,7 +20,7 @@ function RemoveRecordModal({ setOpenRemoveRecordModal, handleRemoveClick }: Prop
     };
 
   return (
-    <Modal open={true} cannotExit={false}>
+    <Modal open={true} cannotExit={false} setOpenRemoveRecordModal={setOpenRemoveRecordModal} >
       <div>
         <h1 className="m-2 text-xl font-bold">삭제</h1>
         <p className="m-4 pb-4">
