@@ -2,38 +2,36 @@ import { TrashIcon } from "@heroicons/react/24/solid";
 import { PencilSquareIcon } from "@heroicons/react/24/outline";
 import { useNavigate, useLocation } from "react-router-dom";
 import { RemoveRecordModal } from "@/components";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {RecordpageSideBar,
 } from "@/components";
 
 interface RecordPageProps {
   title?: string;
-  date: string;
-  description: string;
   onChangeTitle: (title: string) => void;
 }
 
-
-function RecordPage({ onChangeTitle }: RecordPageProps) {
+function RecordPage({ title, onChangeTitle }: RecordPageProps) {
   const location = useLocation();
   const navigate = useNavigate();
   const state = location.state as { title: string, date: string, description : string}
   const { title: initialTitle, date, description } = state;
 
-  const [title, setTitle] = useState(initialTitle);
+  // const [newTitle, setTitle] = useState(initialTitle);
   const [openRemoveRecordModal, setOpenRemoveRecordModal] = useState<boolean>(false);
   const [isHovered, setIsHovered] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
-  const [updatedTitle, setUpdatedTitle] = useState('');
-
   const [newTitle, setNewTitle] = useState<string>(title || "");
+
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault()
-    const newTitle = e.target.value;
-    setTitle(newTitle);
-    setUpdatedTitle(newTitle);
-    console.log(newTitle)
+    setNewTitle(e.target.value);
+    console.log(e.target.value)
   };
+
+  useEffect(() => {
+    onChangeTitle(newTitle);
+  }, [newTitle, onChangeTitle]);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

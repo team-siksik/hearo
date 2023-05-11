@@ -7,7 +7,7 @@ import { io } from "socket.io-client";
 
 // const socket = io("http://ubuntu@k8a6031.p.ssafy.io:80/ws", {
 
-function RecordPage() {
+function SocketTest() {
   const socket = io("http://ubuntu@k8a6031.p.ssafy.io:80", {
     autoConnect: false,
     transports: ["websocket"],
@@ -57,4 +57,4 @@ function RecordPage() {
 
 // export { socket };
 
-export default RecordPage;
+export default SocketTest;
