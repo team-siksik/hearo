@@ -52,16 +52,16 @@ public class ConversationController {
     @PostMapping("/room/start")
     public ResponseEntity<Result> startConversation(@LoginUser Account account) {
         log.info("[startConversation] 대화 시작 API 호출");
-        RoomResponseDto result = conversationService.startConversation(account);
+        ConversationInfoResponseDto result = conversationService.startConversation(account);
         log.info("[startConversation] result: {}", result);
         return ResponseEntity.ok()
                 .body(responseService.getSingleResult(result));
     }
 
-    @PutMapping("/room/{roomSeq}/close")
-    public ResponseEntity<Result> endConversation(@LoginUser Account account, @PathVariable long roomSeq) {
+    @PutMapping("/room/{conversationSeq}/close")
+    public ResponseEntity<Result> endConversation(@LoginUser Account account, @PathVariable long conversationSeq) {
         log.info("[endConversation] 대화 종료 API 호출");
-        RoomResponseDto result = conversationService.endConversation(account, roomSeq);
+        ConversationInfoResponseDto result = conversationService.endConversation(account, conversationSeq);
         log.info("[endConversation] result: {}", result);
         return ResponseEntity.ok()
                 .body(responseService.getSingleResult(result));

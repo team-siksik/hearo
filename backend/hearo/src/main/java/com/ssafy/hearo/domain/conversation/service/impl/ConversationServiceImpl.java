@@ -93,11 +93,11 @@ public class ConversationServiceImpl implements ConversationService {
     }
 
     @Override
-    public RoomResponseDto startConversation(Account account) {
+    public ConversationInfoResponseDto startConversation(Account account) {
         log.info("[startConversation] 대화 시작 시작");
         List<Conversation> userConversationList = conversationRepository.findByAccountAndEndDtmIsNull(account);
         if (userConversationList.size() > 0) {
-            throw new ErrorException(ConversationErrorCode.ROOM_EXIST);
+            throw new ErrorException(ConversationErrorCode.CONVERSATION_EXIST);
         }
         log.info("[startConversation] 진행 중 대화 존재 여부 검증 완료");
         Conversation conversation = Conversation.builder()
@@ -105,8 +105,8 @@ public class ConversationServiceImpl implements ConversationService {
                 .build();
         conversationRepository.save(conversation);
 
-        RoomResponseDto result = RoomResponseDto.builder()
-                .roomSeq(conversation.getConversationSeq())
+        ConversationInfoResponseDto result = ConversationInfoResponseDto.builder()
+                .conversationSeq(conversation.getConversationSeq())
                 .regDtm(dateUtil.timestampToString(conversation.getRegDtm()))
                 .build();
         log.info("[startConversation] 대화 시작 완료");
@@ -114,17 +114,17 @@ public class ConversationServiceImpl implements ConversationService {
     }
 
     @Override
-    public RoomResponseDto endConversation(Account account, long roomSeq) {
+    public ConversationInfoResponseDto endConversation(Account account, long roomSeq) {
         log.info("[endConversation] 대화 종료 시작");
         conversationRepository.findByAccountAndConversationSeq(account, roomSeq)
-                .orElseThrow(() -> new ErrorException(ConversationErrorCode.ROOM_NOT_VALID));
+                .orElseThrow(() -> new ErrorException(ConversationErrorCode.CONVERSATION_NOT_VALID));
         Conversation conversation = conversationRepository.findByAccountAndConversationSeqAndEndDtmIsNull(account, roomSeq)
-                .orElseThrow(() -> new ErrorException(ConversationErrorCode.ROOM_NOT_EXIST));
+                .orElseThrow(() -> new ErrorException(ConversationErrorCode.CONVERSATION_NOT_EXIST));
         log.info("[endConversation] 종료할 대화 존재 여부 검증 완료");
         conversation.end(new Timestamp(System.currentTimeMillis()));
 
-        RoomResponseDto result = RoomResponseDto.builder()
-                .roomSeq(conversation.getConversationSeq())
+        ConversationInfoResponseDto result = ConversationInfoResponseDto.builder()
+                .conversationSeq(conversation.getConversationSeq())
                 .regDtm(dateUtil.timestampToString(conversation.getRegDtm()))
                 .endDtm(dateUtil.timestampToString(conversation.getEndDtm()))
                 .build();
