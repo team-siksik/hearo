@@ -6,10 +6,8 @@ import com.ssafy.hearo.domain.account.entity.Account;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.Id;
 
@@ -21,15 +19,18 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @DynamicInsert
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
-public class Room {
+public class Conversation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
-    private Long roomSeq;
+    private Long conversationSeq;
 
     @ManyToOne
     @JoinColumn(name = "userSeq", nullable = false)
     private Account account;
+
+    @Column(nullable = false, length = 5)
+    private String conversationType;
 
     @Column(nullable = false)
     @CreationTimestamp
@@ -38,11 +39,8 @@ public class Room {
     @Column()
     private Timestamp endDtm;
 
-    @Column(columnDefinition = "TINYINT", length = 1)
-    private byte saveCondition;
-
     @Builder
-    public Room(Account account) {
+    public Conversation(Account account) {
         this.account = account;
     }
 
