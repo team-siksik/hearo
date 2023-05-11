@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 # import requests
 # import api_token
 # from typing import Dict
@@ -5,6 +6,15 @@
 # API_TOKEN = api_token.huggingface_api_token
 # API_URL = "https://api-inference.huggingface.co/models/speechbrain/urbansound8k_ecapa"
 # headers = {"Authorization": f"Bearer {API_TOKEN}"}
+=======
+import requests
+import keys
+from typing import Dict
+
+API_TOKEN = keys.huggingface_api_key
+API_URL = "https://api-inference.huggingface.co/models/speechbrain/urbansound8k_ecapa"
+headers = {"Authorization": f"Bearer {API_TOKEN}"}
+>>>>>>> Stashed changes
 
 # ko_dict = {
 #     "dog_bark": "개",
