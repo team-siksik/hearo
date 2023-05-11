@@ -1,8 +1,10 @@
+import base64
+import io
+
 from fastapi import APIRouter, WebSocket
 from ai_code.sound_classification import api
 from collections import deque
 from pydub import AudioSegment
-import io
 
 router = APIRouter(prefix="/sc")
 
@@ -14,11 +16,16 @@ async def audio_stream(websocket: WebSocket):
     sid = websocket.client_id
 
     while True:
-        data = await websocket.receive_bytes()
+        data = await websocket.receive_json()
+
+        room_id = data["room_id"]
+        base64_audio = data["audio"]
+
+        # Base64 형식의 오디오 데이터를 디코딩
+        audio_data = base64.b64decode(base64_audio)
 
         # 0.1초 단위로 데이터를 처리하고, 1초 단위로 합쳐서 API 호출
-        audio_data = io.BytesIO(data)
-        audio_segment = AudioSegment.from_file(audio_data, format="wav")
+        audio_segment = AudioSegment.from_file(io.BytesIO(audio_data), format="wav")
 
         if sid not in audio_data_queues:
             audio_data_queues[sid] = deque(maxlen=10)
