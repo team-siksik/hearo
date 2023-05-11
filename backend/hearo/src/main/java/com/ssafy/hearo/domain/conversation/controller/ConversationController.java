@@ -50,9 +50,9 @@ public class ConversationController {
     }
 
     @PostMapping("/room/start")
-    public ResponseEntity<Result> startConversation(@LoginUser Account account) {
+    public ResponseEntity<Result> startConversation(@LoginUser Account account, @RequestBody StartConversationRequestDto requestDto) {
         log.info("[startConversation] 대화 시작 API 호출");
-        ConversationInfoResponseDto result = conversationService.startConversation(account);
+        StartConversationResponseDto result = conversationService.startConversation(account, requestDto);
         log.info("[startConversation] result: {}", result);
         return ResponseEntity.ok()
                 .body(responseService.getSingleResult(result));
@@ -61,7 +61,7 @@ public class ConversationController {
     @PutMapping("/room/{conversationSeq}/close")
     public ResponseEntity<Result> endConversation(@LoginUser Account account, @PathVariable long conversationSeq) {
         log.info("[endConversation] 대화 종료 API 호출");
-        ConversationInfoResponseDto result = conversationService.endConversation(account, conversationSeq);
+        EndConversationResponseDto result = conversationService.endConversation(account, conversationSeq);
         log.info("[endConversation] result: {}", result);
         return ResponseEntity.ok()
                 .body(responseService.getSingleResult(result));

@@ -13,4 +13,10 @@ public class ConversationRequestDto {
         private List<String> sentences;
     }
 
+    @Getter
+    public static class StartConversationRequestDto {
+
+        private String roomType;
+    }
+
 }
