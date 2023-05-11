@@ -20,7 +20,7 @@ public class HearoApplication {
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
 				registry.addMapping("/**")
-						.allowedOrigins("http://localhost:5173")
+						.allowedOrigins("http://localhost:5173", "https://k8a603.p.ssafy.io:5173")
 						.allowedMethods("*")
 						.allowedHeaders("*");
 			}
