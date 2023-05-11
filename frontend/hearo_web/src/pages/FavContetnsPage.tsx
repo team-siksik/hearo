@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { ArrowLeftIcon, XMarkIcon  } from "@heroicons/react/24/solid";
 import { useNavigate } from "react-router-dom";
-import { Modal } from "@/components";
+import { Modal, MypageSideBar } from "@/components";
 
 
 interface MessageType {
@@ -81,6 +81,8 @@ function FavContentsPage () {
 
   return (
     <div>
+      <MypageSideBar/>
+      <div className="fixed right-0 w-[82%]">
       {/* 상단footer */}
       <div className={`${mypagebarBackground} flex flex-row p-2.5 w-full h-full`}>
         <div>
@@ -148,6 +150,7 @@ function FavContentsPage () {
         </Modal>
       )}
     </div>
+  </div>
   );
 
 }
