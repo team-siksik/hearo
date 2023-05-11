@@ -1,4 +1,4 @@
-package com.ssafy.hearo.domain.record.entity;
+package com.ssafy.hearo.domain.conversation.entity;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;

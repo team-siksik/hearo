@@ -14,7 +14,7 @@ public interface ConversationService {
 
     List<KeywordSentenceResponseDto> getSituationSentenceList(long keywordSeq);
 
-    ConversationInfoResponseDto startConversation(Account account);
+    StartConversationResponseDto startConversation(Account account, StartConversationRequestDto requestDto);
 
-    ConversationInfoResponseDto endConversation(Account account, long roomSeq);
+    EndConversationResponseDto endConversation(Account account, long roomSeq);
 }
