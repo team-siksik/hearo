@@ -9,6 +9,7 @@ spring:
       - google
       - jwt
       - mysql
+      - s3
   jpa:
     hibernate:
       ddl-auto: update
