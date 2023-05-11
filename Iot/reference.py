@@ -20,7 +20,7 @@ import picamera
 from twilio.rest import Client
 
 ##########Section_2###########
-contacts= {'Pizza Hut': "718-822-2909", 'Papa John's': "415-586-7272", 'Friend3': "316-316-316"}
+contacts= {'Pizza Hut': "718-822-2909", "Papa John's": "415-586-7272", 'Friend3': "316-316-316"}
 
 #Wolfram
 app_id = ('') #WolfRam Alpha ID
