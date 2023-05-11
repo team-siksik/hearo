@@ -128,7 +128,7 @@ const Navbar = ({ setLoginModal, setOpenProfileModal }: PropsType) => {
           className="user-box mx-4 flex items-center"
         >
           <div className="w-7">
-            <UserIcon />
+
             <div
               className="h-5 w-5 rounded"
               css={css`

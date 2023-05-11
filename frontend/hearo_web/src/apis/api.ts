@@ -173,3 +173,22 @@ export const MeetingAPI = {
       }
     ),
 };
+
+// 기록 관련 API 
+// TODO: API 나오면 바로바로 추가하기
+export const RecordAPI = {
+  getRecords: (
+    accessToken : string, 
+    userSeq: number, 
+    dialogSeq: number, 
+    email: string,
+    ) => 
+    api.get(
+    `/note`,
+    {
+      headers: {
+        Authorization: `${accessToken}`,
+      },
+    }
+  ),
+};
