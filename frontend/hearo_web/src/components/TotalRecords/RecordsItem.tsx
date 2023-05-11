@@ -3,12 +3,7 @@ import { TrashIcon } from "@heroicons/react/24/solid";
 import { NewspaperIcon } from "@heroicons/react/24/outline";
 import { useNavigate} from "react-router-dom";
 import { RemoveRecordModal } from "@/components";
-import RecordPage from "@/pages/SocketTest";
-
-interface RecordPageProps {
-  title: string;
-  onChangeTitle: (title: string) => void;
-}
+import RecordPage from "@/pages/RecordPage";
 
 interface RecordsItemProps extends React.HTMLAttributes<HTMLElement> {
   title: string;
@@ -17,9 +12,10 @@ interface RecordsItemProps extends React.HTMLAttributes<HTMLElement> {
   description: string;
   onRemove: () => void;
   onChangeTitle: (title: string) => void;
+  // onChangeTitle:  React.Dispatch<React.SetStateAction<string>>;
 }
 
-function RecordsItem({ recordId, title, date, description, onRemove,onChangeTitle }: RecordsItemProps) {
+function RecordsItem({ recordId, title, date, description, onRemove, onChangeTitle }: RecordsItemProps) {
   const [openRemoveRecordModal, setOpenRemoveRecordModal] = useState<boolean>(false);
 
   const navigate = useNavigate();
@@ -67,7 +63,7 @@ function RecordsItem({ recordId, title, date, description, onRemove,onChangeTitl
       {openRemoveRecordModal && (
         <RemoveRecordModal 
         setOpenRemoveRecordModal={setOpenRemoveRecordModal} 
-        handleRemoveClick={handleRemoveClick} />
+        handleRemoveClick={handleRemoveClick}/>
       )}
     </div>
   );
