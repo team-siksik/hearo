@@ -1,11 +1,8 @@
 import board,busio
-from time import sleep
 from adafruit_st7735r import ST7735R
 import displayio
-import terminalio
 from adafruit_display_text import label
 from adafruit_bitmap_font import bitmap_font
-import digitalio
 from digitalio import DigitalInOut, Direction
 import scouter
 # 코드 작동 시간 출력용
@@ -30,8 +27,8 @@ touchpad = DigitalInOut(touch_pin)
 touchpad.direction = Direction.INPUT
 
 # led
-led = digitalio.DigitalInOut(board.LED)
-led.direction = digitalio.Direction.OUTPUT
+led = DigitalInOut(board.LED)
+led.direction = Direction.OUTPUT
 
 #display
 displayio.release_displays()
@@ -41,6 +38,7 @@ spi = busio.SPI(clock=clk_pin, MOSI=mosi_pin)
 display_bus = displayio.FourWire(spi, command=dc_pin, chip_select=cs_pin, reset=reset_pin)
 
 display = ST7735R(display_bus, width=128, height=160, bgr = True)
+display.rotation = 90
 
 splash = displayio.Group()
 display.show(splash)
@@ -81,17 +79,19 @@ splash.append(scouter_group)
 
 # 터치용
 already_pressed = False
-service = 0
+service = 2
 
 print("start bluetooth")
 
 print("Font load time: {:.2f} seconds".format(time.time() - start_time))
 while True:
+    # send data to bluetooth
+    bluetooth.write(b'1')
     # touch sensor change the service
     if touchpad.value and not already_pressed:
         print("pressed")
         service = (service + 1) % 3
-    if servcie == 0:
+    if service == 0:
         led.value = True
         command = bluetooth.readline()
     # print(command)   # uncomment this line to see the received data
