@@ -17,9 +17,11 @@ import { useAppSelector } from "./redux/hooks";
 import { LoginModal, ProfileModal, Navbar } from "./components";
 import { useState } from "react";
 import STTTest from "./pages/STTTest";
+import { PrivateRoute } from './PrivateRoute';
 
 function App() {
   const isLoggedIn = useAppSelector((state) => state.user.isLoggedIn);
+  const user = localStorage.getItem("accessToken");
 
   const [loginModal, setLoginModal] = useState<boolean>(false);
   const [openProfileModal, setOpenProfileModal] = useState<boolean>(false);
@@ -33,9 +35,8 @@ function App() {
       />
       <Routes>
         <Route path="/" element={<MainPage setLoginModal={setLoginModal} />} />
-          {/* TODO: private router처리 해야함 */}
-          <Route>
-            <Route path="/stt" element={<STT />} />
+          <Route element={<PrivateRoute/>}>
+            <Route path="/stt" element={<STT/>}/>
             <Route path="/socket" element={<SocketTest />} />
             <Route path="/recordtest" element={<STTTest />} />
             <Route path="/comm" element={<ConversationPage />} />
