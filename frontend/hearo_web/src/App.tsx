@@ -15,7 +15,7 @@ import {
 } from "./pages";
 import { useAppSelector } from "./redux/hooks";
 import { LoginModal, ProfileModal, Navbar } from "./components";
-import { useState } from "react";
+import React, { useState } from "react";
 import STTTest from "./pages/STTTest";
 
 function App() {
