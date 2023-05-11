@@ -1,5 +1,6 @@
-import workercode from "./resampler.js";
-const WORKER_PATH = "resampler.js";
+// import worker_script from "./recorderWorker.js";
+// const WORKER_PATH = "recorderWorker.js";
+import worker_script from "./recorderWorker.js";
 
 export class Recorder {
   context: BaseAudioContext;
@@ -19,7 +20,8 @@ export class Recorder {
     const bufferLen = config.bufferLen || 4096;
     this.context = source.context;
     this.node = this.context.createScriptProcessor(bufferLen, 1, 1);
-    const worker: Worker = new Worker(workercode.worker_script);
+    const worker: Worker = new Worker(worker_script);
+    console.log(worker);
     worker.postMessage({
       command: "init",
       config: {
