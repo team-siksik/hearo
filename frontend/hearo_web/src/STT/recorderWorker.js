@@ -197,6 +197,7 @@ const workercode = () => {
     }
   };
 
+  //전달받은 sampleRate 데이터를 다시 변수에 넣어 초기화
   function init(config) {
     sampleRate = config.sampleRate;
     resampler = new Resampler(sampleRate, 16000, 1, 50 * 1024);
