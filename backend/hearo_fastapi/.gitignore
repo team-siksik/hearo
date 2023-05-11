@@ -27,5 +27,4 @@ archive.zip
 # custom
 .bashrc
 human_jenkins_test.sh
-
-api_token.py
+keys.py
