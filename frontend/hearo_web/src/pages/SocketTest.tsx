@@ -1,4 +1,5 @@
 import { Layout } from "@/components";
+import { useEffect } from "react";
 import { io } from "socket.io-client";
 
 // TODO: Socket 통신 -> 소음 알림!! STT 화자 분리!!
@@ -9,12 +10,14 @@ import { io } from "socket.io-client";
 // const socket = io("http://ubuntu@k8a6031.p.ssafy.io:80/ws", {
 
 function SocketTest() {
-  const socket = io("http://ubuntu@k8a6031.p.ssafy.io:80", {
+  const socket = io("http://k8a6031.p.ssafy.io:80/", {
     autoConnect: false,
     transports: ["websocket"],
     path: "/ws/socket.io",
   }); // client domain !== server domain
-
+  useEffect(() => {
+    console.log(socket);
+  }, []);
   // socket이 연결이 되었으면 실행
   socket.on("connect", () => {
     console.log("connected");
@@ -41,16 +44,20 @@ function SocketTest() {
   });
 
   function handlesocketopen() {
+    console.log("socket open request");
     socket.open();
   }
   function handlesocketclose() {
+    console.log("socket close request");
     socket.close();
   }
 
   function openRoom() {
+    console.log("socket open room request");
     socket.emit("enter_room", { room_id: "1234" });
   }
   function sendMessage() {
+    console.log("socket send msg request");
     socket.emit("audio", { audio: "1234" });
   }
   return (
