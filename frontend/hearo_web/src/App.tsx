@@ -22,8 +22,9 @@ function App() {
   const user = useAppSelector((state) => state.user);
   const [loginModal, setLoginModal] = useState<boolean>(false);
   const [openProfileModal, setOpenProfileModal] = useState<boolean>(false);
+  const onChangeTitle = useState();
 
-  return (
+  return (  
     <div className="App">
       <Navbar
         setLoginModal={setLoginModal}
@@ -35,6 +36,7 @@ function App() {
         <Route path="/socket" element={<SocketTest />} />
         <Route path="/recordtest" element={<STTTest />} />
         <Route path="/comm" element={<ConversationPage />} />
+         {/* //FIXME: props 해결해주세요 */}
         <Route path="/records" element={<TotalRecordsPage />} />
         <Route path="/records/:id" element={<RecordPage />} />
         <Route path="/mypage" element={<MyPage />} />
