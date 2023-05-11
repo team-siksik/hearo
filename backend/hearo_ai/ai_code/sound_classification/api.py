@@ -24,8 +24,10 @@ def query(audio_data: bytes) -> Dict:
     return response.json()
 
 def query_with_memory(audio_data: bytes):
+    logger.info("api 요청")
     output = query(audio_data)
     for result in output:
         if result['label'] in ko_dict:
+            logger.info(f"결과 = {result}")
             return ko_dict[result['label']]
     return None
