@@ -5,10 +5,10 @@ import com.ssafy.hearo.domain.conversation.dto.ConversationRequestDto.*;
 import com.ssafy.hearo.domain.conversation.dto.ConversationResponseDto.*;
 import com.ssafy.hearo.domain.conversation.entity.Keyword;
 import com.ssafy.hearo.domain.conversation.entity.KeywordSentence;
-import com.ssafy.hearo.domain.conversation.entity.Room;
+import com.ssafy.hearo.domain.conversation.entity.Conversation;
 import com.ssafy.hearo.domain.conversation.repository.KeywordRepository;
 import com.ssafy.hearo.domain.conversation.repository.KeywordSentenceRepository;
-import com.ssafy.hearo.domain.conversation.repository.RoomRepository;
+import com.ssafy.hearo.domain.conversation.repository.ConversationRepository;
 import com.ssafy.hearo.domain.conversation.service.ConversationService;
 import com.ssafy.hearo.global.error.code.CommonErrorCode;
 import com.ssafy.hearo.global.error.code.ConversationErrorCode;
@@ -22,7 +22,6 @@ import javax.transaction.Transactional;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -33,7 +32,7 @@ public class ConversationServiceImpl implements ConversationService {
     private final DateUtil dateUtil;
     private final KeywordRepository keywordRepository;
     private final KeywordSentenceRepository keywordSentenceRepository;
-    private final RoomRepository roomRepository;
+    private final ConversationRepository conversationRepository;
 
     @Override
     public void createSituation(CreateSituationRequestDto requestDto) {
@@ -96,19 +95,19 @@ public class ConversationServiceImpl implements ConversationService {
     @Override
     public RoomResponseDto startConversation(Account account) {
         log.info("[startConversation] 대화 시작 시작");
-        List<Room> userRoomList = roomRepository.findByAccountAndEndDtmIsNull(account);
-        if (userRoomList.size() > 0) {
+        List<Conversation> userConversationList = conversationRepository.findByAccountAndEndDtmIsNull(account);
+        if (userConversationList.size() > 0) {
             throw new ErrorException(ConversationErrorCode.ROOM_EXIST);
         }
         log.info("[startConversation] 진행 중 대화 존재 여부 검증 완료");
-        Room room = Room.builder()
+        Conversation conversation = Conversation.builder()
                 .account(account)
                 .build();
-        roomRepository.save(room);
+        conversationRepository.save(conversation);
 
         RoomResponseDto result = RoomResponseDto.builder()
-                .roomSeq(room.getRoomSeq())
-                .regDtm(dateUtil.timestampToString(room.getRegDtm()))
+                .roomSeq(conversation.getConversationSeq())
+                .regDtm(dateUtil.timestampToString(conversation.getRegDtm()))
                 .build();
         log.info("[startConversation] 대화 시작 완료");
         return result;
@@ -117,17 +116,17 @@ public class ConversationServiceImpl implements ConversationService {
     @Override
     public RoomResponseDto endConversation(Account account, long roomSeq) {
         log.info("[endConversation] 대화 종료 시작");
-        roomRepository.findByAccountAndRoomSeq(account, roomSeq)
+        conversationRepository.findByAccountAndConversationSeq(account, roomSeq)
                 .orElseThrow(() -> new ErrorException(ConversationErrorCode.ROOM_NOT_VALID));
-        Room room = roomRepository.findByAccountAndRoomSeqAndEndDtmIsNull(account, roomSeq)
+        Conversation conversation = conversationRepository.findByAccountAndConversationSeqAndEndDtmIsNull(account, roomSeq)
                 .orElseThrow(() -> new ErrorException(ConversationErrorCode.ROOM_NOT_EXIST));
         log.info("[endConversation] 종료할 대화 존재 여부 검증 완료");
-        room.end(new Timestamp(System.currentTimeMillis()));
+        conversation.end(new Timestamp(System.currentTimeMillis()));
 
         RoomResponseDto result = RoomResponseDto.builder()
-                .roomSeq(room.getRoomSeq())
-                .regDtm(dateUtil.timestampToString(room.getRegDtm()))
-                .endDtm(dateUtil.timestampToString(room.getEndDtm()))
+                .roomSeq(conversation.getConversationSeq())
+                .regDtm(dateUtil.timestampToString(conversation.getRegDtm()))
+                .endDtm(dateUtil.timestampToString(conversation.getEndDtm()))
                 .build();
         log.info("[endConversation] 대화 종료 완료");
         return result;
