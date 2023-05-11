@@ -8,26 +8,39 @@ import {
   MeetingSidebar,
   FloatingButton,
 } from "@/components";
-import MicrophoneAccess from "@/apis/STT";
 import STT from "@/apis/STT";
 
 // TODO: 좌측 기능, 우측 버튼, 챗봇버튼(?)
 
 function ConversationPage() {
+  // open modal
   const [openInfoModal, setOpenInfoModal] = useState<boolean>(false);
   const [openExitModal, setOpenExitModal] = useState<boolean>(false);
 
-  const [newMessage, setNewMessage] = useState<string>("");
+  // recording
   const [isRecording, setIsRecording] = useState<boolean>(false);
 
-  function finishMeeting() {
+  // tts
+  const [newMessage, setNewMessage] = useState<string>("");
+
+  const stopRecording = () => {
+    // if (dictate !== undefined) dictate.stopListening();
     setIsRecording(false);
-    console.log(isRecording);
+  };
+
+  // useEffect(() => {
+  //   return () => {
+  //     stopRecording();
+  //   };
+  // }, [dictate]);
+
+  function finishMeeting() {
+    stopRecording();
+    setOpenExitModal(true);
   }
 
   useEffect(() => {
-    console.log(isRecording);
-    setIsRecording(true);
+    setIsRecording(true); // 시작하자마자 recording 시작함
   }, []);
 
   return (
@@ -44,7 +57,6 @@ function ConversationPage() {
           setOpenExitModal={setOpenExitModal}
         />
       ) : null}
-      {/* <STT isRecording={isRecording} setIsRecording={setIsRecording} /> */}
       <MeetingSidebar />
       <div className="fixed right-0 w-[82%]">
         <ConversationHeader
@@ -53,7 +65,12 @@ function ConversationPage() {
           openExitModal={openExitModal}
           setOpenExitModal={setOpenExitModal}
         />
-        <ConversationBody message={newMessage} />
+        <ConversationBody
+          message={newMessage}
+          isRecording={isRecording}
+          setIsRecording={setIsRecording}
+        />
+        <STT />
         <FloatingButton onClick={finishMeeting} />
         <ConversationFooter setNewMessage={setNewMessage} />
       </div>

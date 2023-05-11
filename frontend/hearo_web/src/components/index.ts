@@ -20,6 +20,7 @@ import DropDown from "./common/ui/Dropdown";
 import TutorialBalloon from "./common/ui/TutorialBalloon";
 import BackgroundHider from "./common/ui/BackgroundHider";
 import LoginModal from "./MainPage/LoginModal";
+import AddFavModal from "./Conversation/MeetingBody/AddFavModal";
 
 export {
   ConversationInfo,
@@ -44,4 +45,5 @@ export {
   TutorialBalloon,
   BackgroundHider,
   LoginModal,
+  AddFavModal,
 };
