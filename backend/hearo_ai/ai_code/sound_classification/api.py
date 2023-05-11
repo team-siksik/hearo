@@ -1,6 +1,7 @@
 import requests
 import keys
 from typing import Dict
+from main import logger
 
 API_TOKEN = keys.huggingface_api_key
 API_URL = "https://api-inference.huggingface.co/models/speechbrain/urbansound8k_ecapa"
