@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -65,5 +66,18 @@ public class ConversationController {
         log.info("[endConversation] result: {}", result);
         return ResponseEntity.ok()
                 .body(responseService.getSingleResult(result));
+    }
+
+    @PostMapping("/room/{conversationSeq}/save")
+    public ResponseEntity<Result> saveConversation(@LoginUser Account account, @PathVariable long conversationSeq, @RequestParam("audio") MultipartFile audio) {
+        log.info("[saveConversation] 대화 저장 API 호출");
+        log.info("[saveConversation] audio: {}", String.valueOf(audio));
+
+        log.info("[saveConversation] s3에 음성 데이터 업로드 - 아이디/대화번호/인풋");
+        log.info("[saveConversation] 클로바 스피치 API");
+        log.info("[saveConversation] s3에 결과 데이터 업로드 - 아이디/대화번호/아웃풋");
+
+        return ResponseEntity.ok()
+                .body(responseService.getSuccessResult());
     }
 }
