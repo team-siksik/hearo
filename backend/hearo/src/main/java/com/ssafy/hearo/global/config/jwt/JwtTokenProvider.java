@@ -11,7 +11,7 @@ import java.util.Date;
 @Component
 public class JwtTokenProvider {
     private final String secretKey = "mySecretKey"; // JWT 비밀 키
-    private final long tokenValidTime = 1000L * 60 * 60 * 6; // JWT 토큰 유효 시간 6시간
+    private final long tokenValidTime = 1000L * 60 * 60 * 36; // JWT 토큰 유효 시간 36시간
     private final long refreshTokenValidTime = 1000L * 60 * 60 * 24 * 7; // JWT 갱신 토큰 유효 시간 1주일
 
     // JWT 토큰 생성

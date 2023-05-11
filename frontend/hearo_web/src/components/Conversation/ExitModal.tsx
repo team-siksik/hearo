@@ -10,7 +10,7 @@ interface PropsType {
 function ExitModal({ stream, setOpenExitModal }: PropsType) {
   const navigate = useNavigate();
   function handleExitClick() {
-    setOpenExitModal((prev) => !prev);
+    setOpenExitModal(false);
   }
 
   // function stopStream() {
@@ -26,7 +26,7 @@ function ExitModal({ stream, setOpenExitModal }: PropsType) {
     navigate("/");
   }
   return (
-    <Modal open={true} cannotExit={false}>
+    <Modal open={true} cannotExit={false} setOpenExitModal={setOpenExitModal}>
       <div>
         <h1 className="m-2 text-xl font-bold">대화 종료</h1>
         <p className="m-2">
