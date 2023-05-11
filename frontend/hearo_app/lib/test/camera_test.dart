@@ -1,9 +1,9 @@
+import 'dart:async';
 import 'dart:convert';
-import 'dart:typed_data';
+import 'dart:isolate';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:hearo_app/skills/socket_overall.dart';
-import 'dart:io';
 
 /// CameraTest is the Main Application.
 class CameraTest extends StatefulWidget {
@@ -16,41 +16,10 @@ class CameraTest extends StatefulWidget {
 
 class _CameraTestState extends State<CameraTest> {
   final SocketOverall videoSocket = SocketOverall();
-
   late List<CameraDescription> cameras;
   late CameraController cameraController;
   bool isRecording = false;
-
-  void startCameraRecording() async {
-    // 영상 녹화 시작
-    await cameraController.startVideoRecording();
-
-    // 녹화가 시작되었으므로 isRecording 값을 true로 설정합니다.
-    setState(() {
-      isRecording = true;
-    });
-
-    // 카메라 프레임을 받아서 자동으로 캡쳐하는 로직을 추가합니다.
-    cameraController.startImageStream((CameraImage image) async {
-      // 촬영된 영상을 자동으로 캡쳐하기 위해 takePicture() 메서드를 사용합니다.
-      XFile picture = await cameraController.takePicture();
-
-      // do something with the captured picture
-    });
-  }
-
-  void stopCameraRecording() async {
-    // 영상 녹화 중지
-    await cameraController.stopVideoRecording();
-
-    // 녹화가 중지되었으므로 isRecording 값을 false로 설정합니다.
-    setState(() {
-      isRecording = false;
-    });
-
-    // 카메라 프레임을 더 이상 받지 않도록 설정합니다.
-    cameraController.stopImageStream();
-  }
+  late ReceivePort _receivePort;
 
   @override
   void initState() {
@@ -60,7 +29,15 @@ class _CameraTestState extends State<CameraTest> {
     super.initState();
   }
 
-  void startCamera() async {
+  @override
+  void dispose() {
+    cameraController.dispose();
+    videoSocket.closeRoom("1111");
+    videoSocket.disconnect();
+    super.dispose();
+  }
+
+  Future<void> startCamera() async {
     cameras = await availableCameras();
     late CameraDescription frontCamera;
     for (final camera in cameras) {
@@ -83,22 +60,47 @@ class _CameraTestState extends State<CameraTest> {
     });
   }
 
-  Uint8List _readVideoAsBytes(String filePath) {
-    final File file = File(filePath);
-    return file.readAsBytesSync();
+  void startCameraRecording() async {
+    // 영상 녹화 시작
+    await cameraController.startVideoRecording();
+
+    // 녹화가 시작되었으므로 isRecording 값을 true로 설정합니다.
+    setState(() {
+      isRecording = true;
+    });
+
+    // 카메라 이미지 캡처를 시작합니다.
+    _receivePort = ReceivePort();
+    await Isolate.spawn(
+        _startCapturingFrames, CameraIsolate(cameraController, videoSocket),
+        onExit: _receivePort.sendPort);
+
+    // 이미지 캡처 isolate로부터 메시지를 받아 처리합니다.
+    _receivePort.listen((message) {
+      if (message is String) {
+        print("Received message: $message");
+      }
+    });
   }
 
-  String _convertVideoToBase64(String filePath) {
-    final bytes = _readVideoAsBytes(filePath);
-    return base64Encode(bytes);
+  void _startCapturingFrames(CameraIsolate isolate) async {
+    while (isRecording) {
+      try {
+        final image = await cameraController.takePicture();
+        final base64Image = base64Encode(await image.readAsBytes());
+        videoSocket.sendVideo("1111", base64Image);
+      } catch (e) {
+        print("Error capturing frame: $e");
+      }
+      await Future.delayed(Duration(milliseconds: 33));
+    }
   }
 
-  @override
-  void dispose() {
-    cameraController.dispose();
-    videoSocket.closeRoom("1111");
-    videoSocket.disconnect();
-    super.dispose();
+  void stopCameraRecording() async {
+    await cameraController.stopVideoRecording();
+    setState(() {
+      isRecording = false;
+    });
   }
 
   @override
@@ -123,5 +125,38 @@ class _CameraTestState extends State<CameraTest> {
       );
     }
     return const SizedBox();
+  }
+}
+
+class CameraIsolate {
+  static const int _TIMER_DELAY = 33; // 30 fps
+  final CameraController cameraController;
+  final SocketOverall videoSocket;
+
+  CameraIsolate(this.cameraController, this.videoSocket);
+
+  void startCapturingFrames() async {
+    while (true) {
+      // 33ms(30fps) 대기합니다.
+      await Future.delayed(Duration(milliseconds: _TIMER_DELAY));
+
+      // 촬영 중이 아니면 반복을 중지합니다.
+      if (!cameraController.value.isRecordingVideo) {
+        break;
+      }
+
+      try {
+        // 이미지 캡처를 시작합니다.
+        XFile file = await cameraController.takePicture();
+
+        // 파일을 읽어서 base64로 인코딩합니다.
+        String base64Image = base64Encode(await file.readAsBytes());
+
+        // 소켓으로 이미지를 전송합니다.
+        videoSocket.sendVideo("1111", base64Image);
+      } catch (e) {
+        print("Error capturing frame: $e");
+      }
+    }
   }
 }

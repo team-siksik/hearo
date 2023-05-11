@@ -4,7 +4,7 @@ import 'package:hearo_app/controller/login_controller.dart';
 import 'package:hearo_app/screens/chats/chat_home.dart';
 import 'package:hearo_app/screens/mysettings/favorite_say.dart';
 import 'package:hearo_app/test/camera_test.dart';
-import 'package:hearo_app/test/screen2.dart';
+import 'package:hearo_app/test/blt_test.dart';
 import 'package:hearo_app/widgets/common/custom_app_bar.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -121,7 +121,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     InkWell(
                       onTap: () {
-                        Get.to(() => Screen2());
+                        Get.to(() => BtlTest());
                       },
                       child: naviButton(size, 1),
                     ),
