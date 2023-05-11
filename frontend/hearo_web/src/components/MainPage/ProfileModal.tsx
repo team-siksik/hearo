@@ -4,7 +4,7 @@ import { GOOGLE_AUTH_URL } from "@/apis/oAuthGoogle";
 import google_logo from "@/assets/Google_Logo.svg";
 import Button from "../common/ui/Button";
 import { useNavigate } from "react-router-dom";
-import { useAppDispatch } from "@/redux/hooks";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { googleLogout, userActions } from "@/redux/modules/user";
 
 interface PropsType {
@@ -13,6 +13,7 @@ interface PropsType {
 
 
 function profileModal({ setOpenProfileModal }: PropsType) {
+  const user = useAppSelector((state) => state.user.user);
   const navigate = useNavigate();
   const gocommbutton = () => {
     setOpenProfileModal(false);
@@ -38,7 +39,7 @@ function profileModal({ setOpenProfileModal }: PropsType) {
 
   return (
     <Modal type="profileModal" open={true} cannotExit={false} setOpenProfileModal={setOpenProfileModal}>
-      <div className="text-2xl font-bold text-start pl-1 pb-2">김야옹님</div>
+      <div className="text-2xl font-bold text-start pl-1 pb-2">{user?.nickname}님</div>
       <div className="flex flex-col font-semibold">
         <Button onClick={gocommbutton} type="accountModalButton">회의 시작하기</Button>
         <Button onClick={gorecognizebutton} type="accountModalButton">나의 회의록</Button>
