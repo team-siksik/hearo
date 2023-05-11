@@ -19,10 +19,11 @@ import { useState } from "react";
 import STTTest from "./pages/STTTest";
 
 function App() {
-  const user = useAppSelector((state) => state.user);
+  const isLoggedIn = useAppSelector((state) => state.user.isLoggedIn);
+
   const [loginModal, setLoginModal] = useState<boolean>(false);
   const [openProfileModal, setOpenProfileModal] = useState<boolean>(false);
-  const onChangeTitle = useState();
+  // const isLoggedin = !!localStorage.getItem("accessToken");
 
   return (  
     <div className="App">
@@ -32,22 +33,26 @@ function App() {
       />
       <Routes>
         <Route path="/" element={<MainPage setLoginModal={setLoginModal} />} />
-        <Route path="/stt" element={<STT />} />
-        <Route path="/socket" element={<SocketTest />} />
-        <Route path="/recordtest" element={<STTTest />} />
-        <Route path="/comm" element={<ConversationPage />} />
-         {/* //FIXME: props 해결해주세요 */}
-        <Route path="/records" element={<TotalRecordsPage />} />
-        <Route path="/records/:id" element={<RecordPage />} />
-        <Route path="/mypage" element={<MyPage />} />
-        <Route path="/mypage/favcontents" element={<FavContentsPage />} />
-        <Route path="/mypage/settings" element={<SettingsPage />} />
-        <Route path="/login/oauth2/code/google" element={<Google />} />
-        <Route path="*" element={<NotFound404 />} />
+          {/* TODO: private router처리 해야함 */}
+          <Route>
+            <Route path="/stt" element={<STT />} />
+            <Route path="/socket" element={<SocketTest />} />
+            <Route path="/recordtest" element={<STTTest />} />
+            <Route path="/comm" element={<ConversationPage />} />
+            <Route path="/records" element={<TotalRecordsPage />} />
+             {/* //FIXME: props 해결해주세요 */}
+            {/* <Route path="/records/:id" element={<RecordPage />} /> */}
+            <Route path="/mypage" element={<MyPage />} />
+            <Route path="/mypage/favcontents" element={<FavContentsPage />} />
+            <Route path="/mypage/settings" element={<SettingsPage />} />
+            <Route path="/login/oauth2/code/google" element={<Google />} />
+            <Route path="*" element={<NotFound404 />} />
+          </Route>
       </Routes>
       {/* 로그인 창 */}
       {loginModal && <LoginModal setLoginModal={setLoginModal} />}
-      {openProfileModal && (
+      {/* 로그인 된 후 프로필모달창 */}
+      {isLoggedIn &&  openProfileModal && (
         <ProfileModal setOpenProfileModal={setOpenProfileModal} />
       )}
     </div>
