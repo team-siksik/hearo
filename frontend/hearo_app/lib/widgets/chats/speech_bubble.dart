@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:bubble/bubble.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:get/get.dart';
-import 'package:hearo_app/test/gpt_api.dart';
+import 'package:hearo_app/apis/gpt_api.dart';
 import 'package:hearo_app/apis/say_api.dart';
 import 'package:hearo_app/controller/chat_controller.dart';
 

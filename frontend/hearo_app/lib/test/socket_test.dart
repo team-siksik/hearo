@@ -1,7 +1,11 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:hearo_app/skills/socket_overall.dart';
 import 'package:path_provider/path_provider.dart';
+import 'dart:convert';
+import 'package:flutter/services.dart' show rootBundle;
 
 class SocketTest extends StatefulWidget {
   const SocketTest({super.key});
@@ -11,6 +15,22 @@ class SocketTest extends StatefulWidget {
 }
 
 class _SocketTestState extends State<SocketTest> {
+  Future<String> pngToBase64(String imageName) async {
+    ByteData imageBytes = await rootBundle.load('assets/images/$imageName.png');
+    List<int> bytes = imageBytes.buffer.asUint8List();
+    String base64Image = base64Encode(bytes);
+    print(base64Image.length);
+    print("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+    return base64Image;
+  }
+
+  Future<void> someFunction() async {
+    String imageName = 'test';
+    String img64 = await pngToBase64(imageName);
+    print("@@");
+    audioSocket.sendVideo('1111', img64);
+  }
+
   final SocketOverall audioSocket = SocketOverall();
   List messages = [];
   final FlutterSoundRecorder _audioRecorder = FlutterSoundRecorder();
@@ -99,12 +119,9 @@ class _SocketTestState extends State<SocketTest> {
                     child: Text("소켓방드가기")),
                 TextButton(
                   onPressed: () {
-                    audioSocket.onConnect((p0) {
-                      print(p0);
-                      print(audioSocket.socket.connected); // 연결 여부 확인
-                    });
+                    someFunction();
                   },
-                  child: Text("소켓확인"),
+                  child: Text("이미지전송"),
                 ),
                 TextButton(
                     onPressed: () {
