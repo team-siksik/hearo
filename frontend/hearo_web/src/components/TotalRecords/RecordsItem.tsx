@@ -3,16 +3,19 @@ import { TrashIcon } from "@heroicons/react/24/solid";
 import { NewspaperIcon } from "@heroicons/react/24/outline";
 import { useNavigate} from "react-router-dom";
 import { RemoveRecordModal } from "@/components";
+import RecordPage from "@/pages/RecordPage";
 
-interface RecordsItemProps {
+interface RecordsItemProps extends React.HTMLAttributes<HTMLElement> {
   title: string;
   date: string;
   recordId: number;
   description: string;
   onRemove: () => void;
+  onChangeTitle: (title: string) => void;
+  // onChangeTitle:  React.Dispatch<React.SetStateAction<string>>;
 }
 
-function RecordsItem({ recordId, title, date, description, onRemove }: RecordsItemProps) {
+function RecordsItem({ recordId, title, date, description, onRemove, onChangeTitle }: RecordsItemProps) {
   const [openRemoveRecordModal, setOpenRemoveRecordModal] = useState<boolean>(false);
 
   const navigate = useNavigate();
@@ -25,8 +28,9 @@ function RecordsItem({ recordId, title, date, description, onRemove }: RecordsIt
   const handleRemoveClick = () => {
     onRemove();
     setOpenRemoveRecordModal(false);
-
   }
+  
+
 
   return (
     <div className="mx-10 mt-8 p-4 rounded-2xl font-semibold text-black hover:cursor-pointer hover:bg-blue-50 transition-all duration-300 ease-out shadow-lg">
@@ -41,7 +45,7 @@ function RecordsItem({ recordId, title, date, description, onRemove }: RecordsIt
           </div>
           <div>
             <div className="font-bold mb-2 cursor-pointer">
-              {title}
+              <RecordPage title={title} onChangeTitle={onChangeTitle} />
             </div>
             <div className="my-2 text-blue-main">{description}</div>
             <div className="text-sm">{date}</div>
@@ -59,7 +63,7 @@ function RecordsItem({ recordId, title, date, description, onRemove }: RecordsIt
       {openRemoveRecordModal && (
         <RemoveRecordModal 
         setOpenRemoveRecordModal={setOpenRemoveRecordModal} 
-        handleRemoveClick={handleRemoveClick} />
+        handleRemoveClick={handleRemoveClick}/>
       )}
     </div>
   );
