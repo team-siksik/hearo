@@ -1,4 +1,4 @@
-export const workercode = () => {
+const workercode = () => {
   //  JavaScript Audio Resampler (c) 2011 - Grant Galitz
   function Resampler(
     fromSampleRate,
@@ -345,5 +345,4 @@ const blob = new Blob([code], { type: "application/javascript" });
 const worker_script = URL.createObjectURL(blob);
 
 // module.exports = worker_script;
-
-export default { worker_script };
+export default worker_script;
