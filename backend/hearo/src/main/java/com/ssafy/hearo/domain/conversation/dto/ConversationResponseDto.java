@@ -25,9 +25,9 @@ public class ConversationResponseDto {
 
     @Getter
     @Builder
-    public static class RoomResponseDto {
+    public static class ConversationInfoResponseDto {
 
-        private long roomSeq;
+        private long conversationSeq;
         private String regDtm;
         private String endDtm;
 
