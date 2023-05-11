@@ -1,8 +1,11 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { SetStateAction, useEffect, useRef, useState } from "react";
 import Dialog from "../common/ui/Dialog";
 import GPTRecommend from "./GPTRecommend";
 import { TTS, STT } from "@/apis";
 import FloatingButton from "../common/ui/FloatingButton";
+import FavContents from "./FavContents";
+import AddFavModal from "./MeetingBody/AddFavModal";
+import Button from "../common/ui/Button";
 
 /**
  * socket.io 연결
@@ -11,20 +14,7 @@ import FloatingButton from "../common/ui/FloatingButton";
  * 대화 녹음
  * @returns 화자 분리되어 대화 내역 출력
  */
-const mockdata = {
-  1: {
-    speaker: "other1",
-    content: "회의를 시작하겠습니다.",
-  },
-  2: {
-    speaker: "other2",
-    content: "네, 시작하시죠",
-  },
-  3: {
-    speaker: "other3",
-    content: "이번 주 실적이 어떻게 되시나요 다들?",
-  },
-};
+
 interface MessageType {
   id: number;
   content: string;
@@ -33,50 +23,48 @@ interface MessageType {
 
 interface PropsType {
   message?: string;
+  isRecording: boolean;
+  setIsRecording: React.Dispatch<SetStateAction<boolean>>;
 }
 
-function ConversationBody({ message }: PropsType) {
+function ConversationBody({ message, isRecording, setIsRecording }: PropsType) {
+  // speaker Id
   const [id, setId] = useState<number>(0);
+  // regarding component status
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isRecording, setIsRecording] = useState<boolean>(false);
-  const [recorder, setRecorder] = useState<MediaRecorder>();
-  const [stream, setStream] = useState<MediaStream>();
-  const [conversation, setConversation] = useState<MessageType[]>([]); // 전체 대화 텍스트
-  const [openGPTModal, setOpenGPTModal] = useState<boolean>(false); // get GPT 추천
+  const [isSTTLoading, setIsSTTLoading] = useState<boolean>(false);
+  // get GPT 추천 modal
+  const [openGPTModal, setOpenGPTModal] = useState<boolean>(false);
+  // 자주 쓰는 말 modal
+  const [openAddFavModal, setOpenAddFavModal] = useState<boolean>(false);
+  // 전체 대화 텍스트
+  const [conversation, setConversation] = useState<MessageType[]>([]);
+  // Text-to-Speech를 위한 text
   const [text, setText] = useState<string>("");
-  // const [openAddFavModal, setOpenAddFavModal] = useState<boolean>(false); // 자주 쓰는 말
   const messageEndRef = useRef<HTMLDivElement>(null); // 채팅창 늘어날 수록 스크롤 맨 밑으로 이동
 
-  // 채팅창 늘어날 수록 스크롤 맨 밑으로 이동
+  // 채팅창 늘어날수록 스크롤 맨 밑으로 이동
   useEffect(() => {
     if (messageEndRef.current)
       messageEndRef.current.scrollIntoView({ behavior: "smooth" });
   }, [conversation]);
 
-  // Update the conversation state when the message prop changes
+  // user이 텍스트 input에 넣으면 화면에 추가해주고, tts로 읽어주기
   useEffect(() => {
     if (message) {
-      setId((prev) => prev + 1);
       setText(message);
       setConversation((prevConversation) => [
         ...prevConversation,
-        { id: id + 1, content: message, speaker: "user" },
+        { id: id, content: message, speaker: "user" },
       ]);
       setId((prev) => prev + 1);
-      if (id % 3 === 0) {
-        setConversation((prev) => [...prev, { id: id + 2, ...mockdata[2] }]);
-      } else if (id % 2 === 0) {
-        setConversation((prev) => [...prev, { id: id + 2, ...mockdata[3] }]);
-      } else {
-        setConversation((prev) => [...prev, { id: id + 2, ...mockdata[1] }]);
-      }
     }
-    console.log(conversation);
   }, [message]);
 
-  useEffect(() => {
-    setIsRecording(true);
-  }, []);
+  // 시작하자마자 record할 것임
+  // useEffect(() => {
+  //   setIsRecording(true);
+  // }, []);
 
   // when my dialog clicked -> Text To Speech play
   function handleDialogClick(e: React.MouseEvent<HTMLDivElement>) {
@@ -96,7 +84,8 @@ function ConversationBody({ message }: PropsType) {
         <div>isLoading</div>
       ) : (
         <section className="message-sec h-100 mb-10 overflow-y-scroll pt-10">
-          {/* <STT /> */}
+          {/* isRecording 이 true 일 때만 STT rendering */}
+          <STT />
           {conversation ? (
             <div>
               {text && <TTS text={text} setText={setText} />}
@@ -105,6 +94,7 @@ function ConversationBody({ message }: PropsType) {
                   <>
                     {item.speaker === "user" ? (
                       <Dialog
+                        setOpenAddFavModal={setOpenAddFavModal}
                         onClick={handleDialogClick}
                         key={item.id}
                         type={"user_text"}
@@ -150,7 +140,10 @@ function ConversationBody({ message }: PropsType) {
           ) : (
             <div></div>
           )}
-          {openGPTModal ? <GPTRecommend /> : null}
+          {openGPTModal && <GPTRecommend setOpenGPTModal={setOpenGPTModal} />}
+          {openAddFavModal && (
+            <AddFavModal setOpenAddFavModal={setOpenAddFavModal} />
+          )}
         </section>
       )}
     </>
