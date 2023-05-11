@@ -2,6 +2,7 @@ package com.ssafy.hearo.domain.conversation.dto;
 
 import lombok.Getter;
 
+import java.sql.Blob;
 import java.util.List;
 
 public class ConversationRequestDto {
