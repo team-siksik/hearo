@@ -40,8 +40,9 @@ public class Conversation {
     private Timestamp endDtm;
 
     @Builder
-    public Conversation(Account account) {
+    public Conversation(Account account, String conversationType) {
         this.account = account;
+        this.conversationType = conversationType;
     }
 
     public void end(Timestamp timestamp) {
