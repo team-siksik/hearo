@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
+import 'package:get/get.dart';
+import 'package:hearo_app/test/device_screen.dart';
 
-class Screen2 extends StatefulWidget {
-  const Screen2({super.key});
+class BtlTest extends StatefulWidget {
+  const BtlTest({super.key});
 
   @override
-  State<Screen2> createState() => _Screen2State();
+  State<BtlTest> createState() => _Screen2State();
 }
 
-class _Screen2State extends State<Screen2> {
+class _Screen2State extends State<BtlTest> {
   FlutterBluePlus flutterBlue = FlutterBluePlus.instance;
   List<ScanResult> scanResultList = [];
   bool _isScanning = false;
-  final String targetDeviceName = 'Galaxy Watch5 (2RAD)';
+  final String targetDeviceName = 'HC-06';
 
   @override
   initState() {
@@ -63,7 +65,7 @@ class _Screen2State extends State<Screen2> {
     }
   }
 
-  /*
+/*
    여기서부터는 장치별 출력용 함수들
   */
   /*  장치의 신호값 위젯  */
@@ -108,6 +110,9 @@ class _Screen2State extends State<Screen2> {
   void onTap(ScanResult r) {
     // 단순히 이름만 출력
     print(r.device.name);
+    Get.to(() => DeviceScreen(
+          device: r.device,
+        ));
   }
 
   /* 장치 아이템 위젯 */
@@ -121,20 +126,18 @@ class _Screen2State extends State<Screen2> {
     );
   }
 
-  /* UI */
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("블루투스"),
+        title: Text("blue"),
       ),
       body: Center(
         /* 장치 리스트 출력 */
         child: ListView.separated(
           itemCount: scanResultList.length,
           itemBuilder: (context, index) {
-            final res = scanResultList[index];
-            return listItem(res);
+            return listItem(scanResultList[index]);
           },
           separatorBuilder: (BuildContext context, int index) {
             return Divider();
