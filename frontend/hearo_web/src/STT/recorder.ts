@@ -1,5 +1,4 @@
 // import worker_script from "./recorderWorker.js";
-// const WORKER_PATH = "recorderWorker.js";
 import worker_script from "./recorderWorker.js";
 
 export class Recorder {
@@ -21,9 +20,8 @@ export class Recorder {
     this.context = source.context;
     this.node = this.context.createScriptProcessor(bufferLen, 1, 1);
     const worker: Worker = new Worker(worker_script);
-    console.log(worker);
     worker.postMessage({
-      command: "init",
+      command: "init", // 전달받은 sampleRate 데이터를 다시 변수에 넣어 초기화
       config: {
         sampleRate: this.context.sampleRate,
       },
