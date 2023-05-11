@@ -93,7 +93,7 @@ public class ConversationServiceImpl implements ConversationService {
     }
 
     @Override
-    public ConversationInfoResponseDto startConversation(Account account) {
+    public StartConversationResponseDto startConversation(Account account, StartConversationRequestDto requestDto) {
         log.info("[startConversation] 대화 시작 시작");
         List<Conversation> userConversationList = conversationRepository.findByAccountAndEndDtmIsNull(account);
         if (userConversationList.size() > 0) {
@@ -102,19 +102,21 @@ public class ConversationServiceImpl implements ConversationService {
         log.info("[startConversation] 진행 중 대화 존재 여부 검증 완료");
         Conversation conversation = Conversation.builder()
                 .account(account)
+                .conversationType(requestDto.getRoomType())
                 .build();
         conversationRepository.save(conversation);
 
-        ConversationInfoResponseDto result = ConversationInfoResponseDto.builder()
-                .conversationSeq(conversation.getConversationSeq())
+        StartConversationResponseDto result = StartConversationResponseDto.builder()
+                .roomSeq(conversation.getConversationSeq())
                 .regDtm(dateUtil.timestampToString(conversation.getRegDtm()))
+                .roomId(account.getEmail() + '-' + requestDto.getRoomType())
                 .build();
         log.info("[startConversation] 대화 시작 완료");
         return result;
     }
 
     @Override
-    public ConversationInfoResponseDto endConversation(Account account, long roomSeq) {
+    public EndConversationResponseDto endConversation(Account account, long roomSeq) {
         log.info("[endConversation] 대화 종료 시작");
         conversationRepository.findByAccountAndConversationSeq(account, roomSeq)
                 .orElseThrow(() -> new ErrorException(ConversationErrorCode.CONVERSATION_NOT_VALID));
@@ -123,8 +125,8 @@ public class ConversationServiceImpl implements ConversationService {
         log.info("[endConversation] 종료할 대화 존재 여부 검증 완료");
         conversation.end(new Timestamp(System.currentTimeMillis()));
 
-        ConversationInfoResponseDto result = ConversationInfoResponseDto.builder()
-                .conversationSeq(conversation.getConversationSeq())
+        EndConversationResponseDto result = EndConversationResponseDto.builder()
+                .roomSeq(conversation.getConversationSeq())
                 .regDtm(dateUtil.timestampToString(conversation.getRegDtm()))
                 .endDtm(dateUtil.timestampToString(conversation.getEndDtm()))
                 .build();
