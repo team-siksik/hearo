@@ -19,6 +19,7 @@ interface PropsType {
   setOpenGPTModal?: React.Dispatch<SetStateAction<boolean>>;
   setOpenAddFavModal?: React.Dispatch<SetStateAction<boolean>>;
   setOpenExitModal?: React.Dispatch<SetStateAction<boolean>>;
+  setOpenRemoveRecordModal?: React.Dispatch<SetStateAction<boolean>>; 
 }
 
 const customModalStyles: ReactModal.Styles = {
@@ -95,6 +96,7 @@ function Modal({
   setOpenGPTModal,
   setOpenAddFavModal,
   setOpenExitModal,
+  setOpenRemoveRecordModal,
 }: PropsType) {
 
   const [openModal, setOpenModal] = useState<boolean>(open);
@@ -120,6 +122,9 @@ function Modal({
     if (setOpenExitModal) {
       setOpenExitModal(false);
     }
+    if (setOpenRemoveRecordModal) {
+      setOpenRemoveRecordModal(false);
+    }
   }
   return (
     <>
@@ -144,6 +149,9 @@ function Modal({
         if (setOpenExitModal) {
           setOpenExitModal(false);
         }
+        if (setOpenRemoveRecordModal) {
+          setOpenRemoveRecordModal(false);
+        }
       }}
       shouldCloseOnOverlayClick={cannotExit ? false : true}
       ariaHideApp={false}
@@ -165,7 +173,7 @@ function Modal({
     ariaHideApp={false}
     >
     <div className="absolute right-0 top-0 flex">
-    {cannotExit ? null : (
+     {cannotExit ? null : (
           <button onClick={handleModal}>
             <CrossIconRed />
           </button>
@@ -177,6 +185,5 @@ function Modal({
     </>
   );
 }
-
 
 export default Modal;
