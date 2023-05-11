@@ -10,7 +10,7 @@ import {
 
 function RecordpageSideBar() {
   const navigate = useNavigate();
-  const isLoggedin = !!localStorage.getItem("access_token");
+  const isLoggedin = !!localStorage.getItem("accessToken");
   
   const handleConversationPageClick = () => {
     navigate('/comm')
