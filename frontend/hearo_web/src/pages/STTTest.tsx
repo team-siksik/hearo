@@ -145,6 +145,7 @@ export default function STTTest() {
       audio: true,
     });
     setMediaStream(mediaStream);
+
     // audioContext 생성 (Web Audio API 는 모든 작업을 AudioContext 내에서 처리한다.)
     const audioContext = new AudioContext({ sampleRate: 16000 });
     const input: MediaStreamAudioSourceNode =
@@ -157,10 +158,12 @@ export default function STTTest() {
       workerPath: { recorderWorkerPath },
     });
     setSubRecorder(recorder);
-    console.log("subRecorder", subRecorder);
 
-    // MediaRecorder 생성
-    const mediaRecorder = new MediaRecorder(mediaStream);
+    // MediaRecorder 생성 - 전체 녹음하는 recorder
+    const mediaRecorder = new MediaRecorder(mediaStream, {
+      audioBitsPerSecond: 16000,
+      //memiType: "audio/wav codecs=opus"
+    });
     onEvent(MSG_INIT_RECORDER, "Recorder initialized");
     setRecorder(mediaRecorder);
 
@@ -178,11 +181,18 @@ export default function STTTest() {
       // Blob 데이터에 접근할 수 있는 주소를 생성한다.
       const blobURL = window.URL.createObjectURL(blob);
       setAudio(blobURL);
+
+      setIsRecording(false);
     };
 
     // 녹음 시작
     mediaRecorder.start();
     setIsRecording(true);
+
+    //audioContext.state가 'suspended'이면 재실행함 -> 반대로 'running'일 경우, suspend()함수로 일시정지 시킬 수 있음
+    audioContext.resume().then(() => {
+      onEvent(MSG_AUDIOCONTEXT_RESUMED, "Audio context resumed");
+    });
 
     return mediaRecorder;
   }
@@ -206,10 +216,14 @@ export default function STTTest() {
 
       MeetingAPI.startMeeting(accessToken!)
         .then((result) => {
-          console.log(result);
           setRoomSeq(result.data.data.roomSeq); // roomSequence
-          createSocket();
-          record();
+          record()
+            .then((response) => {
+              createSocket();
+            })
+            .catch((error) => {
+              onError(ERR_AUDIO, "Recorder undefined");
+            });
         })
         .catch((err) => {
           onError(ERR_CLIENT, `No user media support, ${err}`);
@@ -294,10 +308,18 @@ export default function STTTest() {
       socket.close();
       setSocket(null);
     }
+    setIsRecording(false);
+    closeRoomAPI()
+      .then((result) => {
+        console.log(result);
+      })
+      .catch((err) => {
+        console.log("room close error", err);
+      });
   }
 
-  function closeRoomAPI() {
-    console.log(accessToken, roomSeq, audioBlob);
+  //room close http api request
+  async function closeRoomAPI() {
     MeetingAPI.finishMeeting(accessToken, roomSeq!, audioBlob!);
   }
 
