@@ -31,10 +31,10 @@ function MainPage({ setLoginModal }: PropsType) {
   // 로그인 여부 판단
   const isLoggedin = !!localStorage.getItem("accessToken");
 
-  // TODO : 음성재생 모달도 로그인된 상태에서만 접근 가능하도록 조치해야함
+  // TODO: 음성재생 모달도 로그인된 상태에서만 접근 가능하도록 조치해야함
   // 음성재생 함수
   const togglePlay = () => {
-    if (!isLoggedin) {
+    if (isLoggedin) {
       if (audioRef.current) {
         if (isPlaying) {
           audioRef.current.pause();
@@ -44,9 +44,12 @@ function MainPage({ setLoginModal }: PropsType) {
         }
         setIsPlaying(!isPlaying);
       }
-    } else {
+      setIsPlaying(!isPlaying);
+      // }
+      // } else {
       // TODO: 알림 주고 login 페이지로 보내기
-      navigate("/login");
+      // navigate("/login");
+      // }
     }
   };
 
@@ -81,15 +84,17 @@ function MainPage({ setLoginModal }: PropsType) {
               <div className="sticky top-0 m-4 flex h-96 flex-col items-center justify-center bg-white">
                 {isLoggedIn ? (
                   <>
-                    <div>안녕하세요, ""{user?.nickname}님!!!&nbsp;</div>
-                    <div>
-                      <div className="text-red-main">히어로</div>
+                    <div className="text-sm">
+                      안녕하세요, {user?.nickname}님!!!&nbsp;
+                    </div>
+                    <div className="flex flex-row text-sm font-medium">
+                      <div className="text-blue-main">히어로</div>
                       <div>에 오신 것을 환영해요 ^____^</div>
                     </div>
                   </>
                 ) : (
                   <>
-                    <div className=" text-sm">반가워요.</div>
+                    <div className="text-sm">반가워요.</div>
                     <div className="flex flex-row text-sm font-medium">
                       <Button onClick={() => setLoginModal(true)}>
                         <span>로그인 후&nbsp;</span>
@@ -116,11 +121,12 @@ function MainPage({ setLoginModal }: PropsType) {
               </div>
 
               {/* body */}
-              <section className="mx-4 flex flex-col gap-10 relative">
-                <motion.div className="sticky top-0 m-4 flex h-screen flex-col items-center justify-center bg-white pb-8"
-                initial={{ opacity: 0, x: "-100vw" }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 1 }}        
+              <section className="relative mx-4 flex flex-col gap-10">
+                <motion.div
+                  className="sticky top-0 m-4 flex h-screen flex-col items-center justify-center bg-white pb-8"
+                  initial={{ opacity: 0, x: "-100vw" }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 1 }}
                 >
                   <div className="grid grid-cols-2 ">
                     <div className="col1">
