@@ -5,12 +5,14 @@ import { Socket, io } from "socket.io-client";
 
 //FIXME: accessToken 연결 전 수정해야함
 const accessToken =
-  "eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJub2hoeXVuamVvbmc5M0BnbWFpbC5jb20iLCJpYXQiOjE2ODM2OTE4NTIsImV4cCI6MTY4MzcxMzQ1Mn0.DrWzRuqOQozjXDntP43aZSZp5X2SA8qMSzJIyv8P9QQ";
+  "eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJub2hoeXVuamVvbmc5M0BnbWFpbC5jb20iLCJpYXQiOjE2ODM3MjMxMDcsImV4cCI6MTY4Mzc0NDcwN30.M9_pQkZvr5lqH9tEHpUoqWgTTN0x5l7wOTZ0iFKwnPw";
 
 const socketURl = "http://ubuntu@k8a6031.p.ssafy.io:80";
-const recorderWorkerPath = "@/STT/recorder.ts";
+const recorderWorkerPath = "recorderWorker.js";
+const roomNo = 1343;
 
 // Error codes (mostly following Android error names and codes)
+const ERR_SOCKET = 1;
 const ERR_NETWORK = 2;
 const ERR_AUDIO = 3;
 const ERR_SERVER = 4;
@@ -21,9 +23,9 @@ const MSG_WAITING_MICROPHONE = 1;
 const MSG_MEDIA_STREAM_CREATED = 2;
 const MSG_INIT_RECORDER = 3;
 const MSG_RECORDING = 4;
-const MSG_SEND = 5;
+const AUDIO_SEND = 5;
 const MSG_SEND_EMPTY = 6;
-const MSG_SEND_EOS = 7;
+const MSG_SEND = 7;
 const MSG_WEB_SOCKET = 8;
 const MSG_WEB_SOCKET_OPEN = 9;
 const MSG_WEB_SOCKET_CLOSE = 10;
@@ -33,14 +35,17 @@ const MSG_AUDIOCONTEXT_RESUMED = 13;
 
 export default function STTTest() {
   const [isRecording, setIsRecording] = useState<boolean>(false);
+  const [intervalKey, setIntervalKey] = useState<any>();
   const [mediaStream, setMediaStream] = useState<MediaStream>(); //streaming되는 미디어
+
   const [audioArray, setAudioArray] = useState<Blob[]>([]);
   const [audioBlob, setAudioBlob] = useState<Blob>();
+
   const [recorder, setRecorder] = useState<MediaRecorder>(); // 녹음기
-  const [subRecorder, setSubRecorder] = useState<Recorder>();
+  const [subRecorder, setSubRecorder] = useState<Recorder>(); // worker recorder
   const [audio, setAudio] = useState<string>(); //whole audio blob url
   const [roomSeq, setRoomSeq] = useState<number>();
-  const [socket, setSocket] = useState<Socket>();
+  const [socket, setSocket] = useState<Socket | null>();
 
   function onEvent(code: any, data: any) {
     console.log(`msg: ${code} : ${data || ""}\n`);
@@ -49,19 +54,89 @@ export default function STTTest() {
     console.log(`Error: ${code} : ${data}\n`);
   }
 
-  //TODO: start meeting api 통신
-  //TODO: start meeting socket io 방 열기
-  //TODO: start record
-
   function createSocket() {
     const socket = io(socketURl, {
       reconnectionDelayMax: 10000,
-      autoConnect: false,
+      //   autoConnect: false,
       transports: ["websocket"],
       path: "/ws/socket.io",
     });
 
+    if (!socket) {
+      throw new Error("socket error!");
+    }
+
+    //TODO: server에서 보내주는 메시지 형식이나 내용에 대해서 이야기 해봐야 할 듯
+    socket.on("message", (e) => {
+      const { data } = e;
+      onEvent(MSG_WEB_SOCKET, data);
+      // socket server에서 보낸 데이터가 object일 때
+      if (data instanceof Object && !(data instanceof Blob)) {
+        onError(ERR_SERVER, "WebSocket: onEvent: got Object, not a Blob");
+      }
+      // socket server에서 보낸 데이터가 blob일 때
+      else if (data instanceof Blob) {
+        onError(ERR_SERVER, "WebSocket: got Blob");
+      }
+      // socket server에서 보낸 데이터가 string이나 나머지일 때
+      else {
+        // const response = JSON.parse(data);
+        console.log(data);
+      }
+    });
+
+    // info 라는 이벤트 메시지를 받았을 때
+    socket.on("info", (e) => {
+      console.log(e);
+      const { data } = e;
+      onEvent(MSG_WEB_SOCKET, data);
+      // socket server에서 보낸 데이터가 object일 때
+      if (data instanceof Object && !(data instanceof Blob)) {
+        onError(ERR_SERVER, "WebSocket: onEvent: got Object, not a Blob");
+      }
+      // socket server에서 보낸 데이터가 blob일 때
+      else if (data instanceof Blob) {
+        onError(ERR_SERVER, "WebSocket: got Blob");
+      }
+      // socket server에서 보낸 데이터가 string이나 나머지일 때
+      else {
+        // const response = JSON.parse(data);
+        console.log(data);
+      }
+    });
+
+    // start recording if socket is connected
+    socket.on("connect", () => {
+      socket.emit("enter_room", {
+        room_id: roomNo, //FIXME: random room key로 들어감 추후 수정
+      });
+      const intervalKey = setInterval(() => {
+        subRecorder?.exportWAV((blob: Blob) => {
+          socketSend(blob);
+          subRecorder?.clear();
+        }, "audio/wav");
+      }, 250);
+      setIntervalKey(intervalKey);
+      subRecorder?.record();
+      console.log("ready for speech");
+      onEvent(MSG_WEB_SOCKET_OPEN, "socket_open");
+    });
+
+    socket.on("disconnect", (e) => {
+      console.log("web socket closed");
+      onEvent(MSG_WEB_SOCKET_CLOSE, e);
+    });
+
+    socket.on("error", (e) => {
+      onEvent(ERR_SOCKET, e);
+    });
+
+    socket.on("connect_error", (err) => {
+      console.log(`connect_error due to ${err.message}`);
+    });
     setSocket(socket);
+
+    return socket;
   }
 
   async function record() {
@@ -70,6 +145,7 @@ export default function STTTest() {
       audio: true,
     });
     setMediaStream(mediaStream);
+
     // audioContext 생성 (Web Audio API 는 모든 작업을 AudioContext 내에서 처리한다.)
     const audioContext = new AudioContext({ sampleRate: 16000 });
     const input: MediaStreamAudioSourceNode =
@@ -77,14 +153,17 @@ export default function STTTest() {
 
     setIsRecording(true);
 
-    //TODO: 이렇게 recorder를 두개 만들어야 할까 ?
-    // socket으로 보내는 recorder
+    //TODO: socket으로 보내는 recorder
     const recorder = new Recorder(input, {
       workerPath: { recorderWorkerPath },
     });
     setSubRecorder(recorder);
-    // MediaRecorder 생성
-    const mediaRecorder = new MediaRecorder(mediaStream);
+
+    // MediaRecorder 생성 - 전체 녹음하는 recorder
+    const mediaRecorder = new MediaRecorder(mediaStream, {
+      audioBitsPerSecond: 16000,
+      //memiType: "audio/wav codecs=opus"
+    });
     onEvent(MSG_INIT_RECORDER, "Recorder initialized");
     setRecorder(mediaRecorder);
 
@@ -102,11 +181,18 @@ export default function STTTest() {
       // Blob 데이터에 접근할 수 있는 주소를 생성한다.
       const blobURL = window.URL.createObjectURL(blob);
       setAudio(blobURL);
+
+      setIsRecording(false);
     };
 
     // 녹음 시작
     mediaRecorder.start();
     setIsRecording(true);
+
+    //audioContext.state가 'suspended'이면 재실행함 -> 반대로 'running'일 경우, suspend()함수로 일시정지 시킬 수 있음
+    audioContext.resume().then(() => {
+      onEvent(MSG_AUDIOCONTEXT_RESUMED, "Audio context resumed");
+    });
 
     return mediaRecorder;
   }
@@ -117,38 +203,123 @@ export default function STTTest() {
       MSG_WAITING_MICROPHONE,
       "Waiting for approval to access your microphone ..."
     );
+    if (recorder) {
+      return;
+    }
+    if (socket) {
+      cancel();
+      return;
+    }
 
     if (!isRecording) {
       // const accessToken = localStorage.getItem("accessToken");
 
       MeetingAPI.startMeeting(accessToken!)
         .then((result) => {
-          console.log(result);
           setRoomSeq(result.data.data.roomSeq); // roomSequence
-          createSocket();
-          record();
+          record()
+            .then((response) => {
+              createSocket();
+            })
+            .catch((error) => {
+              onError(ERR_AUDIO, "Recorder undefined");
+            });
         })
         .catch((err) => {
           onError(ERR_CLIENT, `No user media support, ${err}`);
         });
     }
   }
-  function sendMessage() {
-    if (socket && audioBlob) {
-      socket.emit("send_audio", { audio: audioBlob });
+
+  function socketSend(item: any) {
+    if (socket && socket.connected) {
+      // If item is an audio blob
+      console.log(item);
+      if (item instanceof Blob) {
+        if (item.size > 0) {
+          socket.emit("audio", { audio: item });
+          onEvent(AUDIO_SEND, `Send: blob: ${item.type}, ${item.size}`);
+        } else {
+          onEvent(MSG_SEND_EMPTY, `Send: blob: ${item.type}, EMPTY`);
+        }
+        //If item is like string or sth
+      } else {
+        socket.emit("send_message_to_room", {
+          room_id: roomNo,
+          message: item,
+        });
+        onEvent(MSG_SEND, `Send tag: ${item}`);
+      }
+    } else {
+      onError(ERR_CLIENT, `No web socket connection: failed to send: ${item}`);
     }
   }
 
   // recording stop
   function stopRecord() {
-    if (recorder && isRecording) {
-      recorder.stop();
+    // Stop the regular sending of audio
+    // clearInterval(intervalKey);
+
+    // Stop recording
+    if (recorder && isRecording && subRecorder) {
+      try {
+        recorder.stop();
+      } catch {
+        console.log("recorder stop error");
+      }
+      subRecorder.stop();
+      onEvent(MSG_STOP, "Stopped recording");
+
+      // Push the remaining audio to the server
+      subRecorder.exportWAV((blob: Blob) => {
+        // socket send audio
+        socketSend(blob);
+        // socket send recording finish sign
+        socketSend("finish_audio");
+        subRecorder.clear();
+      }, "audio/wav");
+      console.log("end of meeting");
+
+      // 녹음 완전히 종료
+      if (mediaStream !== undefined) {
+        const tracks = mediaStream!.getTracks();
+        if (tracks !== undefined) {
+          tracks.forEach((track) => {
+            track.stop();
+          });
+        }
+      }
+      setIsRecording(false);
+    } else {
+      onError(ERR_AUDIO, "Recorder undefined");
     }
-    setIsRecording(false);
   }
 
-  function closeRoomAPI() {
-    console.log(accessToken, roomSeq, audioBlob);
+  function cancel() {
+    // Stop the regular sending of audio (if present)
+    //   clearInterval(intervalKey);
+    if (subRecorder) {
+      subRecorder.stop();
+      subRecorder?.clear();
+      onEvent(MSG_STOP, "Stopped recording");
+    }
+    if (socket) {
+      socket.emit("close_room", { room_id: roomNo });
+      socket.close();
+      setSocket(null);
+    }
+    setIsRecording(false);
+    closeRoomAPI()
+      .then((result) => {
+        console.log(result);
+      })
+      .catch((err) => {
+        console.log("room close error", err);
+      });
+  }
+
+  //room close http api request
+  async function closeRoomAPI() {
     MeetingAPI.finishMeeting(accessToken, roomSeq!, audioBlob!);
   }
 
@@ -168,9 +339,9 @@ export default function STTTest() {
         >
           녹음 종료
         </button>
+        <button onClick={cancel}>소켓 닫기</button>
       </div>
       <button onClick={closeRoomAPI}>방 닫기</button>
-      <button onClick={sendMessage}>socket으로 메시지 보내기</button>
       {audio && <audio src={audio} controls />}
     </div>
   );
