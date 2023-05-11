@@ -1,3 +1,4 @@
+import { Layout } from "@/components";
 import { io } from "socket.io-client";
 
 // TODO: Socket 통신 -> 소음 알림!! STT 화자 분리!!
@@ -18,6 +19,12 @@ function SocketTest() {
   socket.on("connect", () => {
     console.log("connected");
   });
+
+  // socket에 info data가 있으면 실행
+  socket.on("info", (data) => {
+    console.log(data);
+  });
+
   // socket에 데이터가 있으면 실행
   socket.on("data", (data) => {
     console.log(data);
@@ -25,10 +32,6 @@ function SocketTest() {
 
   socket.on("connect_error", (err) => {
     console.log(`connect_error due to ${err.message}`);
-  });
-
-  socket.on("info", (data) => {
-    console.log(data);
   });
 
   // socket 연결이 끊겼을 때 실행
@@ -40,18 +43,45 @@ function SocketTest() {
   function handlesocketopen() {
     socket.open();
   }
+  function handlesocketclose() {
+    socket.close();
+  }
+
   function openRoom() {
     socket.emit("enter_room", { room_id: "1234" });
   }
   function sendMessage() {
-    socket.send({ message: "hello socket" });
+    socket.emit("audio", { audio: "1234" });
   }
   return (
-    <div>
-      <button onClick={handlesocketopen}>소켓 연결</button>
-      <button onClick={openRoom}>방 파기</button>
-      <button onClick={sendMessage}>메시지 보내기</button>
-    </div>
+    <Layout>
+      <div className="m-40 flex flex-row gap-4">
+        <button
+          className="border-spacing-3 border border-blue-main"
+          onClick={handlesocketopen}
+        >
+          소켓 연결
+        </button>
+        <button
+          className="border-spacing-3 border border-blue-main"
+          onClick={handlesocketclose}
+        >
+          소켓 연결 끊기
+        </button>
+        <button
+          className="border-spacing-3 border border-blue-main"
+          onClick={openRoom}
+        >
+          방 파기
+        </button>
+        <button
+          className="border-spacing-3 border border-blue-main"
+          onClick={sendMessage}
+        >
+          메시지 보내기
+        </button>
+      </div>
+    </Layout>
   );
 }
 
