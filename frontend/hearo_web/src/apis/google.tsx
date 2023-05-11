@@ -7,7 +7,7 @@ function Google() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const parsedHash = new URLSearchParams(window.location.hash.substring(1));
-  const accessToken = parsedHash.get("accessToken");
+  const accessToken = parsedHash.get("access_token");
   if (accessToken) {
     const login = async () => {
       try {
