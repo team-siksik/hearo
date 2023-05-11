@@ -23,7 +23,7 @@ async def generate_sentence(text):
     prompt = f'''
     다음 텍스트에 적절한 대답을 5개 생성해서 형식에 맞게 돌려줘.
     텍스트: {text}
-    형식: 1.답변/2.답변/3.답변/4.답변/5.답변
+    형식: 1.답변\n2.답변\n3.답변\n4.답변\n5.답변
     '''
 
     # GPT engine : "text-davinci-002"
@@ -49,7 +49,7 @@ async def generate_sentence(text):
     # )
     # result = response.choices[0].message['content'].strip()
 
-    result = list(result.split('/'))
+    result = list(result.split('\n'))
     logger.debug(result)
     result = [string[2:] for string in result]
 
