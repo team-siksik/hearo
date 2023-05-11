@@ -6,7 +6,7 @@ import {
 } from "@heroicons/react/24/solid";
 import { useNavigate } from "react-router-dom";
 import { ReactComponent as FormatSizeIcon } from "../assets/Format_size.svg";
-import { DropDown } from "@/components";
+import { DropDown, MypageSideBar } from "@/components";
 
 function SettingsPage() {
   const mypagebarBackground = "z-10 bg-white drop-shadow";
@@ -49,16 +49,20 @@ function SettingsPage() {
 
   return (
     <div>
+    <div className="fixed right-0 w-[82%]">
+      <MypageSideBar/>
       <div
-        className={`${mypagebarBackground} flex h-full w-full flex-row p-2.5`}
+        className={`${mypagebarBackground} flex h-full w-full flex-row p-2.5 items-stretch justify-between`}
       >
-        <div>
-          <ArrowLeftIcon className="h-8 w-8" onClick={backClick} />
+        <div onClick={backClick} className="self-center h-8 w-8 hover:cursor-pointer" >
+          <ArrowLeftIcon/>
         </div>
-        <div className="pl-[30%] text-3xl font-bold ">환경설정</div>
+        <div className="pr-10 text-3xl font-bold">환경설정</div>
+      <div>
+      </div>
       </div>
 
-      <div className="m-4 flex flex-row justify-start pt-4 text-center">
+      <div className="m-4 flex flex-row justify-center pt-4 text-center">
         <FormatSizeIcon className="h-8 w-8" />
         <div className="pl-4 text-2xl font-bold">글자 크기 설정</div>
       </div>
@@ -150,6 +154,7 @@ function SettingsPage() {
         <div className="z-0 mt-3.5 h-0.5 w-full bg-red-main" />
       </div>
     </div>
+  </div>
   );
 }
 
