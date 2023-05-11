@@ -62,7 +62,7 @@ function Mypage() {
   return (
     <div>
       <MypageSideBar/>
-      <div className="absolute mt-20 right-0 w-[82%]">
+      <div className="absolute mt-16 right-0 w-[82%]">
         <div className="m-4 flex flex-col justify-center pt-4 text-center">
           <div className="pt-1 text-3xl font-bold">김야옹 님</div>
           <div className="text-1.5xl pt-1 font-light">cutekitty@gmail.com</div>
