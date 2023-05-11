@@ -66,6 +66,12 @@ class SocketOverall {
     print("오디오보냄");
   }
 
+  void getAudio() {
+    socket.on("audio", (data) {
+      print(data);
+    });
+  }
+
   void sendVideo(String roomId, String img64) {
     socket.emit('image', {'room_id': roomId, 'base64_string': img64});
     print(img64);
