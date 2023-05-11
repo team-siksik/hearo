@@ -7,6 +7,7 @@ interface PropsType {
   onClick?: () => void | React.Dispatch<SetStateAction<boolean>>;
 }
 
+
 function Button({ type, children, onClick }: PropsType) {
   return (
     <>
@@ -38,20 +39,51 @@ function Button({ type, children, onClick }: PropsType) {
             {children}
           </span>
         </button>
-      ) : type === "whiteButton" ? (
+      ) : type === "backButton" ? (
         <button
-          className="h-10 rounded-xl bg-white shadow-md shadow-slate-200 "
+          className="group relative w-full overflow-hidden rounded-xl border bg-white text-blue-main border-blue-main px-4 py-2 shadow-md hover:bg-blue-50 transition-all duration-[250ms] ease-out"
           onClick={onClick}
-          // css={css`
-          //   width: 90vw;
-          // `}
+        >
+          <div className="absolute inset-0 w-3  "></div>
+          <span className="relative">
+            {children}
+          </span>
+        </button>
+      ) : type === "accountButton" ? (
+        <button
+        className="mr-2 z-100 h-10 rounded-xl bg-white shadow-md shadow-slate-200"
+        onClick={onClick}
         >
           {children}
-        </button>
-      ) : (
-        <button onClick={onClick}>{children}</button>
-      )}
-    </>
+        </button> 
+      ) : type === "accountModalButton" ? (
+        <button
+        className="group w-full transform overflow-hidden rounded-xl bg-white my-2 px-2 py-2"
+        onClick={onClick}
+      >
+        <div className="absolute inset-0 w-0 bg-blue-200 transition-all duration-[250ms] ease-out opacity-80 group-hover:w-full"></div>
+        <span className="relative text-black">
+          <div className="text-start"> 
+          {children}
+          </div>
+        </span>
+      </button>
+      ) : type === "deleteButton" ? (
+        <button
+        className="group relative w-full overflow-hidden rounded-xl border text-white border-red-main px-4 py-2 
+        shadow-md bg-red-500 hover:bg-red-main transition-all duration-[250ms] ease-out"
+        onClick={onClick}
+      >
+        <div className="absolute inset-0 w-3  "></div>
+        <span className="relative">
+          {children}
+        </span>
+      </button>
+      ) :
+      <button onClick={onClick}>
+        {children}</button>
+      } 
+      </>
   );
 }
 
