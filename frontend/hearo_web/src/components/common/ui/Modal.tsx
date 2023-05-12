@@ -19,7 +19,8 @@ interface PropsType {
   setOpenGPTModal?: React.Dispatch<SetStateAction<boolean>>;
   setOpenAddFavModal?: React.Dispatch<SetStateAction<boolean>>;
   setOpenExitModal?: React.Dispatch<SetStateAction<boolean>>;
-  setOpenRemoveRecordModal?: React.Dispatch<SetStateAction<boolean>>; 
+  setOpenRemoveRecordModal?: React.Dispatch<SetStateAction<boolean>>;
+  setShowModal?: React.Dispatch<SetStateAction<boolean>>;
 }
 
 const customModalStyles: ReactModal.Styles = {
@@ -81,9 +82,8 @@ const profileModalStyles: ReactModal.Styles = {
     backgroundColor: "white",
     overflow: "auto",
     transition: "opacity 1.0s ease-in-out",
-    },
+  },
 };
-
 
 function Modal({
   open,
@@ -97,91 +97,99 @@ function Modal({
   setOpenAddFavModal,
   setOpenExitModal,
   setOpenRemoveRecordModal,
+  setShowModal,
 }: PropsType) {
-
   const [openModal, setOpenModal] = useState<boolean>(open);
-  
+
   // x버튼이나, 나가기 혹은 취소 버튼을 누르면 modal을 닫게 하기 위한 함수입니다.
   function handleModal() {
-    setOpenModal(!openModal);
+    setOpenModal((prev) => !prev);
+    if (setShowModal) {
+      setShowModal((prev) => !prev);
+    }
     if (setLoginModal) {
-      setLoginModal(false);
+      setLoginModal((prev) => !prev);
     }
     if (setOpenInfoModal) {
-      setOpenInfoModal(false);
+      setOpenInfoModal((prev) => !prev);
     }
     if (setOpenProfileModal) {
-      setOpenProfileModal(false);
-    } 
+      setOpenProfileModal((prev) => !prev);
+    }
     if (setOpenGPTModal) {
-      setOpenGPTModal(false);
+      setOpenGPTModal((prev) => !prev);
     }
     if (setOpenAddFavModal) {
-      setOpenAddFavModal(false);
+      setOpenAddFavModal((prev) => !prev);
     }
     if (setOpenExitModal) {
-      setOpenExitModal(false);
+      setOpenExitModal((prev) => !prev);
     }
     if (setOpenRemoveRecordModal) {
-      setOpenRemoveRecordModal(false);
+      setOpenRemoveRecordModal((prev) => !prev);
     }
   }
   return (
     <>
-    {type === "profileModal" ? (
-      <ReactModal
-      isOpen={openModal}
-      style={profileModalStyles}
-      onRequestClose={() => {
-        setOpenModal(false);
-        if (setOpenProfileModal) {
-          setOpenProfileModal(false);
-        }
-        if (setOpenInfoModal) {
-          setOpenInfoModal(false);
-        }
-        if (setOpenGPTModal) {
-          setOpenGPTModal(false);
-        }
-        if (setOpenAddFavModal) {
-          setOpenAddFavModal(false);
-        }
-        if (setOpenExitModal) {
-          setOpenExitModal(false);
-        }
-        if (setOpenRemoveRecordModal) {
-          setOpenRemoveRecordModal(false);
-        }
-      }}
-      shouldCloseOnOverlayClick={cannotExit ? false : true}
-      ariaHideApp={false}
-      >
-      <div className="absolute right-2 top-1 flex">
-        {cannotExit ? null : (
-          <button onClick={handleModal}>
-          </button>
-        )}
-      </div>
-      {children}        
-      </ReactModal>
-    ) : 
-    <ReactModal
-    isOpen={openModal}
-    style={customModalStyles} // 개별 스타일링을 줄 수 있습니다.
-    onRequestClose={() => setOpenModal(false)}
-    shouldCloseOnOverlayClick={cannotExit ? false : true}
-    ariaHideApp={false}
-    >
-    <div className="absolute right-0 top-0 flex">
-     {cannotExit ? null : (
-          <button onClick={handleModal}>
-            <CrossIconRed />
-          </button>
-        )}
-    </div>
-    {children}
-    </ReactModal>
-    }
+      {type === "profileModal" ? (
+        <ReactModal
+          isOpen={openModal}
+          style={profileModalStyles}
+          onRequestClose={() => {
+            setOpenModal((prev) => !prev);
+            if (setOpenProfileModal) {
+              setOpenProfileModal((prev) => !prev);
+            }
+          }}
+          shouldCloseOnOverlayClick={cannotExit ? false : true}
+          ariaHideApp={false}
+        >
+          <div className="absolute right-2 top-1 flex">
+            {cannotExit ? null : <button onClick={handleModal}></button>}
+          </div>
+          {children}
+        </ReactModal>
+      ) : (
+        <ReactModal
+          isOpen={openModal}
+          style={customModalStyles} // 개별 스타일링을 줄 수 있습니다.
+          onRequestClose={() => {
+            setOpenModal((prev) => !prev);
+            if (setLoginModal) {
+              setLoginModal(false);
+            }
+            if (setOpenInfoModal) {
+              setOpenInfoModal((prev) => !prev);
+            }
+            if (setOpenGPTModal) {
+              setOpenGPTModal((prev) => !prev);
+            }
+            if (setOpenAddFavModal) {
+              setOpenAddFavModal((prev) => !prev);
+            }
+            if (setOpenExitModal) {
+              setOpenExitModal((prev) => !prev);
+            }
+            if (setOpenRemoveRecordModal) {
+              setOpenRemoveRecordModal((prev) => !prev);
+            }
+            if (setShowModal) {
+              setShowModal((prev) => !prev);
+            }
+          }}
+          shouldCloseOnOverlayClick={cannotExit ? false : true}
+          ariaHideApp={false}
+        >
+          <div className="absolute right-0 top-0 flex">
+            {cannotExit ? null : (
+              <button onClick={handleModal}>
+                <CrossIconRed />
+              </button>
+            )}
+          </div>
+          {children}
+        </ReactModal>
+      )}
     </>
   );
 }
