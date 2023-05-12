@@ -15,6 +15,11 @@ audio_data_queues = {}
 
 @socket_manager.on("classification")
 async def audio_stream(sid, data):
+
+    audio_data = data["audio"]
+    await socket_manager.emit("info", f"audio: {sid} sent audio '{audio_data}'")
+
+
     base64_audio = data["audio"]
 
     # Base64 형식의 오디오 데이터를 디코딩
