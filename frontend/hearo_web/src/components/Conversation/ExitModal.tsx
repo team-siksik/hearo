@@ -1,28 +1,22 @@
 import React, { SetStateAction } from "react";
 import { Button, Modal } from "@/components";
 import { useNavigate } from "react-router-dom";
+import { MeetingAPI } from "@/apis/api";
 
 interface PropsType {
-  stream?: MediaStream;
   setOpenExitModal: React.Dispatch<SetStateAction<boolean>>;
+  stopRecord: () => void;
 }
 
-function ExitModal({ stream, setOpenExitModal }: PropsType) {
+function ExitModal({ setOpenExitModal, stopRecord }: PropsType) {
   const navigate = useNavigate();
   function handleExitClick() {
     setOpenExitModal(false);
   }
 
-  // function stopStream() {
-  //   stream.getTracks().forEach((track) => track.stop());
-
-  //   // setPlaying(false);
-  // }
-
   function handleSaveClick() {
     //TODO: 저장 요청도 같이 보내야함
-    console.log("저장 후 종료!!");
-    // stopStream();
+    MeetingAPI;
     navigate("/");
   }
   return (
@@ -37,17 +31,12 @@ function ExitModal({ stream, setOpenExitModal }: PropsType) {
       </div>
       <div className="grid w-full grid-flow-col grid-cols-2 justify-center gap-2 px-4 ">
         <div className="flex w-full">
-          <Button onClick={handleExitClick} 
-          type="backButton"
-          >
+          <Button onClick={handleExitClick} type="backButton">
             취소
           </Button>
         </div>
         <div className="flex w-full">
-          <Button 
-          onClick={handleSaveClick}
-          type="deleteButton"
-          >
+          <Button onClick={stopRecord} type="deleteButton">
             저장 후 종료
           </Button>
         </div>
