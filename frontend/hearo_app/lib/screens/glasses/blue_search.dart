@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:get/get.dart';
-import 'package:hearo_app/test/device_screen.dart';
+import 'package:hearo_app/screens/glasses/chat_home_glasses.dart';
 
-class BtlTest extends StatefulWidget {
-  const BtlTest({super.key});
+class BlueSearch extends StatefulWidget {
+  const BlueSearch({super.key});
 
   @override
-  State<BtlTest> createState() => _Screen2State();
+  State<BlueSearch> createState() => _Screen2State();
 }
 
-class _Screen2State extends State<BtlTest> {
+class _Screen2State extends State<BlueSearch> {
   FlutterBluePlus flutterBlue = FlutterBluePlus.instance;
   List<ScanResult> scanResultList = [];
   bool _isScanning = false;
@@ -97,22 +97,22 @@ class _Screen2State extends State<BtlTest> {
 
   /* BLE 아이콘 위젯 */
   Widget leading(ScanResult r) {
-    return CircleAvatar(
-      backgroundColor: Colors.cyan,
-      child: Icon(
-        Icons.bluetooth,
-        color: Colors.white,
-      ),
-    );
+    return SizedBox(child: Image.asset("assets/images/glasses.png"));
   }
 
   /* 장치 아이템을 탭 했을때 호출 되는 함수 */
   void onTap(ScanResult r) {
     // 단순히 이름만 출력
     print(r.device.name);
-    Get.to(() => DeviceScreen(
-          device: r.device,
-        ));
+    // Get.to(
+    //   () => DeviceScreen(
+    //     device: r.device,
+    //   ),
+    Get.to(
+      () => ChatHomeGlasses(
+        device: r.device,
+      ),
+    );
   }
 
   /* 장치 아이템 위젯 */
@@ -128,21 +128,39 @@ class _Screen2State extends State<BtlTest> {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.sizeOf(context);
     return Scaffold(
       appBar: AppBar(
         title: Text("blue"),
       ),
-      body: Center(
-        /* 장치 리스트 출력 */
-        child: ListView.separated(
-          itemCount: scanResultList.length,
-          itemBuilder: (context, index) {
-            return listItem(scanResultList[index]);
-          },
-          separatorBuilder: (BuildContext context, int index) {
-            return Divider();
-          },
-        ),
+      body: SizedBox(
+        height: size.height,
+        child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            /* 장치 리스트 출력 */
+            children: [
+              Flexible(
+                flex: 3,
+                child: SizedBox(
+                  height: 100,
+                  width: size.width,
+                  // child: Text('블루투스'),
+                ),
+              ),
+              Flexible(
+                flex: 10,
+                child: ListView.separated(
+                  itemCount: scanResultList.length,
+                  itemBuilder: (context, index) {
+                    return listItem(scanResultList[index]);
+                  },
+                  separatorBuilder: (BuildContext context, int index) {
+                    return Divider();
+                  },
+                ),
+              ),
+            ]),
       ),
       /* 장치 검색 or 검색 중지  */
       floatingActionButton: FloatingActionButton(

@@ -60,14 +60,14 @@ class SocketOverall {
     });
   }
 
-  void sendAudio(String roomId, audioData) {
+  void sendClassification(String roomId, audioData) {
     socket.emit('classification', {'room_id': roomId, 'audio': audioData});
     print(audioData);
     print("오디오보냄");
   }
 
-  void getAudio() {
-    socket.on("audio", (data) {
+  void getClassification() {
+    socket.on("classification", (data) {
       print(data);
     });
   }
