@@ -85,6 +85,38 @@ const profileModalStyles: ReactModal.Styles = {
   },
 };
 
+// info modal style
+const infoModalStyles: ReactModal.Styles = {
+  overlay: {
+    // 검은색으로 칠해지는 모달 아래부분
+    backgroundColor: " rgba(0, 0, 0, 0.4)",
+    width: "100%",
+    height: "100%",
+    zIndex: "10",
+    position: "fixed",
+    top: "0",
+    left: "0",
+    boxShadow: "0 8px 10px",
+  },
+  content: {
+    // 모달 박스의 스타일
+    width: "20%",
+    height: "fit-content",
+    padding: "32px",
+    zIndex: "150",
+    position: "absolute",
+    textAlign: "center",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    borderRadius: "20px",
+    boxShadow: "2px 2px 2px rgba(0, 0, 0, 0.25)",
+    backgroundColor: "white",
+    justifyContent: "center",
+    overflow: "auto",
+  },
+};
+
 function Modal({
   open,
   type,
@@ -152,7 +184,7 @@ function Modal({
       ) : (
         <ReactModal
           isOpen={openModal}
-          style={customModalStyles} // 개별 스타일링을 줄 수 있습니다.
+          style={type === "info" ? infoModalStyles : customModalStyles} // 개별 스타일링을 줄 수 있습니다.
           onRequestClose={() => {
             setOpenModal((prev) => !prev);
             if (setLoginModal) {
