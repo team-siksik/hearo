@@ -22,7 +22,7 @@ function MypageSideBar() {
 
   // 로그인된 상태에서만 MyPage로 이동
   const handleMypageClick = () => {
-      navigate("/mypage");
+      navigate("/mypage/settings");
     }
 
   // 로그인된 상태에서만 MyPage로 이동

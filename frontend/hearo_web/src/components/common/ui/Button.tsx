@@ -7,7 +7,6 @@ interface PropsType {
   onClick?: () => void | React.Dispatch<SetStateAction<boolean>>;
 }
 
-
 function Button({ type, children, onClick }: PropsType) {
   return (
     <>
@@ -41,7 +40,9 @@ function Button({ type, children, onClick }: PropsType) {
         </button>
       ) : type === "backButton" ? (
         <button
-          className="group relative w-full overflow-hidden rounded-xl border bg-white text-blue-main border-blue-main px-4 py-2 shadow-md hover:bg-blue-50 transition-all duration-[250ms] ease-out"
+          className="group relative w-full overflow-hidden rounded-xl border bg-white 
+          text-blue-main border-blue-main px-4 py-2 m-4
+          shadow-md hover:bg-blue-50 transition-all duration-[250ms] ease-out"
           onClick={onClick}
         >
           <div className="absolute inset-0 w-3  "></div>
@@ -70,7 +71,7 @@ function Button({ type, children, onClick }: PropsType) {
       </button>
       ) : type === "deleteButton" ? (
         <button
-        className="group relative w-full overflow-hidden rounded-xl border text-white border-red-main px-4 py-2 
+        className="group relative w-full overflow-hidden rounded-xl border text-white border-red-main px-4 py-2 m-4
         shadow-md bg-red-500 hover:bg-red-main transition-all duration-[250ms] ease-out"
         onClick={onClick}
       >
@@ -79,10 +80,36 @@ function Button({ type, children, onClick }: PropsType) {
           {children}
         </span>
       </button>
+      ) : type === "accountDeleteButton" ? (
+        <button
+        className="w-full overflow-hidden rounded-xl border text-white border-red-main px-4 py-2 mt-4
+        shadow-md bg-red-500 hover:bg-red-main transition-all duration-[250ms] ease-out"
+        onClick={onClick}
+      >
+        <span className="relative text-white">
+          <div className="text-center"> 
+          {children}
+          </div>
+        </span>
+        </button>
+      ) : type === "accountLogoutButton" ? (
+        <button
+        className="w-full overflow-hidden rounded-xl border text-white border-gray-400 px-4 py-2
+        shadow-md bg-white hover:bg-gray-200 transition-all duration-[250ms] ease-out"
+        onClick={onClick}
+      >
+        <span className="relative text-black">
+          <div className="text-center"> 
+          {children}
+          </div>
+        </span>
+        </button>
       ) :
       <button onClick={onClick}>
-        {children}</button>
-      } 
+        {children}
+        </button>
+    }
+
       </>
   );
 }

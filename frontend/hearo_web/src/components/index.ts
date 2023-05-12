@@ -26,6 +26,7 @@ import RecordsItem from "./TotalRecords/RecordsItem";
 import RecordpageSideBar from "./TotalRecords/RecordpageSideBar";
 import RemoveRecordModal from "./TotalRecords/RemoveRecordModal";
 import AddFavModal from "./Conversation/MeetingBody/AddFavModal";
+import ConvertBar from "./Mypage/ConvertBar";
 
 export {
   ConversationInfo,
@@ -56,4 +57,5 @@ export {
   RecordpageSideBar,
   RemoveRecordModal,
   AddFavModal,
+  ConvertBar,
 };
