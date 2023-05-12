@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hearo_app/controller/login_controller.dart';
 import 'package:hearo_app/screens/chats/chat_home.dart';
+import 'package:hearo_app/screens/glasses/blue_search.dart';
 import 'package:hearo_app/screens/mysettings/favorite_say.dart';
 import 'package:hearo_app/test/camera2.dart';
-import 'package:hearo_app/test/test3.dart';
 import 'package:hearo_app/widgets/common/custom_app_bar.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -121,8 +121,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     InkWell(
                       onTap: () {
-                        // Get.to(() => BtlTest());
-                        Get.to(() => Test3());
+                        Get.to(() => BlueSearch());
                       },
                       child: naviButton(size, 1),
                     ),

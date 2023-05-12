@@ -19,7 +19,7 @@ class ApiSay {
     );
     if (response.statusCode == 200) {
       final responseData = jsonDecode(utf8.decode(response.bodyBytes));
-      print("가져오기 성공!");
+      print("가져오기 성공! in say_api");
       return responseData["data"];
     } else {
       print("가져오기 실패!");
