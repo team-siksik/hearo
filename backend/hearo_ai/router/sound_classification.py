@@ -41,6 +41,8 @@ async def audio_stream(sid, data):
         # 음성 데이터를 메모리에서 처리하기 위해 query_with_memory 함수 호출
         result = api.query_with_memory(combined_audio_data.getvalue())
         if result:
+            logger.info(f"result = {result}")
             await socket_manager.emit("result", result)
         else:
+            logger.info("No result")
             await socket_manager.emit("result", "No result")
