@@ -74,7 +74,7 @@ class _SocketTestState extends State<SocketTest> {
       File file = File(_recordingFilePath);
       List<int> fileData = file.readAsBytesSync();
       String fileDataB64 = base64Encode(fileData);
-      audioSocket.sendAudio('1111', fileDataB64);
+      audioSocket.sendClassification('1111', fileDataB64);
       audioSocket.socket.on(
         "audio",
         (data) {
