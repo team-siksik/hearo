@@ -1,10 +1,10 @@
 import React, { useEffect, useState, useRef, SetStateAction } from "react";
-import { useNavigate } from "react-router-dom";
-import MainLogo from "@/assets/Icon/MainLogo.json";
-import google_logo from "@/assets/Google_Logo.svg";
 import { css } from "@emotion/react";
+import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { Player } from "@lottiefiles/react-lottie-player";
+import MainLogo from "@/assets/Icon/MainLogo.json";
+import google_logo from "@/assets/Google_Logo.svg";
 import Button from "../ui/Button";
 
 // TODO: 로그인을 하면 useParams 써서 로그인정보를 버튼들 위에다가 띄워줘야함

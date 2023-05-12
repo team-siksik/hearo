@@ -1,5 +1,5 @@
 import { Routes, Route } from "react-router-dom";
-import { Google, STT, socket } from "@/apis";
+import { Google, STT } from "@/apis";
 import {
   ConversationPage,
   MainPage,
