@@ -81,11 +81,25 @@ function TotalRecordsPage() {
     },
   ]);
 
+  const handleChangeTitle = (id: number, newTitle: string) => {
+    const newRecords = records.map(record => {
+      if (record.id === id) {
+        return {
+          ...record,
+          title: newTitle
+        }
+      }
+      return record;
+    });
+    setRecords(newRecords);
+  };
+
   const handleRemoveRecord = (idToDelete:number) => {
     const updatedRecords = records.filter((record) => record.id !== idToDelete);
     setRecords(updatedRecords);
     setOpenRemoveRecordModal(false);
   };
+
 
   // const getRecords = async () => {
   //   const response = await axios.get('v1/record/??', {
@@ -119,6 +133,7 @@ function TotalRecordsPage() {
                 date={record.date}
                 description={record.description}
                 onRemove={() => handleRemoveRecord(record.id)}
+                onChangeTitle={(newTitle) => handleChangeTitle(record.id, newTitle)}
               />
             ))}
           </div>

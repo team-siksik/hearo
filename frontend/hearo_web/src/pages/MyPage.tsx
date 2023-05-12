@@ -46,10 +46,6 @@ function Mypage() {
     setShowModal(true);
   };
 
-  const ModalOff = () => {
-    setShowModal(false);
-  };
-
   const handleLogoutClick = () => {
     dispatch(googleLogout(localStorage.getItem("accessToken")!));
     dispatch(userActions.logoutAction());
@@ -61,8 +57,8 @@ function Mypage() {
 
   return (
     <div>
-      <MypageSideBar/>
-      <div className="absolute mt-20 right-0 w-[82%]">
+      <MypageSideBar />
+      <div className="absolute right-0 mt-16 w-[82%]">
         <div className="m-4 flex flex-col justify-center pt-4 text-center">
           <div className="pt-1 text-3xl font-bold">김야옹 님</div>
           <div className="text-1.5xl pt-1 font-light">cutekitty@gmail.com</div>
@@ -76,7 +72,10 @@ function Mypage() {
           <ChevronRightIcon className="m-1 h-6 w-6" />
         </div>
         <hr className="m-4 h-0.5 bg-black opacity-20" />
-        <div onClick={SettingClick} className="flex flex-row justify-between p-3">
+        <div
+          onClick={SettingClick}
+          className="flex flex-row justify-between p-3"
+        >
           <div className="flex flex-row pl-4 pr-4 text-2xl font-bold hover:cursor-pointer">
             <Cog6ToothIcon className="m-1 mr-2 h-6 w-6" />
             환경설정
@@ -103,7 +102,7 @@ function Mypage() {
           <button
             onClick={onDeleteButtonClick}
             className="p-8 text-2xl font-bold text-black opacity-50"
-            >
+          >
             회원탈퇴
           </button>
         </div>
@@ -111,23 +110,17 @@ function Mypage() {
 
       {/* 로그아웃, 회원탈퇴 모달  */}
       {showModal && (
-        <Modal open={true} cannotExit={false}>
+        <Modal open={true} cannotExit={false} setShowModal={setShowModal}>
           {modalType === "logout" && (
             <div>
               <div className="fon t-semibold mb-2 text-xl">
                 정말 로그아웃하시겠습니까?
               </div>
               <div className="m-1 mt-4 flex flex-row justify-center text-2xl font-bold">
-                <Button
-                  onClick={ModalOff}
-                  type="deleteButton"
-                >
+                <Button onClick={() => setShowModal(false)} type="deleteButton">
                   아니오
                 </Button>
-                <Button
-                  onClick={handleLogoutClick}
-                  type="backButton"
-                >
+                <Button onClick={handleLogoutClick} type="backButton">
                   네
                 </Button>
               </div>
@@ -144,15 +137,10 @@ function Mypage() {
               <div className="pb-4">전부 삭제됩니다!</div>
               <div className="pb-16">그래도 정말 하시겠습니까?</div>
               <div className="m-1 flex flex-row justify-center text-2xl font-bold">
-                <Button
-                  onClick={ModalOff}
-                  type="deleteButton"
-                  > 아니오
+                <Button onClick={() => setShowModal(false)} type="deleteButton">
+                  아니오
                 </Button>
-                <Button
-                  onClick={deleteAccount}
-                  type="backButton"
-                >
+                <Button onClick={deleteAccount} type="backButton">
                   네
                 </Button>
               </div>
