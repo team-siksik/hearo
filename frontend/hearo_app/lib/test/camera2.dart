@@ -21,7 +21,7 @@ class _Camera2State extends State<Camera2> {
   late List<CameraDescription> cameras;
   late CameraController cameraController;
   bool isStreamingImages = false;
-
+  Timer? imageStreamingTimer; // Timer 객체를 저장하기 위한 변수
   @override
   void initState() {
     videoSocket.connect();
@@ -36,7 +36,7 @@ class _Camera2State extends State<Camera2> {
           break;
         }
       }
-      cameraController = CameraController(frontCamera, ResolutionPreset.low);
+      cameraController = CameraController(frontCamera, ResolutionPreset.medium);
 
       cameraController.initialize().then((_) {
         if (!mounted) {
@@ -70,6 +70,26 @@ class _Camera2State extends State<Camera2> {
     }
   }
 
+  Future<void> startStreaming() async {
+    isStreamingImages = true;
+    if (!cameraController.value.isStreamingImages) {
+      await cameraController.startImageStream((CameraImage image) {
+        if (isStreamingImages) {
+          // 이미지를 Base64로 인코딩하여 Socket.IO로 전송합니다.
+          String base64Image = base64Encode(image.planes[0].bytes);
+          videoSocket.sendVideo("image", base64Image);
+        }
+      });
+    }
+  }
+
+  void stopStreaming() {
+    if (cameraController.value.isStreamingImages) {
+      cameraController.stopImageStream();
+      isStreamingImages = false;
+    }
+  }
+
   void startSend() {
     setState(() {
       isStreamingImages = true;
@@ -83,7 +103,7 @@ class _Camera2State extends State<Camera2> {
   }
 
   Timer timeSend() {
-    return Timer.periodic(Duration(milliseconds: (1000 ~/ 30)), (timer) {
+    return Timer.periodic(Duration(milliseconds: 30), (timer) {
       // 1초에 30번 실행되는 함수 호출
       takePicture();
     });
@@ -151,7 +171,8 @@ class _Camera2State extends State<Camera2> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: isStreamingImages ? stopImageStream : startSend,
+        // onPressed: isStreamingImages ? stopImageStream : startSend,
+        onPressed: isStreamingImages ? stopStreaming : startStreaming,
         child: Icon(isStreamingImages ? Icons.stop : Icons.videocam),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.miniEndFloat,
