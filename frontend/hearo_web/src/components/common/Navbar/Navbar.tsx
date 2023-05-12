@@ -97,7 +97,7 @@ const Navbar = ({ setLoginModal, setOpenProfileModal }: PropsType) => {
       setShowModal(true);
     } else {
       setLoginModal(false);
-      setShowModal(false);
+
     }
   }
 
@@ -138,7 +138,7 @@ const Navbar = ({ setLoginModal, setOpenProfileModal }: PropsType) => {
               `}
             ></div>
           </div>
-          <p>{user?.nickname} 님</p>
+          <p className="hover:cursor-pointer">{user?.nickname} 님</p>
           {/* <p>김야옹 님</p> */}
         </section>
       ) : (
