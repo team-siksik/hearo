@@ -10,6 +10,7 @@ spring:
       - jwt
       - mysql
       - s3
+      - clova
   jpa:
     hibernate:
       ddl-auto: update
