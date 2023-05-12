@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { ArrowLeftIcon, XMarkIcon  } from "@heroicons/react/24/solid";
 import { useNavigate } from "react-router-dom";
-import { Modal, MypageSideBar } from "@/components";
+import { Modal, MypageSideBar,ConvertBar } from "@/components";
 
 
 interface MessageType {
@@ -82,39 +82,29 @@ function FavContentsPage () {
   return (
     <div>
       <MypageSideBar/>
-      <div className="fixed right-0 w-[82%]">
-      {/* 상단footer */}
-      <div className={`${mypagebarBackground} flex flex-row p-2.5 w-full h-full`}>
-        <div>
-          <ArrowLeftIcon className="w-8 h-8" onClick={() => navigate(-1)} />
-        </div>
-        <div className="pl-[25%] font-bold text-3xl ">
-          자주 쓰는 말
-        </div>
-        <div className="ml-auto space-x-2">
-          <button onClick={onAddButtonClick} className="flex flex-row pt-1 text-red-main font-bold text-lg w-10 h-10">
-            추 가
-          </button>
-        </div>
-      </div>
-  
-      {/* 출력되는 내용 */}
-      <div className="mt-4 px-6 py-2 space-y-6">
-        {contents.map((c) => (
-          <div>
-            <div key={c.id} className="flex flex-row">
-              <div className="flex-grow text-gray-950">{c.content}</div>
-              <div className="flex flex-row space-x-2">
-                <button onClick={() => onDeleteButtonClick(c.id)}>
-                  <XMarkIcon className="w-6 h-6" />
-                </button>
+      <div className="fixed right-0 mt-16 w-[82%] h-full"> 
+        <ConvertBar/>
+
+        {/* 출력되는 내용 */}
+        <div className="right-0 mt-28 mx-10 p-4 mb-4 h-[70%] shadow-gray-200 rounded-2xl shadow-md">
+          <div className="mt-4 px-6 py-2 space-y-6">
+            {contents.map((c) => (
+              <div>
+                <div key={c.id} className="flex flex-row">
+                  <div className="flex-grow text-gray-950">{c.content}</div>
+                  <div className="flex flex-row space-x-2">
+                    <button onClick={() => onDeleteButtonClick(c.id)}>
+                      <XMarkIcon className="w-6 h-6" />
+                    </button>
+                  </div>
+                </div>
+              <hr className="bg-black opacity-10 h-0.5 my-2 px-6"/>
               </div>
-            </div>
-          <hr className="bg-black opacity-10 h-0.5 my-2 px-6"/>
+          ))}
           </div>
-        ))}
+        </div>
       </div>
-          
+
       {/* 모달발생 시  */}
       {showModal && (
         <Modal open={true} cannotExit={false}>
@@ -149,7 +139,7 @@ function FavContentsPage () {
           )}
         </Modal>
       )}
-    </div>
+
   </div>
   );
 
