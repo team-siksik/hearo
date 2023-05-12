@@ -1,5 +1,4 @@
 import ConversationPage from "./ConversationPage";
-import MyPage from "./MyPage";
 import MainPage from "./MainPage";
 import FavContentsPage from "./FavContetnsPage";
 import SettingsPage from "./SettingsPage";
@@ -13,7 +12,6 @@ import RecordPage from "./RecordPage";
 
 export {
   ConversationPage,
-  MyPage,
   MainPage,
   FavContentsPage,
   SettingsPage,
