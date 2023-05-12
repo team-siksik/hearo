@@ -22,5 +22,4 @@ export {
   NotFound404,
   TotalRecordsPage,
   RecordPage,
-  // TutorialPage,
 };
