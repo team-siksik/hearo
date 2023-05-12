@@ -37,17 +37,18 @@ async def audio_stream(sid, data):
             await socket_manager.emit("result", "Max dBFS exceeded")
             return  # API 요청을 하지 않고 함수 종료
 
-        # combined_audio를 임시 파일로 저장
-        with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as temp_file:
-            temp_filename = temp_file.name
-            combined_audio.export(temp_filename, format="wav")
+    # combined_audio를 임시 파일로 저장
+    with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as temp_file:
+        temp_filename = temp_file.name
+        combined_audio.export(temp_filename, format="wav")
+        logger.info(f"임시 파일 경로:, {temp_filename}")  # 임시 파일 경로 출력
 
-        # 임시 파일을 읽어서 query_with_memory 함수 호출
-        with open(temp_filename, "rb") as f:
-            result = api.query_with_memory(f.read())
+    # 임시 파일을 읽어서 query_with_memory 함수 호출
+    with open(temp_filename, "rb") as f:
+        result = api.query_with_memory(f.read())
 
-        # 임시 파일 삭제
-        os.remove(temp_filename)
+        # # 임시 파일 삭제
+        # os.remove(temp_filename)
 
         # combined_audio_data = io.BytesIO()
         # combined_audio.export(combined_audio_data, format="wav")
