@@ -6,6 +6,7 @@ import FloatingButton from "../common/ui/FloatingButton";
 import FavContents from "./FavContents";
 import AddFavModal from "./MeetingBody/AddFavModal";
 import Button from "../common/ui/Button";
+import STTTest from "@/pages/STTTest";
 
 /**
  * socket.io 연결
@@ -85,7 +86,7 @@ function ConversationBody({ message, isRecording, setIsRecording }: PropsType) {
       ) : (
         <section className="message-sec h-100 mb-10 overflow-y-scroll pt-10">
           {/* isRecording 이 true 일 때만 STT rendering */}
-          <STT />
+          <STTTest />
           {conversation ? (
             <div>
               {text && <TTS text={text} setText={setText} />}
