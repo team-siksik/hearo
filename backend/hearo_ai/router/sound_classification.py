@@ -15,11 +15,6 @@ audio_data_queues = {}
 
 @socket_manager.on("classification")
 async def audio_stream(sid, data):
-
-    audio_data = data["audio"]
-    logger.info(f"audio: {sid} sent audio '{audio_data}'")
-
-
     base64_audio = data["audio"]
 
     # Base64 형식의 오디오 데이터를 디코딩
@@ -33,15 +28,17 @@ async def audio_stream(sid, data):
 
     audio_data_queues[sid].append(audio_segment)
 
-    # 큐에 충분한 데이터가 있으면 합쳐서 API 호출
-    if len(audio_data_queues[sid]) == 10:
-        combined_audio = sum(audio_data_queues[sid], AudioSegment.empty())
-        
-        # 최대 데시벨 확인
-        if combined_audio.max_dBFS > 50:
-            await socket_manager.emit("result", "Max dBFS exceeded")
-            return  # API 요청을 하지 않고 함수 종료
+    if len(audio_data_queues[sid]) != 10:
+        await socket_manager.emit("result", "Loading")
+        return
+    
+    combined_audio = sum(audio_data_queues[sid], AudioSegment.empty())
 
+    # 최대 데시벨 확인
+    if combined_audio.max_dBFS < 40:
+        await socket_manager.emit("result", "Small dB")
+        return  # API 요청을 하지 않고 함수 종료
+    
     # combined_audio를 임시 파일로 저장
     with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as temp_file:
         temp_filename = temp_file.name
@@ -52,16 +49,9 @@ async def audio_stream(sid, data):
     with open(temp_filename, "rb") as f:
         result = api.query_with_memory(f.read())
 
-        # # 임시 파일 삭제
-        # os.remove(temp_filename)
+        # 임시 파일 삭제
+        os.remove(temp_filename)
 
-        # combined_audio_data = io.BytesIO()
-        # combined_audio.export(combined_audio_data, format="wav")
-        # combined_audio_data.seek(0)
-        # audio_data = combined_audio_data.read()
-
-        # # 음성 데이터를 메모리에서 처리하기 위해 query_with_memory 함수 호출
-        # result = api.query_with_memory(audio_data)
         if result:
             logger.info(f"result = {result}")
             await socket_manager.emit("result", result)
