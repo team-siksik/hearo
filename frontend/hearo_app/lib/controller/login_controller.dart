@@ -11,6 +11,7 @@ class LoginController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+
     if (loginBox.hasData('loginToken')) {
       final savedData = loginBox.read<String>('loginToken');
       if (savedData != null && savedData.isNotEmpty) {
@@ -30,11 +31,11 @@ class LoginController extends GetxController {
   }
 
   // 토큰 비우기
-  void clearList() {
+  void clearList() async {
     loginToken.value = ''; // loginToken을 빈 문자열로 초기화
-    loginBox.remove('loginToken');
+    await loginBox.remove('loginToken');
     loginData.clear();
-    loginDataBox.remove('loginData');
+    await loginDataBox.remove('loginData');
     update();
   }
 }
