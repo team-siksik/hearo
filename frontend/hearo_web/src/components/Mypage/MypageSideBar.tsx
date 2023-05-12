@@ -30,7 +30,7 @@ function MypageSideBar() {
   //   if (isLoggedin) {
   //     navigate("/mypage");
   //   } else {
-  //     로그인되어 있지 않은 경우 로그인 페이지로 이동하도록 처리
+  //     로그인되어 있지 않은 경우 로그인 모달이뜨도록 처리
   //     navigate("/login");
   //     setLoginModal(true);
   //   }

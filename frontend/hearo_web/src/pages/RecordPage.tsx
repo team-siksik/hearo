@@ -1,30 +1,46 @@
 import { TrashIcon } from "@heroicons/react/24/solid";
-import { NewspaperIcon } from "@heroicons/react/24/outline";
+import { PencilSquareIcon } from "@heroicons/react/24/outline";
 import { useNavigate, useLocation } from "react-router-dom";
 import { RemoveRecordModal } from "@/components";
-import React, { useState } from "react";
-import {RecordpageSideBar,
-} from "@/components";
+import React, { useState, useEffect } from "react";
+import { RecordpageSideBar } from "@/components";
 
-interface LocationState {
-  title: string;
-  date: string;
-  description: string;
+interface RecordPageProps {
+  title?: string;
+  onChangeTitle: (title: string) => void;
 }
 
-function RecordPage() {
+function RecordPage({ title, onChangeTitle }: RecordPageProps) {
   const location = useLocation();
   const navigate = useNavigate();
-  const state = location.state as { title: string, date: string, description : string}
+  const state = location.state as {
+    title: string;
+    date: string;
+    description: string;
+  };
   const { title: initialTitle, date, description } = state;
 
-  const [title, setTitle] = useState(initialTitle);
-  const [openRemoveRecordModal, setOpenRemoveRecordModal] = useState<boolean>(false);
+  // const [newTitle, setTitle] = useState(initialTitle);
+  const [openRemoveRecordModal, setOpenRemoveRecordModal] =
+    useState<boolean>(false);
+  const [isHovered, setIsHovered] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
+  const [newTitle, setNewTitle] = useState<string>(title || "");
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setTitle(e.target.value);
+    e.preventDefault();
+    setNewTitle(e.target.value);
+    console.log(e.target.value);
   };
 
+  useEffect(() => {
+    onChangeTitle(newTitle);
+  }, [newTitle, onChangeTitle]);
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    onChangeTitle(newTitle);
+  };
 
   const moveToRecords = () => {
     navigate(`/records`);
@@ -37,53 +53,64 @@ function RecordPage() {
 
   return (
     <div>
-      <RecordpageSideBar/>
-        <div className="fixed right-0 mt-20 w-[82%]">
-          <div className="mx-8"> 
-            <div className="flex justify-between items-stretch ">
-                <div className="font-bold text-3xl text-gray-600 rounded-lg self-center">
+      <RecordpageSideBar />
+      <div className="fixed right-0 mt-20 w-[82%]">
+        <div className="mx-8">
+          <div className="flex items-stretch justify-between ">
+            <div className="flex flex-row items-center">
+              <div className="self-center rounded-lg text-3xl font-bold text-gray-600">
+                <form onSubmit={handleSubmit}>
                   <input
-                    type="text" 
+                    type="text"
                     value={title}
                     onChange={handleTitleChange}
-                    className="
-                      w-full
-                      hover:cursor-pointer 
-                      border-none 
-                      border-black
-                      hover:border-blue-main 
-                      hover:shadow-blue-main 
-                      text-black
-                      "
+                    placeholder="제목을 입력해주세요"
+                    className="w-full rounded-lg p-2 hover:cursor-pointer hover:outline"
+                    onMouseEnter={() => setIsHovered(true)}
+                    onMouseLeave={() => setIsHovered(false)}
+                    onFocus={() => setIsFocused(true)}
+                    onBlur={() => setIsFocused(false)}
                   />
+                </form>
+              </div>
+              {isHovered || isFocused ? (
+                <div className="ml-4 h-10 w-10 self-center text-gray-600">
+                  <PencilSquareIcon />
                 </div>
-                <div className="flex flex-row  mr-4">
-                    <div className="m-4 pl-0 p-1">
-                      <button
-                        className="px-4 py-2 bg-red-main text-white rounded-full hover:bg-red-400 transition-all duration-200 ease-out"
-                        onClick={moveToRecords}
-                        >
-                        Back
-                      </button>
-                    </div>
-                    <div
-                      className="m-4 font-semibold text-red-main rounded-full bg-red-50 w-12 h-12 hover:bg-red-300 hover:shadow-sm transition-all duration-200 ease-out flex justify-center items-center"
-                      onClick={() => setOpenRemoveRecordModal(true)}>
-                      <div className="w-6 h-6">
-                        <TrashIcon />
-                      </div>
-                    </div>
+              ) : title ? null : (
+                <div className="ml-4 h-10 w-10 self-center text-gray-600">
+                  <PencilSquareIcon />
                 </div>
+              )}
             </div>
-            <div className="text-sm">{date}</div>
-            <div className="my-2">{description}</div>
-          </div>  
-          {openRemoveRecordModal && (
-            <RemoveRecordModal
+            <div className="mr-4 flex  flex-row">
+              <div className="m-4 p-1">
+                <button
+                  className="w-20 rounded-full bg-red-main py-2 text-white transition-all duration-200 ease-out hover:bg-red-400"
+                  onClick={moveToRecords}
+                >
+                  Back
+                </button>
+              </div>
+              <div
+                className="mx-2 my-4 flex h-12 w-12 items-center justify-center rounded-full bg-red-50 font-semibold text-red-main transition-all duration-200 ease-out hover:bg-red-300 hover:shadow-sm"
+                onClick={() => setOpenRemoveRecordModal(true)}
+              >
+                <div className="h-6 w-6">
+                  <TrashIcon />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="text-sm">{date}</div>
+          <div className="my-2">{description}</div>
+        </div>
+        {openRemoveRecordModal && (
+          <RemoveRecordModal
             setOpenRemoveRecordModal={setOpenRemoveRecordModal}
             handleRemoveClick={handleRemoveClick}
-            />
-            )}
+          />
+        )}
       </div>
     </div>
   );

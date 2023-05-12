@@ -1,14 +1,14 @@
 import { Recorder } from "@/STT/recorder";
 import { MeetingAPI } from "@/apis/api";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Socket, io } from "socket.io-client";
 
 //FIXME: accessToken 연결 전 수정해야함
 const accessToken =
-  "eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJub2hoeXVuamVvbmc5M0BnbWFpbC5jb20iLCJpYXQiOjE2ODM3MjMxMDcsImV4cCI6MTY4Mzc0NDcwN30.M9_pQkZvr5lqH9tEHpUoqWgTTN0x5l7wOTZ0iFKwnPw";
+  "eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJub2hoeXVuamVvbmc5M0BnbWFpbC5jb20iLCJpYXQiOjE2ODM3NzA2NjQsImV4cCI6MTY4MzkwMDI2NH0.JBlTVLV3CaCyk-jxtZhP7o-v8YwZPWdGEd2nIBbRhJI";
 
-const socketURl = "http://ubuntu@k8a6031.p.ssafy.io:80";
-const recorderWorkerPath = "recorderWorker.js";
+const socketURl = "http://k8a6031.p.ssafy.io:80/";
+const recorderWorkerPath = "../STT/recorderWorker.js";
 const roomNo = 1343;
 
 // Error codes (mostly following Android error names and codes)
@@ -34,18 +34,22 @@ const MSG_SERVER_CHANGED = 12;
 const MSG_AUDIOCONTEXT_RESUMED = 13;
 
 export default function STTTest() {
+  // let subRecorder: Recorder;
+  // let mediaRecorder: MediaRecorder;
   const [isRecording, setIsRecording] = useState<boolean>(false);
   const [intervalKey, setIntervalKey] = useState<any>();
   const [mediaStream, setMediaStream] = useState<MediaStream>(); //streaming되는 미디어
 
   const [audioArray, setAudioArray] = useState<Blob[]>([]);
   const [audioBlob, setAudioBlob] = useState<Blob>();
-
-  const [recorder, setRecorder] = useState<MediaRecorder>(); // 녹음기
-  const [subRecorder, setSubRecorder] = useState<Recorder>(); // worker recorder
+  // const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder>(); // 녹음기
+  // const [subRecorder, setSubRecorder] = useState<any>(); // worker recorder
+  const mediaRecorder = useRef<MediaRecorder>();
+  const subRecorder = useRef<Recorder>();
   const [audio, setAudio] = useState<string>(); //whole audio blob url
   const [roomSeq, setRoomSeq] = useState<number>();
-  const [socket, setSocket] = useState<Socket | null>();
+  // const [socket, setSocket] = useState<Socket | null>();
+  const socket = useRef<Socket | null>(null);
 
   function onEvent(code: any, data: any) {
     console.log(`msg: ${code} : ${data || ""}\n`);
@@ -65,6 +69,33 @@ export default function STTTest() {
     if (!socket) {
       throw new Error("socket error!");
     }
+
+    // socket이벤트 안으로 들어오면 state의 subRecorder나 recorder 못 받아옴
+    // start recording if socket is connected
+    socket.on("connect", () => {
+      console.log("connected");
+      socket.emit("enter_room", {
+        room_id: roomNo, //FIXME: random room key로 들어감 추후 수정
+      });
+      console.log("enter_the_room");
+      //FIXME: 여기에서 subRecorder, mediaRecorder를 못 불러옴...
+      const intervalKey = setInterval(() => {
+        console.log("socket-interval- subRecorder", subRecorder);
+        console.log("socket-interval- recorder", mediaRecorder);
+        subRecorder.current?.exportWAV((blob: Blob) => {
+          socketSend(blob);
+          subRecorder.current?.clear();
+        }, "audio/wav");
+      }, 250);
+      setIntervalKey(intervalKey);
+      try {
+        subRecorder.current?.record();
+        console.log("ready for speech");
+      } catch (err) {
+        console.log("subRecorder doesnt work");
+      }
+      onEvent(MSG_WEB_SOCKET_OPEN, "socket_open");
+    });
 
     //TODO: server에서 보내주는 메시지 형식이나 내용에 대해서 이야기 해봐야 할 듯
     socket.on("message", (e) => {
@@ -87,8 +118,7 @@ export default function STTTest() {
 
     // info 라는 이벤트 메시지를 받았을 때
     socket.on("info", (e) => {
-      console.log(e);
-      const { data } = e;
+      const data = e;
       onEvent(MSG_WEB_SOCKET, data);
       // socket server에서 보낸 데이터가 object일 때
       if (data instanceof Object && !(data instanceof Blob)) {
@@ -105,23 +135,6 @@ export default function STTTest() {
       }
     });
 
-    // start recording if socket is connected
-    socket.on("connect", () => {
-      socket.emit("enter_room", {
-        room_id: roomNo, //FIXME: random room key로 들어감 추후 수정
-      });
-      const intervalKey = setInterval(() => {
-        subRecorder?.exportWAV((blob: Blob) => {
-          socketSend(blob);
-          subRecorder?.clear();
-        }, "audio/wav");
-      }, 250);
-      setIntervalKey(intervalKey);
-      subRecorder?.record();
-      console.log("ready for speech");
-      onEvent(MSG_WEB_SOCKET_OPEN, "socket_open");
-    });
-
     socket.on("disconnect", (e) => {
       console.log("web socket closed");
       onEvent(MSG_WEB_SOCKET_CLOSE, e);
@@ -134,7 +147,7 @@ export default function STTTest() {
     socket.on("connect_error", (err) => {
       console.log(`connect_error due to ${err.message}`);
     });
-    setSocket(socket);
+    // setSocket(socket);
 
     return socket;
   }
@@ -154,26 +167,28 @@ export default function STTTest() {
     setIsRecording(true);
 
     //TODO: socket으로 보내는 recorder
-    const recorder = new Recorder(input, {
+    const subRecorder1 = new Recorder(input, {
       workerPath: { recorderWorkerPath },
     });
-    setSubRecorder(recorder);
+    // setSubRecorder(subRecorder);
+    subRecorder.current = subRecorder1;
 
     // MediaRecorder 생성 - 전체 녹음하는 recorder
-    const mediaRecorder = new MediaRecorder(mediaStream, {
+    const mediaRecorder1 = new MediaRecorder(mediaStream, {
       audioBitsPerSecond: 16000,
-      //memiType: "audio/wav codecs=opus"
+      // memiType: "audio/wav codecs=opus",
     });
     onEvent(MSG_INIT_RECORDER, "Recorder initialized");
-    setRecorder(mediaRecorder);
+    // setMediaRecorder(mediaRecorder);
+    mediaRecorder.current = mediaRecorder1;
 
     // 이벤트핸들러: 녹음 데이터 취득 처리
-    mediaRecorder.ondataavailable = (event) => {
+    mediaRecorder1.ondataavailable = (event) => {
       audioArray.push(event.data); // 오디오 데이터가 취득될 때마다 배열에 담아둔다.
     };
 
     // 이벤트핸들러: 녹음 종료 처리 & 재생하기
-    mediaRecorder.onstop = () => {
+    mediaRecorder1.onstop = () => {
       // 녹음이 종료되면, 배열에 담긴 오디오 데이터(Blob)들을 합친다: 코덱도 설정해준다.
       const blob = new Blob(audioArray, { type: "audio/wav codecs=opus" });
       setAudioBlob(blob);
@@ -186,7 +201,7 @@ export default function STTTest() {
     };
 
     // 녹음 시작
-    mediaRecorder.start();
+    mediaRecorder1.start();
     setIsRecording(true);
 
     //audioContext.state가 'suspended'이면 재실행함 -> 반대로 'running'일 경우, suspend()함수로 일시정지 시킬 수 있음
@@ -203,10 +218,10 @@ export default function STTTest() {
       MSG_WAITING_MICROPHONE,
       "Waiting for approval to access your microphone ..."
     );
-    if (recorder) {
+    if (mediaRecorder.current) {
       return;
     }
-    if (socket) {
+    if (socket.current) {
       cancel();
       return;
     }
@@ -232,19 +247,18 @@ export default function STTTest() {
   }
 
   function socketSend(item: any) {
-    if (socket && socket.connected) {
+    if (socket) {
       // If item is an audio blob
-      console.log(item);
       if (item instanceof Blob) {
         if (item.size > 0) {
-          socket.emit("audio", { audio: item });
+          socket.current?.emit("audio", { audio: item });
           onEvent(AUDIO_SEND, `Send: blob: ${item.type}, ${item.size}`);
         } else {
           onEvent(MSG_SEND_EMPTY, `Send: blob: ${item.type}, EMPTY`);
         }
         //If item is like string or sth
       } else {
-        socket.emit("send_message_to_room", {
+        socket.current?.emit("send_message_to_room", {
           room_id: roomNo,
           message: item,
         });
@@ -257,26 +271,33 @@ export default function STTTest() {
 
   // recording stop
   function stopRecord() {
+    // console.log("stopRecord", mediaRecorder, subRecorder);
     // Stop the regular sending of audio
-    // clearInterval(intervalKey);
-
+    clearInterval(intervalKey);
+    setIntervalKey(null);
     // Stop recording
-    if (recorder && isRecording && subRecorder) {
+    if (mediaRecorder) {
       try {
-        recorder.stop();
+        mediaRecorder.current?.stop();
+        console.log("mediaRecorder stop");
       } catch {
-        console.log("recorder stop error");
+        console.log("mediaRecorder stop error");
       }
-      subRecorder.stop();
+      try {
+        subRecorder.current?.stop();
+        console.log("subRecorder stop");
+      } catch {
+        console.log("subRecorder stop error");
+      }
       onEvent(MSG_STOP, "Stopped recording");
 
       // Push the remaining audio to the server
-      subRecorder.exportWAV((blob: Blob) => {
+      subRecorder.current?.exportWAV((blob: Blob) => {
         // socket send audio
         socketSend(blob);
         // socket send recording finish sign
         socketSend("finish_audio");
-        subRecorder.clear();
+        subRecorder.current?.clear();
       }, "audio/wav");
       console.log("end of meeting");
 
@@ -297,16 +318,17 @@ export default function STTTest() {
 
   function cancel() {
     // Stop the regular sending of audio (if present)
-    //   clearInterval(intervalKey);
+    clearInterval(intervalKey);
     if (subRecorder) {
-      subRecorder.stop();
-      subRecorder?.clear();
+      subRecorder.current?.stop();
+      subRecorder.current?.clear();
       onEvent(MSG_STOP, "Stopped recording");
     }
     if (socket) {
-      socket.emit("close_room", { room_id: roomNo });
-      socket.close();
-      setSocket(null);
+      socket.current?.emit("close_room", { room_id: roomNo });
+      socket.current?.close();
+      // setSocket(null);
+      socket.current = null;
     }
     setIsRecording(false);
     closeRoomAPI()
@@ -341,7 +363,7 @@ export default function STTTest() {
         </button>
         <button onClick={cancel}>소켓 닫기</button>
       </div>
-      <button onClick={closeRoomAPI}>방 닫기</button>
+      {/* <button onClick={closeRoomAPI}>방 닫기</button> */}
       {audio && <audio src={audio} controls />}
     </div>
   );
