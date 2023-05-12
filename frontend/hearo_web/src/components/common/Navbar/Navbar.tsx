@@ -1,26 +1,25 @@
 import React, { useEffect, useState, useRef, SetStateAction } from "react";
 import { useNavigate } from "react-router-dom";
 import MainLogo from "@/assets/Icon/MainLogo.json";
-import { AnimatePresence, motion } from "framer-motion";
-import startVoice from "@/assets/Sounds/start.wav";
 import google_logo from "@/assets/Google_Logo.svg";
-import { GOOGLE_AUTH_URL } from "@/apis/oAuthGoogle";
 import { css } from "@emotion/react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { googleLogout, userActions } from "@/redux/modules/user";
 import { Player } from "@lottiefiles/react-lottie-player";
 import Button from "../ui/Button";
-import { ReactComponent as UserIcon } from "@/assets/Icon/UserIcon.svg";
-
 
 // TODO: 로그인을 하면 useParams 써서 로그인정보를 버튼들 위에다가 띄워줘야함
 
 interface PropsType {
+  loginModal: boolean;
   setLoginModal: React.Dispatch<SetStateAction<boolean>>;
   setOpenProfileModal: React.Dispatch<SetStateAction<boolean>>;
 }
 
-const Navbar = ({ setLoginModal, setOpenProfileModal }: PropsType) => {
+const Navbar = ({
+  loginModal,
+  setLoginModal,
+  setOpenProfileModal,
+}: PropsType) => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
@@ -91,13 +90,9 @@ const Navbar = ({ setLoginModal, setOpenProfileModal }: PropsType) => {
   };
 
   const [showModal, setShowModal] = useState(false);
-  function handleLogin() {
-    if (!showModal) {
-      setLoginModal(true); 
-    } else {
-      setLoginModal(false);
 
-    }
+  function handleLogin() {
+    setLoginModal(true);
   }
 
   function handleProfile() {
@@ -110,45 +105,43 @@ const Navbar = ({ setLoginModal, setOpenProfileModal }: PropsType) => {
 
   return (
     <>
-    <header className="fixed z-10 top-0 left-0 w-full bg-white flex justify-between border border-gray-200 py-2">
-      <div className="logo font-chewy text-3xl font-extrabold text-blue-main">
-        <button onClick={homeClick} className="flex items-center ">
-          <Player src={MainLogo} loop autoplay style={{ width: "60px" }} />
-          <h1>HEARO</h1>  
-        </button>
-      </div>
-      <nav></nav>
-      {isLoggedIn && user ? (
-        <section
-          onClick={handleProfile}
-          className="user-box mx-4 flex items-center"
-        >
-          <div className="w-7">
-
-            <div
-              className="h-5 w-5 rounded"
-              css={css`
-                background-image: url(${user?.profileImg});
-                background-position: center;
-                background-size: cover;
-              `}
-            ></div>
-          </div>
-          <p className="hover:cursor-pointer">{user?.nickname} 님</p>
-          {/* <p>김야옹 님</p> */}
-        </section>
-      ) : (
-        <section className="user-box">
-          <div className="px-3">
-            <Button type="accountButton" onClick={handleLogin}>
-              <img className="mx-3 w-5" src={google_logo} />
-            </Button>
-          </div>
-        </section>
-        )
-    }
-    </header>
-  </>
+      <header className="fixed left-0 top-0 z-10 flex w-full justify-between border border-gray-200 bg-white py-2">
+        <div className="logo font-chewy text-3xl font-extrabold text-blue-main">
+          <button onClick={homeClick} className="flex items-center ">
+            <Player src={MainLogo} loop autoplay style={{ width: "60px" }} />
+            <h1>HEARO</h1>
+          </button>
+        </div>
+        <nav></nav>
+        {isLoggedIn && user ? (
+          <section
+            onClick={handleProfile}
+            className="user-box mx-4 flex items-center"
+          >
+            <div className="w-7">
+              <div
+                className="h-5 w-5 rounded"
+                css={css`
+                  background-image: url(${user?.profileImg});
+                  background-position: center;
+                  background-size: cover;
+                `}
+              ></div>
+            </div>
+            <p className="hover:cursor-pointer">{user?.nickname} 님</p>
+            {/* <p>김야옹 님</p> */}
+          </section>
+        ) : (
+          <section className="user-box">
+            <div className="px-3">
+              <Button type="accountButton" onClick={handleLogin}>
+                <img className="mx-3 w-5" src={google_logo} />
+              </Button>
+            </div>
+          </section>
+        )}
+      </header>
+    </>
   );
 };
 
