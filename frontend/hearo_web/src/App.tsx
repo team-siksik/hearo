@@ -16,7 +16,7 @@ import {
 import { useAppSelector } from "./redux/hooks";
 import { LoginModal, ProfileModal, Navbar } from "./components";
 import { useEffect, useState } from "react";
-import STTTest from "./pages/STTTest";
+import STTTest from "./apis/STT";
 import { PrivateRoute } from "./PrivateRoute";
 
 function App() {
@@ -36,20 +36,20 @@ function App() {
       />
       <Routes>
         <Route path="/" element={<MainPage setLoginModal={setLoginModal} />} />
-        <Route element={<PrivateRoute />}>
-          <Route path="/stt" element={<STT />} />
-          <Route path="/socket" element={<SocketTest />} />
-          <Route path="/recordtest" element={<STTTest />} />
-          <Route path="/comm" element={<ConversationPage />} />
-          <Route path="/records" element={<TotalRecordsPage />} />
-          {/* //FIXME: props 해결해주세요 */}
-          {/* <Route path="/records/:id" element={<RecordPage />} /> */}
-          <Route path="/mypage" element={<MyPage />} />
-          <Route path="/mypage/favcontents" element={<FavContentsPage />} />
-          <Route path="/mypage/settings" element={<SettingsPage />} />
-          <Route path="/login/oauth2/code/google" element={<Google />} />
-          <Route path="*" element={<NotFound404 />} />
-        </Route>
+        {/* <Route element={<PrivateRoute />}> */}
+        <Route path="/stt" element={<STT />} />
+        <Route path="/socket" element={<SocketTest />} />
+        <Route path="/recordtest" element={<STTTest />} />
+        <Route path="/comm" element={<ConversationPage />} />
+        <Route path="/records" element={<TotalRecordsPage />} />
+        {/* //FIXME: props 해결해주세요 */}
+        {/* <Route path="/records/:id" element={<RecordPage />} /> */}
+        <Route path="/mypage" element={<MyPage />} />
+        <Route path="/mypage/favcontents" element={<FavContentsPage />} />
+        <Route path="/mypage/settings" element={<SettingsPage />} />
+        <Route path="/login/oauth2/code/google" element={<Google />} />
+        <Route path="*" element={<NotFound404 />} />
+        {/* </Route> */}
       </Routes>
       {/* 로그인 창 */}
       {loginModal && (
