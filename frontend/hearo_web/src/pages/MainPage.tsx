@@ -1,15 +1,8 @@
 import React, { SetStateAction, useEffect, useRef, useState } from "react";
-import startVoice from "@/assets/Sounds/start.wav";
 import { useNavigate } from "react-router-dom";
 import { useAppSelector } from "@/redux/hooks";
 import { css } from "@emotion/react";
-import {
-  Navbar,
-  Layout,
-  Button,
-  ConversationInfo,
-  LoginModal,
-} from "@/components";
+import { Layout, Button, ConversationInfo } from "@/components";
 import Carousel2 from "@/assets/Carousel2.png";
 import { motion } from "framer-motion";
 
@@ -21,8 +14,6 @@ interface PropsType {
 }
 function MainPage({ setLoginModal }: PropsType) {
   const [comp, setComp] = useState<string>("main");
-  const [isPlaying, setIsPlaying] = useState<boolean>(false);
-  const audioRef = useRef<HTMLAudioElement>(null);
   const navigate = useNavigate();
 
   // redux에서 닉네임을 가져오기 위해 사용함
@@ -32,63 +23,11 @@ function MainPage({ setLoginModal }: PropsType) {
   // 로그인 여부 판단
   const isLoggedin = !!localStorage.getItem("accessToken");
 
-  // TODO: 음성재생 모달도 로그인된 상태에서만 접근 가능하도록 조치해야함
-  // 음성재생 함수
-  const togglePlay = () => {
-    if (isLoggedin) {
-      if (audioRef.current) {
-        if (isPlaying) {
-          audioRef.current.pause();
-        } else {
-          setComp("voice_play");
-          audioRef.current.play();
-        }
-        setIsPlaying(!isPlaying);
-      }
-      setIsPlaying(!isPlaying);
-      // }
-      // } else {
-      // TODO: 알림 주고 login 페이지로 보내기
-      // navigate("/login");
-      // }
-    }
+  const handleRecordPageClick = () => {
+    navigate("/records");
   };
 
-  useEffect(() => {
-    function handleAudioEnded() {
-      setIsPlaying(false);
-      setTimeout(() => {
-        navigate("/comm");
-      }, 1000);
-    }
-
-    if (audioRef.current) {
-      audioRef.current.addEventListener("ended", handleAudioEnded);
-    }
-
-    return () => {
-      if (audioRef.current) {
-        audioRef.current.removeEventListener("ended", handleAudioEnded);
-      }
-    };
-  }, []);
-
-  // // 로그인된 상태에서만 MyPage로 이동
-  // const handleRecordPageClick = () => {
-  //   if (isLoggedin) {
-  //     navigate("/records");
-  //   } else {
-  //     // 로그인되어 있지 않은 경우 로그인 페이지로 이동하도록 처리
-  //     // navigate("/login");
-  //     setLoginModal(true);
-  //   }
-  // };
-  const handleRecordPageClick = () => {
-    navigate('/records')
-  }
-
   // 스크롤 위치에 따른 motion.div 애니메이션 구현
-
   const [scrollPosition, setScrollPosition] = useState(0);
 
   useEffect(() => {
@@ -96,18 +35,15 @@ function MainPage({ setLoginModal }: PropsType) {
       setScrollPosition(window.scrollY);
     };
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
 
     return () => {
-      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener("scroll", handleScroll);
     };
   }, []);
 
-
-
   return (
     <div>
-      <audio ref={audioRef} src={startVoice} />
       {comp === "main" ? (
         <>
           <Layout>
@@ -153,15 +89,16 @@ function MainPage({ setLoginModal }: PropsType) {
               </div>
 
               {/* body */}
-              <section className="mx-4 flex flex-col gap-10 relative">
-                <motion.div className="sticky top-0 m-4 flex h-screen flex-col items-center justify-center bg-white pb-8"
-                initial={{ opacity: 0, x: "-100vw" }}
-                animate={
-                  scrollPosition > 0 
-                  ? { opacity: 1, x: 0 }
-                  : { opacity: 0, x: "-100vw"}
-                }
-                transition={{ duration: 1.5 }}        
+              <section className="relative mx-4 flex flex-col gap-10">
+                <motion.div
+                  className="sticky top-0 m-4 flex h-screen flex-col items-center justify-center bg-white pb-8"
+                  initial={{ opacity: 0, x: "-100vw" }}
+                  animate={
+                    scrollPosition > 0
+                      ? { opacity: 1, x: 0 }
+                      : { opacity: 0, x: "-100vw" }
+                  }
+                  transition={{ duration: 1.5 }}
                 >
                   <div className="grid grid-cols-2 ">
                     <div className="col1">
@@ -183,7 +120,10 @@ function MainPage({ setLoginModal }: PropsType) {
                           쏼라쏼라 어쩌구 저쩌구 쏼라쏼라
                         </p>
                         <div className="w-1/3">
-                          <Button onClick={togglePlay} type="blueTextBtn">
+                          <Button
+                            onClick={() => navigate("/comm")}
+                            type="blueTextBtn"
+                          >
                             회의 시작하기
                           </Button>
                         </div>
@@ -203,14 +143,15 @@ function MainPage({ setLoginModal }: PropsType) {
                     </div>
                   </div>
                 </motion.div>
-                <motion.div className="sticky top-0 m-4 flex h-screen flex-col items-center justify-center bg-white pb-8"
-                initial={{ opacity: 0, x: "100vw" }}
-                animate={
-                  scrollPosition > 400
-                  ? { opacity: 1, x: 0 }
-                  : { opacity: 0, x: "100vw"}
-                }
-                transition={{ duration: 1.5 }}                    
+                <motion.div
+                  className="sticky top-0 m-4 flex h-screen flex-col items-center justify-center bg-white pb-8"
+                  initial={{ opacity: 0, x: "100vw" }}
+                  animate={
+                    scrollPosition > 400
+                      ? { opacity: 1, x: 0 }
+                      : { opacity: 0, x: "100vw" }
+                  }
+                  transition={{ duration: 1.5 }}
                 >
                   <div className="grid grid-cols-2">
                     {/* 기록 확인하기 */}
@@ -243,20 +184,26 @@ function MainPage({ setLoginModal }: PropsType) {
                         어쩌구 저쩌구 쏼라쏼라
                       </p>
                       <div className="w-1/3">
-                        <Button onClick={handleRecordPageClick} type="blueTextBtn">회의 기록 확인하기</Button>
+                        <Button
+                          onClick={handleRecordPageClick}
+                          type="blueTextBtn"
+                        >
+                          회의 기록 확인하기
+                        </Button>
                       </div>
                     </div>
                   </div>
                 </motion.div>
-                <motion.div className="sticky top-0 m-4 flex h-screen flex-col items-center justify-center bg-white  pb-8"
-                initial={{ opacity: 0, x: "-100vw" }}
-                animate={
-                  scrollPosition > 800
-                  ? { opacity: 1, x: 0 }
-                  : { opacity: 0, x: "-100vw"}
-                }
-                transition={{ duration: 1.5 }}                    
-                >                
+                <motion.div
+                  className="sticky top-0 m-4 flex h-screen flex-col items-center justify-center bg-white  pb-8"
+                  initial={{ opacity: 0, x: "-100vw" }}
+                  animate={
+                    scrollPosition > 800
+                      ? { opacity: 1, x: 0 }
+                      : { opacity: 0, x: "-100vw" }
+                  }
+                  transition={{ duration: 1.5 }}
+                >
                   <div className="grid grid-cols-2">
                     <div className="col1">
                       {/* 회의 시작하기 */}
@@ -300,30 +247,27 @@ function MainPage({ setLoginModal }: PropsType) {
           {/* footer */}
           <footer className="h-72 bg-slate-700">
             <div className="p-4">
-              <h5 className="text-white font-chewy text-2xl">Hearo</h5>
-              <p className="text-white font-nanum">소리를 잇는 연결고리</p>
+              <h5 className="font-chewy text-2xl text-white">Hearo</h5>
+              <p className="font-nanum text-white">소리를 잇는 연결고리</p>
             </div>
             <div className="grid grid-cols-3 gap-4 p-4">
-              <div className="flex flex-col justify-center items-center text-white font-nanum">
+              <div className="flex flex-col items-center justify-center font-nanum text-white">
                 <div className="text-lg font-bold">CICD / AI</div>
               </div>
-              <div className="flex flex-col justify-center items-center text-white font-nanum">
+              <div className="flex flex-col items-center justify-center font-nanum text-white">
                 <div className="text-lg font-bold">IoT</div>
                 <div className="text-lg font-bold">백엔드</div>
               </div>
-              <div className="flex flex-col justify-center items-center text-white font-nanum">
+              <div className="flex flex-col items-center justify-center font-nanum text-white">
                 <div className="text-lg font-bold">웹 프론트엔드</div>
                 <div className="text-lg font-bold">앱 프론트엔드</div>
               </div>
             </div>
-            <div className="flex justify-center align-baseline text-white text-2xl font-chewy bottom-0 mt-10">
-                &copy; Hearo by SSAFY A603 srp
+            <div className="bottom-0 mt-10 flex justify-center align-baseline font-chewy text-2xl text-white">
+              &copy; Hearo by SSAFY A603 srp
             </div>
-          </footer>        
+          </footer>
         </>
-      ) : comp === "voice_play" ? (
-        // 음성 재생 -> 회의 시작 페이지로 자동 이동
-        <ConversationInfo cannotExit={true} />
       ) : null}
     </div>
   );
