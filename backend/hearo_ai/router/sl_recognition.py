@@ -127,7 +127,7 @@ async def image(sid, data):
     # test용 emit
     if sequence % 13 == 0:
         socket_manager.emit("sentence", "handsign sentence", room_id, skip_sid=sid)
-    else if sequence % 5 == 0:
+    elif sequence % 5 == 0:
         socket_manager.emit("word", "handsign word", room_id, skip_sid=sid)
 
     # # 모델 인풋 사이즈에 맞게 시퀀스 전처리
