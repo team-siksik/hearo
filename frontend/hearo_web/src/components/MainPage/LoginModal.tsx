@@ -4,11 +4,12 @@ import { GOOGLE_AUTH_URL } from "@/apis/oAuthGoogle";
 import google_logo from "@/assets/Google_Logo.svg";
 import Button from "../common/ui/Button";
 interface PropsType {
+  loginModal: boolean;
   setLoginModal: React.Dispatch<SetStateAction<boolean>>;
 }
-function LoginModal({ setLoginModal }: PropsType) {
+function LoginModal({ loginModal, setLoginModal }: PropsType) {
   return (
-    <Modal open={true} cannotExit={false} setLoginModal={setLoginModal}>
+    <Modal open={loginModal} cannotExit={false} setLoginModal={setLoginModal}>
       <div className="flex flex-col gap-4">
         <div>
           <h2 className="m-auto flex justify-center font-chewy text-5xl text-blue-main">
