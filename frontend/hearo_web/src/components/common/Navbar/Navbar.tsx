@@ -94,7 +94,6 @@ const Navbar = ({ setLoginModal, setOpenProfileModal }: PropsType) => {
   function handleLogin() {
     if (!showModal) {
       setLoginModal(true); 
-      setShowModal(true);
     } else {
       setLoginModal(false);
 
@@ -104,13 +103,10 @@ const Navbar = ({ setLoginModal, setOpenProfileModal }: PropsType) => {
   function handleProfile() {
     if (!showModal) {
       setOpenProfileModal(true)
-      setShowModal(true)
     } else {
       setOpenProfileModal(false)
-      setShowModal(true)
     }
   }
-
 
   return (
     <>
