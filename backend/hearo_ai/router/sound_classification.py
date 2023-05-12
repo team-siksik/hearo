@@ -29,6 +29,7 @@ async def audio_stream(sid, data):
     audio_data_queues[sid].append(audio_segment)
 
     if len(audio_data_queues[sid]) != 10:
+        logger.info("Loading")
         await socket_manager.emit("result", "Loading")
         return
     
@@ -36,6 +37,7 @@ async def audio_stream(sid, data):
 
     # 최대 데시벨 확인
     if combined_audio.max_dBFS < 40:
+        logger.info("Small dB")
         await socket_manager.emit("result", "Small dB")
         return  # API 요청을 하지 않고 함수 종료
     
