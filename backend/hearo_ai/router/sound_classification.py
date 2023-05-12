@@ -37,9 +37,11 @@ async def audio_stream(sid, data):
 
         combined_audio_data = io.BytesIO()
         combined_audio.export(combined_audio_data, format="wav")
+        combined_audio_data.seek(0)
+        audio_data = combined_audio_data.read()
 
         # 음성 데이터를 메모리에서 처리하기 위해 query_with_memory 함수 호출
-        result = api.query_with_memory(combined_audio_data.getvalue())
+        result = api.query_with_memory(audio_data)
         if result:
             logger.info(f"result = {result}")
             await socket_manager.emit("result", result)
