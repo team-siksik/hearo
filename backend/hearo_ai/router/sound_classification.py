@@ -17,7 +17,7 @@ audio_data_queues = {}
 async def audio_stream(sid, data):
 
     audio_data = data["audio"]
-    await socket_manager.emit("info", f"audio: {sid} sent audio '{audio_data}'")
+    logger.info(f"audio: {sid} sent audio '{audio_data}'")
 
 
     base64_audio = data["audio"]
