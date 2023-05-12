@@ -58,7 +58,7 @@ function ConversationPage() {
         />
       ) : null}
       <MeetingSidebar />
-      <div className="absolute mt-20 right-0 w-[82%]">
+      <div className="absolute right-0 mt-20 w-[82%]">
         <ConversationHeader
           openModal={openInfoModal}
           setOpenModal={setOpenInfoModal}
@@ -70,7 +70,6 @@ function ConversationPage() {
           isRecording={isRecording}
           setIsRecording={setIsRecording}
         />
-        <STT />
         <FloatingButton onClick={finishMeeting} />
         <ConversationFooter setNewMessage={setNewMessage} />
       </div>

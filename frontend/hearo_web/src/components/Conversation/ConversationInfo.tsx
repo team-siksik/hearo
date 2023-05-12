@@ -14,6 +14,7 @@ function ConversationInfo({ cannotExit, setOpenInfoModal }: PropsType) {
       open={true}
       cannotExit={cannotExit}
       setOpenInfoModal={setOpenInfoModal}
+      type="info"
     >
       <section className="mb-3 flex items-center justify-center">
         <Info />
