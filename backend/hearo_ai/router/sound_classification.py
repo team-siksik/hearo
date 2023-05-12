@@ -5,12 +5,13 @@ from fastapi import APIRouter, WebSocket
 from ai_code.sound_classification import api
 from collections import deque
 from pydub import AudioSegment
+from main import socket_manager, logger
 
 router = APIRouter(prefix="/sc")
 
 audio_data_queues = {}
 
-@router.websocket("/ws/audio")
+@socket_manager.on("classification")
 async def audio_stream(websocket: WebSocket):
     await websocket.accept()
     sid = websocket.client_id
