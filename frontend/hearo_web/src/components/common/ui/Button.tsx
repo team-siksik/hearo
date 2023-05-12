@@ -7,7 +7,6 @@ interface PropsType {
   onClick?: () => void | React.Dispatch<SetStateAction<boolean>>;
 }
 
-
 function Button({ type, children, onClick }: PropsType) {
   return (
     <>
@@ -39,51 +38,51 @@ function Button({ type, children, onClick }: PropsType) {
             {children}
           </span>
         </button>
+      ) : type === "simpleBlueBtn" ? (
+        <button
+          className="mb-3 ml-12 rounded-full bg-blue-main px-5 py-3 text-base font-medium text-white transition duration-200 hover:bg-blue-600 active:bg-blue-700"
+          onClick={onClick}
+        >
+          {children}
+        </button>
       ) : type === "backButton" ? (
         <button
-          className="group relative w-full overflow-hidden rounded-xl border bg-white text-blue-main border-blue-main px-4 py-2 shadow-md hover:bg-blue-50 transition-all duration-[250ms] ease-out"
+          className="group relative w-full overflow-hidden rounded-xl border border-blue-main bg-white px-4 py-2 text-blue-main shadow-md transition-all duration-[250ms] ease-out hover:bg-blue-50"
           onClick={onClick}
         >
           <div className="absolute inset-0 w-3  "></div>
-          <span className="relative">
-            {children}
-          </span>
+          <span className="relative">{children}</span>
         </button>
       ) : type === "accountButton" ? (
         <button
-        className="mr-2 z-100 h-10 rounded-xl bg-white shadow-md shadow-slate-200"
-        onClick={onClick}
+          className="z-100 mr-2 h-10 rounded-xl bg-white shadow-md shadow-slate-200"
+          onClick={onClick}
         >
           {children}
-        </button> 
+        </button>
       ) : type === "accountModalButton" ? (
         <button
-        className="group w-full transform overflow-hidden rounded-xl bg-white my-2 px-2 py-2"
-        onClick={onClick}
-      >
-        <div className="absolute inset-0 w-0 bg-blue-200 transition-all duration-[250ms] ease-out opacity-80 group-hover:w-full"></div>
-        <span className="relative text-black">
-          <div className="text-start"> 
-          {children}
-          </div>
-        </span>
-      </button>
+          className="group my-2 w-full transform overflow-hidden rounded-xl bg-white px-2 py-2"
+          onClick={onClick}
+        >
+          <div className="absolute inset-0 w-0 bg-blue-200 opacity-80 transition-all duration-[250ms] ease-out group-hover:w-full"></div>
+          <span className="relative text-black">
+            <div className="text-start">{children}</div>
+          </span>
+        </button>
       ) : type === "deleteButton" ? (
         <button
-        className="group relative w-full overflow-hidden rounded-xl border text-white border-red-main px-4 py-2 
-        shadow-md bg-red-500 hover:bg-red-main transition-all duration-[250ms] ease-out"
-        onClick={onClick}
-      >
-        <div className="absolute inset-0 w-3  "></div>
-        <span className="relative">
-          {children}
-        </span>
-      </button>
-      ) :
-      <button onClick={onClick}>
-        {children}</button>
-      } 
-      </>
+          className="group relative w-full overflow-hidden rounded-xl border border-red-main bg-red-500 px-4 py-2 
+        text-white shadow-md transition-all duration-[250ms] ease-out hover:bg-red-main"
+          onClick={onClick}
+        >
+          <div className="absolute inset-0 w-3  "></div>
+          <span className="relative">{children}</span>
+        </button>
+      ) : (
+        <button onClick={onClick}>{children}</button>
+      )}
+    </>
   );
 }
 
