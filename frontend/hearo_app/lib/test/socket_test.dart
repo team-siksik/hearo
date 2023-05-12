@@ -94,7 +94,7 @@ class _SocketTestState extends State<SocketTest> {
 
     while (_isRecording) {
       _startRecording();
-      await Future.delayed(Duration(microseconds: 1000));
+      await Future.delayed(Duration(milliseconds: 1000));
       _stopRecording();
     }
   }
