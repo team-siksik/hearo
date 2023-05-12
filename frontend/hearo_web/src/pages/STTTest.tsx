@@ -229,28 +229,19 @@ export default function STTTest() {
     if (!isRecording) {
       // const accessToken = localStorage.getItem("accessToken");
 
-      // MeetingAPI.startMeeting(accessToken!)
-      //   .then((result) => {
-      //     setRoomSeq(result.data.data.roomSeq); // roomSequence
-      //     record()
-      //       .then((response) => {
-      //         console.log(response);
-      //         createSocket();
-      //       })
-      //       .catch((error) => {
-      //         onError(ERR_AUDIO, "Recorder undefined");
-      //       });
-      //   })
-      //   .catch((err) => {
-      //     onError(ERR_CLIENT, `No user media support, ${err}`);
-      //   });
-      record()
-        .then((response) => {
-          const res = createSocket();
-          socket.current = res;
+      MeetingAPI.startMeeting(accessToken!)
+        .then((result) => {
+          setRoomSeq(result.data.data.roomSeq); // roomSequence
+          record()
+            .then((response) => {
+              createSocket();
+            })
+            .catch((error) => {
+              onError(ERR_AUDIO, "Recorder undefined");
+            });
         })
-        .catch((error) => {
-          onError(ERR_AUDIO, "Recorder undefined");
+        .catch((err) => {
+          onError(ERR_CLIENT, `No user media support, ${err}`);
         });
     }
   }
