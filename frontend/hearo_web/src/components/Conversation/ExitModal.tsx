@@ -35,14 +35,19 @@ function ExitModal({ stream, setOpenExitModal }: PropsType) {
           종료하시겠습니까?
         </p>
       </div>
-      <div className=" grid w-full grid-flow-col grid-cols-2 justify-center gap-2 px-4 ">
+      <div className="grid w-full grid-flow-col grid-cols-2 justify-center gap-2 px-4 ">
         <div className="flex w-full">
-          <Button onClick={handleExitClick} type="redTextBtn">
+          <Button onClick={handleExitClick} 
+          type="backButton"
+          >
             취소
           </Button>
         </div>
         <div className="flex w-full">
-          <Button onClick={handleSaveClick} type="redBgBtn">
+          <Button 
+          onClick={handleSaveClick}
+          type="deleteButton"
+          >
             저장 후 종료
           </Button>
         </div>
