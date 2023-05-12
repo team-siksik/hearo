@@ -106,7 +106,7 @@ class _DeviceScreenState extends State<DeviceScreen> {
    */
     await widget.device
         .connect(autoConnect: false)
-        .timeout(Duration(milliseconds: 10000), onTimeout: () {
+        .timeout(Duration(milliseconds: 4000), onTimeout: () {
       //타임아웃 발생
       //returnValue를 false로 설정
       returnValue = Future.value(false);
@@ -126,20 +126,21 @@ class _DeviceScreenState extends State<DeviceScreen> {
         for (var service in services) {
           var characteristics = service.characteristics;
           for (BluetoothCharacteristic c in characteristics) {
-            if (c.uuid.toString() == "00002a00-0000-1000-8000-00805f9b34fb") {
+            if (c.uuid.toString() == "0000ffe2-0000-1000-8000-00805f9b34fb") {
               print(c.uuid.toString());
               print("성공");
               characteristic = c;
               break;
             } else {
-              print(c.uuid.toString());
+              print(c);
               print("실패");
             }
           }
         }
       }
     });
-
+    print(widget.device);
+    print(characteristic);
     return returnValue ?? Future.value(false);
   }
 
@@ -195,6 +196,8 @@ class _DeviceScreenState extends State<DeviceScreen> {
                 if (deviceState == BluetoothDeviceState.connected) {
                   String data = _textController.text;
                   List<int> bytes = utf8.encode(data);
+                  print("@@@@@@@@@@@@@@@@@");
+                  print(data);
                   print(bytes);
                   print("@@@@@@@@@@@@@@@@@");
                   print(characteristic);

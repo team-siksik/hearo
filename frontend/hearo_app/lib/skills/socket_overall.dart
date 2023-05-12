@@ -61,7 +61,7 @@ class SocketOverall {
   }
 
   void sendAudio(String roomId, audioData) {
-    socket.emit('audio', {'room_id': roomId, 'audio': audioData});
+    socket.emit('classification', {'room_id': roomId, 'audio': audioData});
     print(audioData);
     print("오디오보냄");
   }
