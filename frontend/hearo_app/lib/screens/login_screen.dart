@@ -4,7 +4,6 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hearo_app/apis/login_api.dart';
 import 'package:hearo_app/screens/home_screen.dart';
 import 'package:get/get.dart';
-import 'package:hearo_app/test/blt_test.dart';
 import 'package:hearo_app/test/socket_test.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -59,13 +58,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 SizedBox(
                   height: 30,
                 ),
-                GestureDetector(
-                    onTap: () {
-                      Get.to(() => BtlTest());
-                      // Get.to(() => BleTest2());
-                      // Get.to(() => Test3());
-                    },
-                    child: Image.asset("assets/images/hearo_text_login.png")),
+                Image.asset("assets/images/hearo_text_login.png"),
                 SizedBox(
                   height: 40,
                 ),
