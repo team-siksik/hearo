@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   ConversationHeader,
   ConversationBody,
@@ -8,39 +8,60 @@ import {
   MeetingSidebar,
   FloatingButton,
 } from "@/components";
-import STT from "@/apis/STT";
+import startVoice from "@/assets/Sounds/start.wav";
+import { useNavigate } from "react-router-dom";
 
 // TODO: 좌측 기능, 우측 버튼, 챗봇버튼(?)
 
 function ConversationPage() {
+  // info audio
+  const [isPlaying, setIsPlaying] = useState<boolean>(false);
+  const audioRef = useRef<HTMLAudioElement>(null);
+  const navigate = useNavigate();
+
   // open modal
   const [openInfoModal, setOpenInfoModal] = useState<boolean>(false);
-  const [openExitModal, setOpenExitModal] = useState<boolean>(false);
 
-  // recording
-  const [isRecording, setIsRecording] = useState<boolean>(false);
-
+  // started
+  const [isStarted, setIsStarted] = useState<boolean>(false);
+  const [timerStarted, setTimerStarted] = useState<boolean>(false);
   // tts
   const [newMessage, setNewMessage] = useState<string>("");
 
-  const stopRecording = () => {
-    // if (dictate !== undefined) dictate.stopListening();
-    setIsRecording(false);
+  // 음성재생 함수
+  const togglePlay = () => {
+    if (audioRef.current) {
+      if (isPlaying) {
+        audioRef.current.pause();
+      } else {
+        setIsPlaying(true);
+        audioRef.current.play();
+      }
+      setIsPlaying(!isPlaying);
+    }
+    setIsPlaying(!isPlaying);
   };
 
-  // useEffect(() => {
-  //   return () => {
-  //     stopRecording();
-  //   };
-  // }, [dictate]);
-
-  function finishMeeting() {
-    stopRecording();
-    setOpenExitModal(true);
-  }
-
   useEffect(() => {
-    setIsRecording(true); // 시작하자마자 recording 시작함
+    function handleAudioEnded() {
+      setIsPlaying(false);
+      setTimeout(() => {
+        // recording 시작
+        setIsStarted(true);
+        setTimerStarted(true);
+        true;
+      }, 1000);
+    }
+
+    if (audioRef.current) {
+      audioRef.current.addEventListener("ended", handleAudioEnded);
+    }
+
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.removeEventListener("ended", handleAudioEnded);
+      }
+    };
   }, []);
 
   return (
@@ -51,28 +72,28 @@ function ConversationPage() {
           setOpenInfoModal={setOpenInfoModal}
         />
       ) : null}
-      {openExitModal ? (
-        <ExitModal
-          // stream={stream}
-          setOpenExitModal={setOpenExitModal}
-        />
-      ) : null}
       <MeetingSidebar />
+      <audio ref={audioRef} src={startVoice} />
       <div className="absolute right-0 mt-20 w-[82%]">
         <ConversationHeader
+          timerStarted={timerStarted}
           openModal={openInfoModal}
           setOpenModal={setOpenInfoModal}
-          openExitModal={openExitModal}
-          setOpenExitModal={setOpenExitModal}
         />
         <ConversationBody
+          setTimerStarted={setTimerStarted}
           message={newMessage}
-          isRecording={isRecording}
-          setIsRecording={setIsRecording}
+          isStarted={isStarted}
+          setIsStarted={setIsStarted}
+          togglePlay={togglePlay}
         />
-        <FloatingButton onClick={finishMeeting} />
-        <ConversationFooter setNewMessage={setNewMessage} />
+        <ConversationFooter
+          isStarted={isStarted}
+          setNewMessage={setNewMessage}
+        />
       </div>
+      {/* // 음성 재생 -> 회의 시작 페이지로 자동 이동 */}
+      {isPlaying && <ConversationInfo cannotExit={true} />}
     </div>
   );
 }
