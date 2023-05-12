@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Input } from "@/components";
 interface TimerProps {
   // props 타입 정의
+  timerStarted: boolean;
 }
 
 interface TimeFormat {
@@ -9,15 +10,17 @@ interface TimeFormat {
   seconds: string;
 }
 
-function Timer(props: TimerProps) {
+function Timer({ timerStarted }: TimerProps) {
   const [seconds, setSeconds] = useState<number>(0);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setSeconds((seconds) => seconds + 1);
-    }, 1000);
-    return () => clearInterval(interval);
-  }, []);
+    if (timerStarted) {
+      const interval = setInterval(() => {
+        setSeconds((seconds) => seconds + 1);
+      }, 1000);
+      return () => clearInterval(interval);
+    }
+  }, [timerStarted]);
 
   const formatTime = (time: number): string => {
     const minutes = Math.floor(time / 60);

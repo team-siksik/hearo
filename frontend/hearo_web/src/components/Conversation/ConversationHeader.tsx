@@ -5,24 +5,18 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 
 interface PropsType {
+  timerStarted: boolean;
   openModal: boolean;
   setOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
-  openExitModal: boolean;
-  setOpenExitModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
 function ConversationHeader({
+  timerStarted,
   openModal,
   setOpenModal,
-  openExitModal,
-  setOpenExitModal,
 }: PropsType) {
   function handleClick() {
     // information
     setOpenModal(!openModal);
-  }
-  function handleExitClick() {
-    //TODO: 대화 나가기 -> 저장하고 나가시겠어요?
-    setOpenExitModal(!openExitModal);
   }
 
   return (
@@ -31,7 +25,7 @@ function ConversationHeader({
         <Info />
       </motion.button>
       <div className="w-full">
-        <Timer />
+        <Timer timerStarted={timerStarted} />
       </div>
     </section>
   );
