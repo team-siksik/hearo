@@ -1,23 +1,19 @@
 package com.ssafy.hearo.domain.setting.controller;
 
 import com.ssafy.hearo.domain.account.entity.Account;
-import com.ssafy.hearo.domain.account.repository.AccountRepository;
 import com.ssafy.hearo.domain.setting.dto.SettingResponseDto.*;
 import com.ssafy.hearo.domain.setting.dto.SettingRequestDto.*;
-import com.ssafy.hearo.domain.setting.repository.SettingRepository;
 import com.ssafy.hearo.domain.setting.service.SettingService;
 import com.ssafy.hearo.global.annotation.LoginUser;
 import com.ssafy.hearo.global.common.response.ResponseService;
 import com.ssafy.hearo.global.common.response.Result;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 
 
 @RestController
