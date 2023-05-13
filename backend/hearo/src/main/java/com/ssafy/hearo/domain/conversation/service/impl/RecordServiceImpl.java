@@ -5,11 +5,15 @@ import com.ssafy.hearo.domain.account.entity.Account;
 import com.ssafy.hearo.domain.conversation.dto.ConversationResponseDto.StartConversationResponseDto;
 import com.ssafy.hearo.domain.conversation.dto.RecordResponseDto.*;
 import com.ssafy.hearo.domain.conversation.entity.Conversation;
+import com.ssafy.hearo.domain.conversation.entity.Memo;
 import com.ssafy.hearo.domain.conversation.entity.Record;
+import com.ssafy.hearo.domain.conversation.repository.MemoRepository;
 import com.ssafy.hearo.domain.conversation.repository.RecordRepository;
 import com.ssafy.hearo.domain.conversation.service.RecordService;
 import com.ssafy.hearo.domain.setting.dto.SettingResponseDto;
 import com.ssafy.hearo.domain.setting.entity.FrequentSentence;
+import com.ssafy.hearo.domain.setting.entity.Setting;
+import com.ssafy.hearo.global.error.code.AccountErrorCode;
 import com.ssafy.hearo.global.error.code.ConversationErrorCode;
 import com.ssafy.hearo.global.error.code.RecordErrorCode;
 import com.ssafy.hearo.global.error.exception.ErrorException;
@@ -18,7 +22,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
@@ -41,6 +47,7 @@ public class RecordServiceImpl implements RecordService {
 
     private final DateUtil dateUtil;
     private final RecordRepository recordRepository;
+    private final MemoRepository memoRepository;
 
     private String getRecodingTime(String recordedFile) {
         URL recordUrl;
@@ -136,5 +143,50 @@ public class RecordServiceImpl implements RecordService {
         }
         log.info("[getFavoriteRecordList] 즐겨찾는 기록 목록 조회 완료");
         return result;
+    }
+
+    public GetRecordResponseDto getRecord(Account account, Long recordSeq) {
+        log.info("[getRecord] 기록 조회 시작");
+        Record record = recordRepository.findByAccountAndRecordSeq(account, recordSeq)
+                .orElseThrow(() -> new ErrorException(RecordErrorCode.RECORD_NOT_EXIST));
+
+        log.info("[getRecord] 클로바 URL -> JSON 텍스트 형식으로 변환 시작");
+        URL jsonUrl;
+        String clovaJson;
+        try {
+            jsonUrl = new URL(record.getClovaFile());
+            BufferedReader reader = new BufferedReader(new InputStreamReader(jsonUrl.openStream()));
+            JsonParser jsonParser = new JsonParser();
+            clovaJson = jsonParser.parse(reader).getAsJsonObject().toString();
+        } catch (Exception e) {
+            throw new ErrorException(RecordErrorCode.GET_RECORD_FAILED);
+        }
+        log.info("[getRecord] 클로바 URL -> JSON 텍스트 형식으로 변환 완료");
+
+        log.info("[getRecord] 메모 목록 조회 시작");
+        List<Memo> memoList = memoRepository.findByAccountAndRecordAndDelYn(account, record, (byte)0);
+        List<GetRecordMemoResponseDto> memoResult = new ArrayList<>();
+        for (Memo memo : memoList) {
+            memoResult.add(GetRecordMemoResponseDto.builder()
+                    .memoSeq(memo.getMemoSeq())
+                    .content(memo.getContent())
+                    .timestamp(memo.getTimestamp())
+                    .build());
+        }
+        log.info("[getRecord] 메모 목록 조회 완료");
+
+        log.info("[getRecord] 기록 조회 완료");
+        return GetRecordResponseDto.builder()
+                .recordSeq(record.getRecordSeq())
+                .conversationSeq(record.getConversation().getConversationSeq())
+                .title(record.getTitle())
+                .isFavorite(record.getIsFavorite())
+                .clovaFile(clovaJson)
+                .recordedFileUrl(record.getRecorededFile())
+                .recordingTime(getRecodingTime(record.getRecorededFile()))
+                .regDtm(dateUtil.timestampToString(record.getConversation().getRegDtm()))
+                .modDtm(dateUtil.timestampToString(record.getModDtm()))
+                .memoList(memoResult)
+                .build();
     }
 }
