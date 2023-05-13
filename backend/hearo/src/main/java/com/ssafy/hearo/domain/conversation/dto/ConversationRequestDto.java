@@ -20,4 +20,18 @@ public class ConversationRequestDto {
         private String roomType;
     }
 
+    @Getter
+    public static class SaveConversationMemoRequestDto {
+
+        private String content;
+        private Long timestamp;
+
+    }
+
+    @Getter
+    public static class SaveConversationRequestDto {
+
+        private List<SaveConversationMemoRequestDto> memo;
+    }
+
 }

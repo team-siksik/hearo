@@ -8,12 +8,8 @@ import com.google.gson.Gson;
 import com.ssafy.hearo.domain.account.entity.Account;
 import com.ssafy.hearo.domain.conversation.dto.ConversationRequestDto.*;
 import com.ssafy.hearo.domain.conversation.dto.ConversationResponseDto.*;
-import com.ssafy.hearo.domain.conversation.entity.Keyword;
-import com.ssafy.hearo.domain.conversation.entity.KeywordSentence;
-import com.ssafy.hearo.domain.conversation.entity.Conversation;
-import com.ssafy.hearo.domain.conversation.repository.KeywordRepository;
-import com.ssafy.hearo.domain.conversation.repository.KeywordSentenceRepository;
-import com.ssafy.hearo.domain.conversation.repository.ConversationRepository;
+import com.ssafy.hearo.domain.conversation.entity.*;
+import com.ssafy.hearo.domain.conversation.repository.*;
 import com.ssafy.hearo.domain.conversation.service.ConversationService;
 import com.ssafy.hearo.global.error.code.ClovaErrorCode;
 import com.ssafy.hearo.global.error.code.CommonErrorCode;
@@ -68,6 +64,8 @@ public class ConversationServiceImpl implements ConversationService {
     private final KeywordRepository keywordRepository;
     private final KeywordSentenceRepository keywordSentenceRepository;
     private final ConversationRepository conversationRepository;
+    private final RecordRepository recordRepository;
+    private final MemoRepository memoRepository;
 
 
     @Override
@@ -170,7 +168,7 @@ public class ConversationServiceImpl implements ConversationService {
         return result;
     }
     @Override
-    public void saveConversation(Account account, long conversationSeq, MultipartFile audio) {
+    public void saveConversation(Account account, long conversationSeq, MultipartFile audio, SaveConversationRequestDto requestDto) {
         log.info("[saveConversation] 대화 저장 시작");
         log.info("[saveConversation] audio: {}", String.valueOf(audio));
 
@@ -227,6 +225,31 @@ public class ConversationServiceImpl implements ConversationService {
         amazonS3Client.putObject(bucket, outputFileUrl, inputStreamResult, metadata);
         String outputS3Url = amazonS3Client.getUrl(bucket, outputFileUrl).toString();
         log.info("[saveConversation] s3에 결과 데이터 업로드 완료 - {}", outputS3Url);
+
+        log.info("[saveConversation] record 생성 시작");
+        Record record = Record.builder()
+                .conversation(conversation)
+                .account(account)
+                .title(regDtm)
+                .recorededFile(inputS3Url)
+                .clovaFile(outputS3Url)
+                .build();
+        recordRepository.save(record);
+        log.info("[saveConversation] record 생성 완료 - {}", record.getTitle());
+
+        log.info("[saveConversation] memo 생성 시작");
+        List<SaveConversationMemoRequestDto> conversationMemoList = requestDto.getMemo();
+        for (SaveConversationMemoRequestDto conversationMemo : conversationMemoList) {
+            Memo memo = Memo.builder()
+                    .record(record)
+                    .conversation(conversation)
+                    .account(account)
+                    .content(conversationMemo.getContent())
+                    .timestamp(conversationMemo.getTimestamp())
+                    .build();
+            memoRepository.save(memo);
+            log.info("[saveConversation] memo 생성 완료 - {}", memo.getContent());
+        }
 
         log.info("[saveConversation] 대화 저장 완료");
     }
