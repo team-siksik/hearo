@@ -1,8 +1,8 @@
 package com.ssafy.hearo.domain.conversation.controller;
 
 import com.ssafy.hearo.domain.account.entity.Account;
-import com.ssafy.hearo.domain.conversation.dto.RecordRequestDto.*;
 import com.ssafy.hearo.domain.conversation.dto.RecordResponseDto.*;
+import com.ssafy.hearo.domain.conversation.dto.RecordRequestDto.*;
 import com.ssafy.hearo.domain.conversation.service.RecordService;
 import com.ssafy.hearo.global.annotation.LoginUser;
 import com.ssafy.hearo.global.common.response.ResponseService;
@@ -56,6 +56,14 @@ public class RecordController {
     public ResponseEntity<Result> modifyRecordTitle(@LoginUser Account account, @PathVariable long recordSeq, @RequestBody ModifyRecordTitleRequestDto requestDto) {
         log.info("[modifyRecordTitle] 기록 제목 수정 API 호출 - {}", account.getEmail());
         recordService.modifyRecordTitle(account, recordSeq, requestDto);
+        return ResponseEntity.ok()
+                .body(responseService.getSuccessResult());
+    }
+
+    @PutMapping("/{recordSeq}/favorite")
+    public ResponseEntity<Result> modifyRecordFavorite(@LoginUser Account account, @PathVariable long recordSeq, @RequestBody ModifyRecordFavoriteRequestDto requestDto) {
+        log.info("[modifyRecordFavorite] 기록 즐겨찾기 수정 API 호출 - {}", account.getEmail());
+        recordService.modifyRecordFavorite(account, recordSeq, requestDto);
         return ResponseEntity.ok()
                 .body(responseService.getSuccessResult());
     }
