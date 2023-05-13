@@ -1,43 +1,21 @@
 package com.ssafy.hearo.domain.memo.service.impl;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.ssafy.hearo.domain.account.entity.Account;
 import com.ssafy.hearo.domain.memo.dto.MemoRequestDto.*;
+import com.ssafy.hearo.domain.memo.dto.MemoResponseDto.*;
 import com.ssafy.hearo.domain.memo.entity.Memo;
 import com.ssafy.hearo.domain.memo.repository.MemoRepository;
 import com.ssafy.hearo.domain.memo.service.MemoService;
-import com.ssafy.hearo.domain.record.dto.RecordRequestDto.DeleteRecordRequestDto;
-import com.ssafy.hearo.domain.record.dto.RecordRequestDto.ModifyRecordFavoriteRequestDto;
-import com.ssafy.hearo.domain.record.dto.RecordRequestDto.ModifyRecordTitleRequestDto;
-import com.ssafy.hearo.domain.record.dto.RecordResponseDto.GetRecordListResponseDto;
-import com.ssafy.hearo.domain.record.dto.RecordResponseDto.GetRecordMemoResponseDto;
-import com.ssafy.hearo.domain.record.dto.RecordResponseDto.GetRecordResponseDto;
 import com.ssafy.hearo.domain.record.entity.Record;
 import com.ssafy.hearo.domain.record.repository.RecordRepository;
-import com.ssafy.hearo.domain.record.service.RecordService;
-import com.ssafy.hearo.domain.setting.dto.SettingRequestDto;
-import com.ssafy.hearo.domain.setting.entity.FrequentSentence;
 import com.ssafy.hearo.global.error.code.MemoErrorCode;
 import com.ssafy.hearo.global.error.code.RecordErrorCode;
-import com.ssafy.hearo.global.error.code.SettingErrorCode;
 import com.ssafy.hearo.global.error.exception.ErrorException;
-import com.ssafy.hearo.global.util.DateUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import javax.sound.sampled.AudioFormat;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
 import javax.transaction.Transactional;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,9 +25,25 @@ import java.util.List;
 @Slf4j
 public class MemoServiceImpl implements MemoService {
 
-    private final DateUtil dateUtil;
     private final MemoRepository memoRepository;
     private final RecordRepository recordRepository;
+
+    public List<MemoInfoResponseDto> getMemoList(Account account, Long recordSeq) {
+        log.info("[getMemoList] 메모 목록 조회 시작");
+        Record record = recordRepository.findByAccountAndRecordSeqAndDelYn(account, recordSeq, (byte)0)
+                .orElseThrow(() -> new ErrorException(RecordErrorCode.RECORD_NOT_EXIST));
+        List<Memo> memoList = memoRepository.findByAccountAndRecordAndDelYn(account, record, (byte)0);
+        List<MemoInfoResponseDto> result = new ArrayList<>();
+        for (Memo memo : memoList) {
+            result.add(MemoInfoResponseDto.builder()
+                    .memoSeq(memo.getMemoSeq())
+                    .content(memo.getContent())
+                    .timestamp(memo.getTimestamp())
+                    .build());
+        }
+        log.info("[getMemoList] 메모 목록 조회 완료");
+        return result;
+    }
 
     @Override
     public void createMemo(Account account, Long recordSeq, CreateMemoRequestDto requestDto) {
