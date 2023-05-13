@@ -1,5 +1,6 @@
 package com.ssafy.hearo.domain.conversation.dto;
 
+import com.ssafy.hearo.domain.memo.dto.MemoRequestDto.*;
 import lombok.Getter;
 
 import java.util.List;
@@ -23,7 +24,7 @@ public class ConversationRequestDto {
     @Getter
     public static class SaveConversationRequestDto {
 
-        private List<SaveConversationMemoRequestDto> memo;
+        private List<CreateMemoRequestDto> memo;
     }
 
 }
