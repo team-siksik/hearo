@@ -36,7 +36,7 @@ public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver 
         }
 
         Account account = accountRepository.findByEmail(email).orElse(null);
-        log.info("[LoginUser] {}", account);
+        log.info("[LoginUser] {}", account.getEmail());
 
         return account;
     }

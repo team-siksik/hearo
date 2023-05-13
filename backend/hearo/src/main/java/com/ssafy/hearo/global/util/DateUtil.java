@@ -1,6 +1,5 @@
 package com.ssafy.hearo.global.util;
 
-import com.ssafy.hearo.global.error.code.CommonErrorCode;
 import org.springframework.stereotype.Component;
 
 import java.sql.Timestamp;
