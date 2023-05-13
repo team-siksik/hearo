@@ -101,6 +101,7 @@ dependencies:
   flutter_image_compress: ^2.0.2
   # 앱이름이미지
   flutter_launcher_icons:
+  flutter_switch: ^0.3.2
 
 
 dev_dependencies:

@@ -4,19 +4,39 @@ import 'package:hearo_app/controller/login_controller.dart';
 import 'package:hearo_app/screens/chats/chat_home.dart';
 import 'package:hearo_app/screens/mysettings/favorite_say.dart';
 import 'package:hearo_app/test/blue_search2.dart';
-import 'package:hearo_app/widgets/common/custom_app_bar.dart';
+import 'package:hearo_app/widgets/common/custom_app_bar_glasses.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:flutter_switch/flutter_switch.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+class HomeScreenGlasses extends StatefulWidget {
+  const HomeScreenGlasses({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<HomeScreenGlasses> createState() => _HomeScreenGlassesState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+getPermissionCamera() async {
+  var statusCamera = await Permission.camera.status;
+  if (statusCamera.isGranted) {
+    print('허락됨2Cameratooth');
+  } else if (statusCamera.isDenied) {
+    print('거절됨2Cameratooth');
+    Permission.camera.request();
+  }
+}
+
+class _HomeScreenGlassesState extends State<HomeScreenGlasses> {
+  @override
+  void initState() {
+    super.initState();
+    getPermissionCamera();
+    // WidgetsFlutterBinding.ensureInitialized();
+  }
+
   LoginController loginController = Get.put(LoginController());
   DateTime? firstPress;
+  bool isBlueOn = false;
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -24,7 +44,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return WillPopScope(
       onWillPop: onWillPop,
       child: Scaffold(
-        appBar: CustomMainAppBar(),
+        appBar: CustomMainAppBarGlasses(),
         body: SizedBox(
           width: size.width,
           height: size.height,
@@ -36,8 +56,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     decoration: BoxDecoration(
                       color: Color(0xffFAFAFA),
                       borderRadius: const BorderRadius.only(
-                          bottomLeft: Radius.circular(100),
-                          bottomRight: Radius.circular(100)),
+                          bottomLeft: Radius.circular(30),
+                          bottomRight: Radius.circular(30)),
                       boxShadow: [
                         BoxShadow(
                           color: Colors.transparent.withOpacity(0.25),
@@ -51,11 +71,38 @@ class _HomeScreenState extends State<HomeScreen> {
                     margin: const EdgeInsets.symmetric(vertical: 5),
                     padding: const EdgeInsets.symmetric(vertical: 10),
                     width: size.width,
-                    child: SizedBox()),
+                    child: FlutterSwitch(
+                      activeText: "온",
+                      inactiveText: "오프",
+                      width: 200.0,
+                      height: 100.0,
+                      toggleSize: 100.0,
+                      value: isBlueOn,
+                      borderRadius: 30.0,
+                      activeToggleColor: Colors.blue,
+                      inactiveToggleColor: Colors.grey,
+                      activeSwitchBorder: Border.all(color: Colors.blue),
+                      inactiveSwitchBorder: Border.all(color: Colors.grey),
+                      activeColor: Colors.white,
+                      inactiveColor: Colors.white,
+                      onToggle: (value) {
+                        setState(() {
+                          isBlueOn = value;
+                        });
+                      },
+                      activeIcon: Container(
+                          child: Column(
+                        children: [Image.asset("assets/images/glasses.png")],
+                      )),
+                      inactiveIcon: Container(
+                          child: Column(
+                        children: [Image.asset("assets/images/banglass.png")],
+                      )),
+                    )),
               ),
               // 네비게이션 버튼들
               Flexible(
-                flex: 10,
+                flex: 6,
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(20, 10, 20, 5),
                   child: Column(children: [
@@ -67,6 +114,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     InkWell(
                       onTap: () {
+                        // Get.to(() => SpeechScreen());
+                        // Get.to(() => Screen1());
+                        // Get.to(() => CameraTest());
+                        // Get.to(() => Camera2());
                         Get.to(() => BlueSearch2());
                       },
                       child: naviButton(size, 2),

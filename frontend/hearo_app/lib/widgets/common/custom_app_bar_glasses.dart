@@ -3,8 +3,9 @@ import 'package:get/get.dart';
 import 'package:hearo_app/controller/login_controller.dart';
 import 'package:hearo_app/screens/mysettings/setting_home.dart';
 
-class CustomMainAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const CustomMainAppBar({super.key});
+class CustomMainAppBarGlasses extends StatelessWidget
+    implements PreferredSizeWidget {
+  const CustomMainAppBarGlasses({super.key});
   @override
   Widget build(BuildContext context) {
     LoginController loginController = Get.put(LoginController());
@@ -24,7 +25,7 @@ class CustomMainAppBar extends StatelessWidget implements PreferredSizeWidget {
               Container(
                   margin: const EdgeInsets.fromLTRB(2, 5, 5, 5),
                   child: Text(
-                    "mobile",
+                    "Glass",
                     style: TextStyle(color: Color(0xff1A73E8), fontSize: 14),
                   ))
             ],
