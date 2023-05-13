@@ -2,6 +2,8 @@ package com.ssafy.hearo.domain.record.service.impl;
 
 import com.google.gson.*;
 import com.ssafy.hearo.domain.account.entity.Account;
+import com.ssafy.hearo.domain.memo.dto.MemoResponseDto.*;
+import com.ssafy.hearo.domain.memo.service.MemoService;
 import com.ssafy.hearo.domain.record.dto.RecordResponseDto.*;
 import com.ssafy.hearo.domain.record.dto.RecordRequestDto.*;
 import com.ssafy.hearo.domain.memo.entity.Memo;
@@ -37,6 +39,7 @@ public class RecordServiceImpl implements RecordService {
     private final DateUtil dateUtil;
     private final RecordRepository recordRepository;
     private final MemoRepository memoRepository;
+    private final MemoService memoService;
 
     private String getRecodingTime(String recordedFile) {
         URL recordUrl;
@@ -153,15 +156,7 @@ public class RecordServiceImpl implements RecordService {
         log.info("[getRecord] 클로바 URL -> JSON 텍스트 형식으로 변환 완료");
 
         log.info("[getRecord] 메모 목록 조회 시작");
-        List<Memo> memoList = memoRepository.findByAccountAndRecordAndDelYn(account, record, (byte)0);
-        List<GetRecordMemoResponseDto> memoResult = new ArrayList<>();
-        for (Memo memo : memoList) {
-            memoResult.add(GetRecordMemoResponseDto.builder()
-                    .memoSeq(memo.getMemoSeq())
-                    .content(memo.getContent())
-                    .timestamp(memo.getTimestamp())
-                    .build());
-        }
+        List<MemoInfoResponseDto> memoResult = memoService.getMemoList(account, recordSeq);
         log.info("[getRecord] 메모 목록 조회 완료");
 
         log.info("[getRecord] 기록 조회 완료");
@@ -195,11 +190,15 @@ public class RecordServiceImpl implements RecordService {
         log.info("[modifyRecordFavorite] 기록 즐겨찾기 수정 완료");
     }
 
-    public void deleteRecord(Account account, Long recordSeq) {
+    public void deleteRecord(Account account, DeleteRecordRequestDto requestDto) {
         log.info("[deleteRecord] 기록 삭제 시작");
-        Record record = recordRepository.findByAccountAndRecordSeqAndDelYn(account, recordSeq, (byte)0)
-                .orElseThrow(() -> new ErrorException(RecordErrorCode.RECORD_NOT_EXIST));
-        record.delete();
+        List<Long> deleteRecordSeqList = requestDto.getDeleteRecordSeqList();
+        for (Long deleteRecordSeq : deleteRecordSeqList) {
+            Record record = recordRepository.findByAccountAndRecordSeqAndDelYn(account, deleteRecordSeq, (byte)0)
+                    .orElseThrow(() -> new ErrorException(RecordErrorCode.RECORD_NOT_EXIST));
+            log.info("[deleteRecord] 기록 삭제 - {}", record.getRecordSeq());
+            record.delete();
+        }
         log.info("[deleteRecord] 기록 삭제 완료");
     }
 

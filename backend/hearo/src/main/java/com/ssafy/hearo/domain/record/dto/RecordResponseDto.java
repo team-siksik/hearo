@@ -1,5 +1,6 @@
 package com.ssafy.hearo.domain.record.dto;
 
+import com.ssafy.hearo.domain.memo.dto.MemoResponseDto.*;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -23,14 +24,6 @@ public class RecordResponseDto {
 
     @Getter
     @Builder
-    public static class GetRecordMemoResponseDto {
-        private Long memoSeq;
-        private String content;
-        private Long timestamp;
-    }
-
-    @Getter
-    @Builder
     public static class GetRecordResponseDto {
 
         private long recordSeq;
@@ -42,6 +35,6 @@ public class RecordResponseDto {
         private String recordingTime;
         private String regDtm;
         private String modDtm;
-        private List<GetRecordMemoResponseDto> memoList;
+        private List<MemoInfoResponseDto> memoList;
     }
 }
