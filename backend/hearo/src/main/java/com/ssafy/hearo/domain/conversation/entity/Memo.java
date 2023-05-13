@@ -2,12 +2,10 @@ package com.ssafy.hearo.domain.conversation.entity;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import com.ssafy.hearo.domain.conversation.entity.Conversation;
+import com.ssafy.hearo.domain.account.entity.Account;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import com.ssafy.hearo.domain.account.entity.Account;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -20,11 +18,15 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @DynamicInsert
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
-public class Record {
+public class Memo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
-    private Long recordSeq;
+    private Long memoSeq;
+
+    @ManyToOne
+    @JoinColumn(name = "recordSeq", nullable = false)
+    private Record record;
 
     @ManyToOne
     @JoinColumn(name = "conversationSeq", nullable = false)
@@ -34,17 +36,15 @@ public class Record {
     @JoinColumn(name = "userSeq", nullable = false)
     private Account account;
 
-    @Column(length = 100)
-    private String title;
+    @Column(length = 500)
+    private String content;
 
     @Column(nullable = false)
-    private Byte isFavorite;
+    private Long timestamp;
 
-    @Column(length = 500)
-    private String recorededFile;
-
-    @Column(length = 500)
-    private String clovaFile;
+    @Column(nullable = false)
+    @CreationTimestamp
+    private Timestamp regDtm;
 
     @Column(nullable = false)
     @UpdateTimestamp
@@ -54,18 +54,17 @@ public class Record {
     private Byte delYn;
 
     @Builder
-    public Record(Conversation conversation, Account account, String title, Byte isFavorite, String recorededFile, String clovaFile, Byte delYn) {
+    public Memo(Record record, Conversation conversation, Account account, String content, Long timestamp, Byte delYn) {
+        this.record = record;
         this.conversation = conversation;
         this.account = account;
-        this.title = title;
-        this.isFavorite = isFavorite;
-        this.recorededFile = recorededFile;
-        this.clovaFile = clovaFile;
+        this.content = content;
+        this.timestamp = timestamp;
         this.delYn = delYn;
     }
 
-    public void modify(String title) {
-        this.title = title;
+    public void modify(String content) {
+        this.content = content;
     }
 
     public void delete() {
