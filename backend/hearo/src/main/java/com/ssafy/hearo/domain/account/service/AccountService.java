@@ -2,8 +2,6 @@ package com.ssafy.hearo.domain.account.service;
 
 
 import com.ssafy.hearo.domain.account.entity.Account;
-import com.ssafy.hearo.domain.account.dto.AccountDto;
-import com.ssafy.hearo.domain.account.entity.Role;
 import com.ssafy.hearo.domain.account.repository.AccountRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
