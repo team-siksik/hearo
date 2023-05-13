@@ -48,8 +48,6 @@ function ConversationPage() {
       setTimeout(() => {
         // recording 시작
         setIsStarted(true);
-        setTimerStarted(true);
-        true;
       }, 1000);
     }
 
