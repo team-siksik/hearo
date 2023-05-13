@@ -195,5 +195,12 @@ public class RecordServiceImpl implements RecordService {
         log.info("[modifyRecordFavorite] 기록 즐겨찾기 수정 완료");
     }
 
+    public void deleteRecord(Account account, Long recordSeq) {
+        log.info("[deleteRecord] 기록 삭제 시작");
+        Record record = recordRepository.findByAccountAndRecordSeqAndDelYn(account, recordSeq, (byte)0)
+                .orElseThrow(() -> new ErrorException(RecordErrorCode.RECORD_NOT_EXIST));
+        record.delete();
+        log.info("[deleteRecord] 기록 삭제 완료");
+    }
 
 }
