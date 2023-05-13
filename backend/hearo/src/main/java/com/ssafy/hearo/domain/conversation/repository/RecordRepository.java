@@ -11,8 +11,8 @@ import java.util.Optional;
 
 public interface RecordRepository extends JpaRepository <Record, Long> {
 
-    Page<Record> findByAccountOrderByConversation_RegDtmDesc(Account account, Pageable pageable);
-    Page<Record> findByAccountAndIsFavoriteOrderByConversation_RegDtmDesc(Account account, byte isFavorite, Pageable pageable);
-    Optional<Record> findByAccountAndRecordSeq(Account account, Long recordSeq);
+    Page<Record> findByAccountAndDelYnOrderByConversation_RegDtmDesc(Account account, Byte delYn, Pageable pageable);
+    Page<Record> findByAccountAndIsFavoriteAndDelYnOrderByConversation_RegDtmDesc(Account account, byte isFavorite, byte delYn, Pageable pageable);
+    Optional<Record> findByAccountAndRecordSeqAndDelYn(Account account, Long recordSeq, byte delYn);
 
 }
