@@ -25,7 +25,7 @@ public class ConversationController {
 
     @PostMapping("/room/start")
     public ResponseEntity<Result> startConversation(@LoginUser Account account, @RequestBody StartConversationRequestDto requestDto) {
-        log.info("[startConversation] 대화 시작 API 호출");
+        log.info("[startConversation] 대화 시작 API 호출 - {}", account.getEmail());
         StartConversationResponseDto result = conversationService.startConversation(account, requestDto);
         log.info("[startConversation] result: {}", result);
         return ResponseEntity.ok()
@@ -34,7 +34,7 @@ public class ConversationController {
 
     @PutMapping("/room/{conversationSeq}/close")
     public ResponseEntity<Result> endConversation(@LoginUser Account account, @PathVariable long conversationSeq) {
-        log.info("[endConversation] 대화 종료 API 호출");
+        log.info("[endConversation] 대화 종료 API 호출 - {}", account.getEmail());
         EndConversationResponseDto result = conversationService.endConversation(account, conversationSeq);
         log.info("[endConversation] result: {}", result);
         return ResponseEntity.ok()
@@ -43,7 +43,7 @@ public class ConversationController {
 
     @PostMapping("/room/{conversationSeq}/save")
     public ResponseEntity<Result> saveConversation(@LoginUser Account account, @PathVariable long conversationSeq, @RequestPart("audio") MultipartFile audio, @RequestPart("memo") SaveConversationRequestDto requestDto) {
-        log.info("[saveConversation] 대화 저장 API 호출");
+        log.info("[saveConversation] 대화 저장 API 호출 - {}", account.getEmail());
         conversationService.saveConversation(account, conversationSeq, audio, requestDto);
         return ResponseEntity.ok()
                 .body(responseService.getSuccessResult());

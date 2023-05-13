@@ -2,7 +2,6 @@ package com.ssafy.hearo.domain.conversation.dto;
 
 import lombok.Getter;
 
-import java.util.List;
 
 public class RecordRequestDto {
 
