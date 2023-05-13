@@ -54,14 +54,12 @@ public class Record {
     private Byte delYn;
 
     @Builder
-    public Record(Conversation conversation, Account account, String title, Byte isFavorite, String recorededFile, String clovaFile, Byte delYn) {
+    public Record(Conversation conversation, Account account, String title, String recorededFile, String clovaFile) {
         this.conversation = conversation;
         this.account = account;
         this.title = title;
-        this.isFavorite = isFavorite;
         this.recorededFile = recorededFile;
         this.clovaFile = clovaFile;
-        this.delYn = delYn;
     }
 
     public void modify(String title) {

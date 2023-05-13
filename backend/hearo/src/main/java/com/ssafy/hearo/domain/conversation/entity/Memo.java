@@ -54,13 +54,12 @@ public class Memo {
     private Byte delYn;
 
     @Builder
-    public Memo(Record record, Conversation conversation, Account account, String content, Long timestamp, Byte delYn) {
+    public Memo(Record record, Conversation conversation, Account account, String content, Long timestamp) {
         this.record = record;
         this.conversation = conversation;
         this.account = account;
         this.content = content;
         this.timestamp = timestamp;
-        this.delYn = delYn;
     }
 
     public void modify(String content) {
