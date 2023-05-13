@@ -3,6 +3,7 @@ package com.ssafy.hearo.domain.conversation.service;
 import com.ssafy.hearo.domain.account.entity.Account;
 import com.ssafy.hearo.domain.conversation.dto.ConversationRequestDto.*;
 import com.ssafy.hearo.domain.conversation.dto.ConversationResponseDto.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -14,7 +15,9 @@ public interface ConversationService {
 
     List<KeywordSentenceResponseDto> getSituationSentenceList(long keywordSeq);
 
-    RoomResponseDto startConversation(Account account);
+    StartConversationResponseDto startConversation(Account account, StartConversationRequestDto requestDto);
 
-    RoomResponseDto endConversation(Account account, long roomSeq);
+    EndConversationResponseDto endConversation(Account account, long roomSeq);
+
+    void saveConversation(Account account, long conversationSeq, MultipartFile audio);
 }

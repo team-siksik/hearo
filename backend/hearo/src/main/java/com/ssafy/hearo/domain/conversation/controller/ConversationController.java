@@ -1,5 +1,7 @@
 package com.ssafy.hearo.domain.conversation.controller;
 
+import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.ssafy.hearo.domain.account.entity.Account;
 import com.ssafy.hearo.domain.conversation.dto.ConversationRequestDto.*;
 import com.ssafy.hearo.domain.conversation.dto.ConversationResponseDto.*;
@@ -9,9 +11,13 @@ import com.ssafy.hearo.global.common.response.ResponseService;
 import com.ssafy.hearo.global.common.response.Result;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -50,20 +56,29 @@ public class ConversationController {
     }
 
     @PostMapping("/room/start")
-    public ResponseEntity<Result> startConversation(@LoginUser Account account) {
+    public ResponseEntity<Result> startConversation(@LoginUser Account account, @RequestBody StartConversationRequestDto requestDto) {
         log.info("[startConversation] 대화 시작 API 호출");
-        RoomResponseDto result = conversationService.startConversation(account);
+        log.info(account.getEmail());
+        StartConversationResponseDto result = conversationService.startConversation(account, requestDto);
         log.info("[startConversation] result: {}", result);
         return ResponseEntity.ok()
                 .body(responseService.getSingleResult(result));
     }
 
-    @PutMapping("/room/{roomSeq}/close")
-    public ResponseEntity<Result> endConversation(@LoginUser Account account, @PathVariable long roomSeq) {
+    @PutMapping("/room/{conversationSeq}/close")
+    public ResponseEntity<Result> endConversation(@LoginUser Account account, @PathVariable long conversationSeq) {
         log.info("[endConversation] 대화 종료 API 호출");
-        RoomResponseDto result = conversationService.endConversation(account, roomSeq);
+        EndConversationResponseDto result = conversationService.endConversation(account, conversationSeq);
         log.info("[endConversation] result: {}", result);
         return ResponseEntity.ok()
                 .body(responseService.getSingleResult(result));
+    }
+
+    @PostMapping("/room/{conversationSeq}/save")
+    public ResponseEntity<Result> saveConversation(@LoginUser Account account, @PathVariable long conversationSeq, @RequestParam("audio") MultipartFile audio) {
+        log.info("[saveConversation] 대화 저장 API 호출");
+        conversationService.saveConversation(account, conversationSeq, audio);
+        return ResponseEntity.ok()
+                .body(responseService.getSuccessResult());
     }
 }
