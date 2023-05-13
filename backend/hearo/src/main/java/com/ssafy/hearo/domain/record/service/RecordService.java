@@ -1,8 +1,8 @@
-package com.ssafy.hearo.domain.conversation.service;
+package com.ssafy.hearo.domain.record.service;
 
 import com.ssafy.hearo.domain.account.entity.Account;
-import com.ssafy.hearo.domain.conversation.dto.RecordRequestDto.*;
-import com.ssafy.hearo.domain.conversation.dto.RecordResponseDto.*;
+import com.ssafy.hearo.domain.record.dto.RecordRequestDto.*;
+import com.ssafy.hearo.domain.record.dto.RecordResponseDto.*;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;

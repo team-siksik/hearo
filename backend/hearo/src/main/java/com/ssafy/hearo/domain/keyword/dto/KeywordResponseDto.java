@@ -1,4 +1,4 @@
-package com.ssafy.hearo.domain.conversation.dto;
+package com.ssafy.hearo.domain.keyword.dto;
 
 import lombok.Builder;
 import lombok.Getter;
