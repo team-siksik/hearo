@@ -1,10 +1,12 @@
-package com.ssafy.hearo.domain.conversation.service.impl;
+package com.ssafy.hearo.domain.keyword.service.impl;
 
-import com.ssafy.hearo.domain.conversation.dto.KeywordRequestDto.CreateSituationRequestDto;
-import com.ssafy.hearo.domain.conversation.dto.KeywordResponseDto.*;
-import com.ssafy.hearo.domain.conversation.entity.*;
-import com.ssafy.hearo.domain.conversation.repository.*;
-import com.ssafy.hearo.domain.conversation.service.KeywordService;
+import com.ssafy.hearo.domain.keyword.dto.KeywordRequestDto.CreateSituationRequestDto;
+import com.ssafy.hearo.domain.keyword.dto.KeywordResponseDto.*;
+import com.ssafy.hearo.domain.keyword.service.KeywordService;
+import com.ssafy.hearo.domain.keyword.entity.Keyword;
+import com.ssafy.hearo.domain.keyword.entity.KeywordSentence;
+import com.ssafy.hearo.domain.keyword.repository.KeywordRepository;
+import com.ssafy.hearo.domain.keyword.repository.KeywordSentenceRepository;
 import com.ssafy.hearo.global.error.code.CommonErrorCode;
 import com.ssafy.hearo.global.error.exception.ErrorException;
 import lombok.RequiredArgsConstructor;
