@@ -15,4 +15,5 @@ public interface RecordService {
     GetRecordResponseDto getRecord(Account account, Long recordSeq);
     void modifyRecordTitle(Account account, Long recordSeq, ModifyRecordTitleRequestDto requestDto);
     void modifyRecordFavorite(Account account, Long recordSeq, ModifyRecordFavoriteRequestDto requestDto);
+    void deleteRecord(Account account, Long recordSeq);
 }
