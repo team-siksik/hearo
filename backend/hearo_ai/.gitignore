@@ -28,3 +28,4 @@ archive.zip
 .bashrc
 human_jenkins_test.sh
 keys.py
+credential.json
