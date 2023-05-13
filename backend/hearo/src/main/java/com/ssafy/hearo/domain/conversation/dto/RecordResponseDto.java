@@ -1,14 +1,8 @@
 package com.ssafy.hearo.domain.conversation.dto;
 
-import com.ssafy.hearo.domain.account.entity.Account;
-import com.ssafy.hearo.domain.conversation.entity.Conversation;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
-import org.hibernate.annotations.UpdateTimestamp;
 
-import javax.persistence.*;
-import java.sql.Timestamp;
 import java.util.List;
 
 public class RecordResponseDto {
