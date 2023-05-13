@@ -1,9 +1,9 @@
-package com.ssafy.hearo.domain.conversation.controller;
+package com.ssafy.hearo.domain.record.controller;
 
 import com.ssafy.hearo.domain.account.entity.Account;
-import com.ssafy.hearo.domain.conversation.dto.RecordResponseDto.*;
-import com.ssafy.hearo.domain.conversation.dto.RecordRequestDto.*;
-import com.ssafy.hearo.domain.conversation.service.RecordService;
+import com.ssafy.hearo.domain.record.dto.RecordResponseDto.*;
+import com.ssafy.hearo.domain.record.dto.RecordRequestDto.*;
+import com.ssafy.hearo.domain.record.service.RecordService;
 import com.ssafy.hearo.global.annotation.LoginUser;
 import com.ssafy.hearo.global.common.response.ResponseService;
 import com.ssafy.hearo.global.common.response.Result;
