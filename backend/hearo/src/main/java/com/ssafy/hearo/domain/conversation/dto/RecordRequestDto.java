@@ -11,4 +11,10 @@ public class RecordRequestDto {
 
         private String title;
     }
+
+    @Getter
+    public static class ModifyRecordFavoriteRequestDto {
+
+        private Long isFavorite;
+    }
 }
