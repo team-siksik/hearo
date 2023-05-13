@@ -10,4 +10,5 @@ import java.util.List;
 public interface RecordService {
 
     List<GetRecordListResponseDto> getRecordList(Account account, Pageable pageable);
+    List<GetRecordListResponseDto> getFavoriteRecordList(Account account, Pageable pageable);
 }
