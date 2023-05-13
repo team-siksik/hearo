@@ -2,6 +2,7 @@ package com.ssafy.hearo.domain.conversation.service.impl;
 
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.ssafy.hearo.domain.account.entity.Account;
@@ -37,8 +38,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
-import java.io.IOException;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.sql.Timestamp;
 import java.util.*;
 
@@ -66,6 +68,7 @@ public class ConversationServiceImpl implements ConversationService {
     private final KeywordRepository keywordRepository;
     private final KeywordSentenceRepository keywordSentenceRepository;
     private final ConversationRepository conversationRepository;
+
 
     @Override
     public void createSituation(CreateSituationRequestDto requestDto) {
@@ -166,7 +169,6 @@ public class ConversationServiceImpl implements ConversationService {
         log.info("[endConversation] 대화 종료 완료");
         return result;
     }
-
     @Override
     public void saveConversation(Account account, long conversationSeq, MultipartFile audio) {
         log.info("[saveConversation] 대화 저장 시작");
@@ -176,18 +178,18 @@ public class ConversationServiceImpl implements ConversationService {
         Conversation conversation = conversationRepository.findByAccountAndConversationSeq(account, conversationSeq)
                 .orElseThrow(() -> new ErrorException(ConversationErrorCode.CONVERSATION_NOT_VALID));
         String regDtm = dateUtil.timestampToString(conversation.getRegDtm());
-        String fileUrl = account.getEmail() + "/" + conversationSeq + "/input/" + regDtm + ".wav";
+        String inputFileUrl = account.getEmail() + "/" + conversationSeq + "/input/" + regDtm + ".wav";
         try {
             ObjectMetadata metadata= new ObjectMetadata();
             metadata.setContentType(audio.getContentType());
             metadata.setContentLength(audio.getSize());
-            amazonS3Client.putObject(bucket, fileUrl, audio.getInputStream(), metadata);
+            amazonS3Client.putObject(bucket, inputFileUrl, audio.getInputStream(), metadata);
         } catch (IOException e) {
             log.info("[saveConversation] s3에 음성 데이터 업로드 실패");
             throw new ErrorException(S3ErrorCode.S3_UPLOAD_FAILED);
         }
-        String s3Url = amazonS3Client.getUrl(bucket, fileUrl).toString();
-        log.info("[saveConversation] s3에 음성 데이터 업로드 완료 - {}", s3Url);
+        String inputS3Url = amazonS3Client.getUrl(bucket, inputFileUrl).toString();
+        log.info("[saveConversation] s3에 음성 데이터 업로드 완료 - {}", inputS3Url);
 
         log.info("[saveConversation] 클로바 스피치 API 요청");
         HttpPost httpPost = new HttpPost(invokeUrl + "/recognizer/url");
@@ -199,30 +201,34 @@ public class ConversationServiceImpl implements ConversationService {
         httpPost.setHeaders(HEADERS);
         // body
         Map<String, Object> body = new HashMap<>();
-        body.put("url", s3Url);
+        body.put("url", inputS3Url);
         body.put("language", "ko-KR");
         body.put("completion", "sync");
         // request
         HttpEntity httpEntity = new StringEntity(new Gson().toJson(body), ContentType.APPLICATION_JSON);
         httpPost.setEntity(httpEntity);
+
+        String stringResult;
         try (final CloseableHttpResponse httpResponse = httpClient.execute(httpPost)) {
             final HttpEntity entity = httpResponse.getEntity();
-            String stringResult = EntityUtils.toString(entity, StandardCharsets.UTF_8);
+            stringResult = EntityUtils.toString(entity, StandardCharsets.UTF_8);
             log.info("[saveConversation] Result: {}", stringResult);
-
-            Object parsedResult = objectMapper.readValue(stringResult, Object.class);
-            String jsonResult = objectMapper.writeValueAsString(parsedResult);
-            log.info(jsonResult);
         } catch (Exception e) {
             log.info("[saveConversation] 클로바 스피치 API 요청 실패");
             throw new ErrorException(ClovaErrorCode.CLOVA_FAILED);
         }
 
-
-        log.info("[saveConversation] s3에 결과 데이터 업로드 - 아이디/대화번호/아웃풋");
+        log.info("[saveConversation] s3에 결과 데이터 업로드 시작");
+        String outputFileUrl = account.getEmail() + "/" + conversationSeq + "/output/" + regDtm + ".json";
+        InputStream inputStreamResult = new ByteArrayInputStream(stringResult.getBytes(StandardCharsets.UTF_8));
+        ObjectMetadata metadata= new ObjectMetadata();
+        metadata.setContentType("application/json");
+        metadata.setContentLength(stringResult.getBytes(StandardCharsets.UTF_8).length);
+        amazonS3Client.putObject(bucket, outputFileUrl, inputStreamResult, metadata);
+        String outputS3Url = amazonS3Client.getUrl(bucket, outputFileUrl).toString();
+        log.info("[saveConversation] s3에 결과 데이터 업로드 완료 - {}", outputS3Url);
 
         log.info("[saveConversation] 대화 저장 완료");
-
     }
 
 }
