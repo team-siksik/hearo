@@ -36,6 +36,12 @@ dependencies {
 
 	// Amazon S3
 	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+
+	// For Clova Speech
+	implementation 'org.apache.httpcomponents:httpclient:4.5.12'
+	implementation 'org.apache.httpcomponents:httpmime:4.3.1'
+	implementation 'com.google.code.gson:gson:2.8.5'
+
 }
 
 tasks.named('test') {
