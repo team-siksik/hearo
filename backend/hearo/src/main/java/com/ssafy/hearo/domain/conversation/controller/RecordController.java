@@ -1,11 +1,9 @@
 package com.ssafy.hearo.domain.conversation.controller;
 
 import com.ssafy.hearo.domain.account.entity.Account;
+import com.ssafy.hearo.domain.conversation.dto.RecordRequestDto.*;
 import com.ssafy.hearo.domain.conversation.dto.RecordResponseDto.*;
 import com.ssafy.hearo.domain.conversation.service.RecordService;
-import com.ssafy.hearo.domain.setting.dto.SettingRequestDto;
-import com.ssafy.hearo.domain.setting.dto.SettingResponseDto;
-import com.ssafy.hearo.domain.setting.entity.FrequentSentence;
 import com.ssafy.hearo.global.annotation.LoginUser;
 import com.ssafy.hearo.global.common.response.ResponseService;
 import com.ssafy.hearo.global.common.response.Result;
@@ -54,14 +52,14 @@ public class RecordController {
                 .body(responseService.getSingleResult(result));
     }
 
-//    @PutMapping("/frequent/{frequentSeq}")
-//    public ResponseEntity<Result> modifyFrequent(@LoginUser Account account, @PathVariable long frequentSeq, @RequestBody SettingRequestDto.FrequentRequestDto requestDto) {
-//        log.info("[modifyFrequent] 자주 쓰는 말 수정 API 호출 - {}", account.getEmail());
-//        settingService.modifyFrequent(account, frequentSeq, requestDto);
-//        return ResponseEntity.ok()
-//                .body(responseService.getSuccessResult());
-//    }
-//
+    @PutMapping("/{recordSeq}")
+    public ResponseEntity<Result> modifyRecordTitle(@LoginUser Account account, @PathVariable long recordSeq, @RequestBody ModifyRecordTitleRequestDto requestDto) {
+        log.info("[modifyRecordTitle] 기록 제목 수정 API 호출 - {}", account.getEmail());
+        recordService.modifyRecordTitle(account, recordSeq, requestDto);
+        return ResponseEntity.ok()
+                .body(responseService.getSuccessResult());
+    }
+
 //    @PutMapping("/frequent/{frequentSeq}/delete")
 //    public ResponseEntity<Result> removeFrequent(@LoginUser Account account, @PathVariable long frequentSeq) {
 //        log.info("[modifyFrequent] 자주 쓰는 말 삭제 API 호출 - {}", account.getEmail());
