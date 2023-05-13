@@ -1,8 +1,7 @@
 package com.ssafy.hearo.domain.conversation.service;
 
-import com.ssafy.hearo.domain.conversation.dto.KeywordRequestDto.CreateSituationRequestDto;
-import com.ssafy.hearo.domain.conversation.dto.KeywordResponseDto.KeywordInfoResponseDto;
-import com.ssafy.hearo.domain.conversation.dto.KeywordResponseDto.KeywordSentenceInfoResponseDto;
+import com.ssafy.hearo.domain.conversation.dto.KeywordRequestDto.*;
+import com.ssafy.hearo.domain.conversation.dto.KeywordResponseDto.*;
 
 import java.util.List;
 
