@@ -2,19 +2,15 @@ package com.ssafy.hearo.domain.conversation.service.impl;
 
 import com.google.gson.*;
 import com.ssafy.hearo.domain.account.entity.Account;
-import com.ssafy.hearo.domain.conversation.dto.ConversationResponseDto.StartConversationResponseDto;
+import com.ssafy.hearo.domain.conversation.dto.RecordRequestDto.*;
 import com.ssafy.hearo.domain.conversation.dto.RecordResponseDto.*;
-import com.ssafy.hearo.domain.conversation.entity.Conversation;
 import com.ssafy.hearo.domain.conversation.entity.Memo;
 import com.ssafy.hearo.domain.conversation.entity.Record;
 import com.ssafy.hearo.domain.conversation.repository.MemoRepository;
 import com.ssafy.hearo.domain.conversation.repository.RecordRepository;
 import com.ssafy.hearo.domain.conversation.service.RecordService;
-import com.ssafy.hearo.domain.setting.dto.SettingResponseDto;
 import com.ssafy.hearo.domain.setting.entity.FrequentSentence;
-import com.ssafy.hearo.domain.setting.entity.Setting;
-import com.ssafy.hearo.global.error.code.AccountErrorCode;
-import com.ssafy.hearo.global.error.code.ConversationErrorCode;
+import com.ssafy.hearo.global.error.code.CommonErrorCode;
 import com.ssafy.hearo.global.error.code.RecordErrorCode;
 import com.ssafy.hearo.global.error.exception.ErrorException;
 import com.ssafy.hearo.global.util.DateUtil;
@@ -22,19 +18,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.transaction.Transactional;
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -90,7 +81,7 @@ public class RecordServiceImpl implements RecordService {
     @Override
     public List<GetRecordListResponseDto> getRecordList(Account account, Pageable pageable) {
         log.info("[getRecordList] 기록 목록 조회 시작");
-        Page<Record> recordList = recordRepository.findByAccountOrderByConversation_RegDtmDesc(account, pageable);
+        Page<Record> recordList = recordRepository.findByAccountAndDelYnOrderByConversation_RegDtmDesc(account, (byte)0, pageable);
         List<GetRecordListResponseDto> result = new ArrayList<>();
         for (Record record : recordList) {
             log.info("[getRecordList] 음성 길이 계산 시작");
@@ -119,7 +110,7 @@ public class RecordServiceImpl implements RecordService {
     @Override
     public List<GetRecordListResponseDto> getFavoriteRecordList(Account account, Pageable pageable) {
         log.info("[getFavoriteRecordList] 즐겨찾는 기록 목록 조회 시작");
-        Page<Record> recordList = recordRepository.findByAccountAndIsFavoriteOrderByConversation_RegDtmDesc(account, (byte)1, pageable);
+        Page<Record> recordList = recordRepository.findByAccountAndIsFavoriteAndDelYnOrderByConversation_RegDtmDesc(account, (byte)1, (byte)0, pageable);
         List<GetRecordListResponseDto> result = new ArrayList<>();
         for (Record record : recordList) {
             log.info("[getFavoriteRecordList] 음성 길이 계산 시작");
@@ -147,7 +138,7 @@ public class RecordServiceImpl implements RecordService {
 
     public GetRecordResponseDto getRecord(Account account, Long recordSeq) {
         log.info("[getRecord] 기록 조회 시작");
-        Record record = recordRepository.findByAccountAndRecordSeq(account, recordSeq)
+        Record record = recordRepository.findByAccountAndRecordSeqAndDelYn(account, recordSeq, (byte)0)
                 .orElseThrow(() -> new ErrorException(RecordErrorCode.RECORD_NOT_EXIST));
 
         log.info("[getRecord] 클로바 URL -> JSON 텍스트 형식으로 변환 시작");
@@ -189,4 +180,15 @@ public class RecordServiceImpl implements RecordService {
                 .memoList(memoResult)
                 .build();
     }
+
+    public void modifyRecordTitle(Account account, Long recordSeq, ModifyRecordTitleRequestDto requestDto) {
+        log.info("[modifyRecordTitle] 기록 제목 수정 시작");
+        Record record = recordRepository.findByAccountAndRecordSeqAndDelYn(account, recordSeq, (byte)0)
+                .orElseThrow(() -> new ErrorException(RecordErrorCode.RECORD_NOT_EXIST));
+        String title = requestDto.getTitle();
+        record.modifyTitle(title);
+        log.info("[modifyRecordTitle] 기록 제목 수정 완료");
+    }
+
+
 }
