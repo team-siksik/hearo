@@ -58,7 +58,6 @@ public class ConversationController {
     @PostMapping("/room/start")
     public ResponseEntity<Result> startConversation(@LoginUser Account account, @RequestBody StartConversationRequestDto requestDto) {
         log.info("[startConversation] 대화 시작 API 호출");
-        log.info(account.getEmail());
         StartConversationResponseDto result = conversationService.startConversation(account, requestDto);
         log.info("[startConversation] result: {}", result);
         return ResponseEntity.ok()
@@ -75,9 +74,9 @@ public class ConversationController {
     }
 
     @PostMapping("/room/{conversationSeq}/save")
-    public ResponseEntity<Result> saveConversation(@LoginUser Account account, @PathVariable long conversationSeq, @RequestParam("audio") MultipartFile audio) {
+    public ResponseEntity<Result> saveConversation(@LoginUser Account account, @PathVariable long conversationSeq, @RequestPart("audio") MultipartFile audio, @RequestPart("memo") SaveConversationRequestDto requestDto) {
         log.info("[saveConversation] 대화 저장 API 호출");
-        conversationService.saveConversation(account, conversationSeq, audio);
+        conversationService.saveConversation(account, conversationSeq, audio, requestDto);
         return ResponseEntity.ok()
                 .body(responseService.getSuccessResult());
     }
