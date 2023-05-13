@@ -9,6 +9,7 @@ import com.ssafy.hearo.domain.conversation.dto.ConversationResponseDto.*;
 import com.ssafy.hearo.domain.conversation.entity.*;
 import com.ssafy.hearo.domain.conversation.repository.*;
 import com.ssafy.hearo.domain.conversation.service.ConversationService;
+import com.ssafy.hearo.domain.memo.dto.MemoRequestDto.*;
 import com.ssafy.hearo.domain.memo.entity.Memo;
 import com.ssafy.hearo.domain.memo.repository.MemoRepository;
 import com.ssafy.hearo.domain.record.entity.Record;
@@ -176,8 +177,8 @@ public class ConversationServiceImpl implements ConversationService {
         log.info("[saveConversation] record 생성 완료 - {}", record.getTitle());
 
         log.info("[saveConversation] memo 생성 시작");
-        List<SaveConversationMemoRequestDto> conversationMemoList = requestDto.getMemo();
-        for (SaveConversationMemoRequestDto conversationMemo : conversationMemoList) {
+        List<CreateMemoRequestDto> conversationMemoList = requestDto.getMemo();
+        for (CreateMemoRequestDto conversationMemo : conversationMemoList) {
             Memo memo = Memo.builder()
                     .record(record)
                     .conversation(conversation)
