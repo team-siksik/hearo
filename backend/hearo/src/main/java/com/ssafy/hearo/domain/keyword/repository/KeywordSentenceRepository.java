@@ -1,7 +1,7 @@
-package com.ssafy.hearo.domain.conversation.repository;
+package com.ssafy.hearo.domain.keyword.repository;
 
-import com.ssafy.hearo.domain.conversation.entity.Keyword;
-import com.ssafy.hearo.domain.conversation.entity.KeywordSentence;
+import com.ssafy.hearo.domain.keyword.entity.Keyword;
+import com.ssafy.hearo.domain.keyword.entity.KeywordSentence;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

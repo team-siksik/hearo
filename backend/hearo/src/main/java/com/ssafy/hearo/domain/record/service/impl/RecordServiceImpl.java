@@ -1,14 +1,14 @@
-package com.ssafy.hearo.domain.conversation.service.impl;
+package com.ssafy.hearo.domain.record.service.impl;
 
 import com.google.gson.*;
 import com.ssafy.hearo.domain.account.entity.Account;
-import com.ssafy.hearo.domain.conversation.dto.RecordResponseDto.*;
-import com.ssafy.hearo.domain.conversation.dto.RecordRequestDto.*;
-import com.ssafy.hearo.domain.conversation.entity.Memo;
-import com.ssafy.hearo.domain.conversation.entity.Record;
-import com.ssafy.hearo.domain.conversation.repository.MemoRepository;
-import com.ssafy.hearo.domain.conversation.repository.RecordRepository;
-import com.ssafy.hearo.domain.conversation.service.RecordService;
+import com.ssafy.hearo.domain.record.dto.RecordResponseDto.*;
+import com.ssafy.hearo.domain.record.dto.RecordRequestDto.*;
+import com.ssafy.hearo.domain.memo.entity.Memo;
+import com.ssafy.hearo.domain.record.entity.Record;
+import com.ssafy.hearo.domain.memo.repository.MemoRepository;
+import com.ssafy.hearo.domain.record.repository.RecordRepository;
+import com.ssafy.hearo.domain.record.service.RecordService;
 import com.ssafy.hearo.global.error.code.RecordErrorCode;
 import com.ssafy.hearo.global.error.exception.ErrorException;
 import com.ssafy.hearo.global.util.DateUtil;

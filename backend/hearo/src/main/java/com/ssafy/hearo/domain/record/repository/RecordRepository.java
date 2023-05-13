@@ -1,7 +1,7 @@
-package com.ssafy.hearo.domain.conversation.repository;
+package com.ssafy.hearo.domain.record.repository;
 
 import com.ssafy.hearo.domain.account.entity.Account;
-import com.ssafy.hearo.domain.conversation.entity.Record;
+import com.ssafy.hearo.domain.record.entity.Record;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
