@@ -11,4 +11,5 @@ public interface RecordService {
 
     List<GetRecordListResponseDto> getRecordList(Account account, Pageable pageable);
     List<GetRecordListResponseDto> getFavoriteRecordList(Account account, Pageable pageable);
+    GetRecordResponseDto getRecord(Account account, Long recordSeq);
 }
