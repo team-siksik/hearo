@@ -3,6 +3,8 @@ package com.ssafy.hearo.domain.conversation.controller;
 import com.ssafy.hearo.domain.account.entity.Account;
 import com.ssafy.hearo.domain.conversation.dto.RecordResponseDto.*;
 import com.ssafy.hearo.domain.conversation.service.RecordService;
+import com.ssafy.hearo.domain.setting.dto.SettingRequestDto;
+import com.ssafy.hearo.domain.setting.dto.SettingResponseDto;
 import com.ssafy.hearo.domain.setting.entity.FrequentSentence;
 import com.ssafy.hearo.global.annotation.LoginUser;
 import com.ssafy.hearo.global.common.response.ResponseService;
@@ -31,7 +33,7 @@ public class RecordController {
         List<GetRecordListResponseDto> result = recordService.getRecordList(account, pageable);
         log.info("[getRecordList] result: {}", result);
         return ResponseEntity.ok()
-                .body(responseService.getSingleResult(result));
+                .body(responseService.getListResult(result));
     }
 
     @GetMapping("/favorite")
@@ -40,6 +42,31 @@ public class RecordController {
         List<GetRecordListResponseDto> result = recordService.getFavoriteRecordList(account, pageable);
         log.info("[getFavoriteRecordList] result: {}", result);
         return ResponseEntity.ok()
+                .body(responseService.getListResult(result));
+    }
+
+    @GetMapping("/{recordSeq}")
+    public ResponseEntity<Result> getRecord(@LoginUser Account account, @PathVariable long recordSeq) {
+        log.info("[getRecord] 기록 조회 API 호출 - {}", account.getEmail());
+        GetRecordResponseDto result = recordService.getRecord(account, recordSeq);
+        log.info("[getRecord] result: {}", result);
+        return ResponseEntity.ok()
                 .body(responseService.getSingleResult(result));
     }
+
+//    @PutMapping("/frequent/{frequentSeq}")
+//    public ResponseEntity<Result> modifyFrequent(@LoginUser Account account, @PathVariable long frequentSeq, @RequestBody SettingRequestDto.FrequentRequestDto requestDto) {
+//        log.info("[modifyFrequent] 자주 쓰는 말 수정 API 호출 - {}", account.getEmail());
+//        settingService.modifyFrequent(account, frequentSeq, requestDto);
+//        return ResponseEntity.ok()
+//                .body(responseService.getSuccessResult());
+//    }
+//
+//    @PutMapping("/frequent/{frequentSeq}/delete")
+//    public ResponseEntity<Result> removeFrequent(@LoginUser Account account, @PathVariable long frequentSeq) {
+//        log.info("[modifyFrequent] 자주 쓰는 말 삭제 API 호출 - {}", account.getEmail());
+//        settingService.removeFrequent(account, frequentSeq);
+//        return ResponseEntity.ok()
+//                .body(responseService.getSuccessResult());
+//    }
 }
