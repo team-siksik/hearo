@@ -1,13 +1,13 @@
-package com.ssafy.hearo.domain.conversation.entity;
+package com.ssafy.hearo.domain.memo.entity;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import com.ssafy.hearo.domain.account.entity.Account;
 import com.ssafy.hearo.domain.conversation.entity.Conversation;
+import com.ssafy.hearo.domain.record.entity.Record;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import com.ssafy.hearo.domain.account.entity.Account;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -20,11 +20,15 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @DynamicInsert
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
-public class Record {
+public class Memo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
-    private Long recordSeq;
+    private Long memoSeq;
+
+    @ManyToOne
+    @JoinColumn(name = "recordSeq", nullable = false)
+    private Record record;
 
     @ManyToOne
     @JoinColumn(name = "conversationSeq", nullable = false)
@@ -34,17 +38,15 @@ public class Record {
     @JoinColumn(name = "userSeq", nullable = false)
     private Account account;
 
-    @Column(length = 100)
-    private String title;
-
     @Column(length = 500)
-    private String memo;
+    private String content;
 
-    @Column(length = 500)
-    private String recorededFile;
+    @Column(nullable = false)
+    private Long timestamp;
 
-    @Column(length = 500)
-    private String clovaFile;
+    @Column(nullable = false)
+    @CreationTimestamp
+    private Timestamp regDtm;
 
     @Column(nullable = false)
     @UpdateTimestamp
@@ -54,20 +56,19 @@ public class Record {
     private Byte delYn;
 
     @Builder
-    public Record(Long recordSeq, Conversation conversation, Account account, String title, String memo, String recorededFile, String clovaFile, Timestamp modDtm, Byte delYn) {
-        this.recordSeq = recordSeq;
+    public Memo(Record record, Conversation conversation, Account account, String content, Long timestamp) {
+        this.record = record;
         this.conversation = conversation;
         this.account = account;
-        this.title = title;
-        this.memo = memo;
-        this.recorededFile = recorededFile;
-        this.clovaFile = clovaFile;
-        this.modDtm = modDtm;
-        this.delYn = delYn;
+        this.content = content;
+        this.timestamp = timestamp;
     }
 
-    public void modify(String recorededFile, String clovaFile) {
-        this.recorededFile = recorededFile;
-        this.clovaFile = clovaFile;
+    public void modify(String content) {
+        this.content = content;
+    }
+
+    public void delete() {
+        this.delYn = 1;
     }
 }
