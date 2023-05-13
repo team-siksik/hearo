@@ -10,5 +10,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface RecordRepository extends JpaRepository <Record, Long> {
 
     Page<Record> findByAccountOrderByConversation_RegDtmDesc(Account account, Pageable pageable);
+    Page<Record> findByAccountAndIsFavoriteOrderByConversation_RegDtmDesc(Account account, byte isFavorite, Pageable pageable);
 
 }

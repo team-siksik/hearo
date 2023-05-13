@@ -17,7 +17,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/note")
+@RequestMapping("/record")
 @RequiredArgsConstructor
 @Slf4j
 public class RecordController {
@@ -30,6 +30,15 @@ public class RecordController {
         log.info("[getRecordList] 기록 목록 조회 API 호출 - {}", account.getEmail());
         List<GetRecordListResponseDto> result = recordService.getRecordList(account, pageable);
         log.info("[getRecordList] result: {}", result);
+        return ResponseEntity.ok()
+                .body(responseService.getSingleResult(result));
+    }
+
+    @GetMapping("/favorite")
+    public ResponseEntity<Result> getFavoriteRecordList(@LoginUser Account account, Pageable pageable) {
+        log.info("[getFavoriteRecordList] 즐겨찾는 기록 목록 조회 API 호출 - {}", account.getEmail());
+        List<GetRecordListResponseDto> result = recordService.getFavoriteRecordList(account, pageable);
+        log.info("[getFavoriteRecordList] result: {}", result);
         return ResponseEntity.ok()
                 .body(responseService.getSingleResult(result));
     }
