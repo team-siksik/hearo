@@ -62,8 +62,12 @@ public class Record {
         this.clovaFile = clovaFile;
     }
 
-    public void modify(String title) {
+    public void modifyTitle(String title) {
         this.title = title;
+    }
+
+    public void modifyFavorite(byte isFavorite) {
+        this.isFavorite = isFavorite;
     }
 
     public void delete() {
