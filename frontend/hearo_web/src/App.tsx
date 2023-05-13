@@ -17,7 +17,7 @@ import { useAppSelector } from "./redux/hooks";
 import { LoginModal, ProfileModal, Navbar } from "./components";
 import { useEffect, useState } from "react";
 import STTTest from "./apis/STT";
-import { PrivateRoute } from "./PrivateRoute";
+// import { PrivateRoute } from "./PrivateRoute";
 
 function App() {
   const isLoggedIn = useAppSelector((state) => state.user.isLoggedIn);
