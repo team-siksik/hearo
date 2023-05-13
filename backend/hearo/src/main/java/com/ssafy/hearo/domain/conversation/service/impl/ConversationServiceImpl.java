@@ -2,8 +2,6 @@ package com.ssafy.hearo.domain.conversation.service.impl;
 
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.ssafy.hearo.domain.account.entity.Account;
 import com.ssafy.hearo.domain.conversation.dto.ConversationRequestDto.*;
@@ -12,7 +10,6 @@ import com.ssafy.hearo.domain.conversation.entity.*;
 import com.ssafy.hearo.domain.conversation.repository.*;
 import com.ssafy.hearo.domain.conversation.service.ConversationService;
 import com.ssafy.hearo.global.error.code.ClovaErrorCode;
-import com.ssafy.hearo.global.error.code.CommonErrorCode;
 import com.ssafy.hearo.global.error.code.ConversationErrorCode;
 import com.ssafy.hearo.global.error.code.S3ErrorCode;
 import com.ssafy.hearo.global.error.exception.ErrorException;
@@ -36,7 +33,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.transaction.Transactional;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.sql.Timestamp;
 import java.util.*;
 
@@ -58,73 +54,11 @@ public class ConversationServiceImpl implements ConversationService {
     @Value("${clova.secret-key}")
     private String secretKey;
 
-    private ObjectMapper objectMapper;
-
     private final DateUtil dateUtil;
-    private final KeywordRepository keywordRepository;
-    private final KeywordSentenceRepository keywordSentenceRepository;
     private final ConversationRepository conversationRepository;
     private final RecordRepository recordRepository;
     private final MemoRepository memoRepository;
 
-
-    @Override
-    public void createSituation(CreateSituationRequestDto requestDto) {
-        log.info("[createSituation] 상황 키워드 및 문장 생성 시작");
-
-        log.info("[createSituation] 상황 키워드 생성 시작");
-        String word = requestDto.getKeyword();
-        Keyword keyword = Keyword.builder()
-                .keyword(word)
-                .build();
-        keywordRepository.save(keyword);
-        log.info("[createSituation] 상황 키워드 생성 완료 - {}", word);
-
-        log.info("[createSituation] 상황 문장 생성 시작");
-        List<String> sentenceList = requestDto.getSentences();
-        for (String sentence : sentenceList) {
-            KeywordSentence keywordSentence = KeywordSentence.builder()
-                    .keyword(keyword)
-                    .sentence(sentence)
-                    .build();
-            keywordSentenceRepository.save(keywordSentence);
-            log.info("[createSituation] 상황 문장 생성 완료 - {}", sentence);
-        }
-
-        log.info("[createSituation] 상황 키워드 및 문장 생성 완료");
-    }
-
-    @Override
-    public List<KeywordResponseDto> getSituationKeywordList() {
-        log.info("[getSituation] 상황 키워드 목록 조회 시작");
-        List<Keyword> keywordList = keywordRepository.findAll();
-        List<KeywordResponseDto> result = new ArrayList<>();
-        for (Keyword keyword : keywordList) {
-            result.add(KeywordResponseDto.builder()
-                            .keywordSeq(keyword.getKeywordSeq())
-                            .keyword(keyword.getKeyword())
-                            .build());
-        }
-        log.info("[getSituation] 상황 키워드 목록 조회 완료");
-        return result;
-    }
-
-    @Override
-    public List<KeywordSentenceResponseDto> getSituationSentenceList(long keywordSeq) {
-        log.info("[getSituationSentenceList] 상황 키워드 문장 목록 조회 시작");
-        Keyword keyword = keywordRepository.findById(keywordSeq)
-                .orElseThrow(() -> new ErrorException(CommonErrorCode.BAD_REQUEST));
-        List<KeywordSentence> sentenceList = keywordSentenceRepository.findByKeyword(keyword);
-        List<KeywordSentenceResponseDto> result = new ArrayList<>();
-        for (KeywordSentence sentence : sentenceList) {
-            result.add(KeywordSentenceResponseDto.builder()
-                            .sentenceSeq(sentence.getSentenceSeq())
-                            .keywordSentence(sentence.getSentence())
-                            .build());
-        }
-        log.info("[getSituationSentenceList] 상황 키워드 문장 목록 조회 완료");
-        return result;
-    }
 
     @Override
     public StartConversationResponseDto startConversation(Account account, StartConversationRequestDto requestDto) {
@@ -253,5 +187,4 @@ public class ConversationServiceImpl implements ConversationService {
 
         log.info("[saveConversation] 대화 저장 완료");
     }
-
 }
