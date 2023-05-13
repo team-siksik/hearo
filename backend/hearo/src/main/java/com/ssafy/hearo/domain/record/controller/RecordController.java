@@ -68,10 +68,10 @@ public class RecordController {
                 .body(responseService.getSuccessResult());
     }
 
-    @PutMapping("/{recordSeq}/delete")
-    public ResponseEntity<Result> deleteRecord(@LoginUser Account account, @PathVariable long recordSeq) {
+    @PutMapping("/delete")
+    public ResponseEntity<Result> deleteRecord(@LoginUser Account account, @RequestBody DeleteRecordRequestDto requestDto) {
         log.info("[deleteRecord] 기록 삭제 API 호출 - {}", account.getEmail());
-        recordService.deleteRecord(account, recordSeq);
+        recordService.deleteRecord(account, requestDto);
         return ResponseEntity.ok()
                 .body(responseService.getSuccessResult());
     }
