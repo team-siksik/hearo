@@ -66,8 +66,8 @@ public class Record {
         this.title = title;
     }
 
-    public void modifyFavorite(byte isFavorite) {
-        this.isFavorite = isFavorite;
+    public void modifyFavorite(long isFavorite) {
+        this.isFavorite = (byte)isFavorite;
     }
 
     public void delete() {

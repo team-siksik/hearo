@@ -2,15 +2,13 @@ package com.ssafy.hearo.domain.conversation.service.impl;
 
 import com.google.gson.*;
 import com.ssafy.hearo.domain.account.entity.Account;
-import com.ssafy.hearo.domain.conversation.dto.RecordRequestDto.*;
 import com.ssafy.hearo.domain.conversation.dto.RecordResponseDto.*;
+import com.ssafy.hearo.domain.conversation.dto.RecordRequestDto.*;
 import com.ssafy.hearo.domain.conversation.entity.Memo;
 import com.ssafy.hearo.domain.conversation.entity.Record;
 import com.ssafy.hearo.domain.conversation.repository.MemoRepository;
 import com.ssafy.hearo.domain.conversation.repository.RecordRepository;
 import com.ssafy.hearo.domain.conversation.service.RecordService;
-import com.ssafy.hearo.domain.setting.entity.FrequentSentence;
-import com.ssafy.hearo.global.error.code.CommonErrorCode;
 import com.ssafy.hearo.global.error.code.RecordErrorCode;
 import com.ssafy.hearo.global.error.exception.ErrorException;
 import com.ssafy.hearo.global.util.DateUtil;
@@ -185,9 +183,16 @@ public class RecordServiceImpl implements RecordService {
         log.info("[modifyRecordTitle] 기록 제목 수정 시작");
         Record record = recordRepository.findByAccountAndRecordSeqAndDelYn(account, recordSeq, (byte)0)
                 .orElseThrow(() -> new ErrorException(RecordErrorCode.RECORD_NOT_EXIST));
-        String title = requestDto.getTitle();
-        record.modifyTitle(title);
+        record.modifyTitle(requestDto.getTitle());
         log.info("[modifyRecordTitle] 기록 제목 수정 완료");
+    }
+
+    public void modifyRecordFavorite(Account account, Long recordSeq, ModifyRecordFavoriteRequestDto requestDto) {
+        log.info("[modifyRecordFavorite] 기록 즐겨찾기 수정 시작");
+        Record record = recordRepository.findByAccountAndRecordSeqAndDelYn(account, recordSeq, (byte)0)
+                .orElseThrow(() -> new ErrorException(RecordErrorCode.RECORD_NOT_EXIST));
+        record.modifyFavorite(requestDto.getIsFavorite());
+        log.info("[modifyRecordFavorite] 기록 즐겨찾기 수정 완료");
     }
 
 
