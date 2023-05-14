@@ -129,17 +129,6 @@ class _DeviceScreenState extends State<DeviceScreen> {
           print('============================================');
           print('Service UUID: ${service.uuid}');
           for (BluetoothCharacteristic c in service.characteristics) {
-            // print('\tcharacteristic UUID: ${c.uuid.toString()}');
-            // print('\t\twrite: ${c.properties.write}');
-            // print('\t\tread: ${c.properties.read}');
-            // print('\t\tnotify: ${c.properties.notify}');
-            // print('\t\tisNotifying: ${c.isNotifying}');
-            // print(
-            //     '\t\twriteWithoutResponse: ${c.properties.writeWithoutResponse}');
-            // print('\t\tindicate: ${c.properties.indicate}');
-
-            // notify나 indicate가 true면 디바이스에서 데이터를 보낼 수 있는 캐릭터리스틱이니 활성화 한다.
-            // 단, descriptors가 비었다면 notify를 할 수 없으므로 패스!
             if (c.properties.notify && c.descriptors.isNotEmpty) {
               // 진짜 0x2902 가 있는지 단순 체크용!
               for (BluetoothDescriptor d in c.descriptors) {
