@@ -123,7 +123,7 @@ function SettingsPage() {
                   <div className="flex flex-row">
                     <div className="flex-grow">{selectGender}</div>
                     <div className="flex flex-row space-x-2">
-                      <ChevronDownIcon className="h-8 w-8 pt-2" />
+                      <ChevronDownIcon className="h-8 w-8 pt-" />
                     </div>
                   </div>
                 
@@ -139,7 +139,7 @@ function SettingsPage() {
                     )}
                   </div>
                 </button>
-                <div className="z-0 mt-3.5 h-0.5 w-[40%] bg-gray-300"/>
+                <div className="z-0 mt-1 h-0.5 w-[40%] bg-gray-300"/>
               </div>
             </div>
           

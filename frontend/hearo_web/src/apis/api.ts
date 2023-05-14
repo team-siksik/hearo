@@ -174,21 +174,179 @@ export const MeetingAPI = {
     ),
 };
 
-// 기록 관련 API 
-// TODO: API 나오면 바로바로 추가하기
+// 대화기록API
 export const RecordAPI = {
+  // 기록목록조회
   getRecords: (
     accessToken : string, 
-    userSeq: number, 
-    dialogSeq: number, 
-    email: string,
     ) => 
     api.get(
-    `/note`,
+    `/record`,
+    {
+      headers: {
+        Authorization: `${accessToken}`,
+      }, 
+    }
+  ),
+
+  //즐겨찾는 기록목록조회 
+  // FIXME: API명세서 쿼리파라미터 추가 맞는지?
+  getFavRecords: (
+    accessToken : string,
+    page: number,
+    size: number,
+  ) => 
+  api.get(
+    `/record/favorite`,
+    { 
+    params: {
+      page : page,
+      size : size,
+    },
+      headers: {
+      Authorization: `${accessToken}`,
+      },
+    }
+  ),
+
+  // 기록조회(개별)
+  getRecordItem: (
+    accessToken : string,
+    recordSeq: number,
+  ) => 
+  api.get(
+    `/record/${recordSeq}`,
     {
       headers: {
         Authorization: `${accessToken}`,
       },
     }
   ),
+
+  // 기록제목수정
+  updateRecordTitle: (
+    accessToken : string,
+    recordSeq : number,
+    title : string,
+  ) =>
+  api.put(
+    `/record/${recordSeq}`,
+    {
+      title: title,
+    },
+    {
+      headers: {
+        Authorization: `${accessToken}`,
+      },
+    }
+  ),
+
+  // 기록즐겨찾기수정
+  updateFavRecord: (
+    accessToken : string,
+    recordSeq : number,
+    isFavorite : number,
+  ) =>
+  api.put(
+    `/record/${recordSeq}/favorite`,
+    {
+      isFavorite : isFavorite,
+    },
+    {
+      headers: {
+        Authorization: `${accessToken}`,
+      },
+    }
+  ),
+
+  //선택기록삭제
+  //FIXME: 리스트형태 삭제 맞는지? 
+  deleteRecord: (
+    accessToken : string,
+    deleteRecordSeqList : [],
+  ) => 
+  api.put(
+    `/record/delete`, 
+    {
+      deleteRecordSeqList : deleteRecordSeqList,
+    },
+    {
+      headers: {
+        Authorization: `${accessToken}`,
+      },
+    }
+  ),
+
+  //메모목록조회 
+  getMemoList: (
+    accessToken : string, 
+    recordSeq : number
+    ) => 
+    api.get(
+    `/record/${recordSeq}/memo`,
+    {
+      headers: {
+        Authorization: `${accessToken}`,
+      }, 
+    }
+  ),
+
+  //메모 생성
+  addMemo: (
+    accessToken : string, 
+    recordSeq : number,
+    content : string,
+    timestamp : number
+    ) => 
+    api.post(
+    `/record/${recordSeq}/memo`,
+    {
+      content : content,
+      timestamp : timestamp
+    },
+    {
+      headers: {
+        Authorization: `${accessToken}`,
+      }, 
+    }
+  ),
+
+  // 메모 수정
+  updateMemo: (
+    accessToken : string, 
+    recordSeq : number,
+    memoSeq : number,
+    content : string,
+    ) => 
+    api.put(
+      `/record/${recordSeq}/memo/${memoSeq}`,
+    {
+      content: content,
+    },
+    {
+      headers: {
+        Authorization: `${accessToken}`,
+      }, 
+    }
+  ),
+
+  //메모 삭제
+  deleteMemo: (
+    accessToken : string,
+    recordSeq : number,
+    deleteMemoSeqList : [],
+  ) => 
+  api.put(
+    `/record/${recordSeq}/memo/delete`,
+    {
+      deleteMemoSeqList : deleteMemoSeqList,
+    },
+    {
+      headers: {
+        Authorization: `${accessToken}`,
+      },
+    }
+  ),
+
 };
+
