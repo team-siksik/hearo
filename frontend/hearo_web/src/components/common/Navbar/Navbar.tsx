@@ -97,11 +97,9 @@ const Navbar = ({
 
   function handleProfile() {
     if (!showModal) {
-      setOpenProfileModal(true);
-      setShowModal(true);
+      setOpenProfileModal(true)
     } else {
-      setOpenProfileModal(false);
-      setShowModal(false);
+      setOpenProfileModal(false)
     }
   }
 
