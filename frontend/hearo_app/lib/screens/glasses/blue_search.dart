@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:get/get.dart';
-import 'package:hearo_app/screens/glasses/chat_home_glasses.dart';
+import 'package:hearo_app/controller/bluetooth_controller.dart';
+import 'package:hearo_app/screens/glasses/home_screen_glasses.dart';
 
 class BlueSearch extends StatefulWidget {
   const BlueSearch({super.key});
@@ -11,6 +12,7 @@ class BlueSearch extends StatefulWidget {
 }
 
 class _Screen2State extends State<BlueSearch> {
+  BluetoothController bluetoothController = Get.put(BluetoothController());
   FlutterBluePlus flutterBlue = FlutterBluePlus.instance;
   List<ScanResult> scanResultList = [];
   bool _isScanning = false;
@@ -19,6 +21,17 @@ class _Screen2State extends State<BlueSearch> {
   @override
   initState() {
     super.initState();
+    setState(() {
+      scanResultList = bluetoothController.scanResultList;
+    });
+    flutterBlue.connectedDevices.asStream().listen((devices) {
+      for (BluetoothDevice device in devices) {
+        if (device.name == targetDeviceName) {
+          Get.to(() => HomeScreenGlasses(device: device));
+        }
+      }
+    });
+
     // 블루투스 초기화
     initBle();
   }
@@ -29,6 +42,7 @@ class _Screen2State extends State<BlueSearch> {
       _isScanning = isScanning;
       setState(() {});
     });
+    scan();
   }
 
   /*
@@ -52,11 +66,10 @@ class _Screen2State extends State<BlueSearch> {
                     .indexWhere((e) => e.device.id == element.device.id) <
                 0) {
               // 찾는 장치명이고 scanResultList에 등록된적이 없는 장치라면 리스트에 추가
-              scanResultList.add(element);
+              bluetoothController.setDevice(element.device);
+              Get.to(HomeScreenGlasses(device: element.device));
             }
           }
-          // UI 갱신
-          setState(() {});
         }
       });
     } else {
@@ -65,74 +78,10 @@ class _Screen2State extends State<BlueSearch> {
     }
   }
 
-/*
-   여기서부터는 장치별 출력용 함수들
-  */
-  /*  장치의 신호값 위젯  */
-  Widget deviceSignal(ScanResult r) {
-    return Text(r.rssi.toString());
-  }
-
-  /* 장치의 MAC 주소 위젯  */
-  Widget deviceMacAddress(ScanResult r) {
-    return Text(r.device.id.id);
-  }
-
-  /* 장치의 명 위젯  */
-  Widget deviceName(ScanResult r) {
-    String name = '';
-
-    if (r.device.name.isNotEmpty) {
-      // device.name에 값이 있다면
-      name = r.device.name;
-    } else if (r.advertisementData.localName.isNotEmpty) {
-      // advertisementData.localName에 값이 있다면
-      name = r.advertisementData.localName;
-    } else {
-      // 둘다 없다면 이름 알 수 없음...
-      name = 'N/A';
-    }
-    return Text(name);
-  }
-
-  /* BLE 아이콘 위젯 */
-  Widget leading(ScanResult r) {
-    return SizedBox(child: Image.asset("assets/images/glasses.png"));
-  }
-
-  /* 장치 아이템을 탭 했을때 호출 되는 함수 */
-  void onTap(ScanResult r) {
-    // 단순히 이름만 출력
-    print(r.device.name);
-    // Get.to(
-    //   () => DeviceScreen(
-    //     device: r.device,
-    //   ),
-    Get.to(
-      () => ChatHomeGlasses(
-        device: r.device,
-      ),
-    );
-  }
-
-  /* 장치 아이템 위젯 */
-  Widget listItem(ScanResult r) {
-    return ListTile(
-      onTap: () => onTap(r),
-      leading: leading(r),
-      title: deviceName(r),
-      subtitle: deviceMacAddress(r),
-      trailing: deviceSignal(r),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.sizeOf(context);
     return Scaffold(
-      appBar: AppBar(
-        title: Text("blue"),
-      ),
       body: SizedBox(
         height: size.height,
         child: Column(
@@ -149,24 +98,36 @@ class _Screen2State extends State<BlueSearch> {
                 ),
               ),
               Flexible(
-                flex: 10,
-                child: ListView.separated(
-                  itemCount: scanResultList.length,
-                  itemBuilder: (context, index) {
-                    return listItem(scanResultList[index]);
-                  },
-                  separatorBuilder: (BuildContext context, int index) {
-                    return Divider();
-                  },
-                ),
-              ),
+                  flex: 10,
+                  child: Center(
+                    child: SizedBox(
+                      width: size.width,
+                      height: size.width,
+                      child: InkWell(
+                        onTap: scan,
+                        child: SizedBox(
+                          height: 250,
+                          width: 250,
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                SizedBox(
+                                  height: 200,
+                                  width: 200,
+                                  child: Image.asset(_isScanning
+                                      ? "assets/images/findblue.png"
+                                      : "assets/images/searchglass.png"),
+                                ),
+                                Text(_isScanning
+                                    ? "H - Glass 찾는중..."
+                                    : "H - Glass 찾기위해 클릭")
+                              ]),
+                        ),
+                      ),
+                    ),
+                  )),
             ]),
-      ),
-      /* 장치 검색 or 검색 중지  */
-      floatingActionButton: FloatingActionButton(
-        onPressed: scan,
-        // 스캔 중이라면 stop 아이콘을, 정지상태라면 search 아이콘으로 표시
-        child: Icon(_isScanning ? Icons.stop : Icons.search),
       ),
     );
   }
