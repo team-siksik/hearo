@@ -2,6 +2,7 @@ import cv2
 import numpy as np
 import mediapipe as mp
 
+from collections import deque
 from tensorflow.keras.models import load_model
 
 from utils import get_words_list, joint_to_angle
@@ -19,7 +20,7 @@ mp_holistic = mp.solutions.holistic
 cap = cv2.VideoCapture(0)
 
 # seq = []
-word_seq = []
+word_seq = deque()
 
 with mp_holistic.Holistic(min_detection_confidence=0.5, min_tracking_confidence=0.5) as holistic:
     while cap.isOpened():
@@ -33,7 +34,7 @@ with mp_holistic.Holistic(min_detection_confidence=0.5, min_tracking_confidence=
         image.flags.writeable = False
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         results = holistic.process(image)
-        image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+        # image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
 
         if not results.left_hand_landmarks and not results.right_hand_landmarks:
             continue
@@ -81,10 +82,11 @@ with mp_holistic.Holistic(min_detection_confidence=0.5, min_tracking_confidence=
         )
 
         data = np.concatenate([pose.flatten(), left_joint.flatten(), left_angle, right_joint.flatten(), right_angle,])  # (192,)
+        data = np.expand_dims(data, axis=0)  # (1, 192)
 
-        cv2.imshow(word.upper(), image)
-        if cv2.waitKey(5) & 0xFF == 27:
-            break
+        # cv2.imshow(word.upper(), image)
+        # if cv2.waitKey(5) & 0xFF == 27:
+        #     break
 
         # input_data = np.expand_dims(
         #     np.array(seq[-seq_length:], dtype=np.float32), axis=0
@@ -93,6 +95,7 @@ with mp_holistic.Holistic(min_detection_confidence=0.5, min_tracking_confidence=
         y_pred = model.predict(data).squeeze()
         i_pred = int(np.argmax(y_pred))
         conf = y_pred[i_pred]
+        print(words[i_pred], conf)
 
         if conf < 0.9:
             continue
@@ -105,7 +108,10 @@ with mp_holistic.Holistic(min_detection_confidence=0.5, min_tracking_confidence=
 
         this_word = "?"
         if word_seq[-1] == word_seq[-2] == word_seq[-3]:
-            this_word = word
+            this_word = word_seq[-1]
+        print(word_seq)
+        
+        word_seq.popleft()
 
         cv2.putText(
             image,
