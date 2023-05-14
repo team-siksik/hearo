@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from "react";
+<<<<<<< HEAD
 import { RecordpageSideBar } from "@/components";
+=======
+import {
+  RecordpageSideBar,
+
+} from "@/components";
+>>>>>>> dd6cfd9 ([S08P31A603-362] api 추가 및 전체대화기록페이지 테스트코드 추가)
 import { RecordsItem } from "@/components";
 import axios from "axios";
 import { RecordAPI } from "@/apis/api";
@@ -54,20 +61,32 @@ function TotalRecordsPage() {
     setTotalRecords(newRecords);
   };
 
+<<<<<<< HEAD
   const handleRemoveRecord = (idToDelete: number) => {
     const updatedRecords = totalRecords.filter(
       (record) => record.recordSeq !== idToDelete
     );
+=======
+  const handleRemoveRecord = (idToDelete:number) => {
+    const updatedRecords = totalRecords.filter((record) => record.recordSeq !== idToDelete);
+>>>>>>> dd6cfd9 ([S08P31A603-362] api 추가 및 전체대화기록페이지 테스트코드 추가)
     setTotalRecords(updatedRecords);
     setOpenRemoveRecordModal(false);
   };
 
   // TODO: 기록이 없으면 없는 걸로 보여줘야함
   // const showRecords = () => {
+<<<<<<< HEAD
   //   if (noRecords)
   //     return ('no record')
   //   else
   //     return(
+=======
+  //   if (noRecords) 
+  //     return ('no record') 
+  //   else 
+  //     return( 
+>>>>>>> dd6cfd9 ([S08P31A603-362] api 추가 및 전체대화기록페이지 테스트코드 추가)
   //       {totalRecords}
   //     )
   //   }
@@ -85,6 +104,7 @@ function TotalRecordsPage() {
         >
           <div className="space-y-4">
             {/* 테스트 */}
+<<<<<<< HEAD
             {totalRecords &&
               totalRecords.map((records) => (
                 <div key={records.recordSeq}>
@@ -92,6 +112,15 @@ function TotalRecordsPage() {
                   <p>{records.preview}</p>
                 </div>
               ))}
+=======
+          {totalRecords && 
+          totalRecords.map((records) => (
+            <div key={records.recordSeq}>
+            <h3>{records.title}</h3>
+            <p>{records.preview}</p>
+          </div>
+          ))}
+>>>>>>> dd6cfd9 ([S08P31A603-362] api 추가 및 전체대화기록페이지 테스트코드 추가)
           </div>
         </div>
       </div>
@@ -101,6 +130,10 @@ function TotalRecordsPage() {
 
 export default TotalRecordsPage;
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> dd6cfd9 ([S08P31A603-362] api 추가 및 전체대화기록페이지 테스트코드 추가)
 // {totalRecords.map((record) => (
 //   <RecordsItem
 //     key={record.id}
