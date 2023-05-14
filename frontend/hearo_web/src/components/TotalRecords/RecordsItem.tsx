@@ -7,21 +7,47 @@ import RecordPage from "@/pages/RecordPage";
 
 interface RecordsItemProps extends React.HTMLAttributes<HTMLElement> {
   title: string;
-  date: string;
-  recordId: number;
-  description: string;
-  onRemove: () => void;
   onChangeTitle: (title: string) => void;
+  onRemove: () => void;
   // onChangeTitle:  React.Dispatch<React.SetStateAction<string>>;
+  recordSeq: number;
+  conversationSeq: number;
+  recordingTime: string;
+  preview: string;
+  isFavorite: number;
+  regDtm: string;
+  modDtm: string;
 }
 
-function RecordsItem({ recordId, title, date, description, onRemove, onChangeTitle }: RecordsItemProps) {
+function RecordsItem({ 
+    title,
+    onChangeTitle,
+    onRemove, 
+    recordSeq, 
+    conversationSeq,
+    recordingTime,
+    preview,
+    isFavorite,
+    regDtm,
+    modDtm,
+  }: RecordsItemProps) {
   const [openRemoveRecordModal, setOpenRemoveRecordModal] = useState<boolean>(false);
 
   const navigate = useNavigate();
   const moveToRecord = () => {
-    navigate(`/records/${recordId}`, {
-      state: { title, date, description },
+    navigate(`/records/${recordSeq}`, {
+      state: { 
+        title,
+        onChangeTitle,
+        onRemove, 
+        recordSeq, 
+        conversationSeq,
+        recordingTime,
+        preview,
+        isFavorite,
+        regDtm,
+        modDtm,
+      },
     })
   }
 
@@ -44,11 +70,11 @@ function RecordsItem({ recordId, title, date, description, onRemove, onChangeTit
             </div>
           </div>
           <div>
-            <div className="font-bold mb-2 cursor-pointer">
+            {/* <div className="font-bold mb-2 cursor-pointer">
               <RecordPage title={title} onChangeTitle={onChangeTitle} />
-            </div>
-            <div className="my-2 text-blue-main">{description}</div>
-            <div className="text-sm">{date}</div>
+            </div> */}
+            <div className="my-2 text-blue-main">{preview}</div>
+            <div className="text-sm">{title}</div>
           </div>
         </div>
         <div
