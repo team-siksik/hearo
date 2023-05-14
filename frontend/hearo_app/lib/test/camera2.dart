@@ -22,6 +22,8 @@ class _Camera2State extends State<Camera2> {
   late CameraController cameraController;
   bool isStreamingImages = false;
   Timer? imageStreamingTimer; // Timer 객체를 저장하기 위한 변수
+  GlobalKey globalKey = GlobalKey();
+
   @override
   void initState() {
     videoSocket.connect();
@@ -70,14 +72,13 @@ class _Camera2State extends State<Camera2> {
     }
   }
 
-  Future<void> startStreaming() async {
+  void startStreaming() async {
     isStreamingImages = true;
     if (!cameraController.value.isStreamingImages) {
-      await cameraController.startImageStream((CameraImage image) {
+      await cameraController.startImageStream((CameraImage image) async {
         if (isStreamingImages) {
-          // 이미지를 Base64로 인코딩하여 Socket.IO로 전송합니다.
           String base64Image = base64Encode(image.planes[0].bytes);
-          videoSocket.sendVideo("image", base64Image);
+          await videoSocket.sendVideo("image", base64Image);
         }
       });
     }
@@ -97,7 +98,7 @@ class _Camera2State extends State<Camera2> {
     Timer timer = timeSend();
 
     // 일정 시간(예: 10초) 후에 함수 멈추기
-    Timer(Duration(seconds: 10), () {
+    Timer(Duration(seconds: 5), () {
       stopFunction(timer);
     });
   }
@@ -115,7 +116,7 @@ class _Camera2State extends State<Camera2> {
       final File file = File(image.path);
       final bytes = await file.readAsBytes();
       final encodedImage = base64.encode(bytes);
-      videoSocket.sendVideo("1111", encodedImage);
+      await videoSocket.sendVideo("1111", encodedImage);
     } catch (e) {
       print(e);
     }

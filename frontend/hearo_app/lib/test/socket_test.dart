@@ -96,6 +96,11 @@ class _SocketTestState extends State<SocketTest> {
       _startRecording();
       await Future.delayed(Duration(milliseconds: 1000));
       _stopRecording();
+      String datum = audioSocket.getClassification();
+      print(datum);
+      if (datum != "") {
+        temp.add(datum);
+      }
     }
   }
 
@@ -137,6 +142,16 @@ class _SocketTestState extends State<SocketTest> {
                 ),
               ],
             ),
+            Expanded(
+                child: ListView.separated(
+                    itemBuilder: (context, index) {
+                      var txt = temp[index];
+                      return Text(txt);
+                    },
+                    separatorBuilder: (context, index) => SizedBox(
+                          height: 5,
+                        ),
+                    itemCount: temp.length))
           ],
         ),
       ),

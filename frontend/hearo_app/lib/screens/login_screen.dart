@@ -122,6 +122,7 @@ class _LoginScreenState extends State<LoginScreen> {
         accessToken: googleAuth?.accessToken,
         idToken: googleAuth?.idToken,
       );
+      print(credential.accessToken);
       // Once signed in, return the UserCredential
       final data = sendToken(context, size, credential.accessToken);
       return data;
