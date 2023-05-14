@@ -1,10 +1,10 @@
 import React, { useEffect, useState, useRef, SetStateAction } from "react";
-import { useNavigate } from "react-router-dom";
-import MainLogo from "@/assets/Icon/MainLogo.json";
-import google_logo from "@/assets/Google_Logo.svg";
 import { css } from "@emotion/react";
+import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { Player } from "@lottiefiles/react-lottie-player";
+import MainLogo from "@/assets/Icon/MainLogo.json";
+import google_logo from "@/assets/Google_Logo.svg";
 import Button from "../ui/Button";
 
 // TODO: 로그인을 하면 useParams 써서 로그인정보를 버튼들 위에다가 띄워줘야함
@@ -105,14 +105,16 @@ const Navbar = ({
 
   return (
     <>
-      <header className="fixed left-0 top-0 z-10 flex w-full justify-between border border-gray-200 bg-white py-2">
-        <div className="logo font-chewy text-3xl font-extrabold text-blue-main">
+      <header className="fixed left-0 top-0 z-10 flex w-full items-center justify-between border border-gray-200 bg-white py-2">
+        <div className="logo text-blue-main">
           <button onClick={homeClick} className="flex items-center ">
             <Player src={MainLogo} loop autoplay style={{ width: "60px" }} />
-            <h1>HEARO</h1>
+            <div className="flex flex-row items-end">
+              <h1 className="font-chewy text-3xl font-extrabold ">HEARO </h1>
+              <span>&nbsp;Office</span>
+            </div>
           </button>
         </div>
-        <nav></nav>
         {isLoggedIn && user ? (
           <section
             onClick={handleProfile}
