@@ -4,7 +4,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hearo_app/apis/login_api.dart';
 import 'package:hearo_app/screens/choose_mode_screen.dart';
 import 'package:get/get.dart';
-import 'package:hearo_app/test/socket_test.dart';
+import 'package:hearo_app/test/socket_test2.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -46,7 +46,7 @@ class _LoginScreenState extends State<LoginScreen> {
             GestureDetector(
                 onTap: () {
                   // showSuccessModal(context, size);
-                  Get.to(() => SocketTest());
+                  Get.to(() => SocketTest2());
                 },
                 child: SizedBox(
                     height: size.width * 0.6,
