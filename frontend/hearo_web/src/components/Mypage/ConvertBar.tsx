@@ -54,8 +54,6 @@ function ConvertBar() {
     navigate("/mypage/favcontents");
   }
 
-  
-
 
   // 로그인된 상태에서만 MyPage로 이동
   // const handleMypageClick = () => {
