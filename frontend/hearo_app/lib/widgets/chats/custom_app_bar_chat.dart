@@ -15,35 +15,6 @@ class CustomAppBarChat extends StatefulWidget implements PreferredSizeWidget {
 }
 
 class _CustomAppBarChatState extends State<CustomAppBarChat> {
-  // Stopwatch stopwatch = Stopwatch();
-  // String stopWatchText = '00:00';
-  // late Timer timer;
-  // void _startTimer() {
-  //   timer = Timer.periodic(Duration(milliseconds: 100), (timer) {
-  //     setState(() {
-  //       _updateStopWatchText();
-  //     });
-  //   });
-  // }
-
-  // void _updateStopWatchText() {
-  //   stopWatchText =
-  //       "${stopwatch.elapsed.inMinutes.toString().padLeft(2, "0")}:${(stopwatch.elapsed.inSeconds % 60).toString().padLeft(2, "0")}";
-  // }
-
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   stopwatch.start();
-  //   _startTimer();
-  // }
-
-  // @override
-  // void dispose() {
-  //   timer.cancel();
-  //   super.dispose();
-  // }
-
   @override
   Widget build(BuildContext context) {
     return AppBar(
