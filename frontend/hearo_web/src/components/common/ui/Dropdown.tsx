@@ -26,12 +26,12 @@ function DropDown ({gender, genderSelection}: DropDownProps) {
 
   return (
     <>
-      <div className={showDropDown ? 'dropdown' : 'dropdown active py-1 '}>
+      <div className={showDropDown ? 'dropdown py-2' : 'dropdown active mt-2'}>
         {gender.map(
           (gender: string, index: number): JSX.Element => {
             return (
               <p
-                className='hover:bg-red-main rounded-xl'
+                className='hover:bg-blue-300 rounded-xl py-2'
                 key={index}
                 onClick={(): void => {
                   onClickHandler(gender);
