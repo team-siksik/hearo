@@ -4,9 +4,7 @@ import FavContentsPage from "./FavContetnsPage";
 import SettingsPage from "./SettingsPage";
 import AgainPage from "./AgainPage";
 import NotFound404 from "./NotFound404";
-// import RecognizePage from "./RecognizePage";
 import SocketTest from "./SocketTest";
-// import TutorialPage from "./TutorialPage";
 import TotalRecordsPage from "./TotalRecordsPage";
 import RecordPage from "./RecordPage";
 
@@ -20,5 +18,4 @@ export {
   NotFound404,
   TotalRecordsPage,
   RecordPage,
-  // TutorialPage,
 };

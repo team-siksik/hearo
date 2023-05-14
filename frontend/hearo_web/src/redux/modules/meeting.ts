@@ -2,6 +2,10 @@
 import { UserAPI } from "@/apis/api";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
+interface MeetingType {
+  roomSeq: number;
+  regTime: string;
+}
 // 초기상태
 const initialState: [] = [];
 

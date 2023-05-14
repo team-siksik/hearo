@@ -1,5 +1,7 @@
 import base64
 import io
+import tempfile
+import os
 
 from fastapi import APIRouter, WebSocket
 from ai_code.sound_classification import api
@@ -12,36 +14,49 @@ router = APIRouter(prefix="/sc")
 audio_data_queues = {}
 
 @socket_manager.on("classification")
-async def audio_stream(websocket: WebSocket):
-    await websocket.accept()
-    sid = websocket.client_id
+async def audio_stream(sid, data):
+    base64_audio = data["audio"]
 
-    while True:
-        data = await websocket.receive_json()
+    # Base64 형식의 오디오 데이터를 디코딩
+    audio_data = base64.b64decode(base64_audio)
 
-        room_id = data["room_id"]
-        base64_audio = data["audio"]
+    # 0.1초 단위로 데이터를 처리하고, 1초 단위로 합쳐서 API 호출
+    audio_segment = AudioSegment.from_file(io.BytesIO(audio_data), format="wav")
 
-        # Base64 형식의 오디오 데이터를 디코딩
-        audio_data = base64.b64decode(base64_audio)
+    if sid not in audio_data_queues:
+        audio_data_queues[sid] = deque(maxlen=10)
 
-        # 0.1초 단위로 데이터를 처리하고, 1초 단위로 합쳐서 API 호출
-        audio_segment = AudioSegment.from_file(io.BytesIO(audio_data), format="wav")
+    audio_data_queues[sid].append(audio_segment)
 
-        if sid not in audio_data_queues:
-            audio_data_queues[sid] = deque(maxlen=10)
+    if len(audio_data_queues[sid]) != 10:
+        logger.info("Loading")
+        await socket_manager.emit("result", "Loading")
+        return
+    
+    combined_audio = sum(audio_data_queues[sid], AudioSegment.empty())
 
-        audio_data_queues[sid].append(audio_segment)
+    # 최대 데시벨 확인
+    if combined_audio.max_dBFS < 40:
+        logger.info("Small dB")
+        await socket_manager.emit("result", "Small dB")
+        return  # API 요청을 하지 않고 함수 종료
+    
+    # combined_audio를 임시 파일로 저장
+    with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as temp_file:
+        temp_filename = temp_file.name
+        combined_audio.export(temp_filename, format="wav")
+        logger.info(f"임시 파일 경로:, {temp_filename}")  # 임시 파일 경로 출력
 
-        # 큐에 충분한 데이터가 있으면 합쳐서 API 호출
-        if len(audio_data_queues[sid]) == 10:
-            combined_audio = sum(audio_data_queues[sid], AudioSegment.empty())
-            combined_audio_data = io.BytesIO()
-            combined_audio.export(combined_audio_data, format="wav")
+    # 임시 파일을 읽어서 query_with_memory 함수 호출
+    with open(temp_filename, "rb") as f:
+        result = api.query_with_memory(f.read())
 
-            # 음성 데이터를 메모리에서 처리하기 위해 query_with_memory 함수 호출
-            result = api.query_with_memory(combined_audio_data.getvalue())
-            if result:
-                await websocket.send_text(result)
-            else:
-                await websocket.send_text("No result")
+        # 임시 파일 삭제
+        os.remove(temp_filename)
+
+        if result:
+            logger.info(f"result = {result}")
+            await socket_manager.emit("result", result)
+        else:
+            logger.info("No result")
+            await socket_manager.emit("result", "No result")
