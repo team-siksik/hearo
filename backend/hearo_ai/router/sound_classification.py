@@ -52,8 +52,8 @@ async def audio_stream(sid, data):
     with open(temp_filename, "rb") as f:
         result = api.query_with_memory(f.read())
 
-        # 임시 파일 삭제
-        os.remove(temp_filename)
+        # # 임시 파일 삭제
+        # os.remove(temp_filename)
 
         if result:
             logger.info(f"result = {result}")
