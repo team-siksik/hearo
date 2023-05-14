@@ -37,7 +37,11 @@ class _HomeScreenGlassesState extends State<HomeScreenGlasses> {
       debugPrint('event :  $event');
       if (deviceState == event) {
         // 상태가 동일하다면 무시
-        return;
+        setState(() {
+          if (deviceState == BluetoothDeviceState.connected) {
+            positive = true;
+          }
+        });
       }
       // 연결 상태 정보 변경
       setBleConnectionState(event);
@@ -48,7 +52,6 @@ class _HomeScreenGlassesState extends State<HomeScreenGlasses> {
 
   LoginController loginController = Get.put(LoginController());
   DateTime? firstPress;
-  bool isBlueOn = false;
   int value = 0;
   bool positive = false;
   bool loading = false;
@@ -93,7 +96,11 @@ class _HomeScreenGlassesState extends State<HomeScreenGlasses> {
     }
     //이전 상태 이벤트 저장
     deviceState = event;
-    setState(() {});
+    setState(() {
+      if (deviceState == BluetoothDeviceState.connected) {
+        positive = true;
+      }
+    });
   }
 
 /* 연결 시작 */
@@ -188,7 +195,7 @@ class _HomeScreenGlassesState extends State<HomeScreenGlasses> {
                   child: Column(
                     children: [
                       AnimatedToggleSwitch<bool>.dual(
-                        current: deviceState == BluetoothDeviceState.connected,
+                        current: positive,
                         first: false,
                         second: true,
                         dif: 80.0,
