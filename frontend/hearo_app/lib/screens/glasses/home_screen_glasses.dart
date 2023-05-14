@@ -4,7 +4,7 @@ import 'package:hearo_app/controller/bluetooth_controller.dart';
 import 'package:hearo_app/controller/login_controller.dart';
 import 'package:hearo_app/screens/glasses/chat_home_glasses.dart';
 import 'package:hearo_app/screens/mysettings/favorite_say.dart';
-import 'package:hearo_app/test/blue_search2.dart';
+import 'package:hearo_app/test/socket_test3.dart';
 import 'package:hearo_app/widgets/common/custom_app_bar_glasses.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:animated_toggle_switch/animated_toggle_switch.dart';
@@ -213,8 +213,15 @@ class _HomeScreenGlassesState extends State<HomeScreenGlasses> {
                             offset: Offset(0, 1.5),
                           ),
                         ],
-                        onTap: () {},
                         onChanged: (b) {
+                          print(b);
+                          setState(() {
+                            if (deviceState == BluetoothDeviceState.connected) {
+                              positive = true;
+                            } else {
+                              positive = false;
+                            }
+                          });
                           setState(() => positive = b);
                           return Future.delayed(Duration(seconds: 4));
                         },
@@ -228,8 +235,9 @@ class _HomeScreenGlassesState extends State<HomeScreenGlasses> {
                             ? Center(
                                 child: Text(
                                 'Glass - OFF',
-                                style:
-                                    TextStyle(fontSize: 18, color: Colors.blue),
+                                style: TextStyle(
+                                    fontSize: 18,
+                                    color: Color.fromARGB(255, 159, 159, 159)),
                               ))
                             : Center(
                                 child: Text(
@@ -258,7 +266,9 @@ class _HomeScreenGlassesState extends State<HomeScreenGlasses> {
                     ),
                     InkWell(
                       onTap: () {
-                        Get.to(() => BlueSearch2());
+                        Get.to(() => SocketTest3(
+                              device: widget.device,
+                            ));
                       },
                       child: naviButton(size, 2),
                     ),
