@@ -26,7 +26,7 @@ function DropDown ({gender, genderSelection}: DropDownProps) {
 
   return (
     <>
-      <div className={showDropDown ? 'dropdown py-2' : 'dropdown active py-2'}>
+      <div className={showDropDown ? 'dropdown py-2' : 'dropdown active mt-2'}>
         {gender.map(
           (gender: string, index: number): JSX.Element => {
             return (
