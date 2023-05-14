@@ -30,16 +30,10 @@ async def audio_stream(sid, data):
 
     if len(audio_data_queues[sid]) != 10:
         logger.info("Loading")
-        await socket_manager.emit("audio", "Loading")
+        await socket_manager.emit("result", "Loading")
         return
     
     combined_audio = sum(audio_data_queues[sid], AudioSegment.empty())
-
-    # # 최대 데시벨 확인
-    # if combined_audio.max_dBFS < 20:
-    #     logger.info(f"Small dB. max_dBFS = {combined_audio.max_dBFS}")
-    #     await socket_manager.emit("audio", "Small dB")
-    #     return  # API 요청을 하지 않고 함수 종료
     
     # combined_audio를 임시 파일로 저장
     with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as temp_file:
@@ -56,7 +50,7 @@ async def audio_stream(sid, data):
 
         if result:
             logger.info(f"result = {result}")
-            await socket_manager.emit("audio", result)
+            await socket_manager.emit("result", result)
         else:
             logger.info("No result")
-            await socket_manager.emit("audio", "No result")
+            await socket_manager.emit("result", "No result")
