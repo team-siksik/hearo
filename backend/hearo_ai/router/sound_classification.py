@@ -12,6 +12,7 @@ from main import socket_manager, logger
 router = APIRouter(prefix="/sc")
 
 audio_data_queues = {}
+prv_score = -1
 
 @socket_manager.on("classification")
 async def audio_stream(sid, data):
@@ -50,13 +51,12 @@ async def audio_stream(sid, data):
 
     # 임시 파일을 읽어서 query_with_memory 함수 호출
     with open(temp_filename, "rb") as f:
-        result = api.query_with_memory(f.read())
-
+        result, prv_score = api.query_with_memory(f.read(), prv_score)
         # # 임시 파일 삭제
         # os.remove(temp_filename)
 
         if result:
-            logger.info(f"result = {result}")
+            logger.info(result)
             await socket_manager.emit("result", result)
         else:
             logger.info("No result")
