@@ -9,7 +9,6 @@ import java.util.Optional;
 
 public interface FrequentSentenceRepository extends JpaRepository<FrequentSentence, Long> {
     List<FrequentSentence> findByAccountAndDelYn(Account account, byte delYn);
-//    List<FrequentSentence> findByAccount_UserSeq(long userSeq); // test
 
     Optional<FrequentSentence> findByAccountAndFrequentSeqAndDelYn(Account account, long frequentSeq, byte delYn);
 

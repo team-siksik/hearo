@@ -1,6 +1,5 @@
 package com.ssafy.hearo.global.util;
 
-import com.ssafy.hearo.global.error.code.CommonErrorCode;
 import org.springframework.stereotype.Component;
 
 import java.sql.Timestamp;
@@ -13,7 +12,7 @@ public class DateUtil {
 
     public Timestamp stringToTimestamp(String datetime) {
         try {
-            SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+            SimpleDateFormat format = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
             Date formatDatetime = format.parse(datetime);
             Timestamp result = new Timestamp(formatDatetime.getTime());
             return result;
@@ -24,7 +23,7 @@ public class DateUtil {
     }
 
     public String timestampToString(Timestamp datetime) {
-        String result = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(datetime);
+        String result = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss").format(datetime);
         return result;
     }
 
