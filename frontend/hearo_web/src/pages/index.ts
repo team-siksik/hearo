@@ -1,5 +1,4 @@
 import ConversationPage from "./ConversationPage";
-import MyPage from "./MyPage";
 import MainPage from "./MainPage";
 import FavContentsPage from "./FavContetnsPage";
 import SettingsPage from "./SettingsPage";
@@ -8,10 +7,11 @@ import NotFound404 from "./NotFound404";
 import SocketTest from "./SocketTest";
 import TotalRecordsPage from "./TotalRecordsPage";
 import RecordPage from "./RecordPage";
+// settingpage 및 favcontentspage 구현에 따른 마이페이지 삭제
+// import Mypage from "./MyPage";
 
 export {
   ConversationPage,
-  MyPage,
   MainPage,
   FavContentsPage,
   SettingsPage,
@@ -20,4 +20,5 @@ export {
   NotFound404,
   TotalRecordsPage,
   RecordPage,
+  // Mypage,
 };
