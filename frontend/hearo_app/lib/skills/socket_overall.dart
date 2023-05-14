@@ -67,8 +67,7 @@ class SocketOverall {
   }
 
   getClassification() {
-    socket.on("classification", (data) {
-      print(data);
+    socket.on("result", (data) {
       return data;
     });
   }

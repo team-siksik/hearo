@@ -21,11 +21,14 @@ class ChatHome extends StatefulWidget {
 }
 
 class _ChatHomeState extends State<ChatHome> {
+  String mode = "side";
   final SpeechToText _speechToText = SpeechToText();
   bool _speechEnabled = false;
   String _lastWords = '';
   final _scrollController = ScrollController();
   List chattings = [];
+  List yourChattings = [];
+  List myChattings = [];
   final chatController = Get.put(ChatController());
   TextEditingController textController = TextEditingController();
   final FlutterTts tts = FlutterTts();
@@ -33,6 +36,7 @@ class _ChatHomeState extends State<ChatHome> {
     // 새로운 항목을 ListView에 추가
     setState(() {
       chattings.add({"who": 0, "message": chat});
+      myChattings.add(chat);
       chatController.changeSaying('');
     });
 
@@ -54,6 +58,7 @@ class _ChatHomeState extends State<ChatHome> {
         pauseFor: Duration(seconds: 50));
     if (_lastWords.trim() != "") {
       chattings.add({"who": 1, "message": _lastWords});
+      yourChattings.add(_lastWords);
       _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
       _lastWords = '';
     }
@@ -95,7 +100,7 @@ class _ChatHomeState extends State<ChatHome> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       showInfoFirst(context);
     });
-    playAudio();
+    // playAudio();
     _initSpeech();
     _startListening();
     Future.delayed(Duration(milliseconds: 3300), () async {
@@ -105,18 +110,6 @@ class _ChatHomeState extends State<ChatHome> {
   }
 
   final AssetsAudioPlayer assetsAudioPlayer = AssetsAudioPlayer.newPlayer();
-  void playAudio() async {
-    await assetsAudioPlayer.open(
-      Audio("assets/audios/hearo_start.wav"),
-      loopMode: LoopMode.none, //반복 여부 (LoopMode.none : 없음)
-      autoStart: false, //자동 시작 여부
-      showNotification: false, //스마트폰 알림 창에 띄울지 여부
-    );
-
-    assetsAudioPlayer.play(); //재생
-    // assetsAudioPlayer.pause(); //멈춤
-    // assetsAudioPlayer.stop(); //정지
-  }
 
   void playAudioStop() async {
     assetsAudioPlayer.stop(); //정지
@@ -133,6 +126,16 @@ class _ChatHomeState extends State<ChatHome> {
   AudioPlayer player = AudioPlayer();
   Future playSound() async {
     await player.play(DeviceFileSource("assets/audios/hearo_start.wav"));
+  }
+
+  void changeMode() {
+    setState(() {
+      if (mode == "side") {
+        mode = "face";
+      } else {
+        mode = "side";
+      }
+    });
   }
 
   @override
@@ -163,8 +166,9 @@ class _ChatHomeState extends State<ChatHome> {
                   _speechToText.isNotListening ? Icons.mic_off : Icons.mic),
             ),
           ),
-          floatingActionButtonLocation:
-              FloatingActionButtonLocation.miniCenterTop,
+          floatingActionButtonLocation: mode == "side"
+              ? FloatingActionButtonLocation.miniCenterTop
+              : FloatingActionButtonLocation.miniCenterTop,
           appBar: CustomAppBarChat(),
           body: GestureDetector(
             onTap: () {
@@ -179,26 +183,81 @@ class _ChatHomeState extends State<ChatHome> {
               height: size.height,
               child: Column(
                 children: [
-                  Flexible(
-                    flex: 10,
-                    child: Container(
-                      padding: EdgeInsets.fromLTRB(15, 0, 15, 15),
-                      child: ListView.separated(
-                        controller: _scrollController,
-                        separatorBuilder: (context, index) =>
-                            SizedBox(height: 5),
-                        itemCount: chattings.length,
-                        itemBuilder: (context, index) {
-                          var saying = chattings[index];
-                          return SpeechBubble(
-                              textController: textController,
-                              message: saying["message"],
-                              who: saying["who"],
-                              textSize: textSize);
-                        },
-                      ),
-                    ),
-                  ),
+                  mode == "side"
+                      ? Flexible(
+                          flex: 10,
+                          child: Container(
+                            padding: EdgeInsets.fromLTRB(15, 0, 15, 15),
+                            child: ListView.separated(
+                              controller: _scrollController,
+                              separatorBuilder: (context, index) =>
+                                  SizedBox(height: 5),
+                              itemCount: chattings.length,
+                              itemBuilder: (context, index) {
+                                var saying = chattings[index];
+                                return SpeechBubble(
+                                    textController: textController,
+                                    message: saying["message"],
+                                    who: saying["who"],
+                                    textSize: textSize);
+                              },
+                            ),
+                          ),
+                        )
+                      : Flexible(
+                          flex: 10,
+                          child: Column(
+                            children: [
+                              Flexible(
+                                flex: 5,
+                                child: Transform(
+                                  transform:
+                                      Matrix4.diagonal3Values(-1.0, -1.0, 1.0),
+                                  alignment: Alignment.center,
+                                  child: Container(
+                                    padding: EdgeInsets.fromLTRB(15, 10, 15, 0),
+                                    child: ListView.separated(
+                                      controller: _scrollController,
+                                      separatorBuilder: (context, index) =>
+                                          SizedBox(height: 5),
+                                      itemCount: myChattings.length,
+                                      itemBuilder: (context, index) {
+                                        var saying = myChattings[index];
+                                        return SpeechBubble(
+                                          textController: textController,
+                                          message: saying,
+                                          who: 0,
+                                          textSize: textSize,
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Flexible(
+                                flex: 5,
+                                child: Container(
+                                  padding: EdgeInsets.fromLTRB(15, 10, 15, 0),
+                                  child: ListView.separated(
+                                    controller: _scrollController,
+                                    separatorBuilder: (context, index) =>
+                                        SizedBox(height: 5),
+                                    itemCount: yourChattings.length,
+                                    itemBuilder: (context, index) {
+                                      var saying = yourChattings[index];
+                                      return SpeechBubble(
+                                        textController: textController,
+                                        message: saying,
+                                        who: 1,
+                                        textSize: textSize,
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                   Container(
                     decoration: BoxDecoration(
                         border: Border(top: BorderSide(color: Colors.black38))),
@@ -208,10 +267,15 @@ class _ChatHomeState extends State<ChatHome> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
+                        IconButton(
+                            onPressed: () {
+                              changeMode();
+                            },
+                            icon: Icon(Icons.change_circle_outlined)),
                         FavoriteStar(
                             size: size, textController: textController),
                         SizedBox(
-                          width: size.width * 0.75,
+                          width: size.width * 0.64,
                           child: TextField(
                             onTap: () {
                               _scrollController.jumpTo(

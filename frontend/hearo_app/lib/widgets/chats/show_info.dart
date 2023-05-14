@@ -11,7 +11,7 @@ Future showInfo(context) async {
         style: TextStyle(fontWeight: FontWeight.bold),
       ),
       content: const Text(
-        '이 대화는 목소리가 텍스트로 전환되며, 전달하는 말은 스피커로 출력됩니다. ㄴ시스템 볼륨을 확인해주세요.',
+        '이 대화는 목소리가 텍스트로 전환되며, 전달하는 말은 스피커로 출력됩니다. 시스템 볼륨을 확인해주세요.',
         style: TextStyle(fontSize: 30, fontWeight: FontWeight.w700),
         textAlign: TextAlign.center,
       ),
