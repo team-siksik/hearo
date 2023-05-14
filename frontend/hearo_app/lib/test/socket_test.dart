@@ -1,160 +1,104 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_sound/flutter_sound.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:hearo_app/skills/socket_overall.dart';
+import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 
 class SocketTest extends StatefulWidget {
   const SocketTest({super.key});
 
   @override
-  State<SocketTest> createState() => _SocketTestState();
+  _SocketTestState createState() => _SocketTestState();
 }
 
 class _SocketTestState extends State<SocketTest> {
-  final SocketOverall audioSocket = SocketOverall();
-  final FlutterSoundRecorder _audioRecorder = FlutterSoundRecorder();
-  final FlutterSoundPlayer _audioPlayer = FlutterSoundPlayer();
-  late String _recordingFilePath;
-  bool _isRecording = false;
-  List temp = [];
+  BluetoothDevice? hc06Device;
+  BluetoothCharacteristic? writeCharacteristic;
+  BluetoothCharacteristic? notifyCharacteristic;
+  Stream<List<int>>? notifyStream;
+  List<int> receivedData = [];
+
   @override
   void initState() {
     super.initState();
-    _initializeAudioRecorder();
-    _initializeAudioPlayer();
-    audioSocket.connect();
-    audioSocket.enterRoom("1111");
-    setState(() {});
+    connectToDevice();
   }
 
   @override
   void dispose() {
-    audioSocket.closeRoom("1111");
-    audioSocket.disconnect();
-    _audioRecorder.closeRecorder();
-    _audioPlayer.closePlayer();
+    disconnectFromDevice();
     super.dispose();
   }
 
-  Future<void> _initializeAudioRecorder() async {
-    await _audioRecorder.openRecorder();
-    // _audioRecorder.setSubscriptionDuration(Duration(milliseconds: 100));
-  }
+  Future<void> connectToDevice() async {
+    FlutterBluePlus flutterBlue = FlutterBluePlus.instance;
+    // HC-06의 MAC 주소를 사용하여 BluetoothDevice를 찾습니다.
+    List<BluetoothDevice> devices = await flutterBlue.connectedDevices;
+    hc06Device = devices.firstWhere(
+      (device) => device.name == 'HC-06', // HC-06의 이름으로 필터링
+    );
 
-  Future<void> _initializeAudioPlayer() async {
-    await _audioPlayer.openPlayer();
-  }
-
-  Future<void> _startRecording() async {
-    try {
-      setState(() {
-        _isRecording = true;
-      });
-      final tempDir = await getTemporaryDirectory();
-      final recordingFileName =
-          'recording_${DateTime.now().microsecondsSinceEpoch}.wav';
-      final recordingFilePath = '${tempDir.path}/$recordingFileName';
-      await _audioRecorder.startRecorder(
-          toFile: recordingFilePath, codec: Codec.pcm16WAV);
-
-      setState(() {
-        _recordingFilePath = recordingFilePath;
-      });
-    } catch (e) {
-      print(e.toString());
-    }
-  }
-
-  Future<void> _stopRecording() async {
-    try {
-      _audioRecorder.stopRecorder();
-      File file = File(_recordingFilePath);
-      List<int> fileData = file.readAsBytesSync();
-      String fileDataB64 = base64Encode(fileData);
-      audioSocket.sendClassification('1111', fileDataB64);
-      audioSocket.socket.on(
-        "audio",
-        (data) {
-          temp.add(data);
-          print(data);
-        },
-      );
-    } catch (e) {
-      print(e.toString());
-    }
-  }
-
-  void _recordAndSendEverySecond() async {
-    setState(() {
-      _isRecording = true;
-    });
-
-    while (_isRecording) {
-      _startRecording();
-      await Future.delayed(Duration(milliseconds: 1000));
-      _stopRecording();
-      String datum = audioSocket.getClassification();
-      print(datum);
-      if (datum != "") {
-        temp.add(datum);
+    if (hc06Device != null) {
+      // HC-06을 이미 페어링한 경우 연결합니다.
+      await hc06Device!.connect(autoConnect: false);
+      // 서비스와 캐릭터리스틱을 찾아 저장합니다.
+      List<BluetoothService> services = await hc06Device!.discoverServices();
+      for (BluetoothService service in services) {
+        for (BluetoothCharacteristic characteristic
+            in service.characteristics) {
+          if (characteristic.properties.write) {
+            writeCharacteristic = characteristic;
+          } else if (characteristic.properties.notify) {
+            notifyCharacteristic = characteristic;
+            notifyStream = notifyCharacteristic!.value;
+            // 데이터 수신 리스너를 등록합니다.
+            notifyStream!.listen((data) {
+              setState(() {
+                receivedData.addAll(data);
+              });
+            });
+          }
+        }
       }
     }
   }
 
-  void _stopSendRecording() async {
-    setState(() {
-      _isRecording = false;
-    });
-    await _audioRecorder.stopRecorder();
-    await _audioRecorder.closeRecorder();
+  Future<void> disconnectFromDevice() async {
+    if (hc06Device != null) {
+      await hc06Device!.disconnect();
+    }
+  }
+
+  void sendCommand(String command) {
+    if (writeCharacteristic != null) {
+      writeCharacteristic!.write(utf8.encode(command));
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('음성소켓 연습'),
+        title: Text('HC-06 Microphone'),
       ),
       body: Center(
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                IconButton(
-                  onPressed: _recordAndSendEverySecond,
-                  icon: Icon(Icons.mic),
-                ),
-                SizedBox(width: 10),
-                IconButton(
-                  onPressed: _stopSendRecording,
-                  icon: Icon(Icons.stop),
-                ),
-                SizedBox(width: 10),
-                IconButton(
-                  onPressed: () {
-                    print(temp);
-                  },
-                  icon: Icon(Icons.text_increase_rounded),
-                ),
-              ],
-            ),
-            Expanded(
-                child: ListView.separated(
-                    itemBuilder: (context, index) {
-                      var txt = temp[index];
-                      return Text(txt);
-                    },
-                    separatorBuilder: (context, index) => SizedBox(
-                          height: 5,
-                        ),
-                    itemCount: temp.length))
-          ],
+          child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+        ElevatedButton(
+          onPressed: () {
+            sendCommand('음성 송신'); // 원하는 명령을 전달합니다.
+          },
+          child: Text('음성 송신'),
         ),
-      ),
+        SizedBox(height: 20),
+        Text(
+          '수신된 데이터:',
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+        SizedBox(height: 10),
+        Text(
+          String.fromCharCodes(receivedData),
+          style: TextStyle(fontSize: 16),
+        ),
+      ])),
     );
   }
 }

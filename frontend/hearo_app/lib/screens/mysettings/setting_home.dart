@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:hearo_app/apis/login_api.dart';
 import 'package:hearo_app/controller/login_controller.dart';
 import 'package:hearo_app/screens/login_screen.dart';
-import 'package:hearo_app/test/socket_test.dart';
+import 'package:hearo_app/test/socket_test2.dart';
 import 'package:hearo_app/widgets/common/custom_app_bar_inner.dart';
 
 class SettingHome extends StatefulWidget {
@@ -56,10 +56,17 @@ class _SettingHomeState extends State<SettingHome> {
               ),
             ),
             Flexible(
+                flex: 3,
+                child: TextButton(
+                    onPressed: () {
+                      Get.to(() => SocketTest2());
+                    },
+                    child: Text("모드 변경"))),
+            Flexible(
                 flex: 1,
                 child: TextButton(
                     onPressed: () {
-                      Get.to(() => SocketTest());
+                      Get.to(() => SocketTest2());
                     },
                     child: Text("소켓 실험"))),
             Flexible(
