@@ -4,7 +4,6 @@ import {
   ConversationPage,
   MainPage,
   TotalRecordsPage,
-  MyPage,
   FavContentsPage,
   SettingsPage,
   AgainPage,
@@ -44,7 +43,6 @@ function App() {
         <Route path="/records" element={<TotalRecordsPage />} />
         {/* //FIXME: props 해결해주세요 */}
         {/* <Route path="/records/:id" element={<RecordPage />} /> */}
-        <Route path="/mypage" element={<MyPage />} />
         <Route path="/mypage/favcontents" element={<FavContentsPage />} />
         <Route path="/mypage/settings" element={<SettingsPage />} />
         <Route path="/login/oauth2/code/google" element={<Google />} />
