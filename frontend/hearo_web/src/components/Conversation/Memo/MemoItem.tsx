@@ -1,12 +1,15 @@
+import { MemoType } from "@/types/types";
 import React from "react";
 
-interface PropsType {}
+interface PropsType {
+  item: MemoType;
+}
 
-function MemoItem({}: PropsType) {
+function MemoItem({ item }: PropsType) {
   return (
     <div className="w-80 rounded-md border border-gray-200 p-2">
-      <p>04:23</p>
-      <p>오호 그래서 이렇게 됐다 이거지? </p>
+      <p className="memoCreatedAt text-sm text-gray-400">{item.createdAt}</p>
+      <p className="memoContent">{item.content}</p>
     </div>
   );
 }

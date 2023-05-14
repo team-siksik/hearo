@@ -72,7 +72,7 @@ function ConversationPage() {
       ) : null}
       <MeetingSidebar />
       <audio ref={audioRef} src={startVoice} />
-      <div className="absolute right-0 mt-20 w-[82%]">
+      <div className="absolute right-0 mt-[4.25rem] w-[82%]">
         <ConversationHeader
           timerStarted={timerStarted}
           openModal={openInfoModal}

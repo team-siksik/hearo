@@ -10,10 +10,12 @@ import { MeetingAPI } from "@/apis/api";
 import { Socket, io } from "socket.io-client";
 import { AnimatePresence, motion } from "framer-motion";
 import { decodeUnicode } from "@/STT/Transcription";
+import Alert from "../common/ui/Alert";
+import { MemoType } from "@/types/types";
 
 //FIXME: accessToken 연결 전 수정해야함
 const accessToken =
-  "eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJub2hoeXVuamVvbmc5M0BnbWFpbC5jb20iLCJpYXQiOjE2ODM3NzA2NjQsImV4cCI6MTY4MzkwMDI2NH0.JBlTVLV3CaCyk-jxtZhP7o-v8YwZPWdGEd2nIBbRhJI";
+  "eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJ0ZWFtc2lrc2lrMkBnbWFpbC5jb20iLCJpYXQiOjE2ODQwNTA1MTIsImV4cCI6MTY4NDE4MDExMn0.XMMeKEZMIaSbPrU4mJ9JUn5E57S0F4FqZYtdNdKrEt8";
 const roomNo = 1343;
 
 const socketURl = "http://k8a6031.p.ssafy.io:80/";
@@ -79,6 +81,7 @@ function ConversationBody({
 
   const [openMemoPage, setOpenMemoPage] = useState<boolean>(false);
   const [openExitModal, setOpenExitModal] = useState<boolean>(false);
+  const [openAlertModal, setOpenAlertModal] = useState<boolean>(false);
   // get GPT 추천 modal
   const [openGPTModal, setOpenGPTModal] = useState<boolean>(false);
   // 자주 쓰는 말 modal
@@ -88,6 +91,8 @@ function ConversationBody({
   const [partialResult, setPartialResult] = useState<string>("");
   // Text-to-Speech를 위한 text
   const [text, setText] = useState<string>("");
+
+  const [memoList, setMemoList] = useState<MemoType[]>([]);
 
   const [intervalKey, setIntervalKey] = useState<any>();
   const [mediaStream, setMediaStream] = useState<MediaStream>(); //streaming되는 미디어
@@ -461,6 +466,7 @@ function ConversationBody({
 
   //room close http api request
   async function closeRoomAPI() {
+    //TODO: memoList도 같이 보내야함
     MeetingAPI.finishMeeting(accessToken, roomSeq!, audioBlob!)
       .then((result) => {
         console.log(result);
@@ -479,7 +485,7 @@ function ConversationBody({
 
   return (
     <>
-      <section className="message-sec h-100 mb-10 overflow-y-scroll pt-10">
+      <section className="message-sec mb-12 h-full overflow-x-auto ">
         {openExitModal ? (
           <ExitModal
             setOpenExitModal={setOpenExitModal}
@@ -494,19 +500,16 @@ function ConversationBody({
             </Button>
           </div>
         ) : (
-          <AnimatePresence>
-            {conversation && openMemoPage ? (
+          <div className="flex scroll-mx-0 flex-row">
+            {conversation ? (
               <motion.div
                 key="left"
                 style={{
-                  height: "100%",
-                  width: "70%",
-                  border: "1px solid blue",
+                  maxHeight: "600px",
+                  width: openMemoPage ? "70%" : "100%",
+                  transition: "width 0.5s",
+                  overflow: "auto",
                 }}
-                initial={{ height: "100%", width: "100%" }}
-                animate={{ height: "100%", width: "70%" }}
-                exit={{ height: "100%", width: "100%" }}
-                transition={{ duration: 0.5 }}
               >
                 {text && <TTS text={text} setText={setText} />}
                 {conversation.map((item, idx) => {
@@ -550,32 +553,47 @@ function ConversationBody({
             )}
 
             {/* 메모 div */}
-            {openMemoPage && (
-              <motion.div
-                key="right"
-                style={{
-                  width: "30%",
-                  border: "1px solid #E63E43",
-                }}
-                initial={{ width: "0%" }}
-                animate={{ width: "30%" }}
-                exit={{ width: "0%" }}
-                transition={{ duration: 0.5 }}
-              >
-                <MemoComp openMemoPage={openMemoPage} />
-              </motion.div>
-            )}
-          </AnimatePresence>
+            <AnimatePresence>
+              {openMemoPage && (
+                <motion.div
+                  key="right"
+                  style={{
+                    width: "30%",
+                    height: "600px",
+                  }}
+                  initial={{ width: "0%", height: "600px" }}
+                  animate={{ width: "30%", height: "600px" }}
+                  exit={{ width: "0%", height: "600px" }}
+                  transition={{ duration: 0.5 }}
+                >
+                  <MemoComp
+                    openMemoPage={openMemoPage}
+                    memoList={memoList}
+                    setMemoList={setMemoList}
+                  />
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
         )}
         {openGPTModal && <GPTRecommend setOpenGPTModal={setOpenGPTModal} />}
         {openAddFavModal && (
           <AddFavModal setOpenAddFavModal={setOpenAddFavModal} />
         )}
+        {openAlertModal && (
+          <Alert setOpenAlertModal={setOpenAlertModal}>
+            대화를 시작버튼을 눌러주세요
+          </Alert>
+        )}
         {audio && <audio src={audio} controls />}
         <FloatingButton
           type="memo"
           onClick={() => {
-            setOpenMemoPage((prev) => !prev);
+            if (isStarted) {
+              setOpenMemoPage((prev) => !prev);
+            } else {
+              setOpenAlertModal(true);
+            }
           }}
         />
         <FloatingButton type="close" onClick={() => setOpenExitModal(true)} />
