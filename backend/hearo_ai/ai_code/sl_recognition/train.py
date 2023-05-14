@@ -4,8 +4,7 @@ import os
 import tensorflow as tf
 from tensorflow.keras import layers
 from tensorflow.keras.callbacks import ModelCheckpoint, ReduceLROnPlateau, EarlyStopping
-from tensorflow.keras.layers import LSTM, Dense
-from tensorflow.keras.models import Sequential, load_model
+from tensorflow.keras.models import load_model
 from tensorflow.keras.utils import to_categorical
 from sklearn.metrics import multilabel_confusion_matrix
 from sklearn.model_selection import train_test_split
