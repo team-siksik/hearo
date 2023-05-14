@@ -107,7 +107,7 @@ public class ConversationServiceImpl implements ConversationService {
         return result;
     }
     @Override
-    public void saveConversation(Account account, long conversationSeq, MultipartFile audio, SaveConversationRequestDto requestDto) {
+    public long saveConversation(Account account, long conversationSeq, MultipartFile audio, SaveConversationRequestDto requestDto) {
         log.info("[saveConversation] 대화 저장 시작");
         log.info("[saveConversation] audio: {}", String.valueOf(audio));
 
@@ -191,5 +191,6 @@ public class ConversationServiceImpl implements ConversationService {
         }
 
         log.info("[saveConversation] 대화 저장 완료");
+        return record.getRecordSeq();
     }
 }
