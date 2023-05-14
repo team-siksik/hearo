@@ -16,6 +16,8 @@ prv_score = -1
 
 @socket_manager.on("classification")
 async def audio_stream(sid, data):
+    global prv_score
+    
     base64_audio = data["audio"]
 
     # Base64 형식의 오디오 데이터를 디코딩
