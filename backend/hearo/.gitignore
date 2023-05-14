@@ -8,6 +8,7 @@ application-google.yml
 application-jwt.yml
 application-mysql.yml
 application-s3.yml
+application-clova.yml
 
 ### STS ###
 .apt_generated

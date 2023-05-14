@@ -7,25 +7,18 @@ public class ConversationResponseDto {
 
     @Getter
     @Builder
-    public static class KeywordResponseDto {
+    public static class StartConversationResponseDto {
 
-        private long keywordSeq;
-        private String keyword;
-
-    }
-
-    @Getter
-    @Builder
-    public static class KeywordSentenceResponseDto {
-
-        private long sentenceSeq;
-        private String keywordSentence;
+        private long roomSeq;
+        private String regDtm;
+        private String endDtm;
+        private String roomId;
 
     }
 
     @Getter
     @Builder
-    public static class RoomResponseDto {
+    public static class EndConversationResponseDto {
 
         private long roomSeq;
         private String regDtm;
