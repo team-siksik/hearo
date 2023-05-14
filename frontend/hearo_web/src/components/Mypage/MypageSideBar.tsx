@@ -52,7 +52,9 @@ function MypageSideBar() {
             <div className="w-7 h-7 p-1">
             <BookOpenIcon/>
             </div>
+            <div className="pl-1">
             내 기록
+            </div>
           </div>
         </div>
         <div onClick={handleMypageClick} className="flex h-[10%] w-full items-center border-b border-slate-200 hover:bg-blue-main hover:text-white hover:cursor-pointer">
@@ -60,7 +62,9 @@ function MypageSideBar() {
             <div className="w-7 h-7 p-1">
             <Cog6ToothIcon/>
             </div>
+            <div className="pl-1">
             내 정보
+            </div>
           </div>
         </div>
       </div>
