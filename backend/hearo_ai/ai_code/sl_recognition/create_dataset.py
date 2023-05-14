@@ -30,7 +30,7 @@ with mp_holistic.Holistic(min_detection_confidence=0.5, min_tracking_confidence=
             success, image = cap.read()
 
             if not success:
-                print("Ignoring empty camera frame.")
+                print("EMPTY CAMERA FRAME")
                 continue
 
             image = cv2.flip(image, 1)
@@ -65,7 +65,6 @@ with mp_holistic.Holistic(min_detection_confidence=0.5, min_tracking_confidence=
                 pose = np.zeros((12, 3))
                 left_joint, right_joint = np.zeros((21, 3)), np.zeros((21, 3))
                 left_angle, right_angle = np.zeros((15,)), np.zeros((15,))
-
 
                 for idx, lm in enumerate(results.pose_landmarks.landmark):
                     if 10 < idx < 23:
