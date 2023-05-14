@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hearo_app/controller/login_controller.dart';
-import 'package:hearo_app/screens/glasses/home_screen_glasses.dart';
+import 'package:hearo_app/screens/glasses/blue_search.dart';
 import 'package:hearo_app/screens/home_screen.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -105,7 +105,7 @@ class _ChooseModeScreenState extends State<ChooseModeScreen> {
       child: ElevatedButton(
         onPressed: () {
           if (where == "glass") {
-            Get.to(() => HomeScreenGlasses());
+            Get.to(() => BlueSearch());
           } else {
             Get.to(() => HomeScreen());
           }
