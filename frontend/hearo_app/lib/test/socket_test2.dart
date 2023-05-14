@@ -75,13 +75,10 @@ class _SocketTest2State extends State<SocketTest2> {
       List<int> fileData = file.readAsBytesSync();
       String fileDataB64 = base64Encode(fileData);
       audioSocket.sendClassification('1111', fileDataB64);
-      audioSocket.socket.on(
-        "audio",
-        (data) {
-          temp.add(data);
-          print(data);
-        },
-      );
+
+      String datum = await audioSocket.getClassification(); // 비동기로 데이터 받기
+
+      temp.add(datum);
     } catch (e) {
       print(e.toString());
     }
@@ -96,11 +93,6 @@ class _SocketTest2State extends State<SocketTest2> {
       _startRecording();
       await Future.delayed(Duration(milliseconds: 1000));
       _stopRecording();
-      String datum = audioSocket.getClassification();
-      print(datum);
-      if (datum != "") {
-        temp.add(datum);
-      }
     }
   }
 
@@ -110,6 +102,12 @@ class _SocketTest2State extends State<SocketTest2> {
     });
     await _audioRecorder.stopRecorder();
     await _audioRecorder.closeRecorder();
+  }
+
+  void clearList() async {
+    setState(() {
+      temp = [];
+    });
   }
 
   @override
@@ -125,7 +123,10 @@ class _SocketTest2State extends State<SocketTest2> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 IconButton(
-                  onPressed: _recordAndSendEverySecond,
+                  onPressed: () async {
+                    clearList();
+                    _recordAndSendEverySecond();
+                  },
                   icon: Icon(Icons.mic),
                 ),
                 SizedBox(width: 10),
@@ -137,6 +138,7 @@ class _SocketTest2State extends State<SocketTest2> {
                 IconButton(
                   onPressed: () {
                     print(temp);
+                    clearList();
                   },
                   icon: Icon(Icons.text_increase_rounded),
                 ),
@@ -144,6 +146,7 @@ class _SocketTest2State extends State<SocketTest2> {
             ),
             Expanded(
                 child: ListView.separated(
+                    reverse: true,
                     itemBuilder: (context, index) {
                       var txt = temp[index];
                       return Text(txt);
