@@ -1,3 +1,4 @@
+import { MemoType } from "@/types/types";
 import axios from "axios";
 axios.defaults.withCredentials = true;
 
@@ -155,14 +156,15 @@ export const MeetingAPI = {
   startMeeting: (accessToken: string) =>
     api.post(
       `/conversation/room/start`,
-      {},
+      { roomType: "sl" },
       {
         headers: {
           Authorization: `${accessToken}`,
+          "Content-Type": "application/json",
         },
       }
     ),
-  finishMeeting: (accessToken: string, roomSeq: number, audioBlob: Blob) =>
+  finishMeeting: (accessToken: string, roomSeq: number) =>
     api.put(
       `/conversation/room/${roomSeq}/close`,
       {},
@@ -172,23 +174,27 @@ export const MeetingAPI = {
         },
       }
     ),
+  saveMeeting: (accessToken: string, roomSeq: number, formData: FormData) =>
+    api.post(`/conversation/room/${roomSeq}/save`, formData, {
+      headers: {
+        Authorization: `${accessToken}`,
+        "Content-Type": "multipart/form-data",
+      },
+    }),
 };
 
-// 기록 관련 API 
+// 기록 관련 API
 // TODO: API 나오면 바로바로 추가하기
 export const RecordAPI = {
   getRecords: (
-    accessToken : string, 
-    userSeq: number, 
-    dialogSeq: number, 
-    email: string,
-    ) => 
-    api.get(
-    `/note`,
-    {
+    accessToken: string,
+    userSeq: number,
+    dialogSeq: number,
+    email: string
+  ) =>
+    api.get(`/note`, {
       headers: {
         Authorization: `${accessToken}`,
       },
-    }
-  ),
+    }),
 };

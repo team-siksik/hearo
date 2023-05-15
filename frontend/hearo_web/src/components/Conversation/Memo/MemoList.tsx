@@ -7,9 +7,6 @@ interface PropsType {
 }
 
 function MemoList({ memoList }: PropsType) {
-  useEffect(() => {
-    console.log(memoList);
-  }, [memoList]);
   // 채팅창 늘어날수록 스크롤 맨 밑으로 이동
   const memoEndRef = useRef<HTMLDivElement>(null);
   // 채팅창 늘어날수록 스크롤 맨 밑으로 이동
@@ -17,8 +14,9 @@ function MemoList({ memoList }: PropsType) {
     if (memoEndRef.current)
       memoEndRef.current.scrollIntoView({ behavior: "smooth" });
   }, [memoList]);
+
   return (
-    <div className="flex h-[56%] flex-col gap-2 overflow-auto overflow-x-auto border border-red-main py-2">
+    <div className="flex h-[288px] flex-col gap-2 overflow-auto overflow-x-auto pb-2">
       {memoList?.map((item, idx) => {
         return <MemoItem key={idx} item={item} />;
       })}
