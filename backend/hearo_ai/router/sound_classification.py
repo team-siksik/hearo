@@ -12,9 +12,12 @@ from main import socket_manager, logger
 router = APIRouter(prefix="/sc")
 
 audio_data_queues = {}
+prv_score = -1
 
 @socket_manager.on("classification")
 async def audio_stream(sid, data):
+    global prv_score
+    
     base64_audio = data["audio"]
 
     # Base64 형식의 오디오 데이터를 디코딩
@@ -46,16 +49,16 @@ async def audio_stream(sid, data):
         temp_filename = temp_file.name
         combined_audio.export(temp_filename, format="wav")
         logger.info(f"임시 파일 경로:, {temp_filename}")  # 임시 파일 경로 출력
+        logger.info(f"max_dBFS = {combined_audio.max_dBFS}")
 
     # 임시 파일을 읽어서 query_with_memory 함수 호출
     with open(temp_filename, "rb") as f:
-        result = api.query_with_memory(f.read())
-
-        # 임시 파일 삭제
-        os.remove(temp_filename)
+        result, prv_score = api.query_with_memory(f.read(), prv_score)
+        # # 임시 파일 삭제
+        # os.remove(temp_filename)
 
         if result:
-            logger.info(f"result = {result}")
+            logger.info(result)
             await socket_manager.emit("result", result)
         else:
             logger.info("No result")
