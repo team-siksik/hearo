@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import React, { useEffect, useState } from "react";
+import { motion, AnimatePresence, easeInOut } from "framer-motion";
 import { MemoList } from "@/components";
 
 const TestPage = () => {
@@ -7,6 +7,10 @@ const TestPage = () => {
   function handleClick() {
     setMemoOpen((prev) => !prev);
   }
+  useEffect(() => {
+    console.log(memoOpen);
+  }, [memoOpen]);
+
   return (
     <>
       <button className="mt-20" onClick={handleClick}>
@@ -14,20 +18,11 @@ const TestPage = () => {
       </button>
       <div className="flex flex-row">
         <motion.div
-          initial={{
-            height: "10vh",
-            width: "100%",
-            border: "1px solid black",
-          }}
-          animate={{
-            height: "10vh",
-            width: "70%",
+          style={{
+            height: "80vh",
+            width: memoOpen ? "70%" : "100%",
             border: "1px solid #E63E43",
-          }}
-          exit={{
-            height: "10vh",
-            width: "100%",
-            border: "1px solid black",
+            transition: "width 0.5s",
           }}
         ></motion.div>
         <AnimatePresence>
@@ -37,7 +32,7 @@ const TestPage = () => {
               animate={{ width: "30%", right: "30%" }}
               exit={{ width: "0%", right: "0" }}
             >
-              <MemoList />
+              {/* <MemoList /> */}
             </motion.div>
           )}
         </AnimatePresence>
