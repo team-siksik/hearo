@@ -50,10 +50,13 @@ async def audio_stream(sid, data):
     # 임시 파일을 읽어서 query_with_memory 함수 호출
     with open(temp_filename, "rb") as f:
         # try:
+        logger.info('1111111111111111111')
         classification = model.classify_file(f.read())
+        logger.info('2222222222222222222')
         # 임시 파일 삭제
         os.remove(temp_filename)
         
+        logger.info('3333333333333333333')
         if classification[0].tolist()[0] == prv_score:
             result = "Mic error"
         else:
@@ -61,13 +64,10 @@ async def audio_stream(sid, data):
             prv_score = classification[0].tolist()[0]
         logger.info(result)
         await socket_manager.emit("result", result)
+
         # except:
         #     logger.info("No result")
         #     await socket_manager.emit("result", "No result")
-            
-
-
-
             
         # result, prv_score = api.query_with_memory(f.read(), prv_score)
         # # 임시 파일 삭제
