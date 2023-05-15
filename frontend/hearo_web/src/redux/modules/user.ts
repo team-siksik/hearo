@@ -141,7 +141,7 @@ const userSlice = createSlice({
         state.isLoggedIn = true;
         localStorage.setItem("accessToken", action.payload.accessToken);
         localStorage.setItem("userSeq", action.payload.userSeq);
-        state.user = action.payload; // TODO: payload 데이터를 그대로 user에 넣어도 되는지 체크!
+        state.user = action.payload;
         state.user!.accessToken = "";
       })
       .addCase(googleLogin.rejected, (state) => {
