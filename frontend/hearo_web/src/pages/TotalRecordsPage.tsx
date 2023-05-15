@@ -62,7 +62,7 @@ function TotalRecordsPage(
       .catch((err) => {
         console.log(err);
       });
-  }, []);
+  }, [currentPage]);
 
   // 변경된 타이틀?
   const handleChangeTitle = (recordSeq: number, newTitle: string) => {
