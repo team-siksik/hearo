@@ -16,14 +16,14 @@ class _DeviceScreenState extends State<DeviceScreen> {
   String stateText = 'Connecting';
   String connectButtonText = 'Disconnect';
   BluetoothDeviceState deviceState = BluetoothDeviceState.disconnected;
-  StreamSubscription<BluetoothDeviceState>? _stateListener;
+  StreamSubscription<BluetoothDeviceState>? stateListener;
   List<BluetoothService> bluetoothService = [];
   Map<String, List<int>> notifyDatas = {};
 
   @override
   void initState() {
     super.initState();
-    _stateListener = widget.device.state.listen((event) {
+    stateListener = widget.device.state.listen((event) {
       debugPrint('event: $event');
       if (deviceState == event) {
         return;
@@ -35,7 +35,7 @@ class _DeviceScreenState extends State<DeviceScreen> {
 
   @override
   void dispose() {
-    _stateListener?.cancel();
+    stateListener?.cancel();
     disconnect();
     super.dispose();
   }

@@ -20,6 +20,8 @@ class ApiLog {
     if (response.statusCode == 200) {
       final responseData = jsonDecode(utf8.decode(response.bodyBytes));
       loginController.setData(responseData["data"]);
+      loginController.setMyCode(
+          responseData["data"]["accessToken"].toString().substring(1, 15));
       return true;
     } else {
       return false;

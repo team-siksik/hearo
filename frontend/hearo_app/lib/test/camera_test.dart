@@ -25,14 +25,14 @@ class _CameraTestState extends State<CameraTest> {
   void initState() {
     startCamera();
     videoSocket.connect();
-    videoSocket.enterRoom("1111");
+    videoSocket.enterRoom();
     super.initState();
   }
 
   @override
   void dispose() {
     cameraController.dispose();
-    videoSocket.closeRoom("1111");
+    videoSocket.closeRoom();
     videoSocket.disconnect();
     super.dispose();
   }
@@ -88,7 +88,7 @@ class _CameraTestState extends State<CameraTest> {
       try {
         final image = await cameraController.takePicture();
         final base64Image = base64Encode(await image.readAsBytes());
-        videoSocket.sendVideo("1111", base64Image);
+        videoSocket.sendVideo(base64Image);
       } catch (e) {
         print("Error capturing frame: $e");
       }
@@ -153,7 +153,7 @@ class CameraIsolate {
         String base64Image = base64Encode(await file.readAsBytes());
 
         // 소켓으로 이미지를 전송합니다.
-        videoSocket.sendVideo("1111", base64Image);
+        videoSocket.sendVideo(base64Image);
       } catch (e) {
         print("Error capturing frame: $e");
       }

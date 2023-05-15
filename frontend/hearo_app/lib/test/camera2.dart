@@ -27,7 +27,7 @@ class _Camera2State extends State<Camera2> {
   @override
   void initState() {
     videoSocket.connect();
-    videoSocket.enterRoom("1111");
+    videoSocket.enterRoom();
 
     availableCameras().then((availableCameras) {
       cameras = availableCameras;
@@ -54,7 +54,7 @@ class _Camera2State extends State<Camera2> {
   @override
   void dispose() {
     cameraController.dispose();
-    videoSocket.closeRoom("1111");
+    videoSocket.closeRoom();
     videoSocket.disconnect();
     super.dispose();
   }
@@ -78,7 +78,7 @@ class _Camera2State extends State<Camera2> {
       await cameraController.startImageStream((CameraImage image) async {
         if (isStreamingImages) {
           String base64Image = base64Encode(image.planes[0].bytes);
-          await videoSocket.sendVideo("image", base64Image);
+          await videoSocket.sendVideo(base64Image);
         }
       });
     }
@@ -116,7 +116,7 @@ class _Camera2State extends State<Camera2> {
       final File file = File(image.path);
       final bytes = await file.readAsBytes();
       final encodedImage = base64.encode(bytes);
-      await videoSocket.sendVideo("1111", encodedImage);
+      await videoSocket.sendVideo(encodedImage);
     } catch (e) {
       print(e);
     }
@@ -149,7 +149,7 @@ class _Camera2State extends State<Camera2> {
     final List<int> imageBytes = img.encodePng(convertedImage);
     final String base64Image = base64Encode(imageBytes);
 
-    videoSocket.sendVideo('1111', base64Image);
+    videoSocket.sendVideo(base64Image);
   }
 
   @override

@@ -90,7 +90,7 @@ class _ChooseModeScreenState extends State<ChooseModeScreen> {
     Map info = {
       "mobile": [
         "Hearo - Mobile",
-        "assets/images/start1.png",
+        "assets/images/phone.png",
         "안경없이 시작하기",
       ],
       "glass": [
@@ -107,7 +107,7 @@ class _ChooseModeScreenState extends State<ChooseModeScreen> {
           if (where == "glass") {
             Get.to(() => BlueSearch());
           } else {
-            Get.to(() => HomeScreen());
+            Get.offAll(() => HomeScreen());
           }
         },
         style: ElevatedButton.styleFrom(
