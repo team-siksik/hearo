@@ -6,6 +6,7 @@ import { Player } from "@lottiefiles/react-lottie-player";
 import MainLogo from "@/assets/Icon/MainLogo.json";
 import google_logo from "@/assets/Google_Logo.svg";
 import Button from "../ui/Button";
+import { getUserInfo } from "@/redux/modules/user";
 
 // TODO: 로그인을 하면 useParams 써서 로그인정보를 버튼들 위에다가 띄워줘야함
 
@@ -29,6 +30,17 @@ const Navbar = ({
   const user = useAppSelector((state) => state.user.user);
   // 로그인여부
   const isLoggedIn = localStorage.getItem("accessToken") ? true : false;
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      dispatch(
+        getUserInfo({
+          accessToken: localStorage.getItem("accessToken")!,
+          singleId: localStorage.getItem("userSeq")!,
+        })
+      );
+    }
+  }, [isLoggedIn]);
 
   // 음성재생 컴포넌트 활용
   const [comp, setComp] = useState<string>("main");
@@ -98,10 +110,8 @@ const Navbar = ({
   function handleProfile() {
     if (!showModal) {
       setOpenProfileModal(true);
-      setShowModal(true);
     } else {
       setOpenProfileModal(false);
-      setShowModal(false);
     }
   }
 

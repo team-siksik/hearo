@@ -12,5 +12,5 @@ public interface ConversationService {
 
     EndConversationResponseDto endConversation(Account account, long roomSeq);
 
-    void saveConversation(Account account, long conversationSeq, MultipartFile audio, SaveConversationRequestDto requestDto);
+    long saveConversation(Account account, long conversationSeq, MultipartFile audio, SaveConversationRequestDto requestDto);
 }

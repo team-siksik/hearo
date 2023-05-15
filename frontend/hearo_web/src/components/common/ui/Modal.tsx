@@ -21,6 +21,7 @@ interface PropsType {
   setOpenExitModal?: React.Dispatch<SetStateAction<boolean>>;
   setOpenRemoveRecordModal?: React.Dispatch<SetStateAction<boolean>>;
   setShowModal?: React.Dispatch<SetStateAction<boolean>>;
+  setOpenAlertModal?: React.Dispatch<SetStateAction<boolean>>;
 }
 
 const customModalStyles: ReactModal.Styles = {
@@ -130,11 +131,13 @@ function Modal({
   setOpenExitModal,
   setOpenRemoveRecordModal,
   setShowModal,
+  setOpenAlertModal,
 }: PropsType) {
   const [openModal, setOpenModal] = useState<boolean>(open);
 
   // x버튼이나, 나가기 혹은 취소 버튼을 누르면 modal을 닫게 하기 위한 함수입니다.
-  function handleModal() {
+  function handleModal(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+    e.stopPropagation();
     setOpenModal((prev) => !prev);
     if (setShowModal) {
       setShowModal((prev) => !prev);
@@ -160,6 +163,9 @@ function Modal({
     if (setOpenRemoveRecordModal) {
       setOpenRemoveRecordModal((prev) => !prev);
     }
+    if (setOpenAlertModal) {
+      setOpenAlertModal((prev) => !prev);
+    }
   }
   return (
     <>
@@ -177,7 +183,9 @@ function Modal({
           ariaHideApp={false}
         >
           <div className="absolute right-2 top-1 flex">
-            {cannotExit ? null : <button onClick={handleModal}></button>}
+            {cannotExit ? null : (
+              <button onClick={(e) => handleModal(e)}></button>
+            )}
           </div>
           {children}
         </ReactModal>
@@ -185,7 +193,8 @@ function Modal({
         <ReactModal
           isOpen={openModal}
           style={type === "info" ? infoModalStyles : customModalStyles} // 개별 스타일링을 줄 수 있습니다.
-          onRequestClose={() => {
+          onRequestClose={(e) => {
+            e.stopPropagation();
             setOpenModal((prev) => !prev);
             if (setLoginModal) {
               setLoginModal(false);
@@ -208,13 +217,16 @@ function Modal({
             if (setShowModal) {
               setShowModal((prev) => !prev);
             }
+            if (setOpenAlertModal) {
+              setOpenAlertModal((prev) => !prev);
+            }
           }}
           shouldCloseOnOverlayClick={cannotExit ? false : true}
           ariaHideApp={false}
         >
           <div className="absolute right-0 top-0 flex">
             {cannotExit ? null : (
-              <button onClick={handleModal}>
+              <button onClick={(e) => handleModal(e)}>
                 <CrossIconRed />
               </button>
             )}
