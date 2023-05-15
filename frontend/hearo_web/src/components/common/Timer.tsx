@@ -1,18 +1,17 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, SetStateAction } from "react";
 import { Input } from "@/components";
 interface TimerProps {
   // props 타입 정의
   timerStarted: boolean;
+  setSeconds: React.Dispatch<SetStateAction<number>>;
+  seconds: number;
 }
 
 interface TimeFormat {
   minutes: string;
   seconds: string;
 }
-
-function Timer({ timerStarted }: TimerProps) {
-  const [seconds, setSeconds] = useState<number>(0);
-
+function Timer({ timerStarted, setSeconds, seconds }: TimerProps) {
   useEffect(() => {
     if (timerStarted) {
       const interval = setInterval(() => {
