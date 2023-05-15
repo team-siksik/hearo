@@ -5,6 +5,9 @@ import com.ssafy.hearo.domain.account.entity.Account;
 import com.ssafy.hearo.domain.account.service.AccountService;
 import com.ssafy.hearo.global.annotation.LoginUser;
 import com.ssafy.hearo.global.common.response.Result;
+import com.ssafy.hearo.global.error.code.AccountErrorCode;
+import com.ssafy.hearo.global.error.code.RecordErrorCode;
+import com.ssafy.hearo.global.error.exception.ErrorException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -46,6 +49,12 @@ public class AccountController {
     @GetMapping("/list")
     public ResponseEntity<Result> getAccountList() {
         return ResponseEntity.ok().body(responseService.getListResult(accountService.accountList()));
+    }
+
+    @GetMapping("/info/{singleId}")
+    public ResponseEntity<Result> getAccount(@PathVariable Long singleId) {
+        return ResponseEntity.ok().body(responseService.getSingleResult(accountService.account(singleId)
+                .orElseThrow(() -> new ErrorException(AccountErrorCode.ACCOUNT_NOT_FOUND))));
     }
 
     @GetMapping("/search")
