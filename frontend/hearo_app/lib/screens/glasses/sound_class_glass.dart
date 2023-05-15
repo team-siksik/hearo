@@ -270,17 +270,31 @@ class _SoundClassGlassState extends State<SoundClassGlass> {
     });
   }
 
+  void sendAlarmToGlasses(words) async {
+    if (characteristic == null) {
+      connect();
+      return;
+    }
+    String data = words;
+    print("@@@@@@@@@@@@@@@@@");
+    print(data);
+    List<int> bytes = utf8.encode(data);
+    // print(characteristic);
+    print("안경으로 전송");
+    await characteristic!.write(bytes);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBarInner(name: "소음 인식"),
+      appBar: CustomAppBarInner(name: "소음 인식 Glass"),
       body: Center(
         child: Column(
           children: [
             SizedBox(
               height: 30,
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   Text(stateText),
                   /* 연결 및 해제 버튼 */
