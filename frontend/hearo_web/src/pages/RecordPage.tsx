@@ -5,7 +5,6 @@ import { RemoveRecordModal } from "@/components";
 import React, { useState, useEffect } from "react";
 import { RecordpageSideBar } from "@/components";
 
-// 개별기록페이지
 interface RecordPageProps {
   title?: string;
   onChangeTitle: (title: string) => void;
@@ -14,8 +13,12 @@ interface RecordPageProps {
 function RecordPage({ title, onChangeTitle }: RecordPageProps) {
   const location = useLocation();
   const navigate = useNavigate();
-  const state = location.state as { date: string, description: string } | null;
-  const { date = "", description = "" } = state || {};
+  const state = location.state as {
+    title: string;
+    date: string;
+    description: string;
+  };
+  const { title: initialTitle, date, description } = state;
 
   // const [newTitle, setTitle] = useState(initialTitle);
   const [openRemoveRecordModal, setOpenRemoveRecordModal] =
@@ -31,8 +34,8 @@ function RecordPage({ title, onChangeTitle }: RecordPageProps) {
   };
 
   useEffect(() => {
-    setNewTitle(title || "");
-  }, [title]);
+    onChangeTitle(newTitle);
+  }, [newTitle, onChangeTitle]);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -51,7 +54,7 @@ function RecordPage({ title, onChangeTitle }: RecordPageProps) {
   return (
     <div>
       <RecordpageSideBar />
-      <div className="fixed right-0 mt-20 w-[82%]">
+      <div className="fixed right-0 mt-[4.25rem] w-[82%]">
         <div className="mx-8">
           <div className="flex items-stretch justify-between ">
             <div className="flex flex-row items-center">
