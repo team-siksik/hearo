@@ -29,40 +29,13 @@ function TotalRecordsPage() {
   const [nextPage, setNextPage] = useState<number>(0);
   const [openRemoveRecordModal, setOpenRemoveRecordModal] =
     useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const [totalRecords, setTotalRecords] = useState<RecordItem[]>([]);
   const recordList = useAppSelector((state) => state.record.recordList);
   useEffect(() => {
     dispatch(getRecordList(nextPage));
-  }, []);
-  useEffect(() => {
-    console.log(recordList);
-    setTotalRecords(recordList);
-  }, [recordList]);
-
-  // useEffect(() => {
-  //   setTotalRecords((prev) => [...prev, ...recordList]);
-  // }, [recordList]);
-
-  // 변경된 타이틀?
-  const handleChangeTitle = (recordSeq: number, newTitle: string) => {
-    const newRecords = totalRecords.map((records) => {
-      if (records.recordSeq === recordSeq) {
-        return {
-          ...records,
-          title: newTitle,
-        };
-      }
-      return records;
-    });
-    setTotalRecords(newRecords);
-  };
-
-  // const handleRemoveRecord = (idToDelete:number) => {
-  //   const updatedRecords = totalRecords.filter((record) => record.recordSeq !== idToDelete);
-  //   setTotalRecords(updatedRecords);
-  //   setOpenRemoveRecordModal(false);
-  // };
+  }, [nextPage]);
 
   const handleRemoveClick = (idToDelete?: number) => {
     const updatedRecords = totalRecords.filter(
@@ -71,13 +44,6 @@ function TotalRecordsPage() {
     setTotalRecords(updatedRecords);
     setOpenRemoveRecordModal(false);
   };
-
-  // // TODO: 기록이 없으면 없는 걸로 보여줘야함
-  // const showRecords = (totalRecords: TotalRecord[]) => {
-  //   if (totalRecords.length === 0) {
-  //     return <p>표시할 내용이 없습니다</p>;
-  //   }
-  // };
 
   return (
     <div>
@@ -92,8 +58,8 @@ function TotalRecordsPage() {
         >
           <div className="space-y-4 pb-12">
             {/* 테스트 */}
-            {totalRecords &&
-              totalRecords.map((records, idx) => (
+            {recordList &&
+              recordList.map((records, idx) => (
                 <RecordsItem record={records} key={idx} />
               ))}
           </div>
