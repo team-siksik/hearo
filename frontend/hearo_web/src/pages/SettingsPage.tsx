@@ -1,12 +1,11 @@
 import React, { useState } from "react";
 import {
-  ArrowLeftIcon,
+  SquaresPlusIcon,
   SpeakerWaveIcon,
   ChevronDownIcon,
+  UserCircleIcon,
 } from "@heroicons/react/24/solid";
 import { useNavigate } from "react-router-dom";
-import { ReactComponent as FormatSizeIcon } from "../assets/Format_size.svg";
-import HearoLogo from "@/assets/HearoLogo.svg";
 import { Button, Modal, DropDown, MypageSideBar, ConvertBar } from "@/components";
 import {
   googleLogout,
@@ -14,19 +13,18 @@ import {
   userActions,
 } from "@/redux/modules/user";
 import { useAppSelector, useAppDispatch } from "@/redux/hooks";
+import { css } from "@emotion/react";
 
 function SettingsPage() {
   const dispatch = useAppDispatch();
   const [user, setUser] = useState<number>(0);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [modalType, setModalType] = useState<"logout" | "delete">("logout");
-  const navigate = useNavigate();
-  const backClick = () => {
-    navigate("/mypage");
-  };
+  const navigate = useNavigate(); 
+  const loginedUser = useAppSelector((state) => state.user.user);
 
   // useState를 사용하여 현재 선택된 글자크기를 저장합니다.
-  const [fontSize, setFontSize] = useState("medium");
+  const [fontSize, setFontSize] = useState<number | string>();
 
   // 버튼 클릭 시 선택된 글자크기를 업데이트하는 함수입니다.
   const handleClick = (size: string) => {
@@ -34,7 +32,8 @@ function SettingsPage() {
   };
 
   // 드롭다운을 위한 설정
-  const [showDropDown, setShowDropDown] = useState<boolean>(false);
+  const [showGenDropDown, setShowGenDropDown] = useState<boolean>(false);
+  const [showFontDropDown, setShowFontDropDown] = useState<boolean>(false);
   const [selectGender, setSelectGender] = useState<string>("여성(기본)");
   const gender = () => {
     return ["여성(기본)", "남성"];
@@ -47,17 +46,18 @@ function SettingsPage() {
 
   // 드롭다운 on/off
   const gendertoggledown = () => {
-    setShowDropDown(!showDropDown);
+    setShowGenDropDown(!showGenDropDown);
   };
 
   const fontsizetoggledown = () => {
-    setShowDropDown(!showDropDown);
+    setShowFontDropDown(!showFontDropDown);
   };
 
   // 이게 뭘까?
   const dismissHandler = (event: React.FocusEvent<HTMLButtonElement>): void => {
     if (event.currentTarget === event.target) {
-      setShowDropDown(false);
+      setShowGenDropDown(false);
+      setShowFontDropDown(false);
     }
   };
 
@@ -109,25 +109,45 @@ function SettingsPage() {
         <ConvertBar/>
         <div className="right-0 mt-28 mx-10 p-4 mb-4 h-[70%] shadow-gray-200 rounded-2xl shadow-md">
 
-        <div className="flex flex-row">
-          <div className="w-[50%] h-100 border-r-2">
-            <img className="w-20 h-20" src={HearoLogo} />
-            <div>
-              account name
-            </div>
+        <div className="flex flex-row justify-center">
+          <div className="w-[50%] h-100 border-r-2 grid grid-rows-1">
+            <div className="flex flex-col items-center my-20">
+                <div className="h-34 w-34 rounded border-blue-main">
+                <div
+                  className="h-32 w-32 rounded border-blue-main"
+                  // css={css`
+                  //   background-image: url(${loginedUser?.profileImg});
+                  //   background-image: url(${loginedUser?.profileImg});
+                  //   background-position: center;
+                  //   background-size: cover;
+                  // `}
+                  >
+                  <UserCircleIcon/>
+                  </div>
+                </div>
+              <div className="flex flex-col text-center p-4">
+                <div className="text-3xl text-blue-main">{loginedUser?.nickname}김야옹<span className="text-black">님</span></div>
+                <div className="text-3xl">반갑습니다</div>
+                <div className="text-xl pt-4">설정 변경을 통해 <span className="text-blue-main">히어로</span>
+                  를
+                  <p></p> 
+                  더 편리하게 이용해보세요!</div>
+              </div>
           </div>
+        </div>
 
+          {/* 오른쪽페이지 */}
           <div className="w-[50%] h-full">  
-            <div className="h-60 mx-4 flex flex-row justify-center items-center">
+            <div className="h-80 mx-4 flex flex-row justify-center">
 
               <div className="flex flex-col">
-                <div className="p-2.5 mt-2 flex flex-row items-stretch">
-                  <SpeakerWaveIcon className="h-6 w-6 self-center"/>
-                  <div className="pl-4 text-xl font-light self-center">음성 설정</div>
+                <div className="p-2.5 flex flex-row">
+                  <SpeakerWaveIcon className="h-6 w-6"/>
+                  <div className="pl-4 text-xl font-normal">음성 설정</div>
                 </div>
 
               {/* 드롭다운 */}
-              <div className="m-4 font-light">
+              <div className="m-4 font-light h-full">
                 <button
                   className="text-2xl w-40"
                   onClick={(): void => gendertoggledown()}
@@ -138,17 +158,17 @@ function SettingsPage() {
                   <div className="flex flex-row">
                     <div className="flex-grow">{selectGender}</div>
                       <div className="flex flex-row space-x-2">
-                        <ChevronDownIcon className="h-8 w-8 pt-" />
+                        <ChevronDownIcon className="h-8 w-8" />
                       </div>
                     </div>
                   
                     {/* 드롭다운 열릴 시 */}
                     <div className="pr-8 text-xl">
-                      {showDropDown && (
+                      {showGenDropDown && (
                         // FIXME: 드롭다운 typescript 오류 수정해야함
                         <DropDown
                           gender={gender()}
-                          showDropDown={false}
+                          showGenDropDown={false}
                           toggleDropDown={(): void => gendertoggledown()}
                           genderSelection={genderSelection} 
                         />
@@ -162,9 +182,9 @@ function SettingsPage() {
               
               {/* 글자크기설정 */}
               <div className="flex flex-col">
-                <div className="p-2.5 mt-2 flex flex-row items-stretch">
-                  <SpeakerWaveIcon className="h-6 w-6 self-center"/>
-                  <div className="pl-4 text-xl font-light self-center">글자 크기 설정</div>
+                <div className="p-2.5 flex flex-row">
+                  <SquaresPlusIcon className="h-6 w-6"/>
+                  <div className="pl-4 text-xl font-normal">글자 크기 설정</div>
                 </div>
 
               {/* 드롭다운 */}
@@ -185,10 +205,11 @@ function SettingsPage() {
                   
                     {/* 드롭다운 열릴 시 */}
                     <div className="pr-8 text-xl">
-                      {showDropDown && (
+                      {showFontDropDown && (
+                        // FIXME: 드롭다운 typescript 오류 수정해야함
                         <DropDown
                           fontsize={fontsize()}
-                          showDropDown={false}
+                          showFontDropDown={false}
                           toggleDropDown={(): void => fontsizetoggledown()}
                           fontSizeSelection={fontSizeSelection} 
                         />
