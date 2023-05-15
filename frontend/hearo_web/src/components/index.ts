@@ -22,7 +22,7 @@ import BackgroundHider from "./common/ui/BackgroundHider";
 import LoginModal from "./MainPage/LoginModal";
 import ProfileModal from "./MainPage/ProfileModal";
 import MypageSideBar from "./Mypage/MypageSideBar";
-import RecordsItem from "./TotalRecords/RecordsItem";
+// import RecordsItem from "./TotalRecords/RecordsItem";
 import RecordpageSideBar from "./TotalRecords/RecordpageSideBar";
 import RemoveRecordModal from "./TotalRecords/RemoveRecordModal";
 import AddFavModal from "./Conversation/MeetingBody/AddFavModal";
@@ -53,7 +53,7 @@ export {
   LoginModal,
   ProfileModal,
   MypageSideBar,
-  RecordsItem,
+  // RecordsItem,
   RecordpageSideBar,
   RemoveRecordModal,
   AddFavModal,
