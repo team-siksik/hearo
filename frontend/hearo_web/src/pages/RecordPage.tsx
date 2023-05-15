@@ -165,12 +165,12 @@ function RecordPage() {
             </div>
           </div>
         </div>
-        {openRemoveRecordModal && (
+        {/* {openRemoveRecordModal && (
           <RemoveRecordModal
             setOpenRemoveRecordModal={setOpenRemoveRecordModal}
             handleRemoveClick={handleRemoveRecord}
           />
-        )}
+        )} */}
       </div>
     </div>
   );
