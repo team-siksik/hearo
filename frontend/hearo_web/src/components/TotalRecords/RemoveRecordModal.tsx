@@ -24,7 +24,7 @@ function RemoveRecordModal({ setOpenRemoveRecordModal, handleRemoveClick }: Prop
       <div>
         <h1 className="m-2 text-xl font-bold">삭제</h1>
         <p className="m-4 pb-4">
-          대화를 삭제하시겠습니까?
+          대화기록을 삭제하시겠습니까?
         </p>
       </div>
       <div className="grid w-full grid-flow-col grid-cols-2 justify-center gap-2 px-4 ">
