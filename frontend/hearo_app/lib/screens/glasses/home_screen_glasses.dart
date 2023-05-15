@@ -3,8 +3,8 @@ import 'package:get/get.dart';
 import 'package:hearo_app/controller/bluetooth_controller.dart';
 import 'package:hearo_app/controller/login_controller.dart';
 import 'package:hearo_app/screens/glasses/chat_home_glasses.dart';
+import 'package:hearo_app/screens/glasses/sound_class_glass.dart';
 import 'package:hearo_app/screens/mysettings/favorite_say.dart';
-import 'package:hearo_app/test/socket_test3.dart';
 import 'package:hearo_app/widgets/common/custom_app_bar_glasses.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:animated_toggle_switch/animated_toggle_switch.dart';
@@ -278,7 +278,15 @@ class _HomeScreenGlassesState extends State<HomeScreenGlasses> {
                     ),
                     InkWell(
                       onTap: () {
-                        Get.to(() => SocketTest3(
+                        // Get.to(() => SoundClassGlass(
+                        //       device: widget.device,
+                        //     ));
+                      },
+                      child: naviButton(size, 1),
+                    ),
+                    InkWell(
+                      onTap: () {
+                        Get.to(() => SoundClassGlass(
                               device: widget.device,
                             ));
                       },
@@ -353,7 +361,7 @@ class _HomeScreenGlassesState extends State<HomeScreenGlasses> {
   Container naviButton(Size size, int idx) {
     final info = [
       {"img": "assets/images/conversation.png", "txt": "대화 나누기"},
-      {"img": "assets/images/glasses.png", "txt": "안경 이용 대화"},
+      {"img": "assets/images/signlang.png", "txt": "수어 인식"},
       {"img": "assets/images/alarm.png", "txt": "주변 소음 인식"},
     ];
     return Container(
