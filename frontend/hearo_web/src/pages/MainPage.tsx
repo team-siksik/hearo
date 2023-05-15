@@ -49,7 +49,7 @@ function MainPage({ setLoginModal }: PropsType) {
           <Layout>
             <div className="relative">
               {/* 안녕하세요, 000 님 */}
-              <div className="sticky top-0 m-4 flex h-96 flex-col items-center justify-center bg-white">
+              <div className="sticky top-0 m-4 flex h-80 flex-col items-center justify-center bg-white">
                 {isLoggedIn ? (
                   <>
                     <div className="text-sm">
@@ -191,52 +191,6 @@ function MainPage({ setLoginModal }: PropsType) {
                           회의 기록 확인하기
                         </Button>
                       </div>
-                    </div>
-                  </div>
-                </motion.div>
-                <motion.div
-                  className="sticky top-0 m-4 flex h-screen flex-col items-center justify-center bg-white  pb-8"
-                  initial={{ opacity: 0, x: "-100vw" }}
-                  animate={
-                    scrollPosition > 800
-                      ? { opacity: 1, x: 0 }
-                      : { opacity: 0, x: "-100vw" }
-                  }
-                  transition={{ duration: 1.5 }}
-                >
-                  <div className="grid grid-cols-2">
-                    <div className="col1">
-                      {/* 회의 시작하기 */}
-                      <div className="writeReport">
-                        <h3 className="text-xl font-bold">회의록 작성하기</h3>
-                        <p className="my-4">
-                          저장되어있는 회의 기록을 바탕으로
-                          <span className="font-bold"> 회의록</span>을 작성 및
-                          수정해보세요. 어쩌구 저쩌구 쏼라쏼라 어쩌구 저쩌구
-                          쏼라쏼라 어쩌구 저쩌구 쏼라쏼라 어쩌구 저쩌구 쏼라쏼라
-                          어쩌구 저쩌구 쏼라쏼라 어쩌구 저쩌구 쏼라쏼라 어쩌구
-                          저쩌구 쏼라쏼라 어쩌구 저쩌구 쏼라쏼라 어쩌구 저쩌구
-                          쏼라쏼라 어쩌구 저쩌구 쏼라쏼라 어쩌구 저쩌구 쏼라쏼라
-                          어쩌구 저쩌구 쏼라쏼라 어쩌구 저쩌구 쏼라쏼라 어쩌구
-                          저쩌구 쏼라쏼라 어쩌구 저쩌구 쏼라쏼라 어쩌구 저쩌구
-                          쏼라쏼라 어쩌구 저쩌구 쏼라쏼라
-                        </p>
-                        <div className="w-1/3">
-                          <Button type="blueTextBtn">회의록 작성하기</Button>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="col2 flex items-center justify-center">
-                      <div
-                        css={css`
-                          background-image: url(${Carousel2});
-                          background-repeat: no-repeat;
-                          background-position: center;
-                          background-size: contain;
-                          width: 600px;
-                          height: 200px;
-                        `}
-                      ></div>
                     </div>
                   </div>
                 </motion.div>
