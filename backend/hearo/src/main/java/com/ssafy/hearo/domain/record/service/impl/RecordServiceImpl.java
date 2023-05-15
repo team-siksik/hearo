@@ -6,9 +6,7 @@ import com.ssafy.hearo.domain.memo.dto.MemoResponseDto.*;
 import com.ssafy.hearo.domain.memo.service.MemoService;
 import com.ssafy.hearo.domain.record.dto.RecordResponseDto.*;
 import com.ssafy.hearo.domain.record.dto.RecordRequestDto.*;
-import com.ssafy.hearo.domain.memo.entity.Memo;
 import com.ssafy.hearo.domain.record.entity.Record;
-import com.ssafy.hearo.domain.memo.repository.MemoRepository;
 import com.ssafy.hearo.domain.record.repository.RecordRepository;
 import com.ssafy.hearo.domain.record.service.RecordService;
 import com.ssafy.hearo.global.error.code.RecordErrorCode;
@@ -87,10 +85,10 @@ public class RecordServiceImpl implements RecordService {
     }
 
     @Override
-    public List<GetRecordListResponseDto> getRecordList(Account account, Pageable pageable) {
+    public GetRecordListResponseDto getRecordList(Account account, Pageable pageable) {
         log.info("[getRecordList] 기록 목록 조회 시작");
         Page<Record> recordList = recordRepository.findByAccountAndDelYnOrderByConversation_RegDtmDesc(account, (byte)0, pageable);
-        List<GetRecordListResponseDto> result = new ArrayList<>();
+        List<RecordListResponseDto> result = new ArrayList<>();
         for (Record record : recordList) {
             log.info("[getRecordList] 음성 길이 계산 시작 - {}", record.getRecordSeq());
             String recordingTime = getRecodingTime(record.getRecorededFile());
@@ -100,7 +98,7 @@ public class RecordServiceImpl implements RecordService {
             String preview = getPreview(record.getClovaFile());
             log.info("[getRecordList] 미리보기 텍스트 불러오기 성공 - {}", preview);
 
-            result.add(GetRecordListResponseDto.builder()
+            result.add(RecordListResponseDto.builder()
                     .recordSeq(record.getRecordSeq())
                     .conversationSeq(record.getConversation().getConversationSeq())
                     .title(record.getTitle())
@@ -111,15 +109,21 @@ public class RecordServiceImpl implements RecordService {
                     .modDtm(dateUtil.timestampToString(record.getModDtm()))
                     .build());
         }
+
+        GetRecordListResponseDto resultWithPage = GetRecordListResponseDto.builder()
+                .recordList(result)
+                .isLast(recordList.isLast())
+                .build();
+
         log.info("[getRecordList] 기록 목록 조회 완료");
-        return result;
+        return resultWithPage;
     }
 
     @Override
-    public List<GetRecordListResponseDto> getFavoriteRecordList(Account account, Pageable pageable) {
+    public GetRecordListResponseDto getFavoriteRecordList(Account account, Pageable pageable) {
         log.info("[getFavoriteRecordList] 즐겨찾는 기록 목록 조회 시작");
         Page<Record> recordList = recordRepository.findByAccountAndIsFavoriteAndDelYnOrderByConversation_RegDtmDesc(account, (byte)1, (byte)0, pageable);
-        List<GetRecordListResponseDto> result = new ArrayList<>();
+        List<RecordListResponseDto> result = new ArrayList<>();
         for (Record record : recordList) {
             log.info("[getFavoriteRecordList] 음성 길이 계산 시작");
             String recordingTime = getRecodingTime(record.getRecorededFile());
@@ -129,7 +133,7 @@ public class RecordServiceImpl implements RecordService {
             String preview = getPreview(record.getClovaFile());
             log.info("[getFavoriteRecordList] 미리보기 텍스트 불러오기 성공 - {}", preview);
 
-            result.add(GetRecordListResponseDto.builder()
+            result.add(RecordListResponseDto.builder()
                     .recordSeq(record.getRecordSeq())
                     .conversationSeq(record.getConversation().getConversationSeq())
                     .title(record.getTitle())
@@ -140,8 +144,14 @@ public class RecordServiceImpl implements RecordService {
                     .modDtm(dateUtil.timestampToString(record.getModDtm()))
                     .build());
         }
-        log.info("[getFavoriteRecordList] 즐겨찾는 기록 목록 조회 완료");
-        return result;
+
+        GetRecordListResponseDto resultWithPage = GetRecordListResponseDto.builder()
+                .recordList(result)
+                .isLast(recordList.isLast())
+                .build();
+
+        log.info("[getFavoriteRecordList] 기록 목록 조회 완료");
+        return resultWithPage;
     }
 
     public GetRecordResponseDto getRecord(Account account, Long recordSeq) {
