@@ -6,14 +6,14 @@ import 'package:flutter_sound/flutter_sound.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:hearo_app/skills/socket_overall.dart';
 
-class SocketTest2 extends StatefulWidget {
-  const SocketTest2({super.key});
+class SoundClass extends StatefulWidget {
+  const SoundClass({super.key});
 
   @override
-  State<SocketTest2> createState() => _SocketTest2State();
+  State<SoundClass> createState() => _SoundClassState();
 }
 
-class _SocketTest2State extends State<SocketTest2> {
+class _SoundClassState extends State<SoundClass> {
   final SocketOverall audioSocket = SocketOverall();
   final FlutterSoundRecorder _audioRecorder = FlutterSoundRecorder();
   final FlutterSoundPlayer _audioPlayer = FlutterSoundPlayer();
@@ -75,8 +75,9 @@ class _SocketTest2State extends State<SocketTest2> {
       List<int> fileData = file.readAsBytesSync();
       String fileDataB64 = base64Encode(fileData);
       audioSocket.sendClassification('1111', fileDataB64);
-
-      String datum = await audioSocket.getClassification(); // 비동기로 데이터 받기
+      print(
+          "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+      String datum = audioSocket.getClassification(); // 비동기로 데이터 받기
 
       temp.add(datum);
     } catch (e) {
@@ -114,7 +115,7 @@ class _SocketTest2State extends State<SocketTest2> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('음성소켓 연습'),
+        title: Text('소음 인식'),
       ),
       body: Center(
         child: Column(
