@@ -27,18 +27,16 @@ function TotalRecordsPage() {
   const accessToken = localStorage.getItem("accessToken");
 
   const [totalRecords, setTotalRecords] = useState<TotalRecord[]>([]);
-  // useEffect(() => {
-  //   RecordAPI.getRecords(accessToken!)
-  //     .then((response) => {
-  //       setTotalRecords(response.data);
-  //       console.log(response.data);
-  //       console.log(totalRecords)
-  //       console.log('나오나?');
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-  // }, []);
+  useEffect(() => {
+    RecordAPI.getRecords(accessToken!, 0)
+      .then((response) => {
+        console.log(response.data.data.recordList);
+        setTotalRecords(response.data.data.recordList);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
 
   // 변경된 타이틀?
   const handleChangeTitle = (recordSeq: number, newTitle: string) => {
@@ -86,11 +84,8 @@ function TotalRecordsPage() {
           <div className="space-y-4">
             {/* 테스트 */}
             {totalRecords &&
-              totalRecords.map((records) => (
-                <div key={records.recordSeq}>
-                  <h3>{records.title}</h3>
-                  <p>{records.preview}</p>
-                </div>
+              totalRecords.map((records, idx) => (
+                <RecordsItem record={records} key={idx} />
               ))}
           </div>
         </div>
@@ -100,15 +95,3 @@ function TotalRecordsPage() {
 }
 
 export default TotalRecordsPage;
-
-// {totalRecords.map((record) => (
-//   <RecordsItem
-//     key={record.id}
-//     recordId={record.id}
-//     title={record.title}
-//     date={record.date}
-//     description={record.description}
-//     onRemove={() => handleRemoveRecord(record.id)}
-//     onChangeTitle={(newTitle) => handleChangeTitle(record.id, newTitle)}
-//   />
-// ))}
