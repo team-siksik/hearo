@@ -188,20 +188,15 @@ export const MeetingAPI = {
 export const RecordAPI = {
   // 전체기록목록조회
   getRecords: (accessToken: string, page: number) =>
-    api.get(`/record?page=${page}&size=5`, {
+    api.get(`/record?page=${page}&size=10`, {
       headers: {
         Authorization: `${accessToken}`,
       },
     }),
 
   //즐겨찾는 기록목록조회
-  // FIXME: API명세서 쿼리파라미터 추가 맞는지?
-  getFavRecords: (accessToken: string, page: number, size: number) =>
-    api.get(`/record/favorite`, {
-      params: {
-        page: page,
-        size: size,
-      },
+  getFavRecords: (accessToken: string, page: number) =>
+    api.get(`/record/favorite?page=${page}&size=10`, {
       headers: {
         Authorization: `${accessToken}`,
       },
@@ -248,8 +243,7 @@ export const RecordAPI = {
     ),
 
   //선택기록삭제
-  //FIXME: 리스트형태 삭제 맞는지?
-  deleteRecord: (accessToken: string, deleteRecordSeqList: []) =>
+  deleteRecord: (accessToken: string, deleteRecordSeqList: number[]) =>
     api.put(
       `/record/delete`,
       {
@@ -323,4 +317,3 @@ export const RecordAPI = {
       }
     ),
 };
-

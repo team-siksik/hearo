@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -21,6 +22,10 @@ public class AccountService {
         Account user = account.getUser();
         user.withdraw();
         accountRepository.save(user);
+    }
+
+    public Optional<Account> account(Long singleId) {
+        return accountRepository.findById(singleId);
     }
 
     public List<Account> accountList() {
