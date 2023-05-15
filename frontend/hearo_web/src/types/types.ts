@@ -7,5 +7,5 @@ export enum SelectedPage {
 
 export interface MemoType {
   content: string;
-  createdAt: number;
+  timestamp: number;
 }
