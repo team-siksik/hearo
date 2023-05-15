@@ -44,7 +44,7 @@ function TotalRecordsPage(
 
   //전체기록조회
   const [totalRecords, setTotalRecords] = useState<TotalRecord[]>([]);
-  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [currentPage, setCurrentPage] = useState<number>(0);
   useEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
     if (!accessToken) {
