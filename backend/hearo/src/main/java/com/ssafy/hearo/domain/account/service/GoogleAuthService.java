@@ -83,6 +83,7 @@ public class GoogleAuthService {
                 String Jwt = jwtService.login(user.getEmail());
                 log.info("Jwt : {}", Jwt);
                 Optional<Account> account = accountRepository.findByEmailAndDelYn(user.getEmail(),"0");
+                Optional<Setting> setting = settingRepository.findByAccount(account.get());
                 return SignInResponseDto.builder()
                         .userSeq(account.get().getUserSeq())
                         .accessToken(Jwt)
@@ -91,6 +92,7 @@ public class GoogleAuthService {
                         .email(account.get().getEmail())
                         .delYn(account.get().getDelYn())
                         .role(account.get().getUserRole())
+                        .setting(setting.orElse(null))
                         .build();
 
             } catch (IOException e) {
