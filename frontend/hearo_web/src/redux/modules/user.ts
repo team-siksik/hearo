@@ -6,6 +6,7 @@ interface UserType {
   isLoggedIn: boolean;
   user: {
     nickname: string;
+    userSeq: number;
     accessToken: string;
     email: string;
     profileImg: string;
@@ -39,6 +40,7 @@ interface UserDataType {
 const initialState: UserType = {
   user: {
     nickname: "",
+    userSeq: 0,
     email: "",
     accessToken: "",
     profileImg: "",
@@ -95,6 +97,7 @@ const getUserInfo = createAsyncThunk(
   "user/getUserInfo",
   async (userData: UserDataType, thunkAPI) => {
     const { accessToken, singleId } = userData;
+    console.log(accessToken, singleId);
     const response = await UserAPI.getUserInfo(accessToken, singleId);
     if (!response) {
       throw new Error();
@@ -137,6 +140,7 @@ const userSlice = createSlice({
         state.isLoading = false;
         state.isLoggedIn = true;
         localStorage.setItem("accessToken", action.payload.accessToken);
+        localStorage.setItem("userSeq", action.payload.userSeq);
         state.user = action.payload; // TODO: payload 데이터를 그대로 user에 넣어도 되는지 체크!
         state.user!.accessToken = "";
       })
