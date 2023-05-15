@@ -324,6 +324,7 @@ class _ChatHomeGlassesState extends State<ChatHomeGlasses> {
                           } else if (deviceState ==
                               BluetoothDeviceState.disconnected) {
                             /* 연결 해재된 상태라면 연결 */
+                            connect();
                           } else {}
                         },
                         child: Text(connectButtonText),

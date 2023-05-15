@@ -75,14 +75,30 @@ class _SoundClassState extends State<SoundClass> {
       List<int> fileData = file.readAsBytesSync();
       String fileDataB64 = base64Encode(fileData);
       audioSocket.sendClassification('1111', fileDataB64);
-      print(
-          "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-      String datum = audioSocket.getClassification(); // 비동기로 데이터 받기
 
-      temp.add(datum);
+      // 이전에 등록된 핸들러 제거
+      audioSocket.socket.off("result");
+
+      // 새로운 핸들러 등록
+      audioSocket.socket.on("result", (data) {
+        print(
+            "$data ${data.runtimeType} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+        processData(data); // 데이터 처리 함수 호출
+      });
     } catch (e) {
       print(e.toString());
     }
+  }
+
+  void processData(data) {
+    // 받은 데이터를 활용하여 원하는 작업 수행
+    print("받은 데이터: $data");
+    // 여기에서 데이터를 사용하여 추가 작업 수행 가능
+    if (data != "Loading" && data != "Mic error") {
+      temp.add(data);
+    }
+    print("KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK");
+    print(temp);
   }
 
   void _recordAndSendEverySecond() async {
