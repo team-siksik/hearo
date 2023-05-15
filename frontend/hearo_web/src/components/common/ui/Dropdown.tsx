@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 
 interface DropDownProps {
   showDropDown: boolean;
@@ -13,7 +13,7 @@ function DropDown ({gender, genderSelection, fontsize, fontSizeSelection}: DropD
   const [showDropDown, setShowDropDown] = useState<boolean>(false);
 
   /**
-   * 젠더 설정 
+   * 젠더 설정
    * 부모 컴포넌트로 이동
    *
    * @param gender
@@ -80,6 +80,6 @@ function DropDown ({gender, genderSelection, fontsize, fontSizeSelection}: DropD
     } 
     </>
   );
-};
+}
 
 export default DropDown;
