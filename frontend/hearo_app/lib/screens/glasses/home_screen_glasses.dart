@@ -55,7 +55,9 @@ class _HomeScreenGlassesState extends State<HomeScreenGlasses> {
   int value = 0;
   bool positive = false;
   bool loading = false;
-
+  BluetoothCharacteristic? notifyCharacteristic;
+  Stream<List<int>>? notifyStream;
+  List receivedData = [];
   BluetoothController bluetoothController = Get.put(BluetoothController());
   FlutterBluePlus flutterBlue = FlutterBluePlus.instance;
 
@@ -145,6 +147,16 @@ class _HomeScreenGlassesState extends State<HomeScreenGlasses> {
               print(c);
               print(bluetoothController.writeCharacteristic);
               break;
+            } else if (c.properties.notify) {
+              notifyCharacteristic = c;
+              notifyStream = notifyCharacteristic!.value;
+              // 데이터 수신 리스너를 등록합니다.
+              notifyStream!.listen((data) {
+                setState(() {
+                  receivedData.add(data);
+                });
+                print(data);
+              });
             } else {
               print(c);
               print("실패");
@@ -195,13 +207,13 @@ class _HomeScreenGlassesState extends State<HomeScreenGlasses> {
                   child: Column(
                     children: [
                       AnimatedToggleSwitch<bool>.dual(
-                        current: positive,
+                        current: !positive,
                         first: false,
                         second: true,
                         dif: 80.0,
                         borderColor: Colors.transparent,
                         borderWidth: 5.0,
-                        innerColor: positive
+                        innerColor: !positive
                             ? Color.fromARGB(255, 255, 206, 206)
                             : const Color.fromARGB(255, 206, 233, 255),
                         height: 60,

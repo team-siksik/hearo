@@ -123,7 +123,6 @@ class _ChatHomeGlassesState extends State<ChatHomeGlasses> {
     characteristic = bluetoothController.writeCharacteristic.value;
 
     if (characteristic == null) {
-      print("ASDFASDFASDFA");
       connect();
     }
 
