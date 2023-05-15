@@ -3,7 +3,7 @@ import {
   RecordpageSideBar,
 
 } from "@/components";
-// import { RecordsItem } from "@/components";
+import { RecordsItem } from "@/components";
 import { RecordAPI } from "@/apis/api";
 import { TrashIcon } from "@heroicons/react/24/solid";
 import { NewspaperIcon } from "@heroicons/react/24/outline";
@@ -44,25 +44,17 @@ function TotalRecordsPage(
 
   //전체기록조회
   const [totalRecords, setTotalRecords] = useState<TotalRecord[]>([]);
-  const [currentPage, setCurrentPage] = useState<number>(0);
   useEffect(() => {
-    const accessToken = localStorage.getItem("accessToken");
-    if (!accessToken) {
-      navigate("/login");
-      return;
-    }
-    
-    RecordAPI.getRecords(accessToken!, currentPage)
+    const accessToken = localStorage.getItem("accessToken")
+    RecordAPI.getRecords(accessToken!, 0)
       .then((response) => {
-        setTotalRecords(response.data);
-        console.log(response.data);
-        console.log(totalRecords)
-        console.log('나오나?');
+        console.log(response.data.data.recordList);
+        setTotalRecords(response.data.data.recordList);
       })
       .catch((err) => {
         console.log(err);
       });
-  }, [currentPage]);
+  }, []);
 
   // 변경된 타이틀?
   const handleChangeTitle = (recordSeq: number, newTitle: string) => {
@@ -127,48 +119,10 @@ function TotalRecordsPage(
         >
           <div className="space-y-4">
             {/* 테스트 */}
-          {/* <div className="px-4 py-2">
-          {showRecords(totalRecords)}
-          </div> */}
-          {showRecords(totalRecords) && 
-          totalRecords.map((records) => (
-            <div className="mx-10 mt-8 p-4 rounded-2xl font-semibold text-black hover:cursor-pointer hover:bg-blue-50 transition-all duration-300 ease-out shadow-lg">
-            <div className="flex flex-row items-stretch justify-between">
-              <div onClick={moveToRecord} className="flex items-center">
-                <div
-                  className="self-center mr-4 font-semibold text-blue-main rounded-full bg-blue-100 w-12 h-12 flex justify-center items-center"
-                >
-                  <div className="w-6 h-6">
-                    <NewspaperIcon />
-                  </div>
-                </div>
-                <div>
-                  {/* <div className="font-bold mb-2 cursor-pointer">
-                    <RecordPage title={title} onChangeTitle={onChangeTitle} />
-                  </div> */}
-                  {/* <div className="font-bold mb-2 cursor-pointer">
-                    <RecordPage title={title} onChangeTitle={onChangeTitle} />
-                  </div> */}
-                  <div className="my-2 text-blue-main">{records.title}</div>
-                  <div className="text-sm">{records.preview}</div>
-                </div>
-              </div>
-              <div
-                className="self-center mr-4 font-semibold text-red-main rounded-full bg-red-50 w-12 h-12 hover:bg-red-300 hover:shadow-sm transition-all duration-200 ease-out flex justify-center items-center"
-                onClick={()=> setOpenRemoveRecordModal(true)}
-              >
-                <div className="w-6 h-6">
-                  <TrashIcon />
-                </div>
-              </div>
-            </div>
-            {openRemoveRecordModal && (
-              <RemoveRecordModal 
-              setOpenRemoveRecordModal={setOpenRemoveRecordModal} 
-              handleRemoveClick={handleRemoveClick}/>
-            )}
-          </div>
-          ))}
+            {totalRecords &&
+              totalRecords.map((records, idx) => (
+                <RecordsItem record={records} key={idx} />
+              ))}
           </div>
         </div>
       </div>
@@ -177,19 +131,3 @@ function TotalRecordsPage(
 }
 
 export default TotalRecordsPage;
-
-
-// {
-//   totalRecords.map((record) => (
-//   <RecordsItem
-//     key={record.recordSeq}
-//     recordSeq={record.recordSeq}
-//     title={record.title}
-//     recordingTime={record.recordingTime}
-//     preview={record.preview}
-//     regDtm={record.regDtm}
-//     modDtm={record.modDtm}
-//     onRemove={() => handleRemoveRecord(record.recordSeq)}
-//     onChangeTitle={(newTitle) => handleChangeTitle(record.recordSeq, newTitle)}
-//   />
-// ))}
