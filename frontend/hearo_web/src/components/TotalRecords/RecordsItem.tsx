@@ -27,10 +27,16 @@ function RecordsItem({ record }: RecordsItemProps) {
     navigate(`/records/${record.recordSeq}`);
   };
 
+  function handleDeleteClick(e: React.MouseEvent) {
+    e.stopPropagation();
+    setOpenRemoveRecordModal(true);
+    console.log("children");
+  }
+
   return (
     <div
-      onClick={moveToRecord}
       className="mx-10 mt-8 rounded-2xl p-4 font-semibold text-black shadow-lg transition-all duration-300 ease-out hover:cursor-pointer hover:bg-blue-50"
+      onClick={moveToRecord}
     >
       <div className="flex flex-row items-stretch justify-between">
         <div className="flex items-center">
@@ -46,12 +52,21 @@ function RecordsItem({ record }: RecordsItemProps) {
             <div className="text-sm">{record.title}</div>
           </div>
         </div>
-        <div className="mr-4 flex h-12 w-12 items-center justify-center self-center rounded-full bg-red-50 font-semibold text-red-main transition-all duration-200 ease-out hover:bg-red-300 hover:shadow-sm">
+        <div
+          className="mr-4 flex h-12 w-12 items-center justify-center self-center rounded-full bg-red-50 font-semibold text-red-main transition-all duration-200 ease-out hover:bg-red-300 hover:shadow-sm"
+          onClick={(e) => handleDeleteClick(e)}
+        >
           <div className="h-6 w-6">
             <TrashIcon />
           </div>
         </div>
       </div>
+      {openRemoveRecordModal && (
+        <RemoveRecordModal
+          recordSeq={record.recordSeq}
+          setOpenRemoveRecordModal={setOpenRemoveRecordModal}
+        />
+      )}
     </div>
   );
 }
