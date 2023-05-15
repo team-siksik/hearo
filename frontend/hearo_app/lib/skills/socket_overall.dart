@@ -66,7 +66,7 @@ class SocketOverall {
     print("오디오보냄");
   }
 
-  getClassification() {
+  void getClassification() {
     socket.on("result", (data) {
       return data;
     });
@@ -74,7 +74,5 @@ class SocketOverall {
 
   sendVideo(String roomId, String img64) {
     socket.emit('image', {'room_id': roomId, 'base64_string': img64});
-    // print(img64);
-    // print("영상보냄");
   }
 }

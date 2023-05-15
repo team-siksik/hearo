@@ -210,7 +210,7 @@ class _SocketTest3State extends State<SocketTest3> {
       _startRecording();
       await Future.delayed(Duration(milliseconds: 1000));
       _stopRecording();
-      String datum = audioSocket.getClassification();
+      String datum = "";
       print(datum);
       if (datum != "") {
         temp.add(datum);
