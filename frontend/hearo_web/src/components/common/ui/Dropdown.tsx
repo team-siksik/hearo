@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 
 interface DropDownProps {
-  showDropDown: boolean;
+  showGenDropDown: boolean;
+  showFontDropDown : boolean;
   toggleDropDown: Function;
   gender: string[];
   genderSelection: Function;
@@ -10,7 +11,8 @@ interface DropDownProps {
 };
 
 function DropDown ({gender, genderSelection, fontsize, fontSizeSelection}: DropDownProps) {
-  const [showDropDown, setShowDropDown] = useState<boolean>(false);
+  const [showGenDropDown, setShowGenDropDown] = useState<boolean>(false);
+  const [showFontDropDown, setShowFontDropDown] = useState<boolean>(false);
 
   /**
    * 젠더 설정
@@ -24,22 +26,22 @@ function DropDown ({gender, genderSelection, fontsize, fontSizeSelection}: DropD
   };
 
   useEffect(() => {
-    setShowDropDown(showDropDown);
-  }, [showDropDown]);
+    setShowGenDropDown(showGenDropDown);
+  }, [showGenDropDown]);
 
   const onClickFontsizeHandler = (fontsize: string): void => {
     fontSizeSelection(fontsize);
   };
 
   useEffect(() => {
-    setShowDropDown(showDropDown);
-  }, [showDropDown]);
+    setShowFontDropDown(showFontDropDown);
+  }, [showFontDropDown]);
 
 
   return (
     <>
     {gender && (
-      <div className={showDropDown ? 'dropdown py-2' : 'dropdown active mt-2'}>
+      <div className={showGenDropDown ? 'dropdown py-2' : 'dropdown active mt-2'}>
         {gender.map(
           (gender: string, index: number): JSX.Element => {
             return (
@@ -57,27 +59,34 @@ function DropDown ({gender, genderSelection, fontsize, fontSizeSelection}: DropD
           )}
       </div>
       )
-    } 
+    }
     {fontsize && (
-      <div className={showDropDown ? 'dropdown py-2' : 'dropdown active mt-2'}>
+      <div className={showFontDropDown ? 'dropdown py-2' : 'dropdown active mt-2'}>
         {fontsize.map(
           (fontsize: string, index: number): JSX.Element => {
+            let textSize = "";
+            if (index === 0) {
+              textSize = "작게";
+            } else if (index === 1) {
+              textSize = "보통";
+            } else if (index === 2) {
+              textSize = "크게";
+            }
             return (
               <p
-              className='hover:bg-blue-300 rounded-xl py-2'
-              key={index}
-              onClick={(): void => {
-                onClickFontsizeHandler(fontsize);
-              }}
+                className="hover:bg-blue-300 rounded-xl py-2"
+                key={index}
+                onClick={(): void => {
+                  onClickFontsizeHandler(fontsize);
+                }}
               >
-                {fontsize}
+                {textSize}
               </p>
             );
           }
-          )}
+        )}
       </div>
-      )
-    } 
+    )}
     </>
   );
 }
