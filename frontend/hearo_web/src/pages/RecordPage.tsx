@@ -13,6 +13,7 @@ interface Memo {
   timestamp : number;
 }
 
+// 개별기록페이지
 interface RecordPageProps {
   title?: string;
   onChangeTitle: (title: string) => void;
