@@ -1,12 +1,5 @@
 import React, { useState, useEffect } from "react";
-<<<<<<< HEAD
 import { RecordpageSideBar } from "@/components";
-=======
-import {
-  RecordpageSideBar,
-
-} from "@/components";
->>>>>>> dd6cfd9 ([S08P31A603-362] api 추가 및 전체대화기록페이지 테스트코드 추가)
 import { RecordsItem } from "@/components";
 import axios from "axios";
 import { RecordAPI } from "@/apis/api";
