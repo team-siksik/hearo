@@ -4,6 +4,7 @@ import 'package:hearo_app/controller/login_controller.dart';
 import 'package:hearo_app/screens/ais/sound_class.dart';
 import 'package:hearo_app/screens/chats/chat_home.dart';
 import 'package:hearo_app/screens/mysettings/favorite_say.dart';
+import 'package:hearo_app/test/camera2.dart';
 import 'package:hearo_app/widgets/common/custom_app_bar.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -33,25 +34,59 @@ class _HomeScreenState extends State<HomeScreen> {
               Flexible(
                 flex: 1,
                 child: Container(
-                    decoration: BoxDecoration(
-                      color: Color(0xffFAFAFA),
-                      borderRadius: const BorderRadius.only(
-                          bottomLeft: Radius.circular(100),
-                          bottomRight: Radius.circular(100)),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.transparent.withOpacity(0.25),
-                          spreadRadius: 0,
-                          blurRadius: 1.0,
-                          offset:
-                              const Offset(0, 4), // changes position of shadow
-                        ),
-                      ],
-                    ),
-                    margin: const EdgeInsets.symmetric(vertical: 5),
-                    padding: const EdgeInsets.symmetric(vertical: 10),
+                  decoration: BoxDecoration(
+                    color: Color(0xffFAFAFA),
+                    borderRadius: const BorderRadius.only(
+                        bottomLeft: Radius.circular(30),
+                        bottomRight: Radius.circular(30)),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.transparent.withOpacity(0.25),
+                        spreadRadius: 0,
+                        blurRadius: 1.0,
+                        offset:
+                            const Offset(0, 4), // changes position of shadow
+                      ),
+                    ],
+                  ),
+                  width: size.width,
+                  child: // 안녕하세요 ~ 환영해요 부분
+                      SizedBox(
                     width: size.width,
-                    child: SizedBox()),
+                    child: Padding(
+                      padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "안녕하세요, ${loginController.loginData[0]["nickname"]}님",
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.w600),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "히어로",
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      color: Color(0xff1A73E8),
+                                      fontWeight: FontWeight.w600),
+                                ),
+                                Text(
+                                  "에 오신 것을 환영해요.",
+                                  style: TextStyle(fontSize: 16),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
               ),
               // 네비게이션 버튼들
               Flexible(
@@ -70,6 +105,12 @@ class _HomeScreenState extends State<HomeScreen> {
                         Get.to(() => SoundClass());
                       },
                       child: naviButton(size, 2),
+                    ),
+                    InkWell(
+                      onTap: () {
+                        Get.to(() => Camera2());
+                      },
+                      child: naviButton(size, 1),
                     ),
                     Expanded(
                       child: Row(
@@ -140,7 +181,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Container naviButton(Size size, int idx) {
     final info = [
       {"img": "assets/images/conversation.png", "txt": "대화 나누기"},
-      {"img": "assets/images/glasses.png", "txt": "안경 이용 대화"},
+      {"img": "assets/images/signlang.png", "txt": "수어 인식"},
       {"img": "assets/images/alarm.png", "txt": "주변 소음 인식"},
     ];
     return Container(
