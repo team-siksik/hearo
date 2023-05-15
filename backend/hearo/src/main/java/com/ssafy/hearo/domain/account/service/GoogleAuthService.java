@@ -84,6 +84,7 @@ public class GoogleAuthService {
                 log.info("Jwt : {}", Jwt);
                 Optional<Account> account = accountRepository.findByEmailAndDelYn(user.getEmail(),"0");
                 return SignInResponseDto.builder()
+                        .userSeq(account.get().getUserSeq())
                         .accessToken(Jwt)
                         .nickname(account.get().getNickname())
                         .profileImg(account.get().getImageUrl())
