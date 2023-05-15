@@ -4,7 +4,9 @@ from google.cloud import speech
 from google.cloud.speech import enums, types
 from collections import deque
 
-
+import os
+# os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "C:/Coding/S08P31A603/backend/hearo_ai/credential.json"
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "/app/credential.json"
 router = APIRouter(prefix="/sd")
 
 # 버퍼 크기 (1초에 해당하는 샘플 수)
@@ -19,7 +21,7 @@ async def root():
     return {"message": "hearo!"}
 
 
-@socket_manager.on("audio")
+@socket_manager.on("/audio")
 async def audio(sid, data):
     audio_data = data["audio"]
 
