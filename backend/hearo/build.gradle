@@ -42,6 +42,8 @@ dependencies {
 	implementation 'org.apache.httpcomponents:httpmime:4.3.1'
 	implementation 'com.google.code.gson:gson:2.8.5'
 
+	// Jave2
+	implementation group: 'ws.schild', name: 'jave-all-deps', version: '3.3.1'
 }
 
 tasks.named('test') {

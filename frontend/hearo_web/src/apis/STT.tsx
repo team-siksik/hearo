@@ -339,7 +339,7 @@ export default function STT({}: PropsType) {
 
   //room close http api request
   async function closeRoomAPI() {
-    MeetingAPI.finishMeeting(accessToken, roomSeq!, audioBlob!)
+    MeetingAPI.finishMeeting(accessToken, roomSeq!)
       .then((result) => {
         console.log(result);
       })

@@ -10,8 +10,8 @@ import java.util.List;
 
 public interface RecordService {
 
-    List<GetRecordListResponseDto> getRecordList(Account account, Pageable pageable);
-    List<GetRecordListResponseDto> getFavoriteRecordList(Account account, Pageable pageable);
+    GetRecordListResponseDto getRecordList(Account account, Pageable pageable);
+    GetRecordListResponseDto getFavoriteRecordList(Account account, Pageable pageable);
     GetRecordResponseDto getRecord(Account account, Long recordSeq);
     void modifyRecordTitle(Account account, Long recordSeq, ModifyRecordTitleRequestDto requestDto);
     void modifyRecordFavorite(Account account, Long recordSeq, ModifyRecordFavoriteRequestDto requestDto);

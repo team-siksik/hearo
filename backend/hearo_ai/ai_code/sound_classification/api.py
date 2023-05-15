@@ -24,11 +24,13 @@ def query(audio_data) -> Dict:
     response = requests.post(API_URL, headers=headers, data=audio_data)
     return response.json()
 
-def query_with_memory(audio_data):
+def query_with_memory(audio_data, prv_score):
     logger.info("api 요청")
     output = query(audio_data)
     logger.info(f"결과 = {output}")
     try:
-        return ko_dict[output[0]['label']]
+        if output[0]['score'] == prv_score:
+            return 'mic error', prv_score
+        return ko_dict[output[0]['label']], output[0]['score']
     except:
-        return None
+        return None, prv_score
