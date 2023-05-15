@@ -40,8 +40,17 @@ function SettingsPage() {
     return ["여성(기본)", "남성"];
   };
 
+  const [selectFontSize, setSelectFontSize] = useState<string>("보통")
+  const fontsize = () => {
+    return ["작게" , "보통", "크게"]
+  }
+
   // 드롭다운 on/off
-  const toggleDropDown = () => {
+  const gendertoggledown = () => {
+    setShowDropDown(!showDropDown);
+  };
+
+  const fontsizetoggledown = () => {
     setShowDropDown(!showDropDown);
   };
 
@@ -56,6 +65,11 @@ function SettingsPage() {
   const genderSelection = (gender: string): void => {
     setSelectGender(gender);
   };
+
+  // 폰트크기선택
+  const fontSizeSelection = (fontsize: string): void => {
+    setSelectFontSize(fontsize)
+  }
 
   
   const onLogoutButton = () => {
@@ -104,47 +118,93 @@ function SettingsPage() {
           </div>
 
           <div className="w-[50%] h-full">  
-            <div className="h-60 mx-4">
+            <div className="h-60 mx-4 flex flex-row justify-center items-center">
 
-              <div className="p-2.5 mt-2 flex flex-row items-stretch">
-                <SpeakerWaveIcon className="h-6 w-6 self-center"/>
-                <div className="pl-4 text-xl font-light self-center">음성 설정</div>
-              </div>
-      
+              <div className="flex flex-col">
+                <div className="p-2.5 mt-2 flex flex-row items-stretch">
+                  <SpeakerWaveIcon className="h-6 w-6 self-center"/>
+                  <div className="pl-4 text-xl font-light self-center">음성 설정</div>
+                </div>
+
               {/* 드롭다운 */}
               <div className="m-4 font-light">
                 <button
                   className="text-2xl w-40"
-                  onClick={(): void => toggleDropDown()}
+                  onClick={(): void => gendertoggledown()}
                   onBlur={(e: React.FocusEvent<HTMLButtonElement>): void =>
                     dismissHandler(e)
                   }
                   >
                   <div className="flex flex-row">
                     <div className="flex-grow">{selectGender}</div>
-                    <div className="flex flex-row space-x-2">
-                      <ChevronDownIcon className="h-8 w-8 pt-" />
+                      <div className="flex flex-row space-x-2">
+                        <ChevronDownIcon className="h-8 w-8 pt-" />
+                      </div>
                     </div>
-                  </div>
-                
-                  {/* 드롭다운 열릴 시 */}
-                  <div className="pr-8 text-xl">
-                    {showDropDown && (
-                      <DropDown
-                        gender={gender()}
-                        showDropDown={false}
-                        toggleDropDown={(): void => toggleDropDown()}
-                        genderSelection={genderSelection} 
-                      />
-                    )}
-                  </div>
-                </button>
-                <div className="z-0 mt-1 h-0.5 w-[40%] bg-gray-300"/>
+                  
+                    {/* 드롭다운 열릴 시 */}
+                    <div className="pr-8 text-xl">
+                      {showDropDown && (
+                        // FIXME: 드롭다운 typescript 오류 수정해야함
+                        <DropDown
+                          gender={gender()}
+                          showDropDown={false}
+                          toggleDropDown={(): void => gendertoggledown()}
+                          genderSelection={genderSelection} 
+                        />
+                      )}
+                    </div>
+                  </button>
+                  <div className="z-0 mt-1 h-0.5 w-[100%] bg-gray-300"/>
               </div>
+
             </div>
-          
+              
+              {/* 글자크기설정 */}
+              <div className="flex flex-col">
+                <div className="p-2.5 mt-2 flex flex-row items-stretch">
+                  <SpeakerWaveIcon className="h-6 w-6 self-center"/>
+                  <div className="pl-4 text-xl font-light self-center">글자 크기 설정</div>
+                </div>
+
+              {/* 드롭다운 */}
+              <div className="m-4 font-light">
+                <button
+                  className="text-2xl w-40"
+                  onClick={(): void => fontsizetoggledown()}
+                  onBlur={(e: React.FocusEvent<HTMLButtonElement>): void =>
+                    dismissHandler(e)
+                  }
+                  >
+                  <div className="flex flex-row">
+                    <div className="flex-grow">{selectFontSize}</div>
+                      <div className="flex flex-row space-x-2">
+                        <ChevronDownIcon className="h-8 w-8 pt-" />
+                      </div>
+                    </div>
+                  
+                    {/* 드롭다운 열릴 시 */}
+                    <div className="pr-8 text-xl">
+                      {showDropDown && (
+                        <DropDown
+                          fontsize={fontsize()}
+                          showDropDown={false}
+                          toggleDropDown={(): void => fontsizetoggledown()}
+                          fontSizeSelection={fontSizeSelection} 
+                        />
+                      )}
+                    </div>
+                  </button>
+                  <div className="z-0 mt-1 h-0.5 w-[100%] bg-gray-300"/>
+              </div>                          
+
+
+            </div>
+          </div>
+
+
           {/* 환경설정 - 로그아웃, 회원탈퇴 버튼 */}
-          <div className="h-40 flex justify-center items-center">
+          <div className="h-30 flex justify-center items-center">
             <div className="w-40 flex flex-col">
               <Button onClick={onLogoutButton} type="accountLogoutButton">
                 로그아웃
@@ -159,7 +219,7 @@ function SettingsPage() {
      </div>
 
         </div>
-    </div>
+      </div>
         {/* 로그아웃, 회원탈퇴 모달  */}
         {showModal && (
         <Modal open={true} cannotExit={false}>
