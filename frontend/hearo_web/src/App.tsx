@@ -21,13 +21,12 @@ import TestPage from "./pages/TestPage";
 
 function App() {
   const isLoggedIn = useAppSelector((state) => state.user.isLoggedIn);
-  const user = localStorage.getItem("accessToken");
+  const user = useAppSelector((state) => state.user.user);
 
   const [loginModal, setLoginModal] = useState<boolean>(false);
   const [openProfileModal, setOpenProfileModal] = useState<boolean>(false);
   // const isLoggedin = !!localStorage.getItem("accessToken");
 
- 
   return (
     <div className="App">
       <Navbar
@@ -46,9 +45,16 @@ function App() {
         <Route path="/test" element={<TestPage />} />
         {/* //FIXME: props 해결해주세요 */}
         {/* TODO: 스토어로 관리해야하는데 임시방편... */}
-        <Route path="/records/:id" element={<RecordPage onChangeTitle={function (title: string): void {
-          throw new Error("Function not implemented.");
-        } } />} />
+        <Route
+          path="/records/:id"
+          element={
+            <RecordPage
+              onChangeTitle={function (title: string): void {
+                throw new Error("Function not implemented.");
+              }}
+            />
+          }
+        />
         <Route path="/mypage/favcontents" element={<FavContentsPage />} />
         <Route path="/mypage/settings" element={<SettingsPage />} />
         <Route path="/login/oauth2/code/google" element={<Google />} />
