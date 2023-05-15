@@ -4,7 +4,7 @@ import 'package:get_storage/get_storage.dart';
 class LoginController extends GetxController {
   final loginToken = ''.obs;
   final loginData = [].obs;
-
+  final myCode = '9983'.obs;
   final loginBox = GetStorage();
   final loginDataBox = GetStorage();
 
@@ -23,7 +23,9 @@ class LoginController extends GetxController {
     }
   }
 
-  void setToken() {}
+  void setMyCode(data) {
+    myCode.value = data;
+  }
 
   void setData(data) {
     loginData.add(data);
@@ -33,6 +35,7 @@ class LoginController extends GetxController {
   // 토큰 비우기
   void clearList() async {
     loginToken.value = ''; // loginToken을 빈 문자열로 초기화
+    myCode.value = '';
     await loginBox.remove('loginToken');
     loginData.clear();
     await loginDataBox.remove('loginData');

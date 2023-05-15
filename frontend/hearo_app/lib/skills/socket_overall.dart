@@ -1,4 +1,8 @@
+import 'package:get/get.dart';
+import 'package:hearo_app/controller/login_controller.dart';
 import 'package:socket_io_client/socket_io_client.dart' as so_io;
+
+LoginController loginController = Get.put(LoginController());
 
 class SocketOverall {
   final so_io.Socket socket;
@@ -19,18 +23,18 @@ class SocketOverall {
     socket.disconnect();
   }
 
-  void enterRoom(String roomId) {
-    socket.emit('enter_room', {'room_id': roomId});
+  void enterRoom() {
+    socket.emit('enter_room', {'room_id': loginController.myCode.value});
     print("방 입장");
   }
 
-  void closeRoom(String roomId) {
-    socket.emit('close_room', {'room_id': roomId});
+  void closeRoom() {
+    socket.emit('close_room', {'room_id': loginController.myCode.value});
   }
 
-  void sendMessageToRoom(String roomId, String message) {
-    socket
-        .emit('send_message_to_room', {'room_id': roomId, 'message': message});
+  void sendMessageToRoom(String message) {
+    socket.emit('send_message_to_room',
+        {'room_id': loginController.myCode.value, 'message': message});
     print(message);
     print("메세지보냄");
   }
@@ -60,8 +64,9 @@ class SocketOverall {
     });
   }
 
-  void sendClassification(String roomId, audioData) {
-    socket.emit('classification', {'room_id': roomId, 'audio': audioData});
+  void sendClassification(audioData) {
+    socket.emit('classification',
+        {'room_id': loginController.myCode.value, 'audio': audioData});
     print(audioData);
     print("오디오보냄");
   }
@@ -72,7 +77,8 @@ class SocketOverall {
     });
   }
 
-  sendVideo(String roomId, String img64) {
-    socket.emit('image', {'room_id': roomId, 'base64_string': img64});
+  sendVideo(String img64) {
+    socket.emit('image',
+        {'room_id': loginController.myCode.value, 'base64_string': img64});
   }
 }
