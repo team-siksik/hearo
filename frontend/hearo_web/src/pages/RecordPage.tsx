@@ -1,31 +1,32 @@
 import { TrashIcon } from "@heroicons/react/24/solid";
 import { PencilSquareIcon } from "@heroicons/react/24/outline";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, useParams } from "react-router-dom";
 import { RemoveRecordModal } from "@/components";
 import React, { useState, useEffect } from "react";
 import { RecordpageSideBar } from "@/components";
+import { RecordAPI } from "@/apis/api";
 
-interface RecordPageProps {
-  title?: string;
-  onChangeTitle: (title: string) => void;
-}
-
-function RecordPage({ title, onChangeTitle }: RecordPageProps) {
+function RecordPage() {
   const location = useLocation();
   const navigate = useNavigate();
-  const state = location.state as {
-    title: string;
-    date: string;
-    description: string;
-  };
-  const { title: initialTitle, date, description } = state;
+  const { id } = useParams<{ id: string }>();
+
+  // 게별기록조회
+  const [data, setData] = useState<[]>([]);
+  const accessToken = localStorage.getItem("accessToken");
+  useEffect(() => {
+    if (!accessToken) {
+      navigate("/login");
+      return;
+    }
+  }, []);
 
   // const [newTitle, setTitle] = useState(initialTitle);
   const [openRemoveRecordModal, setOpenRemoveRecordModal] =
     useState<boolean>(false);
   const [isHovered, setIsHovered] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
-  const [newTitle, setNewTitle] = useState<string>(title || "");
+  const [newTitle, setNewTitle] = useState<string>("");
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
@@ -33,22 +34,48 @@ function RecordPage({ title, onChangeTitle }: RecordPageProps) {
     console.log(e.target.value);
   };
 
-  useEffect(() => {
-    onChangeTitle(newTitle);
-  }, [newTitle, onChangeTitle]);
+  // useEffect(() => {
+  //   setNewTitle("");
+  // }, []);
 
+  // 기록제목수정 FIXME: 위에랑 어떻게 겹치는 것인가?
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    onChangeTitle(newTitle);
+    const accessToken = localStorage.getItem("accessToken");
+    if (!accessToken) {
+      // access token이 없을 때 처리하는 부분
+      return;
+    }
+    //   RecordAPI.updateRecordTitle(accessToken, recordSeq, newTitle)
+    //     .then(() => {
+    //       onChangeTitle(newTitle);
+    //     })
+    //     .catch((err) => {
+    //       console.log(err);
+    //       // 에러 처리하는 부분
+    //     });
   };
 
   const moveToRecords = () => {
     navigate(`/records`);
   };
 
-  const handleRemoveClick = () => {
-    setOpenRemoveRecordModal(false);
-    // Record 삭제 코드 추가
+  // 기록삭제
+  // FIXME: deleterecordseqlist 수정해야함
+  const [deleteRecordSeqList, setDeleteRecordIds] = useState<number[] | any>(
+    []
+  );
+  const handleRemoveRecord = () => {
+    const accessToken = localStorage.getItem("accessToken");
+    // const deleteRecordSeqList = [11, 13];
+    RecordAPI.deleteRecord(accessToken!, deleteRecordSeqList)
+      .then(() => {
+        setOpenRemoveRecordModal(false);
+        // TODO: 리다이렉트 처리
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   return (
@@ -62,7 +89,7 @@ function RecordPage({ title, onChangeTitle }: RecordPageProps) {
                 <form onSubmit={handleSubmit}>
                   <input
                     type="text"
-                    value={title}
+                    value="title"
                     onChange={handleTitleChange}
                     placeholder="제목을 입력해주세요"
                     className="w-full rounded-lg p-2 hover:cursor-pointer hover:outline"
@@ -73,7 +100,7 @@ function RecordPage({ title, onChangeTitle }: RecordPageProps) {
                   />
                 </form>
               </div>
-              {isHovered || isFocused ? (
+              {/* {isHovered || isFocused ? (
                 <div className="ml-4 h-10 w-10 self-center text-gray-600">
                   <PencilSquareIcon />
                 </div>
@@ -81,7 +108,7 @@ function RecordPage({ title, onChangeTitle }: RecordPageProps) {
                 <div className="ml-4 h-10 w-10 self-center text-gray-600">
                   <PencilSquareIcon />
                 </div>
-              )}
+              )} */}
             </div>
             <div className="mr-4 flex  flex-row">
               <div className="m-4 p-1">
@@ -102,13 +129,46 @@ function RecordPage({ title, onChangeTitle }: RecordPageProps) {
               </div>
             </div>
           </div>
-          <div className="text-sm">{date}</div>
-          <div className="my-2">{description}</div>
+
+          {/* TODO: 여기서부터 개별정보 가져오는거 만들어야함 map 활용 */}
+          <div className="flex flex-col rounded-md border p-4 shadow-md">
+            <div className="flex flex-row items-center">
+              <h2 className="mr-2 font-semibold">녹음 정보</h2>
+              <div className="flex-grow border-b"></div>
+            </div>
+            <div className="mt-4">
+              <div className="my-2 flex flex-row items-center">
+                <h3 className="mr-2 text-gray-600">녹음일시:</h3>
+                {/* <p>{recordingTime}</p> */}
+              </div>
+              <div className="my-2 flex flex-row items-center">
+                <h3 className="mr-2 text-gray-600">즐겨찾기:</h3>
+                <p>
+                  {/* {isFavorite
+                    ? "즐겨찾기에 추가됨"
+                    : "즐겨찾기에 추가되지 않음"} */}
+                </p>
+              </div>
+              <div>
+                {/* {data.map((datas) => (
+                  <div>
+                    {datas.title}
+                    {datas.recordingTime}
+                    {datas.regDtm}
+                    {datas.modDtm}
+                  </div>
+                ))}
+                {memoList.map((memo) => (
+                  <li key={memo.memoSeq}>{memo.content}</li>
+                ))} */}
+              </div>
+            </div>
+          </div>
         </div>
         {openRemoveRecordModal && (
           <RemoveRecordModal
             setOpenRemoveRecordModal={setOpenRemoveRecordModal}
-            handleRemoveClick={handleRemoveClick}
+            handleRemoveClick={handleRemoveRecord}
           />
         )}
       </div>
