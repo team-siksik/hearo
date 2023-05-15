@@ -3,6 +3,7 @@ FROM tiangolo/uvicorn-gunicorn:python3.8
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         libgl1-mesa-glx \
+    && apt-get install libasound-dev libportaudio2 libportaudiocpp0 portaudio19-dev -y \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app

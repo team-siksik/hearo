@@ -17,7 +17,7 @@ import { startMeeting } from "@/redux/modules/meeting";
 
 //FIXME: accessToken 연결 전 수정해야함
 const accessToken =
-  "eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJ0ZWFtc2lrc2lrMkBnbWFpbC5jb20iLCJpYXQiOjE2ODQwNTA1MTIsImV4cCI6MTY4NDE4MDExMn0.XMMeKEZMIaSbPrU4mJ9JUn5E57S0F4FqZYtdNdKrEt8";
+  "eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJ0ZWFtc2lrc2lrMkBnbWFpbC5jb20iLCJpYXQiOjE2ODQxMzYzMDQsImV4cCI6MTY4NDI2NTkwNH0.FSwizYi6oThPzNkEJSPkkEsDgCuLPAY9lNx_aYu00dY";
 const roomNo = 1343;
 
 const socketURl = "http://k8a6031.p.ssafy.io:80/";
