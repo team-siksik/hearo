@@ -116,6 +116,24 @@ public class ConversationServiceImpl implements ConversationService {
         log.info("[saveConversation] 대화 저장 시작");
         log.info("[saveConversation] audio: {}", String.valueOf(audio));
 
+//        log.info("[saveConversation] s3에 원본 음성 데이터 업로드 시작");
+//        Conversation conversation = conversationRepository.findByAccountAndConversationSeq(account, conversationSeq)
+//                .orElseThrow(() -> new ErrorException(ConversationErrorCode.CONVERSATION_NOT_VALID));
+//        String regDtm = dateUtil.timestampToString(conversation.getRegDtm());
+//        String inputFileUrl_test = account.getEmail() + "/" + conversationSeq + "/input/" + regDtm + ".webm";
+//        try {
+//            ObjectMetadata metadata= new ObjectMetadata();
+//            metadata.setContentType(audio.getContentType());
+//            metadata.setContentLength(audio.getSize());
+//            amazonS3Client.putObject(bucket, inputFileUrl_test, audio.getInputStream(), metadata);
+//        } catch (IOException e) {
+//            log.info("[saveConversation] s3에 원본 음성 데이터 업로드 실패");
+//            log.info(e.getMessage());
+//            throw new ErrorException(S3ErrorCode.S3_UPLOAD_FAILED);
+//        }
+//        String inputS3Url_test = amazonS3Client.getUrl(bucket, inputFileUrl_test).toString();
+//        log.info("[saveConversation] s3에 원본 음성 데이터 업로드 완료 - {}", inputS3Url_test);
+
         log.info("[saveConversation] webm -> wav 음성 데이터 변환 시작");
         File target;
         try {
@@ -126,8 +144,8 @@ public class ConversationServiceImpl implements ConversationService {
             //Audio Attributes
             AudioAttributes audioAttributes = new AudioAttributes();
             audioAttributes.setCodec("pcm_s16le");
-            audioAttributes.setBitRate(16);
-            audioAttributes.setChannels(2);
+            audioAttributes.setBitRate(128000);
+            audioAttributes.setChannels(1);
             audioAttributes.setSamplingRate(8000);
 
             //Encoding attributes
@@ -157,6 +175,7 @@ public class ConversationServiceImpl implements ConversationService {
             amazonS3Client.putObject(bucket, inputFileUrl, new FileInputStream(target), metadata);
         } catch (IOException e) {
             log.info("[saveConversation] s3에 음성 데이터 업로드 실패");
+            log.info(e.getMessage());
             throw new ErrorException(S3ErrorCode.S3_UPLOAD_FAILED);
         }
         String inputS3Url = amazonS3Client.getUrl(bucket, inputFileUrl).toString();
