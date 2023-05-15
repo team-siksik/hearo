@@ -21,6 +21,7 @@ interface PropsType {
   setOpenExitModal?: React.Dispatch<SetStateAction<boolean>>;
   setOpenRemoveRecordModal?: React.Dispatch<SetStateAction<boolean>>;
   setShowModal?: React.Dispatch<SetStateAction<boolean>>;
+  setOpenAlertModal?: React.Dispatch<SetStateAction<boolean>>;
 }
 
 const customModalStyles: ReactModal.Styles = {
@@ -130,6 +131,7 @@ function Modal({
   setOpenExitModal,
   setOpenRemoveRecordModal,
   setShowModal,
+  setOpenAlertModal,
 }: PropsType) {
   const [openModal, setOpenModal] = useState<boolean>(open);
 
@@ -159,6 +161,9 @@ function Modal({
     }
     if (setOpenRemoveRecordModal) {
       setOpenRemoveRecordModal((prev) => !prev);
+    }
+    if (setOpenAlertModal) {
+      setOpenAlertModal((prev) => !prev);
     }
   }
   return (
@@ -207,6 +212,9 @@ function Modal({
             }
             if (setShowModal) {
               setShowModal((prev) => !prev);
+            }
+            if (setOpenAlertModal) {
+              setOpenAlertModal((prev) => !prev);
             }
           }}
           shouldCloseOnOverlayClick={cannotExit ? false : true}
