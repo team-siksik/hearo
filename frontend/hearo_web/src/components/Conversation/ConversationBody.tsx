@@ -1,23 +1,27 @@
 import React, { SetStateAction, useEffect, useRef, useState } from "react";
-import Dialog from "../common/ui/Dialog";
-import GPTRecommend from "./GPTRecommend";
-import { TTS, STT } from "@/apis";
+import { useNavigate } from "react-router-dom";
+import { Button, Dialog, FloatingButton, MemoComp } from "@/components";
 import AddFavModal from "./MeetingBody/AddFavModal";
-import Button from "../common/ui/Button";
-import FloatingButton from "../common/ui/FloatingButton";
+import GPTRecommend from "./GPTRecommend";
+import ExitModal from "./ExitModal";
 import { Recorder } from "@/STT/recorder";
+import { TTS, STT } from "@/apis";
 import { MeetingAPI } from "@/apis/api";
 import { Socket, io } from "socket.io-client";
-import ExitModal from "./ExitModal";
-import { useNavigate } from "react-router-dom";
+import { AnimatePresence, motion } from "framer-motion";
+import { decodeUnicode } from "@/STT/Transcription";
+import Alert from "../common/ui/Alert";
+import { MemoType } from "@/types/types";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { startMeeting } from "@/redux/modules/meeting";
 
 //FIXME: accessToken 연결 전 수정해야함
 const accessToken =
-  "eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJub2hoeXVuamVvbmc5M0BnbWFpbC5jb20iLCJpYXQiOjE2ODM3NzA2NjQsImV4cCI6MTY4MzkwMDI2NH0.JBlTVLV3CaCyk-jxtZhP7o-v8YwZPWdGEd2nIBbRhJI";
+  "eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJ0ZWFtc2lrc2lrMkBnbWFpbC5jb20iLCJpYXQiOjE2ODQxMzYzMDQsImV4cCI6MTY4NDI2NTkwNH0.FSwizYi6oThPzNkEJSPkkEsDgCuLPAY9lNx_aYu00dY";
+const roomNo = 1343;
 
 const socketURl = "http://k8a6031.p.ssafy.io:80/";
 const recorderWorkerPath = "../STT/recorderWorker.js";
-const roomNo = 1343;
 
 // Error codes (mostly following Android error names and codes)
 const ERR_SOCKET = 1;
@@ -61,6 +65,7 @@ interface PropsType {
   setIsStarted: React.Dispatch<SetStateAction<boolean>>;
   togglePlay: () => void;
   setTimerStarted: React.Dispatch<React.SetStateAction<boolean>>;
+  seconds: number;
 }
 
 function ConversationBody({
@@ -69,6 +74,7 @@ function ConversationBody({
   setIsStarted,
   togglePlay,
   setTimerStarted,
+  seconds,
 }: PropsType) {
   // person Id
   const [id, setId] = useState<number>(0);
@@ -77,21 +83,28 @@ function ConversationBody({
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isSTTLoading, setIsSTTLoading] = useState<boolean>(false);
 
+  const [openMemoPage, setOpenMemoPage] = useState<boolean>(false);
   const [openExitModal, setOpenExitModal] = useState<boolean>(false);
+  const [openAlertModal, setOpenAlertModal] = useState<boolean>(false);
   // get GPT 추천 modal
   const [openGPTModal, setOpenGPTModal] = useState<boolean>(false);
   // 자주 쓰는 말 modal
   const [openAddFavModal, setOpenAddFavModal] = useState<boolean>(false);
   // 전체 대화 텍스트
   const [conversation, setConversation] = useState<MessageType[]>([]);
+  const [partialResult, setPartialResult] = useState<string>("");
+
   // Text-to-Speech를 위한 text
   const [text, setText] = useState<string>("");
+
+  const [memoList, setMemoList] = useState<MemoType[]>([]);
 
   const [intervalKey, setIntervalKey] = useState<any>();
   const [mediaStream, setMediaStream] = useState<MediaStream>(); //streaming되는 미디어
   const [isRecording, setIsRecording] = useState<boolean>(false);
   const [audioArray, setAudioArray] = useState<Blob[]>([]);
-  const [audioBlob, setAudioBlob] = useState<Blob>();
+  // const [audioBlob, setAudioBlob] = useState<Blob>();
+
   // const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder>(); // 녹음기
   // const [subRecorder, setSubRecorder] = useState<any>(); // worker recorder
   const mediaRecorder = useRef<MediaRecorder>();
@@ -99,10 +112,17 @@ function ConversationBody({
 
   const [audio, setAudio] = useState<string>(); //whole audio blob url
   // meeting room no
-  const [roomSeq, setRoomSeq] = useState<number>();
+  // const [roomSequence, setRoomSequence] = useState<number>();
+  const roomSequence = useRef<number>(0);
+  const roomSeq = useAppSelector((state) => state.meeting.roomSeq);
   // const [socket, setSocket] = useState<Socket | null>();
   const socket = useRef<Socket | null>(null);
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    roomSequence.current = roomSeq;
+  }, [roomSeq]);
 
   function onEvent(code: any, data: any) {
     console.log(`msg: ${code} : ${data || ""}\n`);
@@ -178,9 +198,16 @@ function ConversationBody({
         subRecorder.current?.record();
         console.log("ready for speech");
       } catch (err) {
-        console.log("subRecorder doesnt work");
+        console.log("subRecorder doesn't work");
       }
       onEvent(MSG_WEB_SOCKET_OPEN, "socket_open");
+    });
+
+    socket.on("stt", (e) => {
+      // socket server에서 보낸 데이터가 stt string
+      console.log(e);
+      onPartialResults(e);
+      conversation.push(e); // 화면에 보여지기 위해서 conversation array에 추가
     });
 
     socket.on("message", (e) => {
@@ -236,6 +263,19 @@ function ConversationBody({
     return socket;
   }
 
+  function onPartialResults(script: any) {
+    const result = decodeUnicode(script[0].transcript)
+      .replace(/<UNK>/gi, "")
+      .replace(/{/gi, "")
+      .replace(/}/gi, "")
+      .replace(/\[/gi, "")
+      .replace(/\]/gi, "")
+      .replace(/\(/gi, "")
+      .replace(/\)/gi, "");
+    if (result !== "." && !result.includes("^"))
+      setPartialResult((prev) => result);
+  }
+
   async function record() {
     // 마이크 mediaStream 생성: Promise를 반환하므로 async/await 사용
     const mediaStream = await navigator.mediaDevices.getUserMedia({
@@ -249,7 +289,9 @@ function ConversationBody({
       audioContext.createMediaStreamSource(mediaStream);
 
     setIsRecording(true);
-    setIsStarted(false);
+    setTimerStarted(true);
+    setIsStarted(true);
+    setIsLoading(true);
 
     //TODO: socket으로 보내는 recorder
     const subRecorder1 = new Recorder(input, {
@@ -261,7 +303,7 @@ function ConversationBody({
     // MediaRecorder 생성 - 전체 녹음하는 recorder
     const mediaRecorder1 = new MediaRecorder(mediaStream, {
       audioBitsPerSecond: 16000,
-      // memiType: "audio/wav codecs=opus",
+      // mimeType: "audio/wav; codecs=opus",
     });
     onEvent(MSG_INIT_RECORDER, "Recorder initialized");
     // setMediaRecorder(mediaRecorder);
@@ -275,12 +317,15 @@ function ConversationBody({
     // 이벤트핸들러: 녹음 종료 처리 & 재생하기
     mediaRecorder1.onstop = () => {
       // 녹음이 종료되면, 배열에 담긴 오디오 데이터(Blob)들을 합친다: 코덱도 설정해준다.
-      const blob = new Blob(audioArray, { type: "audio/wav codecs=opus" });
-      setAudioBlob(blob);
-      audioArray.splice(0); // 기존 오디오 데이터들은 모두 비워 초기화한다.
+      // const blob = new Blob(audioArray, { type: "audio/wav; codecs=opus" });
+      const blob = new Blob(audioArray, { type: audioArray[0].type });
+      // setAudioBlob(blob);
+      // audioArray.splice(0); // 기존 오디오 데이터들은 모두 비워 초기화한다.
       // Blob 데이터에 접근할 수 있는 주소를 생성한다.
       const blobURL = window.URL.createObjectURL(blob);
       setAudio(blobURL);
+      console.log(blobURL);
+      closeRoomAPI(blob);
 
       setIsRecording(false);
     };
@@ -315,20 +360,41 @@ function ConversationBody({
 
     if (!isRecording) {
       // const accessToken = localStorage.getItem("accessToken");
-      MeetingAPI.startMeeting(accessToken!)
-        .then((result) => {
-          setRoomSeq(result.data.data.roomSeq); // roomSequence
-          record()
-            .then((response) => {
-              createSocket();
-            })
-            .catch((error) => {
-              onError(ERR_AUDIO, "Recorder undefined");
-            });
-        })
-        .catch((err) => {
+      const start = async () => {
+        try {
+          const result = await dispatch(startMeeting(accessToken));
+          if (result) {
+            record()
+              .then((response) => {
+                createSocket();
+              })
+              .catch((error) => {
+                onError(ERR_AUDIO, "Recorder undefined");
+              });
+          } else {
+            onError(ERR_CLIENT, `start meeting failed`);
+          }
+        } catch (err) {
           onError(ERR_CLIENT, `No user media support, ${err}`);
-        });
+        }
+      };
+      start();
+
+      // MeetingAPI.startMeeting(accessToken!)
+      //   .then((result) => {
+      //     // setRoomSeq(result.data.data.roomSeq); // roomSequence
+      //     // console.log(result.data.data.roomSeq);
+      //     record()
+      //       .then((response) => {
+      //         createSocket();
+      //       })
+      //       .catch((error) => {
+      //         onError(ERR_AUDIO, "Recorder undefined");
+      //       });
+      //   })
+      //   .catch((err) => {
+      //     onError(ERR_CLIENT, `No user media support, ${err}`);
+      //   });
     }
   }
 
@@ -378,6 +444,7 @@ function ConversationBody({
       onEvent(MSG_STOP, "Stopped recording");
 
       // Push the remaining audio to the server
+
       subRecorder.current?.exportWAV((blob: Blob) => {
         // socket send audio
         socketSend(blob);
@@ -403,14 +470,7 @@ function ConversationBody({
       }
       setIsRecording(false);
       setTimerStarted(false);
-      closeRoomAPI()
-        .then((response) => {
-          console.log(response);
-          navigate("/records");
-        })
-        .catch((err) => {
-          console.log("대화 저장 및 종료를 실패하였습니다.", err);
-        });
+      setIsLoading(false);
     } else {
       onError(ERR_AUDIO, "Recorder undefined");
     }
@@ -435,9 +495,35 @@ function ConversationBody({
   }
 
   //room close http api request
-  async function closeRoomAPI() {
-    MeetingAPI.finishMeeting(accessToken, roomSeq!, audioBlob!)
+  async function closeRoomAPI(blob?: Blob) {
+    MeetingAPI.finishMeeting(accessToken, roomSequence.current!)
       .then((result) => {
+        console.log(result);
+
+        if (blob) {
+          //TODO:  encoding:
+          const memo = new Blob(
+            [
+              JSON.stringify({
+                memo: memoList,
+              }),
+            ],
+            {
+              type: "application/json",
+            }
+          );
+          const formData = new FormData();
+          formData.append("audio", blob);
+          formData.append("memo", memo);
+          MeetingAPI.saveMeeting(accessToken, roomSequence.current!, formData)
+            .then(() => {
+              // successfully finished and saved meeting
+              navigate("/records");
+            })
+            .catch((err) => {
+              console.log("room save error", err);
+            });
+        }
         console.log(result);
       })
       .catch((err) => {
@@ -454,7 +540,7 @@ function ConversationBody({
 
   return (
     <>
-      <section className="message-sec h-100 mb-10 overflow-y-scroll pt-10">
+      <section className="message-sec mb-12 h-full overflow-x-auto ">
         {openExitModal ? (
           <ExitModal
             setOpenExitModal={setOpenExitModal}
@@ -462,75 +548,111 @@ function ConversationBody({
           />
         ) : null}
 
-        {/* isRecording 이 true 일 때만 STT rendering */}
         {!isStarted && !isRecording ? (
           <div className="flex justify-center">
             <Button onClick={handleStartBtn} type="simpleBlueBtn">
               대화 시작
             </Button>
           </div>
-        ) : null}
-        {conversation ? (
-          <div>
-            {text && <TTS text={text} setText={setText} />}
-            {conversation?.map((item) => {
-              return (
-                <>
-                  {item.speaker === "user" ? (
-                    <Dialog
-                      setOpenAddFavModal={setOpenAddFavModal}
-                      onClick={handleDialogClick}
-                      key={item.id}
-                      type={"user_text"}
-                    >
-                      {item.content}
-                    </Dialog>
-                  ) : (
-                    <Dialog
-                      onClick={handleGPTClick}
-                      key={item.id}
-                      type={
-                        item.speaker === "other1"
-                          ? "other1_text"
-                          : item.speaker === "other2"
-                          ? "other2_text"
-                          : item.speaker === "other3"
-                          ? "other3_text"
-                          : item.speaker === "other4"
-                          ? "other4_text"
-                          : item.speaker === "other5"
-                          ? "other5_text"
-                          : item.speaker === "other6"
-                          ? "other6_text"
-                          : item.speaker === "other7"
-                          ? "other7_text"
-                          : item.speaker === "other8"
-                          ? "other8_text"
-                          : item.speaker === "other9"
-                          ? "other9_text"
-                          : item.speaker === "other10"
-                          ? "other10_text"
-                          : ""
-                      }
-                    >
-                      {item.content}
-                    </Dialog>
-                  )}
-                </>
-              );
-            })}
-            <div className="scroll-bottom" ref={messageEndRef}></div>
-          </div>
         ) : (
-          <div></div>
-        )}
+          <div className="flex scroll-mx-0 flex-row">
+            {conversation ? (
+              <motion.div
+                key="left"
+                style={{
+                  maxHeight: "600px",
+                  width: openMemoPage ? "70%" : "100%",
+                  transition: "width 0.5s",
+                  overflow: "auto",
+                }}
+              >
+                {text && <TTS text={text} setText={setText} />}
+                {conversation.map((item, idx) => {
+                  return (
+                    <>
+                      {item.speaker === "user" ? (
+                        <Dialog
+                          setOpenAddFavModal={setOpenAddFavModal}
+                          onClick={handleDialogClick}
+                          key={item.id}
+                          type={"user_text"}
+                        >
+                          {item.content}
+                        </Dialog>
+                      ) : (
+                        <Dialog
+                          onClick={handleGPTClick}
+                          key={item.id}
+                          type={
+                            item.speaker === "other1"
+                              ? "other1_text"
+                              : item.speaker === "other2"
+                              ? "other2_text"
+                              : item.speaker === "other3"
+                              ? "other3_text"
+                              : item.speaker === "other4"
+                              ? "other4_text"
+                              : ""
+                          }
+                        >
+                          {item.content}
+                        </Dialog>
+                      )}
+                    </>
+                  );
+                })}
+                <div className="scroll-bottom" ref={messageEndRef}></div>
+              </motion.div>
+            ) : (
+              <div></div>
+            )}
 
+            {/* 메모 div */}
+            <AnimatePresence>
+              {openMemoPage && (
+                <motion.div
+                  key="right"
+                  style={{
+                    width: "30%",
+                    height: "600px",
+                  }}
+                  initial={{ width: "0%", height: "600px" }}
+                  animate={{ width: "30%", height: "600px" }}
+                  exit={{ width: "0%", height: "600px" }}
+                  transition={{ duration: 0.5 }}
+                >
+                  <MemoComp
+                    seconds={seconds}
+                    openMemoPage={openMemoPage}
+                    memoList={memoList}
+                    setMemoList={setMemoList}
+                  />
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        )}
         {openGPTModal && <GPTRecommend setOpenGPTModal={setOpenGPTModal} />}
         {openAddFavModal && (
           <AddFavModal setOpenAddFavModal={setOpenAddFavModal} />
         )}
+        {openAlertModal && (
+          <Alert setOpenAlertModal={setOpenAlertModal}>
+            대화를 시작버튼을 눌러주세요
+          </Alert>
+        )}
         {audio && <audio src={audio} controls />}
-        <FloatingButton onClick={() => setOpenExitModal(true)} />
+        <FloatingButton
+          type="memo"
+          onClick={() => {
+            if (isStarted) {
+              setOpenMemoPage((prev) => !prev);
+            } else {
+              setOpenAlertModal(true);
+            }
+          }}
+        />
+        <FloatingButton type="close" onClick={() => setOpenExitModal(true)} />
       </section>
     </>
   );

@@ -47,7 +47,9 @@ function Button({ type, children, onClick }: PropsType) {
         </button>
       ) : type === "backButton" ? (
         <button
-          className="group relative w-full overflow-hidden rounded-xl border border-blue-main bg-white px-4 py-2 text-blue-main shadow-md transition-all duration-[250ms] ease-out hover:bg-blue-50"
+          className="group relative m-4 w-full overflow-hidden rounded-xl border 
+          border-blue-main bg-white px-4 py-2 text-blue-main
+          shadow-md transition-all duration-[250ms] ease-out hover:bg-blue-50"
           onClick={onClick}
         >
           <div className="absolute inset-0 w-3  "></div>
@@ -72,12 +74,32 @@ function Button({ type, children, onClick }: PropsType) {
         </button>
       ) : type === "deleteButton" ? (
         <button
-          className="group relative w-full overflow-hidden rounded-xl border border-red-main bg-red-500 px-4 py-2 
+          className="group relative m-4 w-full overflow-hidden rounded-xl border border-red-main bg-red-500 px-4 py-2
         text-white shadow-md transition-all duration-[250ms] ease-out hover:bg-red-main"
           onClick={onClick}
         >
           <div className="absolute inset-0 w-3  "></div>
           <span className="relative">{children}</span>
+        </button>
+      ) : type === "accountDeleteButton" ? (
+        <button
+          className="mt-4 w-full overflow-hidden rounded-xl border border-red-main bg-red-500 px-4 py-2
+        text-white shadow-md transition-all duration-[250ms] ease-out hover:bg-red-main"
+          onClick={onClick}
+        >
+          <span className="relative text-white">
+            <div className="text-center">{children}</div>
+          </span>
+        </button>
+      ) : type === "accountLogoutButton" ? (
+        <button
+          className="w-full overflow-hidden rounded-xl border border-gray-400 bg-white px-4 py-2
+        text-white shadow-md transition-all duration-[250ms] ease-out hover:bg-gray-200"
+          onClick={onClick}
+        >
+          <span className="relative text-black">
+            <div className="text-center">{children}</div>
+          </span>
         </button>
       ) : (
         <button onClick={onClick}>{children}</button>

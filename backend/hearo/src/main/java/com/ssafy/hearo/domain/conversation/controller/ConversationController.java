@@ -4,6 +4,8 @@ import com.ssafy.hearo.domain.account.entity.Account;
 import com.ssafy.hearo.domain.conversation.dto.ConversationRequestDto.*;
 import com.ssafy.hearo.domain.conversation.dto.ConversationResponseDto.*;
 import com.ssafy.hearo.domain.conversation.service.ConversationService;
+import com.ssafy.hearo.domain.record.dto.RecordResponseDto.*;
+import com.ssafy.hearo.domain.record.service.RecordService;
 import com.ssafy.hearo.global.annotation.LoginUser;
 import com.ssafy.hearo.global.common.response.ResponseService;
 import com.ssafy.hearo.global.common.response.Result;
@@ -22,6 +24,7 @@ public class ConversationController {
 
     private final ResponseService responseService;
     private final ConversationService conversationService;
+    private final RecordService recordService;
 
     @PostMapping("/room/start")
     public ResponseEntity<Result> startConversation(@LoginUser Account account, @RequestBody StartConversationRequestDto requestDto) {
@@ -44,8 +47,9 @@ public class ConversationController {
     @PostMapping("/room/{conversationSeq}/save")
     public ResponseEntity<Result> saveConversation(@LoginUser Account account, @PathVariable long conversationSeq, @RequestPart("audio") MultipartFile audio, @RequestPart("memo") SaveConversationRequestDto requestDto) {
         log.info("[saveConversation] 대화 저장 API 호출 - {}", account.getEmail());
-        conversationService.saveConversation(account, conversationSeq, audio, requestDto);
+        Long recordSeq = conversationService.saveConversation(account, conversationSeq, audio, requestDto);
+        GetRecordResponseDto result = recordService.getRecord(account, recordSeq);
         return ResponseEntity.ok()
-                .body(responseService.getSuccessResult());
+                .body(responseService.getSingleResult(result));
     }
 }
