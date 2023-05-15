@@ -19,7 +19,7 @@ export default function AddFavModal({ setOpenAddFavModal }: PropsType) {
         <Button onClick={() => setOpenAddFavModal(false)} type="blueTextBtn">
           아니오
         </Button>
-        <Button onClick={() => console.log("yes!")} type="blueBgBtn">
+        <Button onClick={() => console.log("yes!")} type="blueTextBtn">
           추가하기
         </Button>
       </div>
