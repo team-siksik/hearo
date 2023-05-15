@@ -37,14 +37,6 @@ function TotalRecordsPage() {
     dispatch(getRecordList(nextPage));
   }, [nextPage]);
 
-  const handleRemoveClick = (idToDelete?: number) => {
-    const updatedRecords = totalRecords.filter(
-      (record) => record.recordSeq !== idToDelete
-    );
-    setTotalRecords(updatedRecords);
-    setOpenRemoveRecordModal(false);
-  };
-
   return (
     <div>
       <RecordpageSideBar />
@@ -58,10 +50,14 @@ function TotalRecordsPage() {
         >
           <div className="space-y-4 pb-12">
             {/* 테스트 */}
-            {recordList &&
+            {recordList.length === 0 ? (
+              //TODO: 로딩중
+              <div className="h-96 font-bold">isLoading</div>
+            ) : (
               recordList.map((records, idx) => (
                 <RecordsItem record={records} key={idx} />
-              ))}
+              ))
+            )}
           </div>
         </div>
       </div>
