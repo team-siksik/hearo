@@ -28,19 +28,19 @@ public class RecordController {
     @GetMapping()
     public ResponseEntity<Result> getRecordList(@LoginUser Account account, Pageable pageable) {
         log.info("[getRecordList] 기록 목록 조회 API 호출 - {}", account.getEmail());
-        List<GetRecordListResponseDto> result = recordService.getRecordList(account, pageable);
+        GetRecordListResponseDto result = recordService.getRecordList(account, pageable);
         log.info("[getRecordList] result: {}", result);
         return ResponseEntity.ok()
-                .body(responseService.getListResult(result));
+                .body(responseService.getSingleResult(result));
     }
 
     @GetMapping("/favorite")
     public ResponseEntity<Result> getFavoriteRecordList(@LoginUser Account account, Pageable pageable) {
         log.info("[getFavoriteRecordList] 즐겨찾는 기록 목록 조회 API 호출 - {}", account.getEmail());
-        List<GetRecordListResponseDto> result = recordService.getFavoriteRecordList(account, pageable);
+        GetRecordListResponseDto result = recordService.getFavoriteRecordList(account, pageable);
         log.info("[getFavoriteRecordList] result: {}", result);
         return ResponseEntity.ok()
-                .body(responseService.getListResult(result));
+                .body(responseService.getSingleResult(result));
     }
 
     @GetMapping("/{recordSeq}")
