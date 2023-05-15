@@ -73,7 +73,7 @@ function Button({ type, children, onClick }: PropsType) {
         </button>
       ) : type === "accountDeleteButton" ? (
         <button
-          className="mt-4 w-full overflow-hidden rounded-xl border border-red-main bg-red-500 px-4 py-2
+          className="mt-4 mb-4 w-full overflow-hidden rounded-xl border border-red-main bg-red-500 px-4 py-2
         text-white shadow-md transition-all duration-[250ms] ease-out hover:bg-red-main"
           onClick={onClick}
         >
@@ -91,9 +91,22 @@ function Button({ type, children, onClick }: PropsType) {
             <div className="text-center">{children}</div>
           </span>
         </button>
+      ) : type === "addButton" ? (
+        <button
+          className="
+          bg-wight px-4 py-2
+          text-black          
+          group relative w-full overflow-hidden rounded-xl border 
+          border-blue-main bg-whitetext-blue-main
+          shadow-md transition-all duration-[250ms] ease-out hover:bg-blue-50"
+          onClick={onClick}
+        >
+          <div className="absolute inset-0 w-3"></div>
+          <span className="relative">{children}</span>
+        </button>
       ) : (
         <button onClick={onClick}>{children}</button>
-      )}
+      ) }
     </>
   );
 }
