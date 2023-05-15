@@ -1,7 +1,6 @@
 from fastapi import APIRouter
 from main import socket_manager, logger
 from google.cloud import speech
-from google.cloud.speech import enums, types
 from collections import deque
 
 import os
@@ -33,11 +32,11 @@ async def audio(sid, data):
         # Process audio using Google Cloud Speech-to-Text
         language_code = "ko-KR"  # Language code for speech recognition
         client = speech.SpeechClient()
-        config = types.RecognitionConfig(
+        config = speech.RecognitionConfig(
             sample_rate_hertz=RATE,
             language_code=language_code,
         )
-        streaming_config = types.StreamingRecognitionConfig(config=config, interim_results=True)
+        streaming_config = speech.StreamingRecognitionConfig(config=config, interim_results=True)
 
         def request_generator():
             # 버퍼에서 1초에 해당하는 음성 데이터를 가져와서 생성
