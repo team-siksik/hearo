@@ -29,6 +29,7 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -38,7 +39,6 @@ public class RecordServiceImpl implements RecordService {
 
     private final DateUtil dateUtil;
     private final RecordRepository recordRepository;
-    private final MemoRepository memoRepository;
     private final MemoService memoService;
 
     private String getRecodingTime(String recordedFile) {
@@ -67,13 +67,18 @@ public class RecordServiceImpl implements RecordService {
             BufferedReader reader = new BufferedReader(new InputStreamReader(jsonUrl.openStream()));
             JsonParser jsonParser = new JsonParser();
             JsonObject jsonObject = jsonParser.parse(reader).getAsJsonObject();
-            JsonArray segmentsArray = jsonObject.getAsJsonArray("segments");
-            if (segmentsArray.size() == 0) {
-                preview = "";
+            JsonElement resultElement = jsonObject.get("result");
+            if (Objects.equals(resultElement.getAsString(), "FAILED")) {
+                preview = String.valueOf(jsonObject.get("message"));
             } else {
-                JsonElement firstSegmentElement = segmentsArray.get(0);
-                JsonObject firstSegmentObject = firstSegmentElement.getAsJsonObject();
-                preview = firstSegmentObject.get("text").getAsString();
+                JsonArray segmentsArray = jsonObject.getAsJsonArray("segments");
+                if (segmentsArray.size() == 0) {
+                    preview = "";
+                } else {
+                    JsonElement firstSegmentElement = segmentsArray.get(0);
+                    JsonObject firstSegmentObject = firstSegmentElement.getAsJsonObject();
+                    preview = firstSegmentObject.get("text").getAsString();
+                }
             }
         } catch (Exception e) {
             throw new ErrorException(RecordErrorCode.GET_RECORD_PREVIEW_FAILED);
