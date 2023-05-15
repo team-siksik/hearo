@@ -6,6 +6,8 @@ import {
   UserCircleIcon,
 } from "@heroicons/react/24/solid";
 import { useNavigate } from "react-router-dom";
+import { ReactComponent as FormatSizeIcon } from "../assets/Format_size.svg";
+import HearoLogo from "@/assets/HearoLogo.svg";
 import { Button, Modal, DropDown, MypageSideBar, ConvertBar } from "@/components";
 import {
   googleLogout,
@@ -39,10 +41,10 @@ function SettingsPage() {
     return ["여성(기본)", "남성"];
   };
 
-  const [selectFontSize, setSelectFontSize] = useState<string>("보통")
+  const [selectFontSize, setSelectFontSize] = useState<string>("보통");
   const fontsize = () => {
-    return ["작게" , "보통", "크게"]
-  }
+    return ["작게", "보통", "크게"];
+  };
 
   // 드롭다운 on/off
   const gendertoggledown = () => {
@@ -68,10 +70,9 @@ function SettingsPage() {
 
   // 폰트크기선택
   const fontSizeSelection = (fontsize: string): void => {
-    setSelectFontSize(fontsize)
-  }
+    setSelectFontSize(fontsize);
+  };
 
-  
   const onLogoutButton = () => {
     setModalType("logout");
     setShowModal(true);
@@ -101,7 +102,6 @@ function SettingsPage() {
     dispatch(googleWithdraw(localStorage.getItem("accessToken")!));
   }
 
-
   return (
     <div>
       <MypageSideBar/>
@@ -109,45 +109,25 @@ function SettingsPage() {
         <ConvertBar/>
         <div className="right-0 mt-28 mx-10 p-4 mb-4 h-[70%] shadow-gray-200 rounded-2xl shadow-md">
 
-        <div className="flex flex-row justify-center">
-          <div className="w-[50%] h-100 border-r-2 grid grid-rows-1">
-            <div className="flex flex-col items-center my-20">
-                <div className="h-34 w-34 rounded border-blue-main">
-                <div
-                  className="h-32 w-32 rounded border-blue-main"
-                  // css={css`
-                  //   background-image: url(${loginedUser?.profileImg});
-                  //   background-image: url(${loginedUser?.profileImg});
-                  //   background-position: center;
-                  //   background-size: cover;
-                  // `}
-                  >
-                  <UserCircleIcon/>
-                  </div>
-                </div>
-              <div className="flex flex-col text-center p-4">
-                <div className="text-3xl text-blue-main">{loginedUser?.nickname}김야옹<span className="text-black">님</span></div>
-                <div className="text-3xl">반갑습니다</div>
-                <div className="text-xl pt-4">설정 변경을 통해 <span className="text-blue-main">히어로</span>
-                  를
-                  <p></p> 
-                  더 편리하게 이용해보세요!</div>
-              </div>
+        <div className="flex flex-row">
+          <div className="w-[50%] h-100 border-r-2">
+            <img className="w-20 h-20" src={HearoLogo} />
+            <div>
+              account name
+            </div>
           </div>
-        </div>
 
-          {/* 오른쪽페이지 */}
           <div className="w-[50%] h-full">  
-            <div className="h-80 mx-4 flex flex-row justify-center">
+            <div className="h-60 mx-4 flex flex-row justify-center items-center">
 
               <div className="flex flex-col">
-                <div className="p-2.5 flex flex-row">
-                  <SpeakerWaveIcon className="h-6 w-6"/>
-                  <div className="pl-4 text-xl font-normal">음성 설정</div>
+                <div className="p-2.5 mt-2 flex flex-row items-stretch">
+                  <SpeakerWaveIcon className="h-6 w-6 self-center"/>
+                  <div className="pl-4 text-xl font-light self-center">음성 설정</div>
                 </div>
 
               {/* 드롭다운 */}
-              <div className="m-4 font-light h-full">
+              <div className="m-4 font-light">
                 <button
                   className="text-2xl w-40"
                   onClick={(): void => gendertoggledown()}
@@ -158,17 +138,17 @@ function SettingsPage() {
                   <div className="flex flex-row">
                     <div className="flex-grow">{selectGender}</div>
                       <div className="flex flex-row space-x-2">
-                        <ChevronDownIcon className="h-8 w-8" />
+                        <ChevronDownIcon className="h-8 w-8 pt-" />
                       </div>
                     </div>
                   
                     {/* 드롭다운 열릴 시 */}
                     <div className="pr-8 text-xl">
-                      {showGenDropDown && (
+                      {showDropDown && (
                         // FIXME: 드롭다운 typescript 오류 수정해야함
                         <DropDown
                           gender={gender()}
-                          showGenDropDown={false}
+                          showDropDown={false}
                           toggleDropDown={(): void => gendertoggledown()}
                           genderSelection={genderSelection} 
                         />
@@ -182,84 +162,76 @@ function SettingsPage() {
               
               {/* 글자크기설정 */}
               <div className="flex flex-col">
-                <div className="p-2.5 flex flex-row">
-                  <SquaresPlusIcon className="h-6 w-6"/>
-                  <div className="pl-4 text-xl font-normal">글자 크기 설정</div>
+                <div className="p-2.5 mt-2 flex flex-row items-stretch">
+                  <SpeakerWaveIcon className="h-6 w-6 self-center"/>
+                  <div className="pl-4 text-xl font-light self-center">글자 크기 설정</div>
                 </div>
 
-              {/* 드롭다운 */}
-              <div className="m-4 font-light">
-                <button
-                  className="text-2xl w-40"
-                  onClick={(): void => fontsizetoggledown()}
-                  onBlur={(e: React.FocusEvent<HTMLButtonElement>): void =>
-                    dismissHandler(e)
-                  }
-                  >
-                  <div className="flex flex-row">
-                    <div className="flex-grow">{selectFontSize}</div>
-                      <div className="flex flex-row space-x-2">
-                        <ChevronDownIcon className="h-8 w-8 pt-" />
+                  {/* 드롭다운 */}
+                  <div className="m-4 font-light">
+                    <button
+                      className="w-40 text-2xl"
+                      onClick={(): void => fontsizetoggledown()}
+                      onBlur={(e: React.FocusEvent<HTMLButtonElement>): void =>
+                        dismissHandler(e)
+                      }
+                    >
+                      <div className="flex flex-row">
+                        <div className="flex-grow">{selectFontSize}</div>
+                        <div className="flex flex-row space-x-2">
+                          <ChevronDownIcon className="pt- h-8 w-8" />
+                        </div>
                       </div>
                     </div>
                   
                     {/* 드롭다운 열릴 시 */}
                     <div className="pr-8 text-xl">
-                      {showFontDropDown && (
-                        // FIXME: 드롭다운 typescript 오류 수정해야함
+                      {showDropDown && (
                         <DropDown
                           fontsize={fontsize()}
                           showFontDropDown={false}
                           toggleDropDown={(): void => fontsizetoggledown()}
                           fontSizeSelection={fontSizeSelection} 
                         />
-                      )}
-                    </div>
-                  </button>
-                  <div className="z-0 mt-1 h-0.5 w-[100%] bg-gray-300"/>
-              </div>                          
+                      )} */}
+                      </div>
+                    </button>
+                    <div className="z-0 mt-1 h-0.5 w-[100%] bg-gray-300" />
+                  </div>
+                </div>
+              </div>
 
-
+              {/* 환경설정 - 로그아웃, 회원탈퇴 버튼 */}
+              <div className="h-30 flex items-center justify-center">
+                <div className="flex w-40 flex-col">
+                  <Button onClick={onLogoutButton} type="accountLogoutButton">
+                    로그아웃
+                  </Button>
+                  <Button
+                    onClick={onDeleteButtonClick}
+                    type="accountDeleteButton"
+                  >
+                    회원탈퇴
+                  </Button>
+                </div>
+              </div>
             </div>
           </div>
-
-
-          {/* 환경설정 - 로그아웃, 회원탈퇴 버튼 */}
-          <div className="h-30 flex justify-center items-center">
-            <div className="w-40 flex flex-col">
-              <Button onClick={onLogoutButton} type="accountLogoutButton">
-                로그아웃
-              </Button>
-              <Button onClick={onDeleteButtonClick} type="accountDeleteButton">
-                회원탈퇴
-              </Button>
-            </div>
-          </div>
-
-        </div>
-     </div>
-
         </div>
       </div>
-        {/* 로그아웃, 회원탈퇴 모달  */}
-        {showModal && (
+      {/* 로그아웃, 회원탈퇴 모달  */}
+      {showModal && (
         <Modal open={true} cannotExit={false}>
           {modalType === "logout" && (
             <div>
-              <div className="font-semibold mb-1 text-xl">
+              <div className="mb-1 text-xl font-semibold">
                 정말 로그아웃하시겠습니까?
               </div>
               <div className="m-1 mt-4 flex flex-row justify-center text-2xl font-bold">
-                <Button
-                  onClick={ModalOff}
-                  type="deleteButton"
-                >
+                <Button onClick={ModalOff} type="deleteButton">
                   아니오
                 </Button>
-                <Button
-                  onClick={handleLogoutClick}
-                  type="backButton"
-                >
+                <Button onClick={handleLogoutClick} type="backButton">
                   네
                 </Button>
               </div>
@@ -276,15 +248,11 @@ function SettingsPage() {
               <div className="pb-4">전부 삭제됩니다!</div>
               <div className="pb-4">그래도 정말 하시겠습니까?</div>
               <div className="m-1 flex flex-row justify-center text-2xl font-bold">
-                <Button
-                  onClick={ModalOff}
-                  type="deleteButton"
-                  > 아니오
+                <Button onClick={ModalOff} type="deleteButton">
+                  {" "}
+                  아니오
                 </Button>
-                <Button
-                  onClick={deleteAccount}
-                  type="backButton"
-                >
+                <Button onClick={deleteAccount} type="backButton">
                   네
                 </Button>
               </div>
@@ -298,14 +266,16 @@ function SettingsPage() {
 
 export default SettingsPage;
 
-
 // 삭제한 부분
-      {/* <div className="m-4 flex flex-row justify-center pt-4 text-center">
+{
+  /* <div className="m-4 flex flex-row justify-center pt-4 text-center">
         <FormatSizeIcon className="h-8 w-8" />
         <div className="pl-4 text-2xl font-bold">글자 크기 설정</div>
-      </div> */}
+      </div> */
+}
 
-      {/* <div className="m-2 mx-3 flex flex-row justify-between pt-6">
+{
+  /* <div className="m-2 mx-3 flex flex-row justify-between pt-6">
         <button
           className={`mx-6 text-lg font-bold ${
             fontSize === "small" ? "text-blue-500" : "text-gray-500"
@@ -330,9 +300,11 @@ export default SettingsPage;
         >
           크게
         </button>
-      </div> */}
+      </div> */
+}
 
-      {/* <div className="relative m-4 mx-10 flex flex-row justify-between">
+{
+  /* <div className="relative m-4 mx-10 flex flex-row justify-between">
         <button
           className={`z-30 h-8 w-8 rounded-full border-2 border-gray-400 ${
             fontSize === "small" ? "bg-black" : "bg-white"
@@ -352,4 +324,5 @@ export default SettingsPage;
           onClick={() => handleClick("large")}
         />
 
-      </div> */}
+      </div> */
+}

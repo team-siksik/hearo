@@ -8,11 +8,13 @@ from ai_code.sound_classification import api
 from collections import deque
 from pydub import AudioSegment
 from main import socket_manager, logger
+from speechbrain.pretrained import EncoderClassifier
 
 router = APIRouter(prefix="/sc")
 
+model = EncoderClassifier.from_hparams("speechbrain/urbansound8k_ecapa")
 audio_data_queues = {}
-prv_score = -1
+prv_score = []
 
 @socket_manager.on("classification")
 async def audio_stream(sid, data):
@@ -37,12 +39,6 @@ async def audio_stream(sid, data):
         return
     
     combined_audio = sum(audio_data_queues[sid], AudioSegment.empty())
-
-    # # 최대 데시벨 확인
-    # if combined_audio.max_dBFS < 20:
-    #     logger.info(f"Small dB. max_dBFS = {combined_audio.max_dBFS}")
-    #     await socket_manager.emit("result", "Small dB")
-    #     return  # API 요청을 하지 않고 함수 종료
     
     # combined_audio를 임시 파일로 저장
     with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as temp_file:
@@ -51,15 +47,19 @@ async def audio_stream(sid, data):
         logger.info(f"임시 파일 경로:, {temp_filename}")  # 임시 파일 경로 출력
         logger.info(f"max_dBFS = {combined_audio.max_dBFS}")
 
-    # 임시 파일을 읽어서 query_with_memory 함수 호출
-    with open(temp_filename, "rb") as f:
-        result, prv_score = api.query_with_memory(f.read(), prv_score)
-        # # 임시 파일 삭제
-        # os.remove(temp_filename)
-
-        if result:
-            logger.info(result)
-            await socket_manager.emit("result", result)
+    try:
+        classification = model.classify_file(temp_filename)
+        # 임시 파일 삭제
+        os.remove(temp_filename)
+        
+        if classification[0].tolist()[0] == prv_score:
+            result = "Mic error"
         else:
-            logger.info("No result")
-            await socket_manager.emit("result", "No result")
+            result = classification[-1][0]
+            prv_score = classification[0].tolist()[0]
+        logger.info(result)
+        await socket_manager.emit("result", result)
+    
+    except:
+        logger.info("No result")
+        await socket_manager.emit("result", "No result")

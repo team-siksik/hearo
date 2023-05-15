@@ -39,10 +39,15 @@ import ws.schild.jave.Encoder;
 import ws.schild.jave.MultimediaObject;
 import ws.schild.jave.encode.AudioAttributes;
 import ws.schild.jave.encode.EncodingAttributes;
+import ws.schild.jave.info.MultimediaInfo;
+import ws.schild.jave.progress.EncoderProgressListener;
 
 import javax.transaction.Transactional;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.sql.Timestamp;
 import java.util.*;
 
@@ -116,17 +121,35 @@ public class ConversationServiceImpl implements ConversationService {
         log.info("[saveConversation] 대화 저장 시작");
         log.info("[saveConversation] audio: {}", String.valueOf(audio));
 
+//        log.info("[saveConversation] s3에 원본 음성 데이터 업로드 시작");
+//        Conversation conversation = conversationRepository.findByAccountAndConversationSeq(account, conversationSeq)
+//                .orElseThrow(() -> new ErrorException(ConversationErrorCode.CONVERSATION_NOT_VALID));
+//        String regDtm = dateUtil.timestampToString(conversation.getRegDtm());
+//        String inputFileUrl_test = account.getEmail() + "/" + conversationSeq + "/input/" + regDtm + ".webm";
+//        try {
+//            ObjectMetadata metadata= new ObjectMetadata();
+//            metadata.setContentType(audio.getContentType());
+//            metadata.setContentLength(audio.getSize());
+//            amazonS3Client.putObject(bucket, inputFileUrl_test, audio.getInputStream(), metadata);
+//        } catch (IOException e) {
+//            log.info("[saveConversation] s3에 원본 음성 데이터 업로드 실패");
+//            log.info(e.getMessage());
+//            throw new ErrorException(S3ErrorCode.S3_UPLOAD_FAILED);
+//        }
+//        String inputS3Url_test = amazonS3Client.getUrl(bucket, inputFileUrl_test).toString();
+//        log.info("[saveConversation] s3에 원본 음성 데이터 업로드 완료 - {}", inputS3Url_test);
+
         log.info("[saveConversation] webm -> wav 음성 데이터 변환 시작");
         File target;
         try {
-            File source = File.createTempFile("source", null);
+            File source = File.createTempFile("source", ".webm");
             audio.transferTo(source);
-            target = File.createTempFile("target", null);
+            target = File.createTempFile("target", ".wav");
 
             //Audio Attributes
             AudioAttributes audioAttributes = new AudioAttributes();
             audioAttributes.setCodec("pcm_s16le");
-            audioAttributes.setBitRate(16);
+            audioAttributes.setBitRate(16000);
             audioAttributes.setChannels(2);
             audioAttributes.setSamplingRate(8000);
 
@@ -138,6 +161,7 @@ public class ConversationServiceImpl implements ConversationService {
             //Encode
             Encoder encoder = new Encoder();
             encoder.encode(new MultimediaObject(source), target, attrs);
+            Files.copy(target.toPath(), Path.of("save.wav"), StandardCopyOption.REPLACE_EXISTING);
         } catch (Exception e) {
             log.info("[saveConversation] webm -> wav 음성 데이터 변환 실패");
             log.info(e.getMessage());
@@ -153,10 +177,11 @@ public class ConversationServiceImpl implements ConversationService {
         try {
             ObjectMetadata metadata= new ObjectMetadata();
             metadata.setContentType(audio.getContentType());
-            metadata.setContentLength(audio.getSize());
+            metadata.setContentLength(target.length());
             amazonS3Client.putObject(bucket, inputFileUrl, new FileInputStream(target), metadata);
         } catch (IOException e) {
             log.info("[saveConversation] s3에 음성 데이터 업로드 실패");
+            log.info(e.getMessage());
             throw new ErrorException(S3ErrorCode.S3_UPLOAD_FAILED);
         }
         String inputS3Url = amazonS3Client.getUrl(bucket, inputFileUrl).toString();
