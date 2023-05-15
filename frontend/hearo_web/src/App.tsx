@@ -17,6 +17,7 @@ import { LoginModal, ProfileModal, Navbar } from "./components";
 import { useEffect, useState } from "react";
 import STTTest from "./apis/STT";
 // import { PrivateRoute } from "./PrivateRoute";
+import TestPage from "./pages/TestPage";
 
 function App() {
   const isLoggedIn = useAppSelector((state) => state.user.isLoggedIn);
@@ -42,6 +43,7 @@ function App() {
         <Route path="/recordtest" element={<STTTest />} />
         <Route path="/comm" element={<ConversationPage />} />
         <Route path="/records" element={<TotalRecordsPage />} />
+        <Route path="/test" element={<TestPage />} />
         {/* //FIXME: props 해결해주세요 */}
         {/* TODO: 스토어로 관리해야하는데 임시방편... */}
         <Route path="/records/:id" element={<RecordPage onChangeTitle={function (title: string): void {
