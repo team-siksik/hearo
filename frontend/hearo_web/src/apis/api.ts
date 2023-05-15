@@ -347,6 +347,5 @@ export const RecordAPI = {
       },
     }
   ),
-
 };
 
