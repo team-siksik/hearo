@@ -48,7 +48,7 @@ class _LoginScreenState extends State<LoginScreen> {
           children: [
             GestureDetector(
               onTap: () {
-                LocalNotification.sampleNotification();
+                LocalNotification.sampleNotification("안녕", "하세요");
               },
               child: SizedBox(
                   height: size.width * 0.6,

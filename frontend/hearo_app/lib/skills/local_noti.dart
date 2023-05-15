@@ -36,7 +36,7 @@ class LocalNotification {
         );
   }
 
-  static Future<void> sampleNotification() async {
+  static Future<void> sampleNotification(head, content) async {
     const AndroidNotificationDetails androidPlatformChannelSpecifics =
         AndroidNotificationDetails("channel id", "channel name",
             channelDescription: "channel description",
@@ -51,8 +51,7 @@ class LocalNotification {
       ),
     );
 
-    await _flutterLocalNotificationsPlugin.show(
-        0, "plain title", "plain body", platformChannelSpecifics,
-        payload: "item x");
+    await _flutterLocalNotificationsPlugin
+        .show(0, head, content, platformChannelSpecifics, payload: "item x");
   }
 }
