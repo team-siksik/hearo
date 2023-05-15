@@ -87,7 +87,7 @@ public class RecordServiceImpl implements RecordService {
         Page<Record> recordList = recordRepository.findByAccountAndDelYnOrderByConversation_RegDtmDesc(account, (byte)0, pageable);
         List<GetRecordListResponseDto> result = new ArrayList<>();
         for (Record record : recordList) {
-            log.info("[getRecordList] 음성 길이 계산 시작");
+            log.info("[getRecordList] 음성 길이 계산 시작 - {}", record.getRecordSeq());
             String recordingTime = getRecodingTime(record.getRecorededFile());
             log.info("[getRecordList] 음성 길이 계산 성공 - {}", recordingTime);
 
