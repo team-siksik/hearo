@@ -21,9 +21,6 @@ interface RecordsItemProps {
 function RecordsItem({ record }: RecordsItemProps) {
   const [openRemoveRecordModal, setOpenRemoveRecordModal] =
     useState<boolean>(false);
-  useEffect(() => {
-    console.log(record);
-  }, []);
 
   const navigate = useNavigate();
   const moveToRecord = () => {
@@ -76,7 +73,9 @@ function RecordsItem({ record }: RecordsItemProps) {
             </div>
           </div>
           <div>
-            <div className="my-2 text-blue-main">{record.preview}</div>
+            <div className="my-2 text-blue-main">
+              {record.preview ? record.preview : "내용 없음"}
+            </div>
             <div className="text-sm">{record.title}</div>
           </div>
         </div>
