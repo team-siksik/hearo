@@ -186,9 +186,9 @@ export const MeetingAPI = {
 
 // 대화기록API
 export const RecordAPI = {
-  // 기록목록조회
+  // 전체기록목록조회
   getRecords: (accessToken: string, page: number) =>
-    api.get(`/record?page=${page}&size=5`, {
+    api.get(`/record?page=${page}&size=10`, {
       headers: {
         Authorization: `${accessToken}`,
       },
@@ -323,3 +323,4 @@ export const RecordAPI = {
       }
     ),
 };
+
