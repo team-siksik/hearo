@@ -1,3 +1,4 @@
+import { MemoType } from "@/types/types";
 import React from "react";
 import { MemoType } from "@/types/types";
 
