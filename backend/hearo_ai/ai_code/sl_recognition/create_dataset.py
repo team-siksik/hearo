@@ -10,7 +10,7 @@ from utils import get_words_list, joint_to_angle, time_to_string
 name = 'ny'
 
 words = get_words_list()
-seq_length = 30
+# seq_length = 30
 secs_for_action = 30
 
 created_time = time_to_string(time.time())
@@ -30,7 +30,7 @@ with mp_holistic.Holistic(min_detection_confidence=0.5, min_tracking_confidence=
             success, image = cap.read()
 
             if not success:
-                print("Ignoring empty camera frame.")
+                print("EMPTY CAMERA FRAME")
                 continue
 
             image = cv2.flip(image, 1)
@@ -65,7 +65,6 @@ with mp_holistic.Holistic(min_detection_confidence=0.5, min_tracking_confidence=
                 pose = np.zeros((12, 3))
                 left_joint, right_joint = np.zeros((21, 3)), np.zeros((21, 3))
                 left_angle, right_angle = np.zeros((15,)), np.zeros((15,))
-
 
                 for idx, lm in enumerate(results.pose_landmarks.landmark):
                     if 10 < idx < 23:
@@ -114,14 +113,16 @@ with mp_holistic.Holistic(min_detection_confidence=0.5, min_tracking_confidence=
             data = np.array(data)
             print(word, data.shape)
 
-            sequence_data = []
-            for seq in range(len(data) - seq_length):
-                sequence_data.append(data[seq: seq + seq_length])
+            size = data.shape[0]
 
-            sequence_data = np.array(sequence_data)
-            print(word, sequence_data.shape)
+            # sequence_data = []
+            # for seq in range(len(data) - seq_length):
+            #     sequence_data.append(data[seq: seq + seq_length])
 
-            np.save(os.path.join("dataset", f"{word}_{name}_{created_time}"), sequence_data)
+            # sequence_data = np.array(sequence_data)
+            # print(word, sequence_data.shape)
+
+            np.save(os.path.join("dataset", f"{word}_{name}_{size}_{created_time}"), data)
         break
 
 cap.release()

@@ -5,7 +5,6 @@ import cv2
 import numpy as np
 import mediapipe as mp
 
-from collections import deque
 from tensorflow.keras.models import load_model
 
 from main import socket_manager, logger
@@ -58,38 +57,44 @@ async def preprocess_image(image):
     """
     넘파이 배열 형식의 이미지를 모델 input에 맞게 전처리
     Input: 넘파이 배열 (numpy.ndarray)
-    Output: 모델 인풋 사이즈에 맞추어 전처리된 넘파이 배열 (156,) (numpy.ndarray)
+    Output: 모델 인풋 사이즈에 맞추어 전처리된 넘파이 배열 (192,) (numpy.ndarray)
     """
-    with mp_hands.Hands(model_complexity=0, min_detection_confidence=0.5, min_tracking_confidence=0.5) as hands:
-        results = hands.process(image)
+    with mp_holistic.Holistic(min_detection_confidence=0.5, min_tracking_confidence=0.5) as holistic:
+        results = holistic.process(image)
 
-        if not results.multi_hand_landmarks:
-            logger.debug("!no hands detected!")
-            return np.zeros((156,))
+        if not results.left_hand_landmarks and not results.right_hand_landmarks:
+            return None
         
+        pose = np.zeros((12, 3))
         left_joint, right_joint = np.zeros((21, 3)), np.zeros((21, 3))
         left_angle, right_angle = np.zeros((15,)), np.zeros((15,))
 
-        for landmarks, hand in zip(results.multi_hand_landmarks, results.multi_handedness):
-            hand = hand.classification[0].label.lower()
-            logger.debug(f"{hand} hand detected")
+        for idx, lm in enumerate(results.pose_landmarks.landmark):
+            if 10 < idx < 23:
+                pose[idx - 11] = [lm.x, lm.y, lm.z]
 
-            if hand == "right":
-                for j, lm in enumerate(landmarks.landmark):
-                    right_joint[j] = [lm.x, lm.y, lm.z,]
-                right_angle = await joint_to_angle_from_router(right_joint)
-            else:
-                for j, lm in enumerate(landmarks.landmark):
-                    left_joint[j] = [lm.x, lm.y, lm.z,]
-                left_angle = await joint_to_angle_from_router(left_joint)
+        if results.left_hand_landmarks:
+            logger.debug("left hand")
+            for idx, lm in enumerate(results.left_hand_landmarks.landmark):
+                left_joint[idx] = [lm.x, lm.y, lm.z]
+            left_angle = await joint_to_angle_from_router(left_joint)
 
-        return np.concatenate([left_joint.flatten(), left_angle, right_joint.flatten(), right_angle,])
+        if results.right_hand_landmarks:
+            logger.debug("right hand")
+            for idx, lm in enumerate(results.right_hand_landmarks.landmark):
+                right_joint[idx] = [lm.x, lm.y, lm.z]
+            right_angle = await joint_to_angle_from_router(right_joint)
+
+        data = np.concatenate([pose.flatten(), left_joint.flatten(), left_angle, right_joint.flatten(), right_angle,])  # (192,)
+        data = np.expand_dims(data, axis=0)  # (1, 192)
+        
+        return data
 
 
 # mediapipe 세팅
 mp_drawing = mp.solutions.drawing_utils
 mp_drawing_styles = mp.solutions.drawing_styles
-mp_hands = mp.solutions.hands
+mp_holistic = mp.solutions.holistic
 
 # 인식할 수 있는 수어 단어 목록 로드
 words = get_words_list_from_router()
@@ -99,74 +104,42 @@ model = load_model("ai_code/sl_recognition/model/sl_recognizer.h5")
 
 # 글로벌 변수 선언
 global sequence, word_sequence
-sequence = deque()  # 전처리된 데이터 저장
-word_sequence = deque()  # 추론된 단어 저장
 
 
 @socket_manager.on("image")
 async def image(sid, data):
-    await socket_manager.emit("info", f"{sid} sent image")
     logger.info(f"image: {sid} sent image")
 
     room_id = data["room_id"]
     base64_string = data["base64_string"]
 
-    # 이미지 변환, 전처리 및 시퀀스에 저장
+    await socket_manager.emit("info", f"{sid} sent image", room_id, skip_sid=sid)
+    
+    # 이미지 데이터 전처리
+    logger.debug(f"1. 데이터 전처리")
     image = await decode_image(base64_string)
     data = await preprocess_image(image)
-    # logger.debug(f"1. data: {data}")
-    logger.debug(f"1. data.shape: {data.shape}")
-    sequence.append(data)
+    if data is None:
+        logger.debug(f"! no hands detected !")
+        return
+    else:
+        logger.debug(f"data.shape: {data.shape}")
 
-    # 시퀀스 길이가 30이 되기 전까지는 추론 실행하지 않음
-    logger.debug(f"2. len(sequence): {len(sequence)}")
-    if len(sequence) < 30:
-        logger.debug("!less than 30!")
+    # 모델 추론 실행
+    logger.debug(f"2. 모델 추론")
+    y_pred = model.predict(data).squeeze()
+    i_pred = int(np.argmax(y_pred))
+    conf = y_pred[i_pred]
+    logger.debug(f"result: word - {words[i_pred]}, conf - {conf}")
+
+    # 임계값 넘지 않으면 추론 결과 무시
+    threshold = 0.8
+    if conf < threshold:
+        logger.debug(f"! confidence smaller than {threshold} !")
         return
 
-    # test용 emit
-    if sequence % 13 == 0:
-        socket_manager.emit("sentence", "handsign sentence", room_id, skip_sid=sid)
-    elif sequence % 5 == 0:
-        socket_manager.emit("word", "handsign word", room_id, skip_sid=sid)
+    # 추론 결과 전송
+    word = words[i_pred]
+    await socket_manager.emit("word", word, room_id, skip_sid=sid)
 
-    # # 모델 인풋 사이즈에 맞게 시퀀스 전처리
-    # input_data = np.expand_dims(np.array(sequence, dtype=np.float32), axis=0)
-    # logger.debug(f"3. input_data: {input_data}")
-    # logger.debug(f"3. input_data.shape: {input_data.shape}")
-    
-    # # 추론 실행
-    # y_pred = model.predict(input_data).squeeze()
-    # i_pred = int(np.argmax(y_pred))
-    # conf = y_pred[i_pred]
-    # logger.debug(f"4. inference result: word - {words[i_pred]}, conf - {conf}")
-
-    # # 시퀀스의 첫번째 인자 삭제
-    # sequence.popleft()
-    # logger.debug(f"5. len(sequence): {len(sequence)}")
-
-    # # 임계값 넘지 않으면 추론 결과 무시
-    # if conf < 0.9:
-    #     logger.debug("!smaller than 0.9!")
-    #     return
-
-    # # 추론된 단어 및 단어 시퀀스 저장  
-    # word = words[i_pred]
-    # word_sequence.append(word)
-    # logger.debug(f"5. word_sequence: {word_sequence}")
-
-    # # 추론된 단어가 3번이 되지 않는 경우 무시
-    # if len(word_sequence) < 3:
-    #     logger.debug("!less than 3!")
-    #     return
-    
-    # # 추론된 단어가 3번 연속 동일하다면 맞는 추론으로 판단
-    # result = None
-    # if word_sequence[-1] == word_sequence[-2] == word_sequence[-3]:
-    #     result = word
-    # socket_manager.emit("word", result, room_id, skip_sid=sid)
-    # socket_manager.emit("info", f"{sid} received result '{result}'")
-    # logger.info(f"image: {sid} received result '{result}'")
-    
-    # # 추론된 단어 시퀀스의 첫번째 인자 삭제
-    # word_sequence.popleft()
+    logger.info(f"image: {sid} received result '{word}'")
