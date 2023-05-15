@@ -1,3 +1,4 @@
+import { MemoType } from "@/types/types";
 import axios from "axios";
 axios.defaults.withCredentials = true;
 
