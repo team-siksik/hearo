@@ -44,6 +44,7 @@ function TotalRecordsPage(
 
   //전체기록조회
   const [totalRecords, setTotalRecords] = useState<TotalRecord[]>([]);
+  const [currentPage, setCurrentPage] = useState<number>(1);
   useEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
     if (!accessToken) {
@@ -51,7 +52,7 @@ function TotalRecordsPage(
       return;
     }
     
-    RecordAPI.getRecords(accessToken!)
+    RecordAPI.getRecords(accessToken!, currentPage)
       .then((response) => {
         setTotalRecords(response.data);
         console.log(response.data);
@@ -115,9 +116,15 @@ function TotalRecordsPage(
 
   return (
     <div>
-      <RecordpageSideBar/>
-      <div className="absolute right-0 mt-20 w-[82%] overflow-auto" style={{ paddingTop: "16px" }}>
-        <div className="fixed right-0 top-20 bottom-0 overflow-y-scroll" style={{ width: "calc(82% - 1rem)" }}>
+      <RecordpageSideBar />
+      <div
+        className="absolute right-0 mt-20 w-[82%] overflow-auto"
+        style={{ paddingTop: "16px" }}
+      >
+        <div
+          className="fixed bottom-0 right-0 top-20 overflow-y-scroll"
+          style={{ width: "calc(82% - 1rem)" }}
+        >
           <div className="space-y-4">
             {/* 테스트 */}
           {/* <div className="px-4 py-2">
@@ -166,7 +173,7 @@ function TotalRecordsPage(
         </div>
       </div>
     </div>
-  )  
+  );
 }
 
 export default TotalRecordsPage;

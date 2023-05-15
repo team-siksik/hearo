@@ -16,6 +16,7 @@ import com.ssafy.hearo.domain.record.entity.Record;
 import com.ssafy.hearo.domain.record.repository.RecordRepository;
 import com.ssafy.hearo.global.error.code.ClovaErrorCode;
 import com.ssafy.hearo.global.error.code.ConversationErrorCode;
+import com.ssafy.hearo.global.error.code.RecordErrorCode;
 import com.ssafy.hearo.global.error.code.S3ErrorCode;
 import com.ssafy.hearo.global.error.exception.ErrorException;
 import com.ssafy.hearo.global.util.DateUtil;
@@ -34,6 +35,10 @@ import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import ws.schild.jave.Encoder;
+import ws.schild.jave.MultimediaObject;
+import ws.schild.jave.encode.AudioAttributes;
+import ws.schild.jave.encode.EncodingAttributes;
 
 import javax.transaction.Transactional;
 import java.io.*;
@@ -107,9 +112,38 @@ public class ConversationServiceImpl implements ConversationService {
         return result;
     }
     @Override
-    public void saveConversation(Account account, long conversationSeq, MultipartFile audio, SaveConversationRequestDto requestDto) {
+    public long saveConversation(Account account, long conversationSeq, MultipartFile audio, SaveConversationRequestDto requestDto) {
         log.info("[saveConversation] 대화 저장 시작");
         log.info("[saveConversation] audio: {}", String.valueOf(audio));
+
+        log.info("[saveConversation] webm -> wav 음성 데이터 변환 시작");
+        File target;
+        try {
+            File source = File.createTempFile("source", null);
+            audio.transferTo(source);
+            target = File.createTempFile("target", null);
+
+            //Audio Attributes
+            AudioAttributes audioAttributes = new AudioAttributes();
+            audioAttributes.setCodec("pcm_s16le");
+            audioAttributes.setBitRate(16);
+            audioAttributes.setChannels(2);
+            audioAttributes.setSamplingRate(8000);
+
+            //Encoding attributes
+            EncodingAttributes attrs = new EncodingAttributes();
+            attrs.setOutputFormat("wav");
+            attrs.setAudioAttributes(audioAttributes);
+
+            //Encode
+            Encoder encoder = new Encoder();
+            encoder.encode(new MultimediaObject(source), target, attrs);
+        } catch (Exception e) {
+            log.info("[saveConversation] webm -> wav 음성 데이터 변환 실패");
+            log.info(e.getMessage());
+            throw new ErrorException(RecordErrorCode.AUDIO_CONVERT_FAILED);
+        }
+        log.info("[saveConversation] webm -> wav 음성 데이터 변환 완료");
 
         log.info("[saveConversation] s3에 음성 데이터 업로드 시작");
         Conversation conversation = conversationRepository.findByAccountAndConversationSeq(account, conversationSeq)
@@ -120,7 +154,7 @@ public class ConversationServiceImpl implements ConversationService {
             ObjectMetadata metadata= new ObjectMetadata();
             metadata.setContentType(audio.getContentType());
             metadata.setContentLength(audio.getSize());
-            amazonS3Client.putObject(bucket, inputFileUrl, audio.getInputStream(), metadata);
+            amazonS3Client.putObject(bucket, inputFileUrl, new FileInputStream(target), metadata);
         } catch (IOException e) {
             log.info("[saveConversation] s3에 음성 데이터 업로드 실패");
             throw new ErrorException(S3ErrorCode.S3_UPLOAD_FAILED);
@@ -191,5 +225,6 @@ public class ConversationServiceImpl implements ConversationService {
         }
 
         log.info("[saveConversation] 대화 저장 완료");
+        return record.getRecordSeq();
     }
 }

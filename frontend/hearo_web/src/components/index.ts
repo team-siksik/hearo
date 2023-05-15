@@ -26,6 +26,9 @@ import MypageSideBar from "./Mypage/MypageSideBar";
 import RecordpageSideBar from "./TotalRecords/RecordpageSideBar";
 import RemoveRecordModal from "./TotalRecords/RemoveRecordModal";
 import AddFavModal from "./Conversation/MeetingBody/AddFavModal";
+import MemoComp from "./Conversation/Memo/MemoComp";
+import MemoList from "./Conversation/Memo/MemoList";
+import MemoItem from "./Conversation/Memo/MemoItem";
 import ConvertBar from "./Mypage/ConvertBar";
 
 export {
@@ -57,5 +60,8 @@ export {
   RecordpageSideBar,
   RemoveRecordModal,
   AddFavModal,
+  MemoComp,
+  MemoList,
+  MemoItem,
   ConvertBar,
 };

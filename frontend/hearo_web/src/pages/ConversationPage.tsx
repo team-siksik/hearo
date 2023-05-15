@@ -14,6 +14,8 @@ import { useNavigate } from "react-router-dom";
 // TODO: 좌측 기능, 우측 버튼, 챗봇버튼(?)
 
 function ConversationPage() {
+  const [seconds, setSeconds] = useState<number>(0);
+
   // info audio
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const audioRef = useRef<HTMLAudioElement>(null);
@@ -48,8 +50,6 @@ function ConversationPage() {
       setTimeout(() => {
         // recording 시작
         setIsStarted(true);
-        setTimerStarted(true);
-        true;
       }, 1000);
     }
 
@@ -74,11 +74,13 @@ function ConversationPage() {
       ) : null}
       <MeetingSidebar />
       <audio ref={audioRef} src={startVoice} />
-      <div className="absolute right-0 mt-20 w-[82%]">
+      <div className="absolute right-0 mt-[4.25rem] w-[82%]">
         <ConversationHeader
           timerStarted={timerStarted}
           openModal={openInfoModal}
           setOpenModal={setOpenInfoModal}
+          setSeconds={setSeconds}
+          seconds={seconds}
         />
         <ConversationBody
           setTimerStarted={setTimerStarted}
@@ -86,6 +88,7 @@ function ConversationPage() {
           isStarted={isStarted}
           setIsStarted={setIsStarted}
           togglePlay={togglePlay}
+          seconds={seconds}
         />
         <ConversationFooter
           isStarted={isStarted}
