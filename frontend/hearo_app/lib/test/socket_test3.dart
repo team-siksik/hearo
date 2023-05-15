@@ -26,7 +26,7 @@ class _SocketTest3State extends State<SocketTest3> {
   String stateText = 'Connecting';
   String connectButtonText = 'Disconnect';
   BluetoothDeviceState deviceState = BluetoothDeviceState.disconnected;
-  StreamSubscription<BluetoothDeviceState>? _stateListener;
+  StreamSubscription<BluetoothDeviceState>? stateListener;
   List<BluetoothService> bluetoothService = [];
   Map<String, List<int>> notifyDatas = {};
   final _scrollController = ScrollController();
@@ -36,8 +36,8 @@ class _SocketTest3State extends State<SocketTest3> {
     _initializeAudioRecorder();
     _initializeAudioPlayer();
     audioSocket.connect();
-    audioSocket.enterRoom("1111");
-    _stateListener = widget.device.state.listen((event) {
+    audioSocket.enterRoom();
+    stateListener = widget.device.state.listen((event) {
       debugPrint('event: $event');
       if (deviceState == event) {
         return;
@@ -50,11 +50,11 @@ class _SocketTest3State extends State<SocketTest3> {
 
   @override
   void dispose() {
-    audioSocket.closeRoom("1111");
+    audioSocket.closeRoom();
     audioSocket.disconnect();
     _audioRecorder.closeRecorder();
     _audioPlayer.closePlayer();
-    _stateListener?.cancel();
+    stateListener?.cancel();
     super.dispose();
   }
 
@@ -188,7 +188,7 @@ class _SocketTest3State extends State<SocketTest3> {
       File file = File(_recordingFilePath);
       List<int> fileData = file.readAsBytesSync();
       String fileDataB64 = base64Encode(fileData);
-      audioSocket.sendClassification('1111', fileDataB64);
+      audioSocket.sendClassification(fileDataB64);
       audioSocket.socket.on(
         "audio",
         (data) {

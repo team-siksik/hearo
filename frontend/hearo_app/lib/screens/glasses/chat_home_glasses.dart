@@ -37,7 +37,7 @@ class _ChatHomeGlassesState extends State<ChatHomeGlasses> {
   BluetoothDeviceState deviceState = BluetoothDeviceState.disconnected;
 
   // 연결 상태 리스너 핸들 화면 종료시 리스너 해제를 위함
-  StreamSubscription<BluetoothDeviceState>? _stateListener;
+  StreamSubscription<BluetoothDeviceState>? stateListener;
 
   BluetoothCharacteristic? characteristic;
 
@@ -126,7 +126,7 @@ class _ChatHomeGlassesState extends State<ChatHomeGlasses> {
       connect();
     }
 
-    _stateListener = widget.device.state.listen((event) {
+    stateListener = widget.device.state.listen((event) {
       debugPrint('event :  $event');
       if (deviceState == event) {
         // 상태가 동일하다면 무시
@@ -204,7 +204,7 @@ class _ChatHomeGlassesState extends State<ChatHomeGlasses> {
     Wakelock.disable();
     _stopListening();
     // 상태 리스터 해제
-    _stateListener?.cancel();
+    stateListener?.cancel();
     super.dispose();
   }
 
