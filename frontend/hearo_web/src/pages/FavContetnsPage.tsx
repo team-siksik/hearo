@@ -1,8 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { ArrowLeftIcon, XMarkIcon  } from "@heroicons/react/24/solid";
 import { useNavigate } from "react-router-dom";
-import { Modal, MypageSideBar,ConvertBar } from "@/components";
-
+import { Button, Modal, MypageSideBar,ConvertBar } from "@/components";
 
 interface MessageType {
   id: number;
@@ -10,13 +9,13 @@ interface MessageType {
   speaker: string;
 }
 
-
 function FavContentsPage () {
   const [id, setId] = useState<number>(0);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [modalType, setModalType] = useState<'add' | 'delete'>('add');
   // const inputRef = useRef(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  // TODO: API작업해야함
   const [contents, setContents] = useState<MessageType[]>([
     { id: 1, content: '안녕하세요 저는 청각장애인입니다.', speaker: 'user' },
     { id: 2, content: '뭐 먹었어?', speaker: 'user' },
@@ -24,10 +23,6 @@ function FavContentsPage () {
     { id: 4, content: '감사합니다.', speaker: 'user' },
     { id: 5, content: '스시 먹었어?', speaker: 'user' },
   ]);
-
-  // 상단bar 스타일
-  const mypagebarBackground = "z-10 bg-white drop-shadow";
-  const navigate = useNavigate();
 
 
   // 추가 버튼
@@ -86,11 +81,11 @@ function FavContentsPage () {
         <ConvertBar/>
 
         {/* 출력되는 내용 */}
-        <div className="right-0 mt-28 mx-10 p-4 mb-4 h-[70%] shadow-gray-200 rounded-2xl shadow-md">
+        <div className="right-0 mt-28 mx-10 p-4 mb-4 h-[64%] shadow-gray-200 rounded-2xl shadow-md overflow-y-scroll">
           <div className="mt-4 px-6 py-2 space-y-6">
             {contents.map((c) => (
-              <div>
-                <div key={c.id} className="flex flex-row">
+              <div key={c.id}>
+                <div className="flex flex-row">
                   <div className="flex-grow text-gray-950">{c.content}</div>
                   <div className="flex flex-row space-x-2">
                     <button onClick={() => onDeleteButtonClick(c.id)}>
@@ -101,10 +96,14 @@ function FavContentsPage () {
               <hr className="bg-black opacity-10 h-0.5 my-2 px-6"/>
               </div>
           ))}
-          </div>
         </div>
       </div>
-
+        <div className="fixed bottom-4 right-10 w-32">
+          <Button onClick={onAddButtonClick} type="blueTextBtn">
+          추가
+          </Button>
+        </div>
+      </div>
       {/* 모달발생 시  */}
       {showModal && (
         <Modal open={true} cannotExit={false}>
@@ -128,12 +127,20 @@ function FavContentsPage () {
               <div className="mb-2 text-xl font-semibold">자주 쓰는 말 삭제</div>
               <div>정말로 삭제하시겠습니까?</div>
               <div className="flex flex-row text-2xl justify-center m-1 mt-3 font-bold">
-                <button onClick={ModalOff} className="mt-2 pl-4 pr-4 border-gray-950">
-                  취소 
-                </button>
-                <button onClick={onModalSave} className="mt-2 bg-red-1 hover:bg-red-main text-white py-2 px-4 rounded"> 
+                <div className="flex w-full">
+                  <Button onClick={ModalOff} 
+                  type="backButton"
+                  >
+                  취소
+                  </Button>
+                </div>
+                <div className="flex w-full">
+                  <Button onClick={onModalSave}
+                  type="deleteButton"
+                  >
                   삭제
-                </button>
+                  </Button>
+                </div>
               </div>
             </div>
           )}
