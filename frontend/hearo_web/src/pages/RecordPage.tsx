@@ -54,7 +54,7 @@ function RecordPage({ title, onChangeTitle }: RecordPageProps) {
   return (
     <div>
       <RecordpageSideBar />
-      <div className="fixed right-0 mt-20 w-[82%]">
+      <div className="fixed right-0 mt-[4.25rem] w-[82%]">
         <div className="mx-8">
           <div className="flex items-stretch justify-between ">
             <div className="flex flex-row items-center">
