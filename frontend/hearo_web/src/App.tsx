@@ -4,7 +4,6 @@ import {
   ConversationPage,
   MainPage,
   TotalRecordsPage,
-  MyPage,
   FavContentsPage,
   SettingsPage,
   AgainPage,
@@ -18,6 +17,7 @@ import { LoginModal, ProfileModal, Navbar } from "./components";
 import { useEffect, useState } from "react";
 import STTTest from "./apis/STT";
 // import { PrivateRoute } from "./PrivateRoute";
+import TestPage from "./pages/TestPage";
 
 function App() {
   const isLoggedIn = useAppSelector((state) => state.user.isLoggedIn);
@@ -27,6 +27,7 @@ function App() {
   const [openProfileModal, setOpenProfileModal] = useState<boolean>(false);
   // const isLoggedin = !!localStorage.getItem("accessToken");
 
+ 
   return (
     <div className="App">
       <Navbar
@@ -42,9 +43,12 @@ function App() {
         <Route path="/recordtest" element={<STTTest />} />
         <Route path="/comm" element={<ConversationPage />} />
         <Route path="/records" element={<TotalRecordsPage />} />
+        <Route path="/test" element={<TestPage />} />
         {/* //FIXME: props 해결해주세요 */}
-        {/* <Route path="/records/:id" element={<RecordPage />} /> */}
-        <Route path="/mypage" element={<MyPage />} />
+        {/* TODO: 스토어로 관리해야하는데 임시방편... */}
+        <Route path="/records/:id" element={<RecordPage onChangeTitle={function (title: string): void {
+          throw new Error("Function not implemented.");
+        } } />} />
         <Route path="/mypage/favcontents" element={<FavContentsPage />} />
         <Route path="/mypage/settings" element={<SettingsPage />} />
         <Route path="/login/oauth2/code/google" element={<Google />} />
