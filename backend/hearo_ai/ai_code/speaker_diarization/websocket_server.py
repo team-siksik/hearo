@@ -1,64 +1,88 @@
-
-import re
-import sys
-import time
-
-from google.cloud import speech
-from google.cloud.speech import enums, types
-import pyaudio
-from six.moves import queue
+from __future__ import division
 import os
 
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "C:/Coding/S08P31A603/backend/hearo_ai/credential.json"
+
+import re
+import sys
+
+from google.cloud import speech
+
+import pyaudio
+from six.moves import queue
+
 # Audio recording parameters
-STREAMING_LIMIT = 240000  # 4 minutes
-SAMPLE_RATE = 16000
-CHUNK_SIZE = int(SAMPLE_RATE / 10)  # 100ms
+RATE = 16000
+CHUNK = int(RATE / 10)  # 100ms
 
-RED = "\033[0;31m"
-GREEN = "\033[0;32m"
-YELLOW = "\033[0;33m"
-
-def get_current_time():
-    """Return Current Time in MS."""
-
-    return int(round(time.time() * 1000))
-
-def send_audio_data(data):
-    # Encode audio data as base64 and emit it to the server
-    audio_base64 = base64.b64encode(data).decode('utf-8')
-    sio.emit('audio_data', audio_base64)
-class AudioCapture(object):
-    """Captures audio from the microphone and sends it via socket.io"""
+class MicrophoneStream(object):
+    """Opens a recording stream as a generator yielding the audio chunks."""
 
     def __init__(self, rate, chunk):
         self._rate = rate
         self._chunk = chunk
-        self._pa = None
-        self._stream = None
+
+        # Create a thread-safe buffer of audio data
+        self._buff = queue.Queue()
+        self.closed = True
 
     def __enter__(self):
-        self._pa = pyaudio.PyAudio()
-        self._stream = self._pa.open(
+        self._audio_interface = pyaudio.PyAudio()
+        self._audio_stream = self._audio_interface.open(
             format=pyaudio.paInt16,
+            # The API currently only supports 1-channel (mono) audio
+            # https://goo.gl/z757pE
             channels=1,
             rate=self._rate,
             input=True,
             frames_per_buffer=self._chunk,
-            stream_callback=self._callback
+            # Run the audio stream asynchronously to fill the buffer object.
+            # This is necessary so that the input device's buffer doesn't
+            # overflow while the calling thread makes network requests, etc.
+            stream_callback=self._fill_buffer,
         )
+
+        self.closed = False
+
         return self
 
     def __exit__(self, type, value, traceback):
-        self._stream.stop_stream()
-        self._stream.close()
-        self._pa.terminate()
+        self._audio_stream.stop_stream()
+        self._audio_stream.close()
+        self.closed = True
+        # Signal the generator to terminate so that the client's
+        # streaming_recognize method will not block the process termination.
+        self._buff.put(None)
+        self._audio_interface.terminate()
 
-    def _callback(self, in_data, frame_count, time_info, status_flags):
-        send_audio_data(in_data)
+    def _fill_buffer(self, in_data, frame_count, time_info, status_flags):
+        """Continuously collect data from the audio stream, into the buffer."""
+        self._buff.put(in_data)
         return None, pyaudio.paContinue
 
-def listen_print_loop(responses, stream):
+    def generator(self):
+        while not self.closed:
+            # Use a blocking get() to ensure there's at least one chunk of
+            # data, and stop iteration if the chunk is None, indicating the
+            # end of the audio stream.
+            chunk = self._buff.get()
+            if chunk is None:
+                return
+            data = [chunk]
+
+            # Now consume whatever other data's still buffered.
+            while True:
+                try:
+                    chunk = self._buff.get(block=False)
+                    if chunk is None:
+                        return
+                    data.append(chunk)
+                except queue.Empty:
+                    break
+
+            yield b"".join(data)
+
+def listen_print_loop(responses):
     """Iterates through server responses and prints them.
 
     The responses passed is a generator that will block until a response
@@ -73,128 +97,72 @@ def listen_print_loop(responses, stream):
     the next result to overwrite it, until the response is a final one. For the
     final one, print a newline to preserve the finalized transcription.
     """
-
+    num_chars_printed = 0
     for response in responses:
-
-        if get_current_time() - stream.start_time > STREAMING_LIMIT:
-            stream.start_time = get_current_time()
-            break
-
         if not response.results:
             continue
 
+        # The `results` list is consecutive. For streaming, we only care about
+        # the first result being considered, since once it's `is_final`, it
+        # moves on to considering the next utterance.
         result = response.results[0]
-
         if not result.alternatives:
             continue
 
+        # Display the transcription of the top alternative.
         transcript = result.alternatives[0].transcript
 
-        result_seconds = 0
-        result_micros = 0
-
-        # if result.result_end_time.seconds:
-        #     result_seconds = result.result_end_time.seconds
-
-        # if result.result_end_time.microseconds:
-        #     result_micros = result.result_end_time.microseconds
-
-        stream.result_end_time = int((result_seconds * 1000) + (result_micros / 1000))
-
-        corrected_time = (
-            stream.result_end_time
-            - stream.bridging_offset
-            + (STREAMING_LIMIT * stream.restart_counter)
-        )
         # Display interim results, but with a carriage return at the end of the
         # line, so subsequent lines will overwrite them.
+        #
+        # If the previous result was longer than this one, we need to print
+        # some extra spaces to overwrite the previous result
+        overwrite_chars = " " * (num_chars_printed - len(transcript))
 
-        if result.is_final:
+        if not result.is_final:
+            sys.stdout.write(transcript + overwrite_chars + "\r")
+            sys.stdout.flush()
 
-            sys.stdout.write(GREEN)
-            sys.stdout.write("\033[K")
-            sys.stdout.write(str(corrected_time) + ": " + transcript + "\n")
+            num_chars_printed = len(transcript)
 
-            stream.is_final_end_time = stream.result_end_time
-            stream.last_transcript_was_final = True
+        else:
+            print(transcript + overwrite_chars)
 
             # Exit recognition if any of the transcribed phrases could be
             # one of our keywords.
-            if re.search(r"\b(그만|중지)\b", transcript, re.I):
-                sys.stdout.write(YELLOW)
-                sys.stdout.write("Exiting...\n")
-                stream.closed = True
+            if re.search(r"\b(그만|중단)\b", transcript, re.I):
+                print("Exiting..")
                 break
 
-        else:
-            sys.stdout.write(RED)
-            sys.stdout.write("\033[K")
-            sys.stdout.write(str(corrected_time) + ": " + transcript + "\r")
-
-            stream.last_transcript_was_final = False
+            num_chars_printed = 0
 
 def main():
-    """start bidirectional streaming from microphone input to speech API"""
+    # See http://g.co/cloud/speech/docs/languages
+    # for a list of supported languages.
+    language_code = "ko-KR"  # a BCP-47 language tag
+
     client = speech.SpeechClient()
-    config = types.RecognitionConfig(
-        encoding=enums.RecognitionConfig.AudioEncoding.LINEAR16,
-        sample_rate_hertz=SAMPLE_RATE,
-        language_code="ko-KR",
-        max_alternatives=1
+    config = speech.RecognitionConfig(
+        encoding=speech.RecognitionConfig.AudioEncoding.LINEAR16,
+        sample_rate_hertz=RATE,
+        language_code=language_code,
     )
-    streaming_config = types.StreamingRecognitionConfig(
+
+    streaming_config = speech.StreamingRecognitionConfig(
         config=config, interim_results=True
     )
 
-    mic_manager = ResumableMicrophoneStream(SAMPLE_RATE, CHUNK_SIZE)
-    print(mic_manager.chunk_size)
-    sys.stdout.write(YELLOW)
-    sys.stdout.write('\nListening, say "그만" or "중지" to stop.\n\n')
-    sys.stdout.write("End (ms)       Transcript Results/Status\n")
-    sys.stdout.write("=====================================================\n")
-    
-    with AudioCapture(RATE, CHUNK) as audio_capture:
-        with mic_manager as stream:
-            audio_generator = audio_capture.generator()
-            requests = (
-                speech.StreamingRecognizeRequest(audio_content=content)
-                for content in audio_generator
-            )
+    with MicrophoneStream(RATE, CHUNK) as stream:
+        audio_generator = stream.generator()
+        requests = (
+            speech.StreamingRecognizeRequest(audio_content=content)
+            for content in audio_generator
+        )
 
-            responses = client.streaming_recognize(streaming_config, requests)
-            listen_print_loop(responses)
+        responses = client.streaming_recognize(streaming_config, requests)
 
-        while not stream.closed:
-            sys.stdout.write(YELLOW)
-            sys.stdout.write(
-                "\n" + str(STREAMING_LIMIT * stream.restart_counter) + ": NEW REQUEST\n"
-            )
-
-            stream.audio_input = []
-            audio_generator = stream.generator()
-
-            requests = (
-                types.StreamingRecognizeRequest(audio_content=content)
-                for content in audio_generator
-            )
-
-            responses = client.streaming_recognize(streaming_config, requests)
-
-            # Now, put the transcription responses to use.
-            listen_print_loop(responses, stream)
-
-            if stream.result_end_time > 0:
-                stream.final_request_end_time = stream.is_final_end_time
-            stream.result_end_time = 0
-            stream.last_audio_input = []
-            stream.last_audio_input = stream.audio_input
-            stream.audio_input = []
-            stream.restart_counter = stream.restart_counter + 1
-
-            if not stream.last_transcript_was_final:
-                sys.stdout.write("\n")
-            stream.new_stream = True
+        # Now, put the transcription responses to use.
+        listen_print_loop(responses)
 
 if __name__ == "__main__":
-
     main()
