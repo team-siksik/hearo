@@ -6,67 +6,27 @@ import React, { useState, useEffect } from "react";
 import { RecordpageSideBar } from "@/components";
 import { RecordAPI } from "@/apis/api";
 
-// 개별기록페이지
-interface Memo {
-  memoSeq : number;
-  content : string;
-  timestamp : number;
-}
-
-// 개별기록페이지
-interface RecordPageProps {
-  title?: string;
-  onChangeTitle: (title: string) => void;
-  recordSeq: number;
-  conversationSeq: number;
-  recordingTime: string;
-  isFavorite: number;
-  regDtm: string;
-  modDtm: string;
-  recordedFileUrl: string;
-  memoList: Memo[];
-}
-
-
-function RecordPage(
-  { 
-    title, 
-    onChangeTitle,
-    recordSeq,
-    conversationSeq,
-    recordingTime,
-    isFavorite,
-    regDtm,
-    modDtm, 
-    memoList,
-  }: RecordPageProps) {
+function RecordPage() {
   const location = useLocation();
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
 
   // 게별기록조회
-  const [data, setData] = useState<RecordPageProps[]>([]);
+  const [data, setData] = useState<[]>([]);
   const accessToken = localStorage.getItem("accessToken");
   useEffect(() => {
     if (!accessToken) {
       navigate("/login");
       return;
     }
-    
-    RecordAPI.getRecordItem(accessToken, recordSeq)
-      .then((response) => {
-        setData(response.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, [accessToken, navigate, recordSeq]);
+  }, []);
 
   // const [newTitle, setTitle] = useState(initialTitle);
-  const [openRemoveRecordModal, setOpenRemoveRecordModal] = useState<boolean>(false);
+  const [openRemoveRecordModal, setOpenRemoveRecordModal] =
+    useState<boolean>(false);
   const [isHovered, setIsHovered] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
-  const [newTitle, setNewTitle] = useState<string>(title || "");
+  const [newTitle, setNewTitle] = useState<string>("");
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
@@ -74,10 +34,9 @@ function RecordPage(
     console.log(e.target.value);
   };
 
-  useEffect(() => {
-    setNewTitle(title || "");
-  }, [title]);
-
+  // useEffect(() => {
+  //   setNewTitle("");
+  // }, []);
 
   // 기록제목수정 FIXME: 위에랑 어떻게 겹치는 것인가?
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -87,24 +46,25 @@ function RecordPage(
       // access token이 없을 때 처리하는 부분
       return;
     }
-    RecordAPI.updateRecordTitle(accessToken, recordSeq, newTitle)
-      .then(() => {
-        onChangeTitle(newTitle);
-      })
-      .catch((err) => {
-        console.log(err);
-        // 에러 처리하는 부분
-      });
-  }
+    //   RecordAPI.updateRecordTitle(accessToken, recordSeq, newTitle)
+    //     .then(() => {
+    //       onChangeTitle(newTitle);
+    //     })
+    //     .catch((err) => {
+    //       console.log(err);
+    //       // 에러 처리하는 부분
+    //     });
+  };
 
   const moveToRecords = () => {
     navigate(`/records`);
   };
-  
 
   // 기록삭제
   // FIXME: deleterecordseqlist 수정해야함
-  const [ deleteRecordSeqList, setDeleteRecordIds] = useState<number[] | any>([]);
+  const [deleteRecordSeqList, setDeleteRecordIds] = useState<number[] | any>(
+    []
+  );
   const handleRemoveRecord = () => {
     const accessToken = localStorage.getItem("accessToken");
     // const deleteRecordSeqList = [11, 13];
@@ -129,7 +89,7 @@ function RecordPage(
                 <form onSubmit={handleSubmit}>
                   <input
                     type="text"
-                    value={title}
+                    value="title"
                     onChange={handleTitleChange}
                     placeholder="제목을 입력해주세요"
                     className="w-full rounded-lg p-2 hover:cursor-pointer hover:outline"
@@ -140,7 +100,7 @@ function RecordPage(
                   />
                 </form>
               </div>
-              {isHovered || isFocused ? ( 
+              {/* {isHovered || isFocused ? (
                 <div className="ml-4 h-10 w-10 self-center text-gray-600">
                   <PencilSquareIcon />
                 </div>
@@ -148,7 +108,7 @@ function RecordPage(
                 <div className="ml-4 h-10 w-10 self-center text-gray-600">
                   <PencilSquareIcon />
                 </div>
-              )}
+              )} */}
             </div>
             <div className="mr-4 flex  flex-row">
               <div className="m-4 p-1">
@@ -170,33 +130,37 @@ function RecordPage(
             </div>
           </div>
 
-        {/* TODO: 여기서부터 개별정보 가져오는거 만들어야함 map 활용 */}
-          <div className="flex flex-col p-4 border rounded-md shadow-md">
+          {/* TODO: 여기서부터 개별정보 가져오는거 만들어야함 map 활용 */}
+          <div className="flex flex-col rounded-md border p-4 shadow-md">
             <div className="flex flex-row items-center">
-              <h2 className="font-semibold mr-2">녹음 정보</h2>
+              <h2 className="mr-2 font-semibold">녹음 정보</h2>
               <div className="flex-grow border-b"></div>
             </div>
             <div className="mt-4">
-              <div className="flex flex-row items-center my-2">
+              <div className="my-2 flex flex-row items-center">
                 <h3 className="mr-2 text-gray-600">녹음일시:</h3>
-                <p>{recordingTime}</p>
+                {/* <p>{recordingTime}</p> */}
               </div>
-              <div className="flex flex-row items-center my-2">
+              <div className="my-2 flex flex-row items-center">
                 <h3 className="mr-2 text-gray-600">즐겨찾기:</h3>
-                <p>{isFavorite ? "즐겨찾기에 추가됨" : "즐겨찾기에 추가되지 않음"}</p>
+                <p>
+                  {/* {isFavorite
+                    ? "즐겨찾기에 추가됨"
+                    : "즐겨찾기에 추가되지 않음"} */}
+                </p>
               </div>
               <div>
-                {data.map((datas) => (
+                {/* {data.map((datas) => (
                   <div>
-                  {datas.title}
-                  {datas.recordingTime}
-                  {datas.regDtm}
-                  {datas.modDtm}
+                    {datas.title}
+                    {datas.recordingTime}
+                    {datas.regDtm}
+                    {datas.modDtm}
                   </div>
                 ))}
-                {memoList.map((memo) => 
+                {memoList.map((memo) => (
                   <li key={memo.memoSeq}>{memo.content}</li>
-                )}
+                ))} */}
               </div>
             </div>
           </div>
