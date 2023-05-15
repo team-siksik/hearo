@@ -110,7 +110,7 @@ function ConversationBody({
   const mediaRecorder = useRef<MediaRecorder>();
   const subRecorder = useRef<Recorder>();
 
-  // const [audio, setAudio] = useState<string>(); //whole audio blob url
+  const [audio, setAudio] = useState<string>(); //whole audio blob url
   // meeting room no
   // const [roomSequence, setRoomSequence] = useState<number>();
   const roomSequence = useRef<number>(0);
@@ -322,8 +322,9 @@ function ConversationBody({
       // setAudioBlob(blob);
       // audioArray.splice(0); // 기존 오디오 데이터들은 모두 비워 초기화한다.
       // Blob 데이터에 접근할 수 있는 주소를 생성한다.
-      // const blobURL = window.URL.createObjectURL(blob);
-      // setAudio(blobURL);
+      const blobURL = window.URL.createObjectURL(blob);
+      setAudio(blobURL);
+      console.log(blobURL);
       closeRoomAPI(blob);
 
       setIsRecording(false);
@@ -640,7 +641,7 @@ function ConversationBody({
             대화를 시작버튼을 눌러주세요
           </Alert>
         )}
-        {/* {audio && <audio src={audio} controls />} */}
+        {audio && <audio src={audio} controls />}
         <FloatingButton
           type="memo"
           onClick={() => {
