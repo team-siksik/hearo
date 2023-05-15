@@ -67,6 +67,7 @@ class _Screen2State extends State<BlueSearch> {
                 0) {
               // 찾는 장치명이고 scanResultList에 등록된적이 없는 장치라면 리스트에 추가
               bluetoothController.setDevice(element.device);
+
               Get.to(HomeScreenGlasses(device: element.device));
             }
           }
