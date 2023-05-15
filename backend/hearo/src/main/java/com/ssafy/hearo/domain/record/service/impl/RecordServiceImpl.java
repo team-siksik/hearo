@@ -68,8 +68,10 @@ public class RecordServiceImpl implements RecordService {
             JsonParser jsonParser = new JsonParser();
             JsonObject jsonObject = jsonParser.parse(reader).getAsJsonObject();
             JsonArray segmentsArray = jsonObject.getAsJsonArray("segments");
-            JsonElement firstSegmentElement = segmentsArray.get(0);
-            if (firstSegmentElement != null && firstSegmentElement.isJsonObject()) {
+            if (segmentsArray.size() == 0) {
+                preview = "";
+            } else {
+                JsonElement firstSegmentElement = segmentsArray.get(0);
                 JsonObject firstSegmentObject = firstSegmentElement.getAsJsonObject();
                 preview = firstSegmentObject.get("text").getAsString();
             }
@@ -85,7 +87,7 @@ public class RecordServiceImpl implements RecordService {
         Page<Record> recordList = recordRepository.findByAccountAndDelYnOrderByConversation_RegDtmDesc(account, (byte)0, pageable);
         List<GetRecordListResponseDto> result = new ArrayList<>();
         for (Record record : recordList) {
-            log.info("[getRecordList] 음성 길이 계산 시작");
+            log.info("[getRecordList] 음성 길이 계산 시작 - {}", record.getRecordSeq());
             String recordingTime = getRecodingTime(record.getRecorededFile());
             log.info("[getRecordList] 음성 길이 계산 성공 - {}", recordingTime);
 
