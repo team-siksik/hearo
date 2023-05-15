@@ -7,7 +7,7 @@ import lombok.Getter;
 @Getter
 @Builder
 public class SignInResponseDto {
-
+    private Long userSeq;
     private String accessToken;
     private String nickname;
     private String email;
