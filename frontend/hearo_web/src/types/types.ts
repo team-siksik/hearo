@@ -4,3 +4,8 @@ export enum SelectedPage {
   RecordsPage = "record",
   Mypage = "mypage",
 }
+
+export interface MemoType {
+  content: string;
+  timestamp: number;
+}
