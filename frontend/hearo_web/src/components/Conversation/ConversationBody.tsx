@@ -1,23 +1,23 @@
 import React, { SetStateAction, useEffect, useRef, useState } from "react";
-import Dialog from "../common/ui/Dialog";
-import GPTRecommend from "./GPTRecommend";
-import { TTS, STT } from "@/apis";
+import { useNavigate } from "react-router-dom";
+import { Button, Dialog, FloatingButton, MemoComp } from "@/components";
 import AddFavModal from "./MeetingBody/AddFavModal";
-import Button from "../common/ui/Button";
-import FloatingButton from "../common/ui/FloatingButton";
+import GPTRecommend from "./GPTRecommend";
+import ExitModal from "./ExitModal";
 import { Recorder } from "@/STT/recorder";
+import { TTS, STT } from "@/apis";
 import { MeetingAPI } from "@/apis/api";
 import { Socket, io } from "socket.io-client";
-import ExitModal from "./ExitModal";
-import { useNavigate } from "react-router-dom";
+import { AnimatePresence, motion } from "framer-motion";
+import { decodeUnicode } from "@/STT/Transcription";
 
 //FIXME: accessToken 연결 전 수정해야함
 const accessToken =
   "eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJub2hoeXVuamVvbmc5M0BnbWFpbC5jb20iLCJpYXQiOjE2ODM3NzA2NjQsImV4cCI6MTY4MzkwMDI2NH0.JBlTVLV3CaCyk-jxtZhP7o-v8YwZPWdGEd2nIBbRhJI";
+const roomNo = 1343;
 
 const socketURl = "http://k8a6031.p.ssafy.io:80/";
 const recorderWorkerPath = "../STT/recorderWorker.js";
-const roomNo = 1343;
 
 // Error codes (mostly following Android error names and codes)
 const ERR_SOCKET = 1;
@@ -77,6 +77,7 @@ function ConversationBody({
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isSTTLoading, setIsSTTLoading] = useState<boolean>(false);
 
+  const [openMemoPage, setOpenMemoPage] = useState<boolean>(false);
   const [openExitModal, setOpenExitModal] = useState<boolean>(false);
   // get GPT 추천 modal
   const [openGPTModal, setOpenGPTModal] = useState<boolean>(false);
@@ -84,6 +85,7 @@ function ConversationBody({
   const [openAddFavModal, setOpenAddFavModal] = useState<boolean>(false);
   // 전체 대화 텍스트
   const [conversation, setConversation] = useState<MessageType[]>([]);
+  const [partialResult, setPartialResult] = useState<string>("");
   // Text-to-Speech를 위한 text
   const [text, setText] = useState<string>("");
 
@@ -178,9 +180,16 @@ function ConversationBody({
         subRecorder.current?.record();
         console.log("ready for speech");
       } catch (err) {
-        console.log("subRecorder doesnt work");
+        console.log("subRecorder doesn't work");
       }
       onEvent(MSG_WEB_SOCKET_OPEN, "socket_open");
+    });
+
+    socket.on("stt", (e) => {
+      // socket server에서 보낸 데이터가 stt string
+      console.log(e);
+      onPartialResults(e);
+      conversation.push(e); // 화면에 보여지기 위해서 conversation array에 추가
     });
 
     socket.on("message", (e) => {
@@ -236,6 +245,19 @@ function ConversationBody({
     return socket;
   }
 
+  function onPartialResults(script: any) {
+    const result = decodeUnicode(script[0].transcript)
+      .replace(/<UNK>/gi, "")
+      .replace(/{/gi, "")
+      .replace(/}/gi, "")
+      .replace(/\[/gi, "")
+      .replace(/\]/gi, "")
+      .replace(/\(/gi, "")
+      .replace(/\)/gi, "");
+    if (result !== "." && !result.includes("^"))
+      setPartialResult((prev) => result);
+  }
+
   async function record() {
     // 마이크 mediaStream 생성: Promise를 반환하므로 async/await 사용
     const mediaStream = await navigator.mediaDevices.getUserMedia({
@@ -249,7 +271,9 @@ function ConversationBody({
       audioContext.createMediaStreamSource(mediaStream);
 
     setIsRecording(true);
-    setIsStarted(false);
+    setTimerStarted(true);
+    setIsStarted(true);
+    setIsLoading(true);
 
     //TODO: socket으로 보내는 recorder
     const subRecorder1 = new Recorder(input, {
@@ -403,6 +427,7 @@ function ConversationBody({
       }
       setIsRecording(false);
       setTimerStarted(false);
+      setIsLoading(false);
       closeRoomAPI()
         .then((response) => {
           console.log(response);
@@ -462,75 +487,98 @@ function ConversationBody({
           />
         ) : null}
 
-        {/* isRecording 이 true 일 때만 STT rendering */}
         {!isStarted && !isRecording ? (
           <div className="flex justify-center">
             <Button onClick={handleStartBtn} type="simpleBlueBtn">
               대화 시작
             </Button>
           </div>
-        ) : null}
-        {conversation ? (
-          <div>
-            {text && <TTS text={text} setText={setText} />}
-            {conversation?.map((item) => {
-              return (
-                <>
-                  {item.speaker === "user" ? (
-                    <Dialog
-                      setOpenAddFavModal={setOpenAddFavModal}
-                      onClick={handleDialogClick}
-                      key={item.id}
-                      type={"user_text"}
-                    >
-                      {item.content}
-                    </Dialog>
-                  ) : (
-                    <Dialog
-                      onClick={handleGPTClick}
-                      key={item.id}
-                      type={
-                        item.speaker === "other1"
-                          ? "other1_text"
-                          : item.speaker === "other2"
-                          ? "other2_text"
-                          : item.speaker === "other3"
-                          ? "other3_text"
-                          : item.speaker === "other4"
-                          ? "other4_text"
-                          : item.speaker === "other5"
-                          ? "other5_text"
-                          : item.speaker === "other6"
-                          ? "other6_text"
-                          : item.speaker === "other7"
-                          ? "other7_text"
-                          : item.speaker === "other8"
-                          ? "other8_text"
-                          : item.speaker === "other9"
-                          ? "other9_text"
-                          : item.speaker === "other10"
-                          ? "other10_text"
-                          : ""
-                      }
-                    >
-                      {item.content}
-                    </Dialog>
-                  )}
-                </>
-              );
-            })}
-            <div className="scroll-bottom" ref={messageEndRef}></div>
-          </div>
         ) : (
-          <div></div>
-        )}
+          <AnimatePresence>
+            {conversation && openMemoPage ? (
+              <motion.div
+                key="left"
+                style={{
+                  height: "100%",
+                  width: "70%",
+                  border: "1px solid blue",
+                }}
+                initial={{ height: "100%", width: "100%" }}
+                animate={{ height: "100%", width: "70%" }}
+                exit={{ height: "100%", width: "100%" }}
+                transition={{ duration: 0.5 }}
+              >
+                {text && <TTS text={text} setText={setText} />}
+                {conversation.map((item, idx) => {
+                  return (
+                    <>
+                      {item.speaker === "user" ? (
+                        <Dialog
+                          setOpenAddFavModal={setOpenAddFavModal}
+                          onClick={handleDialogClick}
+                          key={item.id}
+                          type={"user_text"}
+                        >
+                          {item.content}
+                        </Dialog>
+                      ) : (
+                        <Dialog
+                          onClick={handleGPTClick}
+                          key={item.id}
+                          type={
+                            item.speaker === "other1"
+                              ? "other1_text"
+                              : item.speaker === "other2"
+                              ? "other2_text"
+                              : item.speaker === "other3"
+                              ? "other3_text"
+                              : item.speaker === "other4"
+                              ? "other4_text"
+                              : ""
+                          }
+                        >
+                          {item.content}
+                        </Dialog>
+                      )}
+                    </>
+                  );
+                })}
+                <div className="scroll-bottom" ref={messageEndRef}></div>
+              </motion.div>
+            ) : (
+              <div></div>
+            )}
 
+            {/* 메모 div */}
+            {openMemoPage && (
+              <motion.div
+                key="right"
+                style={{
+                  width: "30%",
+                  border: "1px solid #E63E43",
+                }}
+                initial={{ width: "0%" }}
+                animate={{ width: "30%" }}
+                exit={{ width: "0%" }}
+                transition={{ duration: 0.5 }}
+              >
+                <MemoComp openMemoPage={openMemoPage} />
+              </motion.div>
+            )}
+          </AnimatePresence>
+        )}
         {openGPTModal && <GPTRecommend setOpenGPTModal={setOpenGPTModal} />}
         {openAddFavModal && (
           <AddFavModal setOpenAddFavModal={setOpenAddFavModal} />
         )}
         {audio && <audio src={audio} controls />}
-        <FloatingButton onClick={() => setOpenExitModal(true)} />
+        <FloatingButton
+          type="memo"
+          onClick={() => {
+            setOpenMemoPage((prev) => !prev);
+          }}
+        />
+        <FloatingButton type="close" onClick={() => setOpenExitModal(true)} />
       </section>
     </>
   );
