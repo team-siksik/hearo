@@ -65,6 +65,23 @@ const getRecordDetail = createAsyncThunk(
   }
 );
 
+// 대화기록 삭제
+const deleteRecords = createAsyncThunk(
+  "record/deleteRecords",
+  async (deleteRecordSeqList: number[], thunkAPI) => {
+    console.log(deleteRecordSeqList);
+    const accessToken = localStorage.getItem("accessToken");
+    const response = await RecordAPI.deleteRecord(
+      accessToken!,
+      deleteRecordSeqList
+    );
+    if (!response) {
+      throw new Error();
+    }
+    return deleteRecordSeqList;
+  }
+);
+
 // 리듀서 슬라이스
 const recordSlice = createSlice({
   name: "record",
@@ -77,6 +94,14 @@ const recordSlice = createSlice({
       state.isLast = action.payload.isLast;
       state.recordList = action.payload.recordList;
     });
+    builder.addCase(deleteRecords.fulfilled, (state, action) => {
+      return {
+        ...state,
+        recordList: state.recordList.filter((record: RecordListType) => {
+          return !action.payload.includes(record.recordSeq);
+        }),
+      };
+    });
   },
 });
 
@@ -84,4 +109,4 @@ const recordSlice = createSlice({
 export const recordAction = recordSlice.actions;
 export default recordSlice.reducer;
 
-export { getRecordDetail, getRecordList };
+export { getRecordDetail, getRecordList, deleteRecords };
