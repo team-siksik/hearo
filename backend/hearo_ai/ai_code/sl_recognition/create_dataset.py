@@ -10,7 +10,6 @@ from utils import get_words_list, joint_to_angle, time_to_string
 name = 'ny'
 
 words = get_words_list()
-# seq_length = 30
 secs_for_action = 30
 
 created_time = time_to_string(time.time())
@@ -115,14 +114,8 @@ with mp_holistic.Holistic(min_detection_confidence=0.5, min_tracking_confidence=
 
             size = data.shape[0]
 
-            # sequence_data = []
-            # for seq in range(len(data) - seq_length):
-            #     sequence_data.append(data[seq: seq + seq_length])
-
-            # sequence_data = np.array(sequence_data)
-            # print(word, sequence_data.shape)
-
             np.save(os.path.join("dataset", f"{word}_{name}_{size}_{created_time}"), data)
+            
         break
 
 cap.release()
