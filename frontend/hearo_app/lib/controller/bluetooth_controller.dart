@@ -6,7 +6,6 @@ class BluetoothController extends GetxController {
   final box = GetStorage();
   final flutterBlue = FlutterBluePlus.instance.obs;
   final List<ScanResult> scanResultList = [];
-  // final bool _isScanning = false;
   final String targetDeviceName = 'HC-06';
 
   Rx<BluetoothDevice?> device = Rx<BluetoothDevice?>(null);
