@@ -39,6 +39,8 @@ import ws.schild.jave.Encoder;
 import ws.schild.jave.MultimediaObject;
 import ws.schild.jave.encode.AudioAttributes;
 import ws.schild.jave.encode.EncodingAttributes;
+import ws.schild.jave.info.MultimediaInfo;
+import ws.schild.jave.progress.EncoderProgressListener;
 
 import javax.transaction.Transactional;
 import java.io.*;
@@ -139,13 +141,14 @@ public class ConversationServiceImpl implements ConversationService {
         try {
             File source = File.createTempFile("source", null);
             audio.transferTo(source);
-            target = File.createTempFile("target", null);
+//            File source = new File("sample.webm");
+            target = new File("sample.wav");
 
             //Audio Attributes
             AudioAttributes audioAttributes = new AudioAttributes();
             audioAttributes.setCodec("pcm_s16le");
-            audioAttributes.setBitRate(128000);
-            audioAttributes.setChannels(1);
+            audioAttributes.setBitRate(16000);
+            audioAttributes.setChannels(2);
             audioAttributes.setSamplingRate(8000);
 
             //Encoding attributes
@@ -155,7 +158,8 @@ public class ConversationServiceImpl implements ConversationService {
 
             //Encode
             Encoder encoder = new Encoder();
-            encoder.encode(new MultimediaObject(source), target, attrs);
+            Listener listener = new Listener();
+            encoder.encode(new MultimediaObject(source), target, attrs, listener);
         } catch (Exception e) {
             log.info("[saveConversation] webm -> wav 음성 데이터 변환 실패");
             log.info(e.getMessage());
@@ -245,5 +249,27 @@ public class ConversationServiceImpl implements ConversationService {
 
         log.info("[saveConversation] 대화 저장 완료");
         return record.getRecordSeq();
+    }
+
+    class Listener implements EncoderProgressListener
+    {
+
+        @Override
+        public void sourceInfo(MultimediaInfo info) {}
+
+        @Override
+        public void progress(int permil) {
+            if (permil < 1000) {
+                try {
+                    Thread.sleep(10000); // 1초 대기
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            log.info("[saveConversation] 진행도: {}", permil);
+        }
+
+        @Override
+        public void message(String message) {}
     }
 }
