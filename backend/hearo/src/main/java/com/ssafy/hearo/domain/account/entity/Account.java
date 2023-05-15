@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import com.ssafy.hearo.domain.setting.entity.Setting;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
@@ -85,4 +86,5 @@ public class Account {
     public void setImageUrl(String picture) {
         this.imageUrl = picture;
     }
+
 }
