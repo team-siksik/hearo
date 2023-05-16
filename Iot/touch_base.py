@@ -1,4 +1,4 @@
-import board,busio
+import board, busio
 from adafruit_st7735r import ST7735R
 import displayio
 from adafruit_display_text import label
