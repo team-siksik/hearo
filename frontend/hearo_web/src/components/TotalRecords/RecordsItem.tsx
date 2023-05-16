@@ -30,7 +30,6 @@ function RecordsItem({ record }: RecordsItemProps) {
   function handleDeleteClick(e: React.MouseEvent) {
     e.stopPropagation();
     setOpenRemoveRecordModal(true);
-    console.log("children");
   }
 
   return (
