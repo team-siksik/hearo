@@ -5,14 +5,24 @@ import { RemoveRecordModal } from "@/components";
 import React, { useState, useEffect } from "react";
 import { RecordpageSideBar } from "@/components";
 import { RecordAPI } from "@/apis/api";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { useDispatch } from "react-redux";
+import { getRecordDetail } from "@/redux/modules/records";
+import { RecordItemType, RecordListType } from "@/types/types";
 
 function RecordPage() {
-  const location = useLocation();
   const navigate = useNavigate();
-  const { id } = useParams<{ id: string }>();
+  const dispatch = useAppDispatch();
+  const location = useLocation();
+  useEffect(() => {
+    dispatch(getRecordDetail(Number(location.pathname.substring(9))));
+  }, [location]);
 
   // 게별기록조회
-  const [data, setData] = useState<[]>([]);
+  const recordData = useAppSelector(
+    (state) => state.record.recordData
+  ) as RecordItemType;
+
   const accessToken = localStorage.getItem("accessToken");
   useEffect(() => {
     if (!accessToken) {
@@ -60,6 +70,10 @@ function RecordPage() {
     navigate(`/records`);
   };
 
+  function handleDeleteClick() {
+    setOpenRemoveRecordModal(true);
+  }
+
   // 기록삭제
   // FIXME: deleterecordseqlist 수정해야함
   const [deleteRecordSeqList, setDeleteRecordIds] = useState<number[] | any>(
@@ -89,7 +103,7 @@ function RecordPage() {
                 <form onSubmit={handleSubmit}>
                   <input
                     type="text"
-                    value="title"
+                    defaultValue={recordData.title}
                     onChange={handleTitleChange}
                     placeholder="제목을 입력해주세요"
                     className="w-full rounded-lg p-2 hover:cursor-pointer hover:outline"
@@ -121,7 +135,7 @@ function RecordPage() {
               </div>
               <div
                 className="mx-2 my-4 flex h-12 w-12 items-center justify-center rounded-full bg-red-50 font-semibold text-red-main transition-all duration-200 ease-out hover:bg-red-300 hover:shadow-sm"
-                onClick={() => setOpenRemoveRecordModal(true)}
+                onClick={handleDeleteClick}
               >
                 <div className="h-6 w-6">
                   <TrashIcon />
@@ -138,11 +152,15 @@ function RecordPage() {
             </div>
             <div className="mt-4">
               <div className="my-2 flex flex-row items-center">
-                <h3 className="mr-2 text-gray-600">녹음일시:</h3>
+                <h3 className="mr-2 text-gray-600">
+                  녹음일시: {recordData?.regDtm}
+                </h3>
                 {/* <p>{recordingTime}</p> */}
               </div>
               <div className="my-2 flex flex-row items-center">
-                <h3 className="mr-2 text-gray-600">즐겨찾기:</h3>
+                <h3 className="mr-2 text-gray-600">
+                  즐겨찾기: {recordData.isFavorite}
+                </h3>
                 <p>
                   {/* {isFavorite
                     ? "즐겨찾기에 추가됨"
@@ -165,12 +183,13 @@ function RecordPage() {
             </div>
           </div>
         </div>
-        {/* {openRemoveRecordModal && (
+        {openRemoveRecordModal && (
           <RemoveRecordModal
             setOpenRemoveRecordModal={setOpenRemoveRecordModal}
-            handleRemoveClick={handleRemoveRecord}
+            type="inRecordItem"
+            recordSeq={recordData.recordSeq}
           />
-        )} */}
+        )}
       </div>
     </div>
   );
