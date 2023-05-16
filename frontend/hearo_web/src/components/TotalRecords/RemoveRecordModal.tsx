@@ -8,10 +8,16 @@ import { deleteRecords } from "@/redux/modules/records";
 interface PropsType {
   setOpenRemoveRecordModal: React.Dispatch<SetStateAction<boolean>>;
   recordSeq: number;
+  type?: string;
 }
 
-function RemoveRecordModal({ setOpenRemoveRecordModal, recordSeq }: PropsType) {
+function RemoveRecordModal({
+  setOpenRemoveRecordModal,
+  recordSeq,
+  type,
+}: PropsType) {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const handleCloseModal = (e: React.MouseEvent) => {
     e.stopPropagation();
     setOpenRemoveRecordModal((prev) => !prev);
@@ -19,8 +25,10 @@ function RemoveRecordModal({ setOpenRemoveRecordModal, recordSeq }: PropsType) {
 
   const handleRemove = (e: React.MouseEvent) => {
     e.stopPropagation();
-    console.log(recordSeq);
     dispatch(deleteRecords([recordSeq]));
+    if (type === "inRecordItem") {
+      navigate("/records");
+    }
     setOpenRemoveRecordModal(false);
   };
 
