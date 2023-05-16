@@ -2,19 +2,24 @@ import { TrashIcon } from "@heroicons/react/24/solid";
 import { ReactComponent as CrossIconRed } from "@/assets/Icon/CrossIconRed.svg";
 import { PencilSquareIcon } from "@heroicons/react/24/outline";
 import { useNavigate, useLocation, useParams } from "react-router-dom";
-import { Dialog, MemoItem, RemoveRecordModal } from "@/components";
-import React, { useState, useEffect } from "react";
+import {
+  Button,
+  Dialog,
+  FloatingButton,
+  MemoItem,
+  RemoveRecordModal,
+} from "@/components";
+import React, { useState, useEffect, useRef } from "react";
 import { RecordpageSideBar } from "@/components";
 import { RecordAPI } from "@/apis/api";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useDispatch } from "react-redux";
-import { getRecordDetail } from "@/redux/modules/records";
 import {
-  MemoFromServerType,
-  RecordItemType,
-  RecordListType,
-} from "@/types/types";
-import { formatTime } from "@/components/common/Timer";
+  changeRecordTitleAsync,
+  deleteMemoAsync,
+  getRecordDetail,
+} from "@/redux/modules/records";
+import { MemoFromServerType, RecordItemType } from "@/types/types";
 
 interface DialogType {
   confidence: number;
@@ -28,6 +33,10 @@ interface DialogType {
   textEdited: string;
   words: [number, number, string][];
 }
+interface TimeFormat {
+  minutes: string;
+  seconds: string;
+}
 
 function RecordPage() {
   const navigate = useNavigate();
@@ -38,6 +47,21 @@ function RecordPage() {
   useEffect(() => {
     dispatch(getRecordDetail(Number(location.pathname.substring(9))));
   }, [location]);
+
+  const formatTime = (time: number): string => {
+    let sec = 0;
+    if (time > 0) {
+      const text = time.toString().slice(0, -3);
+      sec = Number(text);
+    }
+    const minutes = Math.floor(sec / 60);
+    const seconds = sec % 60;
+    const timeFormat: TimeFormat = {
+      minutes: minutes < 10 ? `0${minutes}` : `${minutes}`,
+      seconds: seconds < 10 ? `0${seconds}` : `${seconds}`,
+    };
+    return `${timeFormat.minutes}:${timeFormat.seconds}`;
+  };
 
   // 게별기록조회
   const recordData = useAppSelector(
@@ -54,7 +78,6 @@ function RecordPage() {
 
   useEffect(() => {
     if (recordData.clovaFile) {
-      console.log(JSON.parse(recordData.clovaFile));
       setDialog(JSON.parse(recordData.clovaFile).segments);
     }
     return () => {};
@@ -63,63 +86,47 @@ function RecordPage() {
   // const [newTitle, setTitle] = useState(initialTitle);
   const [openRemoveRecordModal, setOpenRemoveRecordModal] =
     useState<boolean>(false);
+  const inputRef = useRef<HTMLInputElement>(null);
   const [isHovered, setIsHovered] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
   const [newTitle, setNewTitle] = useState<string>("");
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault();
     setNewTitle(e.target.value);
-    console.log(e.target.value);
-  };
-
-  // 기록제목수정 FIXME: 위에랑 어떻게 겹치는 것인가?
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const accessToken = localStorage.getItem("accessToken");
-    if (!accessToken) {
-      // access token이 없을 때 처리하는 부분
-      return;
-    }
-    //   RecordAPI.updateRecordTitle(accessToken, recordSeq, newTitle)
-    //     .then(() => {
-    //       onChangeTitle(newTitle);
-    //     })
-    //     .catch((err) => {
-    //       console.log(err);
-    //       // 에러 처리하는 부분
-    //     });
   };
 
   const moveToRecords = () => {
-    navigate(`/records`);
+    navigate(-1);
   };
 
   function handleDeleteClick() {
     setOpenRemoveRecordModal(true);
   }
 
-  function deleteMemo(seq: number) {
-    console.log(seq);
+  //TODO: memo delete
+  function deleteMemo(memoSeq: number) {
+    const delItem = {
+      memoSeq: [memoSeq],
+      recordSeq: recordData.recordSeq,
+    };
+    dispatch(deleteMemoAsync(delItem));
   }
 
-  // 기록삭제
-  // FIXME: deleterecordseqlist 수정해야함
-  const [deleteRecordSeqList, setDeleteRecordIds] = useState<number[] | any>(
-    []
-  );
-  const handleRemoveRecord = () => {
-    const accessToken = localStorage.getItem("accessToken");
-    // const deleteRecordSeqList = [11, 13];
-    RecordAPI.deleteRecord(accessToken!, deleteRecordSeqList)
-      .then(() => {
-        setOpenRemoveRecordModal(false);
-        // TODO: 리다이렉트 처리
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
+  function changeRecordTitle(e: React.KeyboardEvent) {
+    const data = {
+      newTitle: newTitle,
+      recordSeq: recordData.recordSeq,
+    };
+    if (e.key === "Enter") {
+      dispatch(changeRecordTitleAsync(data))
+        .then(() => {
+          inputRef.current?.blur();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }
 
   return (
     <div>
@@ -129,11 +136,13 @@ function RecordPage() {
           <div className="flex items-stretch justify-between ">
             <div className="flex flex-row items-center">
               <div className="self-center rounded-lg text-3xl font-bold text-gray-600">
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={(e) => e.preventDefault()}>
                   <input
                     type="text"
+                    ref={inputRef}
                     defaultValue={recordData.title}
                     onChange={handleTitleChange}
+                    onKeyDown={changeRecordTitle}
                     placeholder="제목을 입력해주세요"
                     className="w-full rounded-lg p-2 hover:cursor-pointer hover:outline"
                     onMouseEnter={() => setIsHovered(true)}
@@ -206,20 +215,23 @@ function RecordPage() {
               {dialog &&
                 dialog.map((item, idx) => (
                   // TODO: ADD Favorite Context
-                  <div>
+                  <div key={item.start}>
                     <div>{item.speaker.name}</div>
-                    <Dialog key={item.start} type={item.speaker.label}>
-                      {item.text}
-                    </Dialog>
+                    <div className="flex flex-row items-center">
+                      <Dialog type={item.speaker.label}>{item.text}</Dialog>
+                      <div className="text-sm text-gray-400">
+                        {formatTime(item.start)}
+                      </div>
+                    </div>
                   </div>
                 ))}
             </div>
             {recordData?.memoList?.length > 0 && (
-              <div className="col-span-1 my-4 flex w-full flex-col rounded-md p-4 shadow-md">
+              <div className="relative col-span-1 my-4 flex w-full flex-col rounded-md p-4 shadow-md">
                 {recordData.memoList.map((item: MemoFromServerType, idx) => {
                   return (
-                    <div className="relative mb-3">
-                      <MemoItem key={item.memoSeq} item={item} />
+                    <div key={item.memoSeq} className="relative mb-3">
+                      <MemoItem item={item} />
                       <div
                         className="absolute right-4 top-0 w-4"
                         onClick={(e) => deleteMemo(item.memoSeq)}
@@ -229,10 +241,13 @@ function RecordPage() {
                     </div>
                   );
                 })}
+                <div>
+                  <FloatingButton type="memoInRecord"></FloatingButton>
+                </div>
               </div>
             )}
           </div>
-          <div className="audio">
+          <div className="audio mb-4">
             <audio
               src={recordData.recordedFileUrl}
               controls
