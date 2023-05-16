@@ -1,17 +1,7 @@
 // 자주 쓰는 말, 유저 정보
 import { RecordAPI } from "@/apis/api";
+import { RecordListType } from "@/types/types";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-
-interface RecordListType {
-  recordSeq: number;
-  conversationSeq: number;
-  title: string;
-  recordingTime: string;
-  preview: string;
-  isFavorite: number;
-  regDtm: string;
-  modDtm: string;
-}
 
 interface MemoType {
   memoSeq: number;
@@ -19,23 +9,11 @@ interface MemoType {
   timestamp: number;
 }
 
-interface RecordItemType {
-  recordSeq: number;
-  conversationSeq: number;
-  title: string;
-  isFavorite: number;
-  clovaFile: string; // JSON.parse 해야함
-  recordedFileUrl: string;
-  recordingTime: string;
-  regDtm: string;
-  modDtm: string;
-  memoList: MemoType[];
-}
-
 // 초기상태
 const initialState = {
   recordList: [],
   isLast: false,
+  recordData: {},
 };
 
 // middleware
@@ -69,7 +47,6 @@ const getRecordDetail = createAsyncThunk(
 const deleteRecords = createAsyncThunk(
   "record/deleteRecords",
   async (deleteRecordSeqList: number[], thunkAPI) => {
-    console.log(deleteRecordSeqList);
     const accessToken = localStorage.getItem("accessToken");
     const response = await RecordAPI.deleteRecord(
       accessToken!,
@@ -93,6 +70,12 @@ const recordSlice = createSlice({
     builder.addCase(getRecordList.fulfilled, (state, action) => {
       state.isLast = action.payload.isLast;
       state.recordList = action.payload.recordList;
+    });
+    builder.addCase(getRecordDetail.fulfilled, (state, action) => {
+      return {
+        ...state,
+        recordData: action.payload,
+      };
     });
     builder.addCase(deleteRecords.fulfilled, (state, action) => {
       return {
