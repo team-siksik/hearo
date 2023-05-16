@@ -11,6 +11,16 @@ interface TimeFormat {
   minutes: string;
   seconds: string;
 }
+
+export const formatTime = (time: number): string => {
+  const minutes = Math.floor(time / 60);
+  const seconds = time % 60;
+  const timeFormat: TimeFormat = {
+    minutes: minutes < 10 ? `0${minutes}` : `${minutes}`,
+    seconds: seconds < 10 ? `0${seconds}` : `${seconds}`,
+  };
+  return `${timeFormat.minutes}:${timeFormat.seconds}`;
+};
 function Timer({ timerStarted, setSeconds, seconds }: TimerProps) {
   useEffect(() => {
     if (timerStarted) {
@@ -20,16 +30,6 @@ function Timer({ timerStarted, setSeconds, seconds }: TimerProps) {
       return () => clearInterval(interval);
     }
   }, [timerStarted]);
-
-  const formatTime = (time: number): string => {
-    const minutes = Math.floor(time / 60);
-    const seconds = time % 60;
-    const timeFormat: TimeFormat = {
-      minutes: minutes < 10 ? `0${minutes}` : `${minutes}`,
-      seconds: seconds < 10 ? `0${seconds}` : `${seconds}`,
-    };
-    return `${timeFormat.minutes}:${timeFormat.seconds}`;
-  };
 
   return (
     <>
