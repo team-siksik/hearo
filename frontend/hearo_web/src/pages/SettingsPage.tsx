@@ -6,7 +6,13 @@ import {
   UserCircleIcon,
 } from "@heroicons/react/24/solid";
 import { useNavigate } from "react-router-dom";
-import { Button, Modal, DropDown, MypageSideBar, ConvertBar } from "@/components";
+import {
+  Button,
+  Modal,
+  DropDown,
+  MypageSideBar,
+  ConvertBar,
+} from "@/components";
 import {
   googleLogout,
   googleWithdraw,
@@ -20,7 +26,7 @@ function SettingsPage() {
   const [user, setUser] = useState<number>(0);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [modalType, setModalType] = useState<"logout" | "delete">("logout");
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
   const loginedUser = useAppSelector((state) => state.user.user);
 
   // useState를 사용하여 현재 선택된 글자크기를 저장합니다.
@@ -102,116 +108,119 @@ function SettingsPage() {
 
   return (
     <div>
-      <MypageSideBar/>
-      <div className="fixed right-0 mt-16 w-[82%] h-full"> 
-        <ConvertBar/>
-        <div className="right-0 mt-28 mx-10 p-4 mb-4 h-[70%] shadow-gray-200 rounded-2xl shadow-md">
-
-        <div className="flex flex-row justify-center">
-          <div className="w-[50%] h-100 border-r-2 grid grid-rows-1">
-            <div className="flex flex-col items-center my-20">
+      <MypageSideBar />
+      <div className="fixed right-0 mt-16 h-full w-[82%]">
+        <ConvertBar />
+        <div className="right-0 mx-10 mb-4 mt-28 h-[70%] rounded-2xl p-4 shadow-md shadow-gray-200">
+          <div className="flex flex-row justify-center">
+            <div className="h-100 grid w-[50%] grid-rows-1 border-r-2">
+              <div className="my-20 flex flex-col items-center">
                 <div className="h-34 w-34 rounded border-blue-main">
-                <div
-                  className="h-32 w-32 rounded border-blue-main"
-                  // css={css`
-                  //   background-image: url(${loginedUser?.profileImg});
-                  //   background-image: url(${loginedUser?.profileImg});
-                  //   background-position: center;
-                  //   background-size: cover;
-                  // `}
+                  <div
+                    className="h-32 w-32 rounded border-blue-main"
+                    // css={css`
+                    //   background-image: url(${loginedUser?.profileImg});
+                    //   background-image: url(${loginedUser?.profileImg});
+                    //   background-position: center;
+                    //   background-size: cover;
+                    // `}
                   >
-                  <UserCircleIcon/>
+                    <UserCircleIcon />
                   </div>
                 </div>
-              <div className="flex flex-col text-center p-4">
-                <div className="text-3xl text-blue-main">{loginedUser?.nickname}김야옹<span className="text-black">님</span></div>
-                <div className="text-3xl">반갑습니다</div>
-                <div className="text-xl pt-4">설정 변경을 통해 <span className="text-blue-main">히어로</span>
-                  를
-                  <p></p> 
-                  더 편리하게 이용해보세요!</div>
-              </div>
-          </div>
-        </div>
-
-          {/* 오른쪽페이지 */}
-          <div className="w-[50%] h-full">  
-            <div className="h-80 mx-4 flex flex-row justify-center">
-
-              <div className="flex flex-col">
-                <div className="p-2.5 flex flex-row">
-                  <SpeakerWaveIcon className="h-6 w-6"/>
-                  <div className="pl-4 text-xl font-normal">음성 설정</div>
+                <div className="flex flex-col p-4 text-center">
+                  <div className="text-3xl text-blue-main">
+                    {loginedUser?.nickname}
+                    <span className="text-black">님</span>
+                  </div>
+                  <div className="text-3xl">반갑습니다</div>
+                  <div className="pt-4 text-xl">
+                    설정 변경을 통해{" "}
+                    <span className="text-blue-main">히어로</span>를<p></p>더
+                    편리하게 이용해보세요!
+                  </div>
                 </div>
-
-              {/* 드롭다운 */}
-              <div className="m-4 font-light h-full">
-                <button
-                  className="text-2xl w-40"
-                  onClick={(): void => gendertoggledown()}
-                  onBlur={(e: React.FocusEvent<HTMLButtonElement>): void =>
-                    dismissHandler(e)
-                  }
-                  >
-                  <div className="flex flex-row">
-                    <div className="flex-grow">{selectGender}</div>
-                      <div className="flex flex-row space-x-2">
-                        <ChevronDownIcon className="h-8 w-8" />
-                      </div>
-                    </div>
-                  
-                    {/* 드롭다운 열릴 시 */}
-                    <div className="pr-8 text-xl">
-                      {showGenDropDown && (
-                        // FIXME: 드롭다운 typescript 오류 수정해야함
-                        <DropDown
-                          gender={gender()}
-                          showGenDropDown={false}
-                          toggleDropDown={(): void => gendertoggledown()}
-                          genderSelection={genderSelection} 
-                        />
-                      )}
-                    </div>
-                  </button>
-                  <div className="z-0 mt-1 h-0.5 w-[100%] bg-gray-300"/>
               </div>
-
             </div>
-              
-              {/* 글자크기설정 */}
-              <div className="flex flex-col">
-                <div className="p-2.5 flex flex-row">
-                  <SquaresPlusIcon className="h-6 w-6"/>
-                  <div className="pl-4 text-xl font-normal">글자 크기 설정</div>
+
+            {/* 오른쪽페이지 */}
+            <div className="h-full w-[50%]">
+              <div className="mx-4 flex h-80 flex-row justify-center">
+                <div className="flex flex-col">
+                  <div className="flex flex-row p-2.5">
+                    <SpeakerWaveIcon className="h-6 w-6" />
+                    <div className="pl-4 text-xl font-normal">음성 설정</div>
+                  </div>
+
+                  {/* 드롭다운 */}
+                  <div className="m-4 h-full font-light">
+                    <button
+                      className="w-40 text-2xl"
+                      onClick={(): void => gendertoggledown()}
+                      onBlur={(e: React.FocusEvent<HTMLButtonElement>): void =>
+                        dismissHandler(e)
+                      }
+                    >
+                      <div className="flex flex-row">
+                        <div className="flex-grow">{selectGender}</div>
+                        <div className="flex flex-row space-x-2">
+                          <ChevronDownIcon className="h-8 w-8" />
+                        </div>
+                      </div>
+
+                      {/* 드롭다운 열릴 시 */}
+                      <div className="pr-8 text-xl">
+                        {showGenDropDown && (
+                          // FIXME: 드롭다운 typescript 오류 수정해야함
+                          <DropDown
+                            gender={gender()}
+                            showGenDropDown={false}
+                            toggleDropDown={(): void => gendertoggledown()}
+                            genderSelection={genderSelection}
+                          />
+                        )}
+                      </div>
+                    </button>
+                    <div className="z-0 mt-1 h-0.5 w-[100%] bg-gray-300" />
+                  </div>
                 </div>
 
-              {/* 드롭다운 */}
-              <div className="m-4 font-light">
-                <button
-                  className="text-2xl w-40"
-                  onClick={(): void => fontsizetoggledown()}
-                  onBlur={(e: React.FocusEvent<HTMLButtonElement>): void =>
-                    dismissHandler(e)
-                  }
-                  >
-                  <div className="flex flex-row">
-                    <div className="flex-grow">{selectFontSize}</div>
-                      <div className="flex flex-row space-x-2">
-                        <ChevronDownIcon className="h-8 w-8 pt-" />
-                      </div>
+                {/* 글자크기설정 */}
+                <div className="flex flex-col">
+                  <div className="flex flex-row p-2.5">
+                    <SquaresPlusIcon className="h-6 w-6" />
+                    <div className="pl-4 text-xl font-normal">
+                      글자 크기 설정
                     </div>
-                  
-                    {/* 드롭다운 열릴 시 */}
-                    <div className="pr-8 text-xl">
-                      {showFontDropDown && (
-                        // FIXME: 드롭다운 typescript 오류 수정해야함
-                        <DropDown
-                          fontsize={fontsize()}
-                          showFontDropDown={false}
-                          toggleDropDown={(): void => fontsizetoggledown()}
-                          fontSizeSelection={fontSizeSelection} 
-                        />
-                      )}
+                  </div>
+
+                  {/* 드롭다운 */}
+                  <div className="m-4 font-light">
+                    <button
+                      className="w-40 text-2xl"
+                      onClick={(): void => fontsizetoggledown()}
+                      onBlur={(e: React.FocusEvent<HTMLButtonElement>): void =>
+                        dismissHandler(e)
+                      }
+                    >
+                      <div className="flex flex-row">
+                        <div className="flex-grow">{selectFontSize}</div>
+                        <div className="flex flex-row space-x-2">
+                          <ChevronDownIcon className="pt- h-8 w-8" />
+                        </div>
+                      </div>
+
+                      {/* 드롭다운 열릴 시 */}
+                      <div className="pr-8 text-xl">
+                        {showFontDropDown && (
+                          // FIXME: 드롭다운 typescript 오류 수정해야함
+                          <DropDown
+                            fontsize={fontsize()}
+                            showFontDropDown={false}
+                            toggleDropDown={(): void => fontsizetoggledown()}
+                            fontSizeSelection={fontSizeSelection}
+                          />
+                        )}
                       </div>
                     </button>
                     <div className="z-0 mt-1 h-0.5 w-[100%] bg-gray-300" />
