@@ -601,7 +601,7 @@ function ConversationBody({
         )}
         {openAlertModal && (
           <Alert setOpenAlertModal={setOpenAlertModal}>
-            대화를 시작버튼을 눌러주세요
+            대화를 시작하는 버튼을 눌러주세요
           </Alert>
         )}
         {/* {audio && <audio src={audio} controls />} */}
