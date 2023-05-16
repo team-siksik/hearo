@@ -29,6 +29,12 @@ getPermissionCamera() async {
 }
 
 class _HomeScreenGlassesState extends State<HomeScreenGlasses> {
+  LoginController loginController = Get.put(LoginController());
+  DateTime? firstPress;
+  int value = 0;
+  bool positive = false;
+  bool loading = false;
+  BlueTestController bluetoothController = Get.find<BlueTestController>();
   @override
   void initState() {
     super.initState();
@@ -41,13 +47,6 @@ class _HomeScreenGlassesState extends State<HomeScreenGlasses> {
     bluetoothController.setupNotification();
     bluetoothController.subscribeToCharacteristic;
   }
-
-  LoginController loginController = Get.put(LoginController());
-  DateTime? firstPress;
-  int value = 0;
-  bool positive = false;
-  bool loading = false;
-  BlueTestController bluetoothController = Get.find<BlueTestController>();
 
   @override
   Widget build(BuildContext context) {
@@ -85,18 +84,6 @@ class _HomeScreenGlassesState extends State<HomeScreenGlasses> {
                   width: size.width,
                   child: Column(
                     children: [
-                      Obx(() {
-                        if (bluetoothController.value.value.isEmpty) {
-                          if (bluetoothController.flag.value == "0") {
-                            Get.to(() => SoundClassGlass());
-                          } else if (bluetoothController.flag.value == "1") {
-                            Get.to(() => ChatHomeGlasses());
-                          }
-                          return SizedBox();
-                        } else {
-                          return SizedBox();
-                        }
-                      }),
                       AnimatedToggleSwitch<bool>.dual(
                         current: positive,
                         first: false,
