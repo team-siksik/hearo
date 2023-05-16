@@ -1,10 +1,10 @@
 import 'dart:convert';
-
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hearo_app/controller/bluetooth_controller.dart';
+import 'package:hearo_app/controller/blue_test_controller.dart';
 import 'package:hearo_app/controller/chat_controller.dart';
+import 'package:hearo_app/screens/glasses/sound_class_glass.dart';
 import 'package:hearo_app/widgets/chats/favorite_star.dart';
 import 'package:hearo_app/widgets/chats_for_glasses/custom_app_bar_chat_glasses.dart';
 import 'package:hearo_app/widgets/chats_for_glasses/speech_bubble_glasses.dart';
@@ -13,35 +13,16 @@ import 'package:flutter_tts/flutter_tts.dart';
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart';
-import 'dart:async';
-import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 
 class ChatHomeGlasses extends StatefulWidget {
-  const ChatHomeGlasses({super.key, required this.device});
-  final BluetoothDevice device;
+  const ChatHomeGlasses({super.key});
 
   @override
   State<ChatHomeGlasses> createState() => _ChatHomeGlassesState();
 }
 
 class _ChatHomeGlassesState extends State<ChatHomeGlasses> {
-  FlutterBluePlus flutterBlue = FlutterBluePlus.instance;
-
-  // 연결 상태 표시 문자열
-  String stateText = 'Connecting';
-
-  // 연결 버튼 문자열
-  String connectButtonText = 'Disconnect';
-
-  // 현재 연결 상태 저장용
-  BluetoothDeviceState deviceState = BluetoothDeviceState.disconnected;
-
-  // 연결 상태 리스너 핸들 화면 종료시 리스너 해제를 위함
-  StreamSubscription<BluetoothDeviceState>? stateListener;
-
-  BluetoothCharacteristic? characteristic;
-
-  BluetoothController bluetoothController = Get.put(BluetoothController());
+  BlueTestController bluetoothController = Get.find<BlueTestController>();
 
   final SpeechToText _speechToText = SpeechToText();
   bool _speechEnabled = false;
@@ -114,82 +95,9 @@ class _ChatHomeGlassesState extends State<ChatHomeGlasses> {
     tts.setLanguage("ko-KR");
     // 속도지정 (0.0이 제일 느리고 1.0이 제일 빠름)
     tts.setSpeechRate(0.6);
-    // tts.setVoice({"name": "ko-kr-x-ism-local", "locale": "ko-KR"});
     tts.setVoice({"name": "ko-kr-x-ism-network", "locale": "ko-KR"});
-    // tts.setVoice({"name": "ko-kr-x-kob-network", "locale": "ko-KR"});
     _initSpeech();
     _startListening();
-    // ignore: unnecessary_null_in_if_null_operators
-    characteristic = bluetoothController.writeCharacteristic.value;
-
-    if (characteristic == null) {
-      connect();
-    }
-
-    stateListener = widget.device.state.listen((event) {
-      debugPrint('event :  $event');
-      if (deviceState == event) {
-        // 상태가 동일하다면 무시
-        return;
-      }
-      // 연결 상태 정보 변경
-      setBleConnectionState(event);
-    });
-  }
-
-/* 연결 시작 */
-  Future<bool> connect() async {
-    Future<bool>? returnValue;
-    setState(() {
-      /* 상태 표시를 Connecting으로 변경 */
-      stateText = 'H-Glass 연결 중';
-    });
-
-    /* 
-    타임아웃을 10초(10000ms)로 설정 및 autoconnect 해제
-     참고로 autoconnect가 true되어있으면 연결이 지연되는 경우가 있음.
-   */
-    await widget.device
-        .connect(autoConnect: false)
-        .timeout(Duration(milliseconds: 4000), onTimeout: () {
-      //타임아웃 발생
-      //returnValue를 false로 설정
-      returnValue = Future.value(false);
-      debugPrint('timeout failed');
-
-      //연결 상태 disconnected로 변경
-      setBleConnectionState(BluetoothDeviceState.disconnected);
-    }).then((data) async {
-      if (returnValue == null) {
-        //returnValue가 null이면 timeout이 발생한 것이 아니므로 연결 성공
-        debugPrint('connection successful');
-        returnValue = Future.value(true);
-
-        //서비스와 캐릭터리스틱 찾기
-        List<BluetoothService> services =
-            await widget.device.discoverServices();
-        for (var service in services) {
-          var characteristics = service.characteristics;
-          for (BluetoothCharacteristic c in characteristics) {
-            if (c.uuid.toString() == "0000ffe2-0000-1000-8000-00805f9b34fb") {
-              print(c.uuid.toString());
-              print("성공");
-              characteristic = c;
-              bluetoothController.setWriteChar(c);
-              print(c);
-              print(bluetoothController.writeCharacteristic);
-              break;
-            } else {
-              print(c);
-              print("실패");
-            }
-          }
-        }
-      }
-    });
-    print(widget.device);
-    print(characteristic);
-    return returnValue ?? Future.value(false);
   }
 
   final AssetsAudioPlayer assetsAudioPlayer = AssetsAudioPlayer.newPlayer();
@@ -204,67 +112,15 @@ class _ChatHomeGlassesState extends State<ChatHomeGlasses> {
     Wakelock.disable();
     _stopListening();
     // 상태 리스터 해제
-    stateListener?.cancel();
     super.dispose();
   }
 
-  @override
-  void setState(VoidCallback fn) {
-    if (mounted) {
-      // 화면이 mounted 되었을때만 업데이트 되게 함
-      super.setState(fn);
-    }
-  } /* 연결 상태 갱신 */
-
-  setBleConnectionState(BluetoothDeviceState event) {
-    switch (event) {
-      case BluetoothDeviceState.disconnected:
-        stateText = 'H-Glass 연결 끊김';
-        // 버튼 상태 변경
-        connectButtonText = '다시연결하기';
-        break;
-      case BluetoothDeviceState.disconnecting:
-        stateText = 'H-Glass 끊는 중';
-        break;
-      case BluetoothDeviceState.connected:
-        stateText = 'H-Glass 연결 됨';
-        // 버튼 상태 변경
-        connectButtonText = '연결끊기';
-        break;
-      case BluetoothDeviceState.connecting:
-        stateText = 'H-Glass 연결 중';
-        break;
-    }
-    //이전 상태 이벤트 저장
-    deviceState = event;
-    setState(() {});
-  }
-
-  /* 연결 해제 */
-  void disconnect() {
-    try {
-      setState(() {
-        stateText = 'H-Glass 연결 끊는 중';
-      });
-      widget.device.disconnect();
-    } catch (e) {
-      print(e);
-    }
-  }
-
   void sendMessageToGlasses(words) async {
-    if (characteristic == null) {
-      connect();
-      return;
-    }
     String data = words;
-    print("@@@@@@@@@@@@@@@@@");
     print(data);
     List<int> bytes = utf8.encode(data);
-    // print(characteristic);
     print("안경으로 전송");
-    await characteristic!.write(bytes);
-    // setState(() {});
+    await bluetoothController.writeCharacteristic.value!.write(bytes);
   }
 
   @override
@@ -309,29 +165,16 @@ class _ChatHomeGlassesState extends State<ChatHomeGlasses> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(
-                  height: 30,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(stateText),
-                      /* 연결 및 해제 버튼 */
-                      OutlinedButton(
-                        onPressed: () {
-                          if (deviceState == BluetoothDeviceState.connected) {
-                            /* 연결된 상태라면 연결 해제 */
-                            disconnect();
-                          } else if (deviceState ==
-                              BluetoothDeviceState.disconnected) {
-                            /* 연결 해재된 상태라면 연결 */
-                            connect();
-                          } else {}
-                        },
-                        child: Text(connectButtonText),
-                      ),
-                    ],
-                  ),
-                ),
+                Obx(() {
+                  if (bluetoothController.value.value.isEmpty) {
+                    if (bluetoothController.flag.value == "1") {
+                      Get.to(() => SoundClassGlass());
+                    }
+                    return SizedBox();
+                  } else {
+                    return SizedBox();
+                  }
+                }),
                 Expanded(
                   child: Container(
                     padding: EdgeInsets.fromLTRB(2, 10, 2, 0),
@@ -354,7 +197,8 @@ class _ChatHomeGlassesState extends State<ChatHomeGlasses> {
                                   message: saying["message"],
                                   who: saying["who"],
                                   textSize: textSize,
-                                  characteristic: characteristic!,
+                                  characteristic: bluetoothController
+                                      .writeCharacteristic.value!,
                                 );
                               },
                             ),
