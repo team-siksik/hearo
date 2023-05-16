@@ -31,5 +31,10 @@ export interface RecordItemType {
   recordingTime: string;
   regDtm: string;
   modDtm: string;
-  memoList: MemoType[];
+  memoList: MemoFromServerType[];
+}
+export interface MemoFromServerType {
+  memoSeq: number;
+  content: string;
+  timestamp: number;
 }
