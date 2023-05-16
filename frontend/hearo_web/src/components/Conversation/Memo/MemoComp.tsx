@@ -2,6 +2,8 @@ import React, { SetStateAction, useEffect, useRef, useState } from "react";
 import { MemoList } from "@/components";
 import { motion, AnimatePresence } from "framer-motion";
 import { MemoType } from "@/types/types";
+import { useAppDispatch } from "@/redux/hooks";
+import { meetingAction } from "@/redux/modules/meeting";
 
 interface PropsType {
   openMemoPage: boolean;
@@ -10,6 +12,7 @@ interface PropsType {
   seconds: number;
 }
 function MemoComp({ openMemoPage, memoList, setMemoList, seconds }: PropsType) {
+  const dispatch = useAppDispatch();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   function handleSendClick() {
@@ -23,6 +26,12 @@ function MemoComp({ openMemoPage, memoList, setMemoList, seconds }: PropsType) {
           timestamp: seconds,
         },
       ]);
+      dispatch(
+        meetingAction.addMemo({
+          content: msg,
+          timestamp: seconds,
+        })
+      );
       if (textareaRef.current) {
         textareaRef.current.value = "";
       }
