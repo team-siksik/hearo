@@ -11,10 +11,10 @@ function App() {
 
     sendWorker.postMessage({ message: "sendAudio" });
 
-    navigator.mediaDevices.getUserMedia({ audio: true }).then((mediaStream) => {
-      const audioTrack = mediaStream.getAudioTracks()[0];
-      sendWorker.postMessage({ audioTrack });
-    });
+    // navigator.mediaDevices.getUserMedia({ audio: true }).then((mediaStream) => {
+    //   const audioTrack = mediaStream.getAudioTracks()[0];
+    //   sendWorker.postMessage({ audioTrack });
+    // });
 
     // const receiveWorker = new Worker("receiveAudio.js");
     // receiveWorker.onmessage = (e) => {
