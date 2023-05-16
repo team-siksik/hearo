@@ -48,9 +48,13 @@ async def decode_image(base64_string):
     Input: base64 인코딩된 문자 (string)
     Output: cv2 호환되는 넘파이 배열 (numpy.ndarray)
     """
-    np_arr = np.fromstring(base64.b64decode(base64_string), np.uint8)  # base64 -> numpy array
-    image = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)  # numpy array -> opencv image
-    return image
+    try:
+        np_arr = np.fromstring(base64.b64decode(base64_string), np.uint8)  # base64 -> numpy array
+        image = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)  # numpy array -> opencv image
+        return image
+    except Exception as e:
+        logger.debug(f"Failed to decode the image: {str(e)}")
+        return None
 
 
 async def preprocess_image(image):
@@ -69,9 +73,11 @@ async def preprocess_image(image):
         left_joint, right_joint = np.zeros((21, 3)), np.zeros((21, 3))
         left_angle, right_angle = np.zeros((15,)), np.zeros((15,))
 
-        for idx, lm in enumerate(results.pose_landmarks.landmark):
-            if 10 < idx < 23:
-                pose[idx - 11] = [lm.x, lm.y, lm.z]
+        if results.pose_landmarks:
+            logger.debug("pose")
+            for idx, lm in enumerate(results.pose_landmarks.landmark):
+                if 10 < idx < 23:
+                    pose[idx - 11] = [lm.x, lm.y, lm.z]
 
         if results.left_hand_landmarks:
             logger.debug("left hand")
@@ -115,17 +121,19 @@ async def image(sid, data):
 
     await socket_manager.emit("info", f"{sid} sent image", room_id, skip_sid=sid)
     
-    # 이미지 데이터 전처리
     logger.debug(f"1. 데이터 전처리")
+    # base64 인코딩된 string -> image
     image = await decode_image(base64_string)
+    if image is None:
+        logger.debug(f"! FAILED TO DECODE THE IMAGE !")
+        return
+    # 모델 input에 맞추어 전처리
     data = await preprocess_image(image)
     if data is None:
-        logger.debug(f"! no hands detected !")
+        logger.debug(f"! NO HANDS DETECTED !")
         return
-    else:
-        logger.debug(f"data.shape: {data.shape}")
+    logger.debug(f"data.shape: {data.shape}")
 
-    # 모델 추론 실행
     logger.debug(f"2. 모델 추론")
     y_pred = model.predict(data).squeeze()
     i_pred = int(np.argmax(y_pred))
