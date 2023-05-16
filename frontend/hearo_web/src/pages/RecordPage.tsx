@@ -1,7 +1,8 @@
 import { TrashIcon } from "@heroicons/react/24/solid";
+import { ReactComponent as CrossIconRed } from "@/assets/Icon/CrossIconRed.svg";
 import { PencilSquareIcon } from "@heroicons/react/24/outline";
 import { useNavigate, useLocation, useParams } from "react-router-dom";
-import { RemoveRecordModal } from "@/components";
+import { Dialog, MemoItem, RemoveRecordModal } from "@/components";
 import React, { useState, useEffect } from "react";
 import { RecordpageSideBar } from "@/components";
 import { RecordAPI } from "@/apis/api";
@@ -13,11 +14,27 @@ import {
   RecordItemType,
   RecordListType,
 } from "@/types/types";
+import { formatTime } from "@/components/common/Timer";
+
+interface DialogType {
+  confidence: number;
+  diarization: {
+    label: string;
+  }[];
+  end: number;
+  speaker: { label: string; name: string; edited: boolean };
+  start: number;
+  text: string;
+  textEdited: string;
+  words: [number, number, string][];
+}
 
 function RecordPage() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const location = useLocation();
+  const [dialog, setDialog] = useState<DialogType[]>([]);
+
   useEffect(() => {
     dispatch(getRecordDetail(Number(location.pathname.substring(9))));
   }, [location]);
@@ -35,6 +52,14 @@ function RecordPage() {
     }
   }, []);
 
+  useEffect(() => {
+    if (recordData.clovaFile) {
+      console.log(JSON.parse(recordData.clovaFile));
+      setDialog(JSON.parse(recordData.clovaFile).segments);
+    }
+    return () => {};
+  }, [recordData]);
+
   // const [newTitle, setTitle] = useState(initialTitle);
   const [openRemoveRecordModal, setOpenRemoveRecordModal] =
     useState<boolean>(false);
@@ -47,10 +72,6 @@ function RecordPage() {
     setNewTitle(e.target.value);
     console.log(e.target.value);
   };
-
-  // useEffect(() => {
-  //   setNewTitle("");
-  // }, []);
 
   // 기록제목수정 FIXME: 위에랑 어떻게 겹치는 것인가?
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -78,6 +99,10 @@ function RecordPage() {
     setOpenRemoveRecordModal(true);
   }
 
+  function deleteMemo(seq: number) {
+    console.log(seq);
+  }
+
   // 기록삭제
   // FIXME: deleterecordseqlist 수정해야함
   const [deleteRecordSeqList, setDeleteRecordIds] = useState<number[] | any>(
@@ -99,7 +124,7 @@ function RecordPage() {
   return (
     <div>
       <RecordpageSideBar />
-      <div className="fixed right-0 mt-[4.25rem] w-[82%]">
+      <div className="absolute right-0 mt-[4.25rem] w-[82%]">
         <div className="mx-8">
           <div className="flex items-stretch justify-between ">
             <div className="flex flex-row items-center">
@@ -148,7 +173,6 @@ function RecordPage() {
             </div>
           </div>
 
-          {/* TODO: 여기서부터 개별정보 가져오는거 만들어야함 map 활용 */}
           <div className="flex flex-col rounded-md border p-4 shadow-md">
             <div className="flex flex-row items-center">
               <h2 className="mr-2 font-semibold">녹음 정보</h2>
@@ -157,7 +181,7 @@ function RecordPage() {
             <div className="mt-4">
               <div className="my-2 flex flex-row items-center">
                 <h3 className="mr-2 text-gray-600">
-                  녹음일시: {recordData?.regDtm}
+                  녹음 일시: {recordData?.regDtm}
                 </h3>
                 <p className="font-bold">{recordData.recordingTime}</p>
               </div>
@@ -171,23 +195,49 @@ function RecordPage() {
                     : "즐겨찾기에 추가되지 않음"}
                 </p>
               </div> */}
-              <div>
-                {/* {data.map((datas) => (
-                  <div>
-                    {datas.title}
-                    {datas.recordingTime}
-                    {datas.regDtm}
-                    {datas.modDtm}
-                  </div>
-                ))} */}
-                {recordData.memoList?.map((memo: MemoFromServerType) => (
-                  <li key={memo.memoSeq}>
-                    <span>{memo.timestamp}</span>
-                    <span>{memo.content}</span>
-                  </li>
-                ))}
-              </div>
             </div>
+          </div>
+          <div
+            className={
+              recordData?.memoList?.length > 0 ? "grid grid-cols-3 gap-4" : ""
+            }
+          >
+            <div className="col-span-2 my-4 flex w-full flex-col rounded-md p-4 shadow-md">
+              {dialog &&
+                dialog.map((item, idx) => (
+                  // TODO: ADD Favorite Context
+                  <div>
+                    <div>{item.speaker.name}</div>
+                    <Dialog key={item.start} type={item.speaker.label}>
+                      {item.text}
+                    </Dialog>
+                  </div>
+                ))}
+            </div>
+            {recordData?.memoList?.length > 0 && (
+              <div className="col-span-1 my-4 flex w-full flex-col rounded-md p-4 shadow-md">
+                {recordData.memoList.map((item: MemoFromServerType, idx) => {
+                  return (
+                    <div className="relative mb-3">
+                      <MemoItem key={item.memoSeq} item={item} />
+                      <div
+                        className="absolute right-4 top-0 w-4"
+                        onClick={(e) => deleteMemo(item.memoSeq)}
+                      >
+                        <CrossIconRed />
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+          <div className="audio">
+            <audio
+              src={recordData.recordedFileUrl}
+              controls
+              className="w-full"
+            />
           </div>
         </div>
         {openRemoveRecordModal && (
