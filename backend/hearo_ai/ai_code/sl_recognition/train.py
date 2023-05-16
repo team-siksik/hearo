@@ -38,7 +38,7 @@ model = tf.keras.Sequential([
     layers.MaxPooling1D(2),
     layers.Flatten(),
     layers.Dense(128, activation='relu'),
-    layers.Dense(31, activation='softmax')
+    layers.Dense(14, activation='softmax')
 ])
 model.compile(optimizer="adam", loss="categorical_crossentropy", metrics=["acc"])
 model.summary()
