@@ -13,7 +13,7 @@ import { decodeUnicode } from "@/STT/Transcription";
 import Alert from "../common/ui/Alert";
 import { MemoType } from "@/types/types";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { startMeeting } from "@/redux/modules/meeting";
+import { saveMeeting, startMeeting } from "@/redux/modules/meeting";
 
 //FIXME: accessToken 연결 전 수정해야함
 const accessToken =
@@ -50,7 +50,7 @@ const MSG_AUDIOCONTEXT_RESUMED = 13;
  * 마이크 연결
  * 스피커로 TTS 출력
  * 대화 녹음
- * @returns 화자 분리되어 대화 내역 출력
+ * @returns (화자 분리되어) 대화 내역 출력
  */
 
 interface MessageType {
@@ -97,12 +97,14 @@ function ConversationBody({
   // Text-to-Speech를 위한 text
   const [text, setText] = useState<string>("");
 
+  const addMemoList = useAppSelector((state) => state.meeting.memoList);
   const [memoList, setMemoList] = useState<MemoType[]>([]);
 
   const [intervalKey, setIntervalKey] = useState<any>();
   const [mediaStream, setMediaStream] = useState<MediaStream>(); //streaming되는 미디어
   const [isRecording, setIsRecording] = useState<boolean>(false);
   const [audioArray, setAudioArray] = useState<Blob[]>([]);
+
   // const [audioBlob, setAudioBlob] = useState<Blob>();
 
   // const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder>(); // 녹음기
@@ -114,8 +116,7 @@ function ConversationBody({
   // meeting room no
   // const [roomSequence, setRoomSequence] = useState<number>();
   const roomSequence = useRef<number>(0);
-  const roomSeq = useAppSelector((state) => state.meeting.roomSeq);
-  // const [socket, setSocket] = useState<Socket | null>();
+  const roomSeq = useAppSelector((state) => state.meeting.roomInfo.roomSeq);
   const socket = useRef<Socket | null>(null);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
@@ -143,11 +144,11 @@ function ConversationBody({
   useEffect(() => {
     if (message) {
       setText(message);
+      setId((prev) => prev + 1);
       setConversation((prevConversation) => [
         ...prevConversation,
         { id: id, content: message, speaker: "user" },
       ]);
-      setId((prev) => prev + 1);
     }
   }, [message]);
 
@@ -316,14 +317,10 @@ function ConversationBody({
     // 이벤트핸들러: 녹음 종료 처리 & 재생하기
     mediaRecorder1.onstop = () => {
       // 녹음이 종료되면, 배열에 담긴 오디오 데이터(Blob)들을 합친다: 코덱도 설정해준다.
-      // const blob = new Blob(audioArray, { type: "audio/wav; codecs=opus" });
       const blob = new Blob(audioArray, { type: audioArray[0].type });
-      // setAudioBlob(blob);
       // audioArray.splice(0); // 기존 오디오 데이터들은 모두 비워 초기화한다.
       // Blob 데이터에 접근할 수 있는 주소를 생성한다.
-      const blobURL = window.URL.createObjectURL(blob);
-      setAudio(blobURL);
-      console.log(blobURL);
+
       closeRoomAPI(blob);
 
       setIsRecording(false);
@@ -358,7 +355,6 @@ function ConversationBody({
     }
 
     if (!isRecording) {
-      // const accessToken = localStorage.getItem("accessToken");
       const start = async () => {
         try {
           const result = await dispatch(startMeeting(accessToken));
@@ -378,22 +374,6 @@ function ConversationBody({
         }
       };
       start();
-
-      // MeetingAPI.startMeeting(accessToken!)
-      //   .then((result) => {
-      //     // setRoomSeq(result.data.data.roomSeq); // roomSequence
-      //     // console.log(result.data.data.roomSeq);
-      //     record()
-      //       .then((response) => {
-      //         createSocket();
-      //       })
-      //       .catch((error) => {
-      //         onError(ERR_AUDIO, "Recorder undefined");
-      //       });
-      //   })
-      //   .catch((err) => {
-      //     onError(ERR_CLIENT, `No user media support, ${err}`);
-      //   });
     }
   }
 
@@ -495,27 +475,10 @@ function ConversationBody({
 
   //room close http api request
   async function closeRoomAPI(blob?: Blob) {
-    // console.log(roomSequence.current!);
     MeetingAPI.finishMeeting(accessToken, roomSequence.current!)
-      .then((result) => {
-        console.log(result);
-
+      .then(() => {
         if (blob) {
-          //TODO:  encoding:
-          const memo = new Blob(
-            [
-              JSON.stringify({
-                memo: memoList,
-              }),
-            ],
-            {
-              type: "application/json",
-            }
-          );
-          const formData = new FormData();
-          formData.append("audio", blob);
-          formData.append("memo", memo);
-          MeetingAPI.saveMeeting(accessToken, roomSequence.current!, formData)
+          dispatch(saveMeeting(blob))
             .then(() => {
               // successfully finished and saved meeting
               navigate("/records");
@@ -524,7 +487,6 @@ function ConversationBody({
               console.log("room save error", err);
             });
         }
-        console.log(result);
       })
       .catch((err) => {
         console.log("room close error", err);
@@ -541,12 +503,12 @@ function ConversationBody({
   return (
     <>
       <section className="message-sec mb-12 h-full overflow-x-auto ">
-        {openExitModal ? (
+        {openExitModal && (
           <ExitModal
             setOpenExitModal={setOpenExitModal}
             stopRecord={stopRecord}
           />
-        ) : null}
+        )}
 
         {!isStarted && !isRecording ? (
           <div className="flex justify-center">
@@ -641,7 +603,7 @@ function ConversationBody({
             대화를 시작버튼을 눌러주세요
           </Alert>
         )}
-        {audio && <audio src={audio} controls />}
+        {/* {audio && <audio src={audio} controls />} */}
         <FloatingButton
           type="memo"
           onClick={() => {
@@ -652,7 +614,12 @@ function ConversationBody({
             }
           }}
         />
-        <FloatingButton type="close" onClick={() => setOpenExitModal(true)} />
+        <FloatingButton
+          type="close"
+          onClick={() => {
+            setOpenExitModal(true);
+          }}
+        />
       </section>
     </>
   );
