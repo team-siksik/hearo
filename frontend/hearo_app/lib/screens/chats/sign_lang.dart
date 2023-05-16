@@ -7,16 +7,15 @@ import 'package:flutter/material.dart';
 import 'package:hearo_app/skills/socket_overall.dart';
 import 'package:image/image.dart' as img;
 
-/// Camera2는 메인 애플리케이션입니다.
-class Camera2 extends StatefulWidget {
+class SignLang extends StatefulWidget {
   /// 기본 생성자
-  const Camera2({Key? key}) : super(key: key);
+  const SignLang({Key? key}) : super(key: key);
 
   @override
-  State<Camera2> createState() => _Camera2State();
+  State<SignLang> createState() => _SignLangState();
 }
 
-class _Camera2State extends State<Camera2> {
+class _SignLangState extends State<SignLang> {
   final SocketOverall videoSocket = SocketOverall();
   late List<CameraDescription> cameras;
   late CameraController cameraController;
@@ -33,11 +32,12 @@ class _Camera2State extends State<Camera2> {
       cameras = availableCameras;
       late CameraDescription frontCamera;
       for (final camera in cameras) {
-        if (camera.lensDirection == CameraLensDirection.front) {
+        if (camera.lensDirection == CameraLensDirection.back) {
           frontCamera = camera;
           break;
         }
       }
+      // cameraController = CameraController(frontCamera, ResolutionPreset.medium);
       cameraController = CameraController(frontCamera, ResolutionPreset.medium);
 
       cameraController.initialize().then((_) {

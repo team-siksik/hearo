@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hearo_app/controller/bluetooth_controller.dart';
+import 'package:hearo_app/controller/blue_test_controller.dart';
 import 'package:hearo_app/controller/login_controller.dart';
 import 'package:hearo_app/screens/glasses/chat_home_glasses.dart';
 import 'package:hearo_app/screens/glasses/sound_class_glass.dart';
@@ -12,8 +12,8 @@ import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'dart:async';
 
 class HomeScreenGlasses extends StatefulWidget {
-  HomeScreenGlasses({super.key, required this.device});
-  final BluetoothDevice device;
+  HomeScreenGlasses({super.key});
+
   @override
   State<HomeScreenGlasses> createState() => _HomeScreenGlassesState();
 }
@@ -32,22 +32,14 @@ class _HomeScreenGlassesState extends State<HomeScreenGlasses> {
   @override
   void initState() {
     super.initState();
+    if (bluetoothController.state.value == BluetoothDeviceState.connected) {
+      positive = true;
+    } else {
+      positive = false;
+    }
     getPermissionCamera(); // 상태 연결 리스너 등록
-    stateListener = widget.device.state.listen((event) {
-      debugPrint('event :  $event');
-      if (deviceState == event) {
-        // 상태가 동일하다면 무시
-        setState(() {
-          if (deviceState == BluetoothDeviceState.connected) {
-            positive = true;
-          }
-        });
-      }
-      // 연결 상태 정보 변경
-      setBleConnectionState(event);
-    });
-    // 연결 시작
-    connect();
+    bluetoothController.setupNotification();
+    bluetoothController.subscribeToCharacteristic;
   }
 
   LoginController loginController = Get.put(LoginController());
@@ -55,120 +47,7 @@ class _HomeScreenGlassesState extends State<HomeScreenGlasses> {
   int value = 0;
   bool positive = false;
   bool loading = false;
-  BluetoothCharacteristic? notifyCharacteristic;
-  Stream<List<int>>? notifyStream;
-  List receivedData = [];
-  BluetoothController bluetoothController = Get.put(BluetoothController());
-  FlutterBluePlus flutterBlue = FlutterBluePlus.instance;
-
-  // 연결 상태 표시 문자열
-  String stateText = 'Connecting';
-
-  // 연결 버튼 문자열
-  String connectButtonText = 'Disconnect';
-
-  // 현재 연결 상태 저장용
-  BluetoothDeviceState deviceState = BluetoothDeviceState.disconnected;
-
-  // 연결 상태 리스너 핸들 화면 종료시 리스너 해제를 위함
-  // ignore: unused_field
-  StreamSubscription<BluetoothDeviceState>? stateListener;
-
-  late BluetoothCharacteristic characteristic;
-
-  /* 연결 상태 갱신 */
-  setBleConnectionState(BluetoothDeviceState event) {
-    switch (event) {
-      case BluetoothDeviceState.disconnected:
-        stateText = 'Disconnected';
-        // 버튼 상태 변경
-        connectButtonText = 'Connect';
-        break;
-      case BluetoothDeviceState.disconnecting:
-        stateText = 'Disconnecting';
-        break;
-      case BluetoothDeviceState.connected:
-        stateText = 'Connected';
-        // 버튼 상태 변경
-        connectButtonText = 'Disconnect';
-        break;
-      case BluetoothDeviceState.connecting:
-        stateText = 'Connecting';
-        break;
-    }
-    //이전 상태 이벤트 저장
-    deviceState = event;
-    setState(() {
-      if (deviceState == BluetoothDeviceState.connected) {
-        positive = true;
-      }
-    });
-  }
-
-/* 연결 시작 */
-  Future<bool> connect() async {
-    Future<bool>? returnValue;
-    setState(() {
-      /* 상태 표시를 Connecting으로 변경 */
-      stateText = 'Connecting';
-    });
-
-    /* 
-    타임아웃을 10초(10000ms)로 설정 및 autoconnect 해제
-     참고로 autoconnect가 true되어있으면 연결이 지연되는 경우가 있음.
-   */
-    await widget.device
-        .connect(autoConnect: false)
-        .timeout(Duration(milliseconds: 4000), onTimeout: () {
-      //타임아웃 발생
-      //returnValue를 false로 설정
-      returnValue = Future.value(false);
-      debugPrint('timeout failed');
-
-      //연결 상태 disconnected로 변경
-      setBleConnectionState(BluetoothDeviceState.disconnected);
-    }).then((data) async {
-      if (returnValue == null) {
-        //returnValue가 null이면 timeout이 발생한 것이 아니므로 연결 성공
-        debugPrint('connection successful');
-        returnValue = Future.value(true);
-
-        //서비스와 캐릭터리스틱 찾기
-        List<BluetoothService> services =
-            await widget.device.discoverServices();
-        for (var service in services) {
-          var characteristics = service.characteristics;
-          for (BluetoothCharacteristic c in characteristics) {
-            if (c.uuid.toString() == "0000ffe2-0000-1000-8000-00805f9b34fb") {
-              print(c.uuid.toString());
-              print("성공");
-              characteristic = c;
-              bluetoothController.setWriteChar(c);
-              print(c);
-              print(bluetoothController.writeCharacteristic);
-              break;
-            } else if (c.properties.notify) {
-              notifyCharacteristic = c;
-              notifyStream = notifyCharacteristic!.value;
-              // 데이터 수신 리스너를 등록합니다.
-              notifyStream!.listen((data) {
-                setState(() {
-                  receivedData.add(data);
-                });
-                print(data);
-              });
-            } else {
-              print(c);
-              print("실패");
-            }
-          }
-        }
-      }
-    });
-    print(widget.device);
-    print(characteristic);
-    return returnValue ?? Future.value(false);
-  }
+  BlueTestController bluetoothController = Get.find<BlueTestController>();
 
   @override
   Widget build(BuildContext context) {
@@ -206,14 +85,26 @@ class _HomeScreenGlassesState extends State<HomeScreenGlasses> {
                   width: size.width,
                   child: Column(
                     children: [
+                      Obx(() {
+                        if (bluetoothController.value.value.isEmpty) {
+                          if (bluetoothController.flag.value == "0") {
+                            Get.to(() => SoundClassGlass());
+                          } else if (bluetoothController.flag.value == "1") {
+                            Get.to(() => ChatHomeGlasses());
+                          }
+                          return SizedBox();
+                        } else {
+                          return SizedBox();
+                        }
+                      }),
                       AnimatedToggleSwitch<bool>.dual(
-                        current: !positive,
+                        current: positive,
                         first: false,
                         second: true,
                         dif: 80.0,
                         borderColor: Colors.transparent,
                         borderWidth: 5.0,
-                        innerColor: !positive
+                        innerColor: positive
                             ? Color.fromARGB(255, 255, 206, 206)
                             : const Color.fromARGB(255, 206, 233, 255),
                         height: 60,
@@ -228,7 +119,8 @@ class _HomeScreenGlassesState extends State<HomeScreenGlasses> {
                         onChanged: (b) {
                           print(b);
                           setState(() {
-                            if (deviceState == BluetoothDeviceState.connected) {
+                            if (bluetoothController.state.value ==
+                                BluetoothDeviceState.connected) {
                               positive = true;
                             } else {
                               positive = false;
@@ -270,25 +162,21 @@ class _HomeScreenGlassesState extends State<HomeScreenGlasses> {
                   child: Column(children: [
                     InkWell(
                       onTap: () {
-                        Get.to(() => ChatHomeGlasses(
-                              device: widget.device,
-                            ));
+                        Get.to(() => ChatHomeGlasses());
                       },
                       child: naviButton(size, 0),
                     ),
                     InkWell(
                       onTap: () {
                         // Get.to(() => SoundClassGlass(
-                        //       device: widget.device,
+                        //       device: bluetoothController.device.value!,
                         //     ));
                       },
                       child: naviButton(size, 1),
                     ),
                     InkWell(
                       onTap: () {
-                        Get.to(() => SoundClassGlass(
-                              device: widget.device,
-                            ));
+                        Get.to(() => SoundClassGlass());
                       },
                       child: naviButton(size, 2),
                     ),
