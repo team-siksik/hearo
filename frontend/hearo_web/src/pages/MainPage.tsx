@@ -20,10 +20,11 @@ function MainPage({ setLoginModal }: PropsType) {
 
   // redux에서 닉네임을 가져오기 위해 사용함
   const { isLoggedIn, user } = useAppSelector((state) => state.user);
-  const nickname = isLoggedIn ? user?.nickname : "";
+  // const nickname = isLoggedIn ? user?.nickname : "";
 
-  // 로그인 여부 판단
-  const isLoggedin = !!localStorage.getItem("accessToken");
+  const handleCommPageClick = () => {
+    navigate("/comm");
+  }
 
   const handleRecordPageClick = () => {
     navigate("/records");
@@ -51,7 +52,7 @@ function MainPage({ setLoginModal }: PropsType) {
           <Layout>
             <div className="relative">
               {/* 안녕하세요, 000 님 */}
-              <div className="flex flex-row w-full min-h-screen">
+              <div className="flex flex-row justify-center min-h-screen">
                 <div className="flex items-center">
                   <Player src={Mainmeeting} loop autoplay style = {{ width : "600px", height : "300px"}}/>
                   <div className="sticky w-[50%] top-48 m-4 flex h-80 flex-col items-center justify-center bg-white">
@@ -68,23 +69,7 @@ function MainPage({ setLoginModal }: PropsType) {
                         <div className="text-blue-main">히어로</div>
                         <div>에 오신 것을 환영해요 ^____^</div>
                       </div>
-                    </>
-                  ) : (
-                    <>
-                      <div className="text-sm">반가워요.</div>
-
-                        <div className="flex flex-row text-sm font-medium">
-                          <Button onClick={() => setLoginModal(true)}>
-                            <span>로그인 후&nbsp;</span>
-                            <span className="font-semibold text-blue-main">
-                              히어로
-                            </span>
-                          </Button>
-                          <span>를 이용해보세요.</span>
-                        </div>
-                    </>
-                  )}
-                  <div>
+                                        <div>
                     <p className="pt-4">
                       <span className="font-semibold">
                         회사에서, 학교에서, 단체에서
@@ -96,9 +81,24 @@ function MainPage({ setLoginModal }: PropsType) {
                       입니다.{" "}
                     </p>
                   </div>
+                    </>
+                  ) : (
+                    <>
+                      <div className="text-sm">반가워요.</div>
+                        <div className="flex flex-row text-sm font-medium">
+                          <Button onClick={() => setLoginModal(true)}>
+                            <span>로그인 후&nbsp;</span>
+                            <span className="font-semibold text-blue-main">
+                              히어로
+                            </span>
+                          </Button>
+                          <span>를 이용해보세요.</span>
+                        </div>
+                    </>
+                    )}
                   <div className="mt-8 w-40 items-center">
                     <Button
-                      onClick={() => setLoginModal(true)}
+                      onClick={handleCommPageClick}
                       type="blueTextBtn"
                       >
                       이용하러 가기
@@ -109,7 +109,7 @@ function MainPage({ setLoginModal }: PropsType) {
               </div>
 
               {/* body */}
-              <section className="relative mx-4 flex flex-col gap-10">
+              <section className="relative mx-4 flex flex-col justify-center gap-10">
                 <motion.div
                   className="sticky top-0 m-4 flex h-screen flex-col items-center justify-center bg-white pb-8"
                   initial={{ opacity: 0, x: "-100vw" }}
@@ -213,7 +213,7 @@ function MainPage({ setLoginModal }: PropsType) {
                   className="sticky top-0 m-4 flex h-screen flex-col items-center justify-center bg-white pb-8"
                   initial={{ opacity: 0, x: "-150vw" }}
                   animate={
-                    scrollPosition > 1200
+                    scrollPosition > 1500
                       ? { opacity: 1, x: 0 }
                       : { opacity: 0, x: "-100vw" }
                   }
@@ -263,6 +263,7 @@ function MainPage({ setLoginModal }: PropsType) {
               <div className="h-24 w-full"></div>
             </div>
           </Layout>
+          
           {/* footer */}
           <footer className="h-72 bg-blue-950">
             <div className="p-4 pb-2">
