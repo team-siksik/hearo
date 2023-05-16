@@ -5,6 +5,11 @@ module.exports = {
     fontFamily: {
       chewy: ["Chewy", "cursive"],
       nanum: ["Nanum Pen Script", "cursive"],
+      "Pretendard-Regular": ["Pretendard-Regular", "sans-serif"],
+      "Pretendard-Bold": ["Pretendard-Bold", "sans-serif"],
+      "Pretendard-ExtraBold": ["Pretendard-ExtraBold", "sans-serif"],
+      "Pretendard-Light": ["Pretendard-Light", "sans-serif"],
+      "Pretendard-Thin": ["Pretendard-Thin", "sans-serif"],
     },
     extend: {
       colors: {

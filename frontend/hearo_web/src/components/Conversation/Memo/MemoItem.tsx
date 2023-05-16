@@ -19,7 +19,7 @@ function MemoItem({ item }: PropsType) {
     return `${timeFormat.minutes}:${timeFormat.seconds}`;
   }
   return (
-    <div className="w-80 rounded-md border border-gray-200 p-2">
+    <div className="w-full rounded-md border border-gray-200 p-2">
       <p className="memoCreatedAt text-sm text-gray-400">
         {parsing(item.timestamp)}
       </p>
