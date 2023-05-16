@@ -45,6 +45,16 @@ function Button({ type, children, onClick }: PropsType) {
           <div className="absolute inset-0 w-3  "></div>
           <span className="relative">{children}</span>
         </button>
+      ) : type === "settingFavAddButton" ? (
+        <button
+          className="group relative m-4 w-full overflow-hidden rounded-xl border 
+          border-blue-main bg-blue-main px-4 py-2 text-white
+          shadow-md transition-all duration-[250ms] ease-out hover:bg-blue-50 hover:text-blue-main"
+          onClick={onClick}
+        >
+          <div className="absolute inset-0 w-3  "></div>
+          <span className="relative">{children}</span>
+        </button>
       ) : type === "accountButton" ? (
         <button
           className="z-100 mr-2 h-10 rounded-xl bg-white shadow-md shadow-slate-200"
