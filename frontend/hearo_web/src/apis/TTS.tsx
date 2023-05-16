@@ -1,6 +1,7 @@
 /**
  * tts 연결 및 테스트
  */
+import { useAppSelector } from "@/redux/hooks";
 import React, { SetStateAction, useEffect, useState } from "react";
 
 interface PropsType {
@@ -9,10 +10,23 @@ interface PropsType {
 }
 
 function TTS({ text, setText }: PropsType) {
+  const voicePreference = useAppSelector(
+    (state) => state.user.setting?.voiceSetting
+  );
+  const [voice, setVoice] = useState<string>("");
+
+  useEffect(() => {
+    if (voicePreference === 0) {
+      setVoice("ko-KR-Neural2-A");
+    } else {
+      setVoice("ko-KR-Neural2-C");
+    }
+  }, [voicePreference]);
+
   const [audio, setAudio] = useState();
   const [playing, setPlaying] = useState<boolean>(false);
 
-  function textToSpeeach(_text: string) {
+  function textToSpeech(_text: string) {
     const url = `https://texttospeech.googleapis.com/v1/text:synthesize?key=${
       import.meta.env.VITE_GOOGLE_API_KEY
     }`;
@@ -53,7 +67,7 @@ function TTS({ text, setText }: PropsType) {
 
   useEffect(() => {
     if (text !== "") {
-      textToSpeeach(text);
+      textToSpeech(text);
     }
   }, [text]);
 
