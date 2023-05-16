@@ -47,6 +47,7 @@ function FavContentsPage () {
 
   // 내용이 입력되었는지 안되었는지 확인하는 함수
   const [inputValue, setInputValue] = useState('');
+  
   // 길어서 주의가 필요함 
   const onModalSave = () => {
     if (modalType === 'add') {
@@ -81,7 +82,7 @@ function FavContentsPage () {
         <ConvertBar/>
 
         {/* 출력되는 내용 */}
-        <div className="right-0 mt-28 mx-10 p-4 mb-4 h-[64%] shadow-gray-200 rounded-2xl shadow-md overflow-y-scroll">
+        <div className="fixed w-[76%] right-0 mt-28 mx-10 p-4 mb-4 h-[64%] shadow-gray-200 rounded-2xl shadow-md overflow-y-scroll">
           <div className="mt-4 px-6 py-2 space-y-6">
             {contents.map((c) => (
               <div key={c.id}>
