@@ -17,7 +17,7 @@ import { startMeeting } from "@/redux/modules/meeting";
 
 //FIXME: accessToken 연결 전 수정해야함
 const accessToken =
-  "eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJ0ZWFtc2lrc2lrMkBnbWFpbC5jb20iLCJpYXQiOjE2ODQxMzYzMDQsImV4cCI6MTY4NDI2NTkwNH0.FSwizYi6oThPzNkEJSPkkEsDgCuLPAY9lNx_aYu00dY";
+  "eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJ0ZWFtc2lrc2lrMkBnbWFpbC5jb20iLCJpYXQiOjE2ODQxOTk2MzUsImV4cCI6MTY4NDMyOTIzNX0.uKlQfCf4tXmS088BMYXCsougugIXCaRwn9qFmaVRGxw";
 const roomNo = 1343;
 
 const socketURl = "http://k8a6031.p.ssafy.io:80/";
@@ -242,7 +242,6 @@ function ConversationBody({
       }
       // socket server에서 보낸 데이터가 string이나 나머지일 때
       else {
-        // const response = JSON.parse(data);
         console.log(data);
       }
     });
@@ -496,6 +495,7 @@ function ConversationBody({
 
   //room close http api request
   async function closeRoomAPI(blob?: Blob) {
+    // console.log(roomSequence.current!);
     MeetingAPI.finishMeeting(accessToken, roomSequence.current!)
       .then((result) => {
         console.log(result);
