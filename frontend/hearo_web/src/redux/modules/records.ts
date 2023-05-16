@@ -72,11 +72,14 @@ const recordSlice = createSlice({
       };
     });
     builder.addCase(deleteRecords.fulfilled, (state, action) => {
+      const newRecordList = state.recordList.filter(
+        (record: RecordListType) => {
+          return !action.payload.includes(record.recordSeq);
+        }
+      );
       return {
         ...state,
-        recordList: state.recordList.filter((record: RecordListType) => {
-          return !action.payload.includes(record.recordSeq);
-        }),
+        recordList: newRecordList,
       };
     });
   },
