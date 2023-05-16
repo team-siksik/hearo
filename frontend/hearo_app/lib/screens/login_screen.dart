@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hearo_app/apis/login_api.dart';
+import 'package:hearo_app/models/blue_init.dart';
 import 'package:hearo_app/screens/choose_mode_screen.dart';
 import 'package:get/get.dart';
 import 'package:hearo_app/skills/local_noti.dart';
@@ -28,11 +29,8 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void initState() {
     super.initState();
-    // getPermissionCamera();
     getPermissionAudio();
-    // getPermission();
     LocalNotification.initialize();
-    print("@@!@#");
   }
 
   @override
@@ -48,7 +46,7 @@ class _LoginScreenState extends State<LoginScreen> {
           children: [
             GestureDetector(
               onTap: () {
-                LocalNotification.sampleNotification("안녕", "하세요");
+                Get.to(() => BlueInit());
               },
               child: SizedBox(
                   height: size.width * 0.6,

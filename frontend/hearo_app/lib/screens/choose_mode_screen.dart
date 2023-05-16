@@ -14,7 +14,6 @@ class ChooseModeScreen extends StatefulWidget {
 
 class _ChooseModeScreenState extends State<ChooseModeScreen> {
   LoginController loginController = Get.put(LoginController());
-
   @override
   void initState() {
     super.initState();
