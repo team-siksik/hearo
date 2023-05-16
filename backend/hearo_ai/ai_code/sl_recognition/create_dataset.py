@@ -23,7 +23,7 @@ cap = cv2.VideoCapture(0)
 
 with mp_holistic.Holistic(min_detection_confidence=0.5, min_tracking_confidence=0.5) as holistic:
     while cap.isOpened():
-        for idx, word in enumerate(words):
+        for word_idx, word in enumerate(words):
             data = []
 
             success, image = cap.read()
@@ -102,7 +102,7 @@ with mp_holistic.Holistic(min_detection_confidence=0.5, min_tracking_confidence=
                 )
 
                 d = np.concatenate([pose.flatten(), left_joint.flatten(), left_angle, right_joint.flatten(), right_angle])
-                d = np.append(d, idx)
+                d = np.append(d, word_idx)
                 data.append(d)  # (193,)
 
                 cv2.imshow(word.upper(), image)
