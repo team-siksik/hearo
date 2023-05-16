@@ -120,6 +120,12 @@ class BlueTestController extends GetxController {
       print(device.value!.state);
       print("ASDFASDFASDDSFASDAFAFSD");
     }
+    device = Rx<BluetoothDevice?>(null);
+    writeCharacteristic = Rx<BluetoothCharacteristic?>(null);
+    readCharacteristic = Rx<BluetoothCharacteristic?>(null);
+    state = Rx<BluetoothState?>(null);
+    value = Rx("");
+    flag = Rx("3");
   }
 
   void setupNotification() async {
