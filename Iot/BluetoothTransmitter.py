@@ -19,6 +19,7 @@ class BluetoothTransmitter:
 
         elif service == 2:
             print("doing nohing")
+            self.bluetooth.write(bytes(self.samples))
         return True
             
     def refresh(self):
