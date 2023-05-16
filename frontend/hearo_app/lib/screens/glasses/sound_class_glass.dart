@@ -113,12 +113,16 @@ class _SoundClassGlassState extends State<SoundClassGlass> {
     }
   }
 
+  List warning = ["개", "사이렌", "엔진", "착암기", "드릴", "자동차 경적"];
   void processData(data) {
     setState(() {
       what = data;
     });
-    LocalNotification.sampleNotification(
-        info[what], "주위에 ${info[what]} 이/가 있습니다.");
+    if (warning.contains(info[what])) {
+      LocalNotification.sampleNotification(
+          info[what], "주위에 ${info[what]} 이/가 있습니다.");
+      sendAlarmToGlasses(info[what]);
+    }
   }
 
   void _recordAndSendEverySecond() async {
