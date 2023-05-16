@@ -293,7 +293,6 @@ function ConversationBody({
     setIsStarted(true);
     setIsLoading(true);
 
-    //TODO: socket으로 보내는 recorder
     const subRecorder1 = new Recorder(input, {
       workerPath: { recorderWorkerPath },
     });
@@ -476,22 +475,22 @@ function ConversationBody({
 
   //room close http api request
   async function closeRoomAPI(blob?: Blob) {
-    MeetingAPI.finishMeeting(accessToken, roomSequence.current!)
-      .then(() => {
-        if (blob) {
-          dispatch(saveMeeting(blob))
-            .then(() => {
-              // successfully finished and saved meeting
-              navigate("/records");
-            })
-            .catch((err) => {
-              console.log("room save error", err);
-            });
-        }
-      })
-      .catch((err) => {
-        console.log("room close error", err);
-      });
+    MeetingAPI.finishMeeting(accessToken, roomSequence.current!);
+    // .then(() => {
+    //   if (blob) {
+    //     dispatch(saveMeeting(blob))
+    //       .then(() => {
+    //         // successfully finished and saved meeting
+    //         navigate("/records");
+    //       })
+    //       .catch((err) => {
+    //         console.log("room save error", err);
+    //       });
+    //   }
+    // })
+    // .catch((err) => {
+    //   console.log("room close error", err);
+    // });
   }
 
   useEffect(() => {
@@ -604,7 +603,6 @@ function ConversationBody({
             대화를 시작하는 버튼을 눌러주세요
           </Alert>
         )}
-        {/* {audio && <audio src={audio} controls />} */}
         <FloatingButton
           type="memo"
           onClick={() => {
