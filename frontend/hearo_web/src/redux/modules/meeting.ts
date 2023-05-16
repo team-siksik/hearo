@@ -1,19 +1,28 @@
 // 자주 쓰는 말, 유저 정보
 import { MeetingAPI } from "@/apis/api";
+import { MemoType } from "@/types/types";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { RootState } from "../configStore";
 
 interface MeetingType {
-  roomSeq: number;
-  regDtm: string;
-  endDtm: string | null;
-  roomId: string;
+  roomInfo: {
+    roomSeq: number;
+    regDtm: string;
+    endDtm: string | null;
+    roomId: string;
+  };
+  memoList: MemoType[];
 }
+
 // 초기상태
-const initialState = {
-  roomSeq: 0,
-  regDtm: "2000.01.01 00:00:01",
-  endDtm: null,
-  roomId: "",
+const initialState: MeetingType = {
+  roomInfo: {
+    roomSeq: 0,
+    regDtm: "2000.01.01 00:00:01",
+    endDtm: null,
+    roomId: "",
+  },
+  memoList: [],
 };
 
 // middleware
@@ -28,19 +37,60 @@ const startMeeting = createAsyncThunk(
   }
 );
 
+const saveMeeting = createAsyncThunk(
+  "meeting/saveMeeting",
+  async (audio: Blob, thunkAPI) => {
+    const accessToken = localStorage.getItem("accessToken");
+    const currentState = thunkAPI.getState() as RootState;
+    const memo = new Blob(
+      [
+        JSON.stringify({
+          memo: currentState.meeting.memoList,
+        }),
+      ],
+      {
+        type: "application/json",
+      }
+    );
+    const formData = new FormData();
+    formData.append("audio", audio);
+    formData.append("memo", memo);
+    console.log(audio, memo);
+    const response = await MeetingAPI.saveMeeting(
+      accessToken!,
+      currentState.meeting.roomInfo.roomSeq,
+      formData
+    );
+    if (!response) {
+      throw new Error();
+    }
+    return response.data.data;
+  }
+);
+
 // 리듀서 슬라이스
 const meetingSlice = createSlice({
   name: "meeting",
   initialState,
-  reducers: {},
+  reducers: {
+    addMemo: (state, action: PayloadAction<MemoType>) => {
+      state.memoList.push(action.payload);
+    },
+    deleteMemo: (state, action: PayloadAction<number>) => {
+      return {
+        ...state,
+        memoList: state.memoList.splice(action.payload, 1),
+      };
+    },
+  },
 
   //middleware
   extraReducers: (builder) => {
     builder.addCase(startMeeting.fulfilled, (state, action) => {
-      state.roomSeq = action.payload.roomSeq;
-      state.regDtm = action.payload.regDtm;
-      state.endDtm = action.payload.endDtm;
-      state.roomId = action.payload.roomId;
+      state.roomInfo.roomSeq = action.payload.roomSeq;
+      state.roomInfo.regDtm = action.payload.regDtm;
+      state.roomInfo.endDtm = action.payload.endDtm;
+      state.roomInfo.roomId = action.payload.roomId;
     });
   },
 });
@@ -49,4 +99,4 @@ const meetingSlice = createSlice({
 export const meetingAction = meetingSlice.actions;
 export default meetingSlice.reducer;
 
-export { startMeeting };
+export { startMeeting, saveMeeting };

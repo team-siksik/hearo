@@ -6,7 +6,7 @@ import { TrashIcon } from "@heroicons/react/24/solid";
 import { NewspaperIcon } from "@heroicons/react/24/outline";
 import { RemoveRecordModal } from "@/components";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { getRecordList } from "@/redux/modules/records";
 
 // 전체기록페이지
@@ -25,6 +25,7 @@ interface RecordItem {
 function TotalRecordsPage() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [nextPage, setNextPage] = useState<number>(0);
   const [openRemoveRecordModal, setOpenRemoveRecordModal] =
@@ -33,9 +34,10 @@ function TotalRecordsPage() {
 
   const [totalRecords, setTotalRecords] = useState<RecordItem[]>([]);
   const recordList = useAppSelector((state) => state.record.recordList);
+
   useEffect(() => {
     dispatch(getRecordList(nextPage));
-  }, [nextPage]);
+  }, [location, nextPage]);
 
   return (
     <div>
@@ -49,7 +51,7 @@ function TotalRecordsPage() {
           style={{ width: "calc(82% - 1rem)" }}
         >
           <div className="space-y-4 pb-12">
-            {/* 테스트 */}
+            {/* FIXME: 페이지 안에서 삭제하고 오면 제데로 로드안됨 */}
             {recordList.length === 0 ? (
               //TODO: 로딩중
               <div className="h-96 font-bold">isLoading</div>
