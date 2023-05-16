@@ -43,20 +43,12 @@ public class RecordServiceImpl implements RecordService {
         URL recordUrl;
         long durationInSeconds;
         try {
-            log.info("딸");
-            // 오류
-            recordUrl = new URL("https://hearobucket.s3.ap-northeast-2.amazonaws.com/teamsiksik2%40gmail.com/41/input/2023.05.14%2016%3A25%3A36.wav");
-            log.info("기");
+            recordUrl = new URL(recordedFile);
             AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(recordUrl);
-            log.info("라");
             AudioFormat format = audioInputStream.getFormat();
-            log.info("떼");
             long audioFileLength = audioInputStream.getFrameLength();
-            log.info("마");
             float frameRate = format.getFrameRate();
-            log.info("실");
             durationInSeconds = (long)(audioFileLength / frameRate);
-            log.info("것");
         } catch (Exception e) {
             log.info(e.getMessage());
             throw new ErrorException(RecordErrorCode.RECORD_TIME_CALCULATION_FAILED);
