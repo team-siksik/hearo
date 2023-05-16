@@ -8,7 +8,6 @@ import 'package:hearo_app/controller/blue_test_controller.dart';
 import 'dart:async';
 
 import 'package:flutter_sound/flutter_sound.dart';
-import 'package:hearo_app/screens/glasses/chat_home_glasses.dart';
 import 'package:hearo_app/skills/local_noti.dart';
 import 'package:hearo_app/widgets/common/custom_app_bar_inner.dart';
 import 'package:path_provider/path_provider.dart';
@@ -49,6 +48,9 @@ class _SoundClassGlassState extends State<SoundClassGlass> {
   @override
   void initState() {
     super.initState();
+    // BlueTestController의 구독 정보 설정
+    bluetoothController.subscribeToCharacteristic();
+
     _initializeAudioRecorder();
     _initializeAudioPlayer();
     audioSocket.connect();
@@ -114,14 +116,35 @@ class _SoundClassGlassState extends State<SoundClassGlass> {
   }
 
   List warning = ["개", "사이렌", "엔진", "착암기", "드릴", "자동차 경적"];
-  void processData(data) {
+  Map memo = {
+    "dog_bark": 0,
+    "children_playing": 0,
+    "air_conditioner": 0,
+    "street_music": 0,
+    "gun_shot": 0,
+    "siren": 0,
+    "engine_idling": 0,
+    "jackhammer": 0,
+    "drilling": 0,
+    "car_horn": 0,
+  };
+  int count = 0;
+  void processData(data) async {
+    print(
+        "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
     setState(() {
       what = data;
+      memo[what]++;
     });
     if (warning.contains(info[what])) {
-      LocalNotification.sampleNotification(
-          info[what], "주위에 ${info[what]} 이/가 있습니다.");
-      sendAlarmToGlasses(info[what]);
+      if (memo[what] % 10 == 0) {
+        if (memo[what] != 0) {
+          memo[what] = 0;
+        }
+        await LocalNotification.sampleNotification(
+            info[what], "주위에 ${info[what]} 이/가 있습니다.");
+        sendAlarmToGlasses(what);
+      }
     }
   }
 
@@ -168,16 +191,6 @@ class _SoundClassGlassState extends State<SoundClassGlass> {
       body: Center(
         child: Column(
           children: [
-            Obx(() {
-              if (bluetoothController.value.value.isEmpty) {
-                if (bluetoothController.flag.value == "1") {
-                  Get.to(() => ChatHomeGlasses());
-                }
-                return SizedBox();
-              } else {
-                return SizedBox();
-              }
-            }),
             AvatarGlow(
               animate: _isRecording,
               glowColor: const Color(0xffE63E43),

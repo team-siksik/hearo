@@ -2,11 +2,14 @@ import 'dart:convert';
 
 import 'package:get/get.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
+import 'package:hearo_app/screens/glasses/chat_home_glasses.dart';
+import 'package:hearo_app/screens/glasses/sound_class_glass.dart';
 
 class BlueTestController extends GetxController {
   // HC-06 블루투스 기기를 찾을 때 사용할 이름
   static const String deviceName = 'HC-06';
-
+  String? previousDeviceId;
+  String? previousCharacteristicUuid;
   // Write가 가능한 UUID
   static const String writeCharacteristicUuid =
       '0000ffe2-0000-1000-8000-00805f9b34fb';
@@ -19,24 +22,45 @@ class BlueTestController extends GetxController {
   Rx<String> value = Rx("");
   Rx<String> flag = Rx("3");
   final flutterBlue = FlutterBluePlus.instance;
+  // 스캔 중인지 여부를 나타내는 변수
+  RxBool isScanning = false.obs;
 
   @override
   void onInit() {
     super.onInit();
-    // 화면이 로드된 후에 initialize 함수를 호출하도록 변경
-    Future.delayed(Duration.zero, () async {
-      initialize();
-    });
 
+    readData();
     // Bluetooth 상태 구독
     subscribeToBluetoothState();
   }
 
+  void readData() async {
+    if (writeCharacteristic.value != null) {
+      List<int> data = await writeCharacteristic.value!.read();
+      String dataStr = String.fromCharCodes(data);
+      print('Received data: $dataStr');
+      value.value = dataStr; // Rx 데이터를 저장하는 value라는 이름의 RxString 변수를 가정
+
+      // 값이 없을 경우 다시 스캔
+      if (data.isEmpty) {
+        disconnect();
+        initialize();
+      }
+    } else {
+      initialize();
+    }
+  }
+
   void initialize() async {
     // 이미 스캔 중이라면 스캔 중지
+    if (isScanning.value) {
+      return;
+    }
     if (state.value != null) {
       await flutterBlue.stopScan();
     }
+    isScanning.value = true;
+
     // 기기 검색
     flutterBlue.scan().listen((scanResult) async {
       if (scanResult.device.name == deviceName) {
@@ -70,6 +94,7 @@ class BlueTestController extends GetxController {
         }
       }
     });
+    isScanning.value = false;
   }
 
   // 블루투스 상태 구독
@@ -86,22 +111,14 @@ class BlueTestController extends GetxController {
         print(value);
         flag.value = utf8.decode(value);
         print(flag.value);
+        String bluetoothValue = utf8.decode(value); // 블루투스 값 디코딩
+        if (bluetoothValue == '0') {
+          Get.to(ChatHomeGlasses()); // '0'일 때 ChatHomeGlasses 이동
+        } else if (bluetoothValue == '1') {
+          Get.to(SoundClassGlass()); // '1'일 때 SoundClassGlass 이동
+        }
       });
     });
-  }
-
-  bool isConnected() {
-    return device.value!.state == BluetoothDeviceState.connected;
-  }
-
-  // Characteristics를 통해 데이터 읽기
-  void readData() async {
-    if (writeCharacteristic.value != null) {
-      List<int> data = await writeCharacteristic.value!.read();
-      String dataStr = String.fromCharCodes(data);
-      print('Received data: $dataStr');
-      value.value = dataStr; // Rx 데이터를 저장하는 value라는 이름의 RxString 변수를 가정
-    }
   }
 
   // Characteristics를 통해 데이터 쓰기

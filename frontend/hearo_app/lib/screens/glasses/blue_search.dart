@@ -58,6 +58,10 @@ class _Screen2State extends State<BlueSearch> {
                           print(bluetoothController.state.value);
                           print(BluetoothDeviceState.connected);
                           print(bluetoothController.device.value?.state);
+                          print(
+                              '${bluetoothController.writeCharacteristic.toString()} @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
+                          print(
+                              '${bluetoothController.flag.value} @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
                           bluetoothController.device.value?.state
                               .listen((BluetoothDeviceState state) {
                             if (state == BluetoothDeviceState.connected) {
