@@ -6,10 +6,11 @@ from adafruit_display_text import label
 from adafruit_bitmap_font import bitmap_font
 import scouter
 # color
-yellow = 0xFFFF00
+
 white = 0x000000
 green = 0x00FF00
 black = 0x000000
+yellow = 0xFFFF00
 
 class DisplayController:
     def __init__(self, display, bluetooth):
@@ -44,24 +45,26 @@ class DisplayController:
         self.max_text_count = 5
         # scouter mode
         self.scouter_active = False
-    async def update_display(self, service, ):
-        await asyncio.sleep(0.1)
+
+    async def update_display(self, service):
         text = self.bluetooth.readline()
+        print(text)
         if text is not None:
             # 주변 소음 인식
             if service == 0:
-                detect_text, detect_img = sound_detect(text)
-                picture_grid = displayio.TileGrid(detect_img, pixel_shader=detect_img.pixel_shader, x=60, y=20)
-                label_text = label.Label(self.font, text=detect_text, color=yellow)
-                self.splash.append(picture_grid)
-                self.scouter_group.append(label_text)
-                self.scouter_group.y = 90
-                self.scouter_group.x = 64 - len(detect_text) * 3
-                asyncio.sleep(4)
-                # 디스플레이 업데이트
-                self.display.refresh()
-                self.splash.pop(-1)
-                self.scouter_group.pop()
+                detect_text, detect_img = await sound_detect(text)
+                if detect_img is not False:
+                    picture_grid = displayio.TileGrid(detect_img, pixel_shader=detect_img.pixel_shader, x=60, y=20)
+                    label_text = label.Label(self.font, text=detect_text, color=yellow)
+                    self.splash.append(picture_grid)
+                    self.scouter_group.append(label_text)
+                    self.scouter_group.y = 90
+                    self.scouter_group.x = 64 - len(detect_text) * 3
+                    await asyncio.sleep(4)
+                    # 디스플레이 업데이트
+                    self.display.refresh()
+                    self.splash.pop(-1)
+                    self.scouter_group.pop()
             # stt
             elif service == 1:
                 speech_text = str(text.decode())
@@ -84,10 +87,10 @@ class DisplayController:
                     if self.text_group:
                         self.text_group.pop()
                     self.text_group.append(text_area)
-                    asyncio.sleep(0.1)
+                    await asyncio.sleep(0.1)
         # scouter
         if service == 2:
-            if self.scouter_activate == False:
+            if self.scouter_active == False:
                 target = scouter.get_number()
                 self.scouter_group.y = 60
                 self.scouter_group.x = 50
@@ -97,8 +100,8 @@ class DisplayController:
                         self.scouter_group.pop()
                     self.scouter_group.append(label_text)
                     self.display.refresh()
-                    asyncio.sleep(0.01)
-                self.scouter_activate = True
+                    await asyncio.sleep(0.01)
+                self.scouter_active = True
         return True
     
     def refresh(self):
