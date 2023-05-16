@@ -7,6 +7,10 @@ from adafruit_bitmap_font import bitmap_font
 from digitalio import DigitalInOut, Direction
 import audiobusio
 import asyncio
+import time as utime
+import usb_cdc
+from Arducam import *
+from board import *
 # 코드 작동 시간 출력용
 import time
 from sound_detect import sound_detect
@@ -59,7 +63,25 @@ mic = audiobusio.PDMIn(
 # 카메라
 camera = "camera"
 
-trasmitter = BluetoothTransmitter(bluetooth, mic, camera)
+once_number=128
+mode = 0
+start_capture = 0
+stop_flag=0
+data_in=0
+value_command=0
+flag_command=0
+buffer=bytearray(once_number)
+
+mycam = ArducamClass(OV2640)
+mycam.Camera_Detection()
+mycam.Spi_Test()
+mycam.Camera_Init()
+utime.sleep(1)
+mycam.clear_fifo_flag()
+mycam.set_format(JPEG)
+mycam.Camera_Init()
+mycam.set_bit(ARDUCHIP_TIM,VSYNC_LEVEL_MASK)
+trasmitter = BluetoothTransmitter(bluetooth, mic, mycam)
 
 # loading
 def loading(sleep_time):
@@ -67,37 +89,64 @@ def loading(sleep_time):
     loading_grid = displayio.TileGrid(loading_page, pixel_shader=loading_page.pixel_shader, x=0, y=0)
     output.splash.append(loading_grid)
     time.sleep(sleep_time)
-
+# camera capture
+def read_fifo_burst():
+    print("capture working")
+    count=0
+    lenght=mycam.read_fifo_length()
+    mycam.SPI_CS_LOW()
+    mycam.set_fifo_burst()
+    while True:
+        mycam.spi.readinto(buffer,start=0,end=once_number)
+        bluetooth.write(buffer)
+        utime.sleep(0.00015)
+        count+=once_number
+        if count+once_number>lenght:
+            count=lenght-count
+            mycam.spi.readinto(buffer,start=0,end=count)
+            bluetooth.write(buffer)
+            mycam.SPI_CS_HIGH()
+            mycam.clear_fifo_flag()
+            break
 # Load font
 print("Font time: {:.2f} seconds".format(time.time() - start_time))
-font_file = "NotoSans-Medium_6.bdf"
+font_file = "NotoSans-Medium_10.bdf"
 korean_words = open("korean.txt", "r").read()
 font = bitmap_font.load_font(font_file)
 loading(3)
 # loading_font
 async def loading_font():
     print("Font time: {:.2f} seconds".format(time.time() - start_time))
-    for i in range(0, len(korean_words), 100):
+    for i in range(0, len(korean_words),5):
         print("Font{} time: {:.2f} seconds".format(i, time.time() - start_time))
-        font.load_glyphs(korean_words[i:i+100])
+        font.load_glyphs(korean_words[i:i+5])
         print("Font{} time: {:.2f} seconds".format(i, time.time() - start_time))
+        await asyncio.sleep(0.3)
     return 0
 
 print("start bluetooth")
 output.splash.pop(-1)
 print("Font load time: {:.2f} seconds".format(time.time() - start_time))
 async def main():
-    service = 0
+    service = 1
     already_pressed = False
-    await loading_font()
+#     loading_task = asyncio.create_task(loading_font())
     while True:
-        # touch sensor change the service
+#         print("running")
+        # touch sensor change the service and camera capture
         if touchpad.value and not already_pressed:
             already_pressed = touchpad.value
-            print("pressed")
-            time.sleep(0.01)
+            print("pressed1")
+            time.sleep(0.5)
             if touchpad.value and already_pressed:
-                print("pressed")
+                print("start capturing")
+                mycam.flush_fifo();
+                mycam.clear_fifo_flag();
+                mycam.start_capture();
+                if mycam.get_bit(ARDUCHIP_TRIG,CAP_DONE_MASK)!=0:
+                    print("working?")
+                    read_fifo_burst() 
+            else:
                 service = (service + 1) % 3
                 print(service)
                 if service == 0:
@@ -116,8 +165,6 @@ async def main():
         
         await asyncio.gather(
             output.update_display(service),
-            trasmitter.data_transmit(service)
+            trasmitter.data_transmit(service),
         )
-
-        time.sleep(0.01)
 asyncio.run(main())
