@@ -5,10 +5,10 @@ import 'dart:typed_data';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:hearo_app/skills/socket_overall.dart';
+import 'package:hearo_app/widgets/common/custom_app_bar_inner.dart';
 import 'package:image/image.dart' as img;
 
 class SignLang extends StatefulWidget {
-  /// 기본 생성자
   const SignLang({Key? key}) : super(key: key);
 
   @override
@@ -20,8 +20,6 @@ class _SignLangState extends State<SignLang> {
   late List<CameraDescription> cameras;
   late CameraController cameraController;
   bool isStreamingImages = false;
-  Timer? imageStreamingTimer; // Timer 객체를 저장하기 위한 변수
-  GlobalKey globalKey = GlobalKey();
 
   @override
   void initState() {
@@ -32,12 +30,11 @@ class _SignLangState extends State<SignLang> {
       cameras = availableCameras;
       late CameraDescription frontCamera;
       for (final camera in cameras) {
-        if (camera.lensDirection == CameraLensDirection.back) {
+        if (camera.lensDirection == CameraLensDirection.front) {
           frontCamera = camera;
           break;
         }
       }
-      // cameraController = CameraController(frontCamera, ResolutionPreset.medium);
       cameraController = CameraController(frontCamera, ResolutionPreset.medium);
 
       cameraController.initialize().then((_) {
@@ -72,39 +69,20 @@ class _SignLangState extends State<SignLang> {
     }
   }
 
-  void startStreaming() async {
-    isStreamingImages = true;
-    if (!cameraController.value.isStreamingImages) {
-      await cameraController.startImageStream((CameraImage image) async {
-        if (isStreamingImages) {
-          String base64Image = base64Encode(image.planes[0].bytes);
-          await videoSocket.sendVideo(base64Image);
-        }
-      });
-    }
-  }
-
-  void stopStreaming() {
-    if (cameraController.value.isStreamingImages) {
-      cameraController.stopImageStream();
-      isStreamingImages = false;
-    }
-  }
-
   void startSend() {
     setState(() {
       isStreamingImages = true;
     });
     Timer timer = timeSend();
 
-    // 일정 시간(예: 10초) 후에 함수 멈추기
-    Timer(Duration(seconds: 5), () {
+    // 일정 시간(예: 600초) 후에 함수 멈추기
+    Timer(Duration(seconds: 600), () {
       stopFunction(timer);
     });
   }
 
   Timer timeSend() {
-    return Timer.periodic(Duration(milliseconds: 30), (timer) {
+    return Timer.periodic(Duration(milliseconds: (1000 ~/ 30)), (timer) {
       // 1초에 30번 실행되는 함수 호출
       takePicture();
     });
@@ -116,7 +94,7 @@ class _SignLangState extends State<SignLang> {
       final File file = File(image.path);
       final bytes = await file.readAsBytes();
       final encodedImage = base64.encode(bytes);
-      await videoSocket.sendVideo(encodedImage);
+      videoSocket.sendVideo(encodedImage);
     } catch (e) {
       print(e);
     }
@@ -158,25 +136,20 @@ class _SignLangState extends State<SignLang> {
       return Container();
     }
     return Scaffold(
-      appBar: AppBar(title: Text("영상 소켓 테스트")),
+      appBar: CustomAppBarInner(name: "수어 인식"),
       body: Column(
         children: [
           AspectRatio(
             aspectRatio: 1 / 1,
             child: CameraPreview(cameraController),
           ),
-          ElevatedButton(
-            onPressed: takePicture,
-            child: Text('Take Picture'),
-          ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        // onPressed: isStreamingImages ? stopImageStream : startSend,
-        onPressed: isStreamingImages ? stopStreaming : startStreaming,
+        onPressed: isStreamingImages ? stopImageStream : startSend,
         child: Icon(isStreamingImages ? Icons.stop : Icons.videocam),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.miniEndFloat,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }

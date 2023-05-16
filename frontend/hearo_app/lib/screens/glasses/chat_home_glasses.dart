@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hearo_app/controller/blue_test_controller.dart';
 import 'package:hearo_app/controller/chat_controller.dart';
-import 'package:hearo_app/screens/glasses/sound_class_glass.dart';
 import 'package:hearo_app/widgets/chats/favorite_star.dart';
 import 'package:hearo_app/widgets/chats_for_glasses/custom_app_bar_chat_glasses.dart';
 import 'package:hearo_app/widgets/chats_for_glasses/speech_bubble_glasses.dart';
@@ -91,6 +90,8 @@ class _ChatHomeGlassesState extends State<ChatHomeGlasses> {
     super.initState();
     // 화면 꺼짐 방지 활성화
     Wakelock.enable();
+    // BlueTestController의 구독 정보 설정
+    bluetoothController.subscribeToCharacteristic();
     // 언어 설정
     tts.setLanguage("ko-KR");
     // 속도지정 (0.0이 제일 느리고 1.0이 제일 빠름)
@@ -165,16 +166,6 @@ class _ChatHomeGlassesState extends State<ChatHomeGlasses> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Obx(() {
-                  if (bluetoothController.value.value.isEmpty) {
-                    if (bluetoothController.flag.value == "1") {
-                      Get.to(() => SoundClassGlass());
-                    }
-                    return SizedBox();
-                  } else {
-                    return SizedBox();
-                  }
-                }),
                 Expanded(
                   child: Container(
                     padding: EdgeInsets.fromLTRB(2, 10, 2, 0),
