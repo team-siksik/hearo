@@ -27,7 +27,8 @@ function RemoveRecordModal({
     e.stopPropagation();
     dispatch(deleteRecords([recordSeq]));
     if (type === "inRecordItem") {
-      navigate("/records");
+      //FIXME: 뒤로가기 하게 되면 지운 record 파일이 뷰에서 남아있음 / selector로도 업데이트 되지 않음
+      navigate(-1);
     }
     setOpenRemoveRecordModal(false);
   };
