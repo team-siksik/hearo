@@ -3,12 +3,6 @@ import { RecordAPI } from "@/apis/api";
 import { RecordListType } from "@/types/types";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-interface MemoType {
-  memoSeq: number;
-  content: string;
-  timestamp: number;
-}
-
 // 초기상태
 const initialState = {
   recordList: [],
@@ -78,11 +72,14 @@ const recordSlice = createSlice({
       };
     });
     builder.addCase(deleteRecords.fulfilled, (state, action) => {
+      const newRecordList = state.recordList.filter(
+        (record: RecordListType) => {
+          return !action.payload.includes(record.recordSeq);
+        }
+      );
       return {
         ...state,
-        recordList: state.recordList.filter((record: RecordListType) => {
-          return !action.payload.includes(record.recordSeq);
-        }),
+        recordList: newRecordList,
       };
     });
   },

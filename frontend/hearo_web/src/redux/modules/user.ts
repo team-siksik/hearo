@@ -123,7 +123,6 @@ const userSlice = createSlice({
   initialState,
   reducers: {
     logoutAction(state: UserType) {
-      console.log("logoutReducer");
       state.isLoggedIn = false;
       state.user = null;
     },
