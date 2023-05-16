@@ -1,4 +1,5 @@
 importScripts("https://unpkg.com/rxjs@^7/dist/bundles/rxjs.umd.min.js");
+importScripts("mediaDevices.js");
 
 class SimpleQueue {
   constructor() {
@@ -118,6 +119,7 @@ function encodeAudio(waveform) {
 
 onmessage = (e) => {
   postMessage(e.data.message + " is ready");
+  console.log(getMediaStream());
 
   const ws = new WebSocket("ws://k8a6031.p.ssafy.io:7007/");
 
