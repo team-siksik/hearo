@@ -8,7 +8,11 @@ import { RecordAPI } from "@/apis/api";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useDispatch } from "react-redux";
 import { getRecordDetail } from "@/redux/modules/records";
-import { RecordItemType, RecordListType } from "@/types/types";
+import {
+  MemoFromServerType,
+  RecordItemType,
+  RecordListType,
+} from "@/types/types";
 
 function RecordPage() {
   const navigate = useNavigate();
@@ -114,15 +118,15 @@ function RecordPage() {
                   />
                 </form>
               </div>
-              {/* {isHovered || isFocused ? (
+              {isHovered || isFocused ? (
                 <div className="ml-4 h-10 w-10 self-center text-gray-600">
                   <PencilSquareIcon />
                 </div>
-              ) : title ? null : (
+              ) : recordData.title ? null : (
                 <div className="ml-4 h-10 w-10 self-center text-gray-600">
                   <PencilSquareIcon />
                 </div>
-              )} */}
+              )}
             </div>
             <div className="mr-4 flex  flex-row">
               <div className="m-4 p-1">
@@ -155,18 +159,18 @@ function RecordPage() {
                 <h3 className="mr-2 text-gray-600">
                   녹음일시: {recordData?.regDtm}
                 </h3>
-                {/* <p>{recordingTime}</p> */}
+                <p className="font-bold">{recordData.recordingTime}</p>
               </div>
-              <div className="my-2 flex flex-row items-center">
+              {/* <div className="my-2 flex flex-row items-center">
                 <h3 className="mr-2 text-gray-600">
                   즐겨찾기: {recordData.isFavorite}
                 </h3>
                 <p>
-                  {/* {isFavorite
+                  {recordData.isFavorite
                     ? "즐겨찾기에 추가됨"
-                    : "즐겨찾기에 추가되지 않음"} */}
+                    : "즐겨찾기에 추가되지 않음"}
                 </p>
-              </div>
+              </div> */}
               <div>
                 {/* {data.map((datas) => (
                   <div>
@@ -175,10 +179,13 @@ function RecordPage() {
                     {datas.regDtm}
                     {datas.modDtm}
                   </div>
-                ))}
-                {memoList.map((memo) => (
-                  <li key={memo.memoSeq}>{memo.content}</li>
                 ))} */}
+                {recordData.memoList?.map((memo: MemoFromServerType) => (
+                  <li key={memo.memoSeq}>
+                    <span>{memo.timestamp}</span>
+                    <span>{memo.content}</span>
+                  </li>
+                ))}
               </div>
             </div>
           </div>
