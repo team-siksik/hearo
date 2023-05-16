@@ -97,7 +97,6 @@ const getUserInfo = createAsyncThunk(
   "user/getUserInfo",
   async (userData: UserDataType, thunkAPI) => {
     const { accessToken, singleId } = userData;
-    console.log(accessToken, singleId);
     const response = await UserAPI.getUserInfo(accessToken, singleId);
     if (!response) {
       throw new Error();

@@ -10,11 +10,7 @@ interface PropsType {
  * @loading : 로딩중일 때만 spinner가 돕니다.
  */
 function Spinner({ loading }: PropsType) {
-  return (
-    <div>
-      <PuffLoader loading={loading} color="#E63E43" />;
-    </div>
-  );
+  return <PuffLoader loading={loading} color="#1A73E8" />;
 }
 
 export default Spinner;
