@@ -102,7 +102,7 @@ const getUserInfo = createAsyncThunk(
     if (!response) {
       throw new Error();
     }
-    return response;
+    return response.data.data;
   }
 );
 // get user info with email
@@ -153,7 +153,7 @@ const userSlice = createSlice({
         state.user = null;
       })
       .addCase(getUserInfo.fulfilled, (state, action) => {
-        state.user = action.payload.data;
+        state.user = action.payload;
       })
       .addCase(getUserEmail.fulfilled, (state, action) => {
         state.user = action.payload.data;
