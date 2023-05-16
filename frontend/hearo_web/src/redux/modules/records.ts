@@ -3,12 +3,6 @@ import { RecordAPI } from "@/apis/api";
 import { RecordListType } from "@/types/types";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-interface MemoType {
-  memoSeq: number;
-  content: string;
-  timestamp: number;
-}
-
 // 초기상태
 const initialState = {
   recordList: [],
