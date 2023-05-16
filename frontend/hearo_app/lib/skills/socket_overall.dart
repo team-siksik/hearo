@@ -77,6 +77,12 @@ class SocketOverall {
     });
   }
 
+  void getSignLang() {
+    socket.on("word", (data) {
+      return data;
+    });
+  }
+
   sendVideo(String img64) {
     socket.emit('image',
         {'room_id': loginController.myCode.value, 'base64_string': img64});
