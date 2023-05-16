@@ -27,70 +27,70 @@ function Dialog({ type, children, setOpenAddFavModal, onClick }: PropsType) {
               {children}
             </div>
           </div>
-        ) : type === "other1_text" ? (
+        ) : type === "1" ? (
+          <div
+            onClick={onClick}
+            className="user_dialog m-2 inline-block h-fit w-fit max-w-sm rounded-xl p-2 shadow-md"
+          >
+            {children}
+          </div>
+        ) : type === "2" ? (
           <div
             onClick={onClick}
             className="user_dialog m-2 inline-block h-fit w-fit max-w-sm rounded-xl bg-red-100 p-2 shadow-md"
           >
             {children}
           </div>
-        ) : type === "other2_text" ? (
+        ) : type === "3" ? (
           <div
             onClick={onClick}
             className="user_dialog m-2 inline-block h-fit w-fit max-w-sm rounded-xl bg-red-100 p-2 shadow-md"
           >
             {children}
           </div>
-        ) : type === "other3_text" ? (
+        ) : type === "4" ? (
           <div
             onClick={onClick}
             className="user_dialog m-2 inline-block h-fit w-fit max-w-sm rounded-xl bg-red-100 p-2 shadow-md"
           >
             {children}
           </div>
-        ) : type === "other4_text" ? (
+        ) : type === "5" ? (
           <div
             onClick={onClick}
             className="user_dialog m-2 inline-block h-fit w-fit max-w-sm rounded-xl bg-red-100 p-2 shadow-md"
           >
             {children}
           </div>
-        ) : type === "other5_text" ? (
+        ) : type === "6" ? (
           <div
             onClick={onClick}
             className="user_dialog m-2 inline-block h-fit w-fit max-w-sm rounded-xl bg-red-100 p-2 shadow-md"
           >
             {children}
           </div>
-        ) : type === "other6_text" ? (
+        ) : type === "7" ? (
           <div
             onClick={onClick}
             className="user_dialog m-2 inline-block h-fit w-fit max-w-sm rounded-xl bg-red-100 p-2 shadow-md"
           >
             {children}
           </div>
-        ) : type === "other7_text" ? (
+        ) : type === "8" ? (
           <div
             onClick={onClick}
             className="user_dialog m-2 inline-block h-fit w-fit max-w-sm rounded-xl bg-red-100 p-2 shadow-md"
           >
             {children}
           </div>
-        ) : type === "other8_text" ? (
+        ) : type === "9" ? (
           <div
             onClick={onClick}
             className="user_dialog m-2 inline-block h-fit w-fit max-w-sm rounded-xl bg-red-100 p-2 shadow-md"
           >
             {children}
           </div>
-        ) : type === "other9_text" ? (
-          <div
-            onClick={onClick}
-            className="user_dialog m-2 inline-block h-fit w-fit max-w-sm rounded-xl bg-red-100 p-2 shadow-md"
-          >
-            {children}
-          </div>
-        ) : type === "other10_text" ? (
+        ) : type === "10" ? (
           <div
             onClick={onClick}
             className="user_dialog m-2 inline-block h-fit w-fit max-w-sm rounded-xl bg-red-100 p-2 shadow-md"
