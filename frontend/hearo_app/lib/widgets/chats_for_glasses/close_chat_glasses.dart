@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hearo_app/controller/bluetooth_controller.dart';
 import 'package:hearo_app/screens/glasses/home_screen_glasses.dart';
 
 class CloseChatGlasses extends StatelessWidget {
   CloseChatGlasses({
     super.key,
   });
-  final BluetoothController bluetoothController =
-      Get.find<BluetoothController>();
 
   @override
   Widget build(BuildContext context) {
@@ -68,8 +65,7 @@ class CloseChatGlasses extends StatelessWidget {
                           borderRadius:
                               BorderRadius.all(Radius.circular(30))))),
                   onPressed: () {
-                    Get.to(() => HomeScreenGlasses(
-                        device: bluetoothController.device.value!));
+                    Get.to(() => HomeScreenGlasses());
                   },
                   child: const Text(
                     '종료하기',
