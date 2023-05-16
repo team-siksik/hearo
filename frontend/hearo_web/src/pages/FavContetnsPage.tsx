@@ -47,7 +47,7 @@ function FavContentsPage () {
 
   // 내용이 입력되었는지 안되었는지 확인하는 함수
   const [inputValue, setInputValue] = useState('');
-  
+
   // 길어서 주의가 필요함 
   const onModalSave = () => {
     if (modalType === 'add') {
@@ -114,12 +114,20 @@ function FavContentsPage () {
             <input type="text" className="w-full border border-gray-200 p-2 rounded" autoFocus 
             value={inputValue} onChange={(e) => setInputValue(e.target.value)}/>
             <div className="flex flex-row text-2xl justify-center m-1 mt-3 font-bold">
-            <button onClick={ModalOff} className="mt-2 pl-4 pr-4 border-gray-950">
-               취소 
-             </button>
-             <button onClick={onModalSave} className="mt-2 bg-blue-500 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded">
-               추가
-             </button>
+                <div className="flex w-full">
+                  <Button onClick={ModalOff} 
+                  type="backButton"
+                  >
+                  취소
+                  </Button>
+                </div>
+                <div className="flex w-full h-">
+                  <Button onClick={onModalSave}
+                  type="settingFavAddButton"
+                  >
+                  추가
+                  </Button>
+                </div>
             </div>
           </div>
           )}
