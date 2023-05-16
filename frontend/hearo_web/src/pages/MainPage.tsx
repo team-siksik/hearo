@@ -18,16 +18,16 @@ function MainPage({ setLoginModal }: PropsType) {
   const [comp, setComp] = useState<string>("main");
   const navigate = useNavigate();
 
-  // redux에서 닉네임을 가져오기 위해 사용함
   const { isLoggedIn, user } = useAppSelector((state) => state.user);
+  // redux에서 닉네임을 가져오기 위해 사용함
   // const nickname = isLoggedIn ? user?.nickname : "";
 
   const handleCommPageClick = () => {
-    navigate("/comm");
+    (isLoggedIn) ? navigate("/comm") : setLoginModal(true);
   }
 
   const handleRecordPageClick = () => {
-    navigate("/records");
+    (isLoggedIn) ? navigate("/records") : setLoginModal(true);
   };
 
   // 스크롤 위치에 따른 motion.div 애니메이션 구현
@@ -52,7 +52,7 @@ function MainPage({ setLoginModal }: PropsType) {
           <Layout>
             <div className="relative">
               {/* 안녕하세요, 000 님 */}
-              <div className="flex min-h-screen w-full flex-row">
+              <div className="flex min-h-screen w-full justify-center flex-row ">
                 <div className="flex items-center">
                   <Player
                     src={Mainmeeting}
@@ -81,15 +81,15 @@ function MainPage({ setLoginModal }: PropsType) {
                       <>
                         <div className="text-sm">반가워요.</div>
 
-                        <div className="flex flex-row text-sm font-medium">
-                          <Button onClick={() => setLoginModal(true)}>
-                            <span>로그인 후&nbsp;</span>
-                            <span className="font-semibold text-blue-main">
-                              히어로
-                            </span>
-                          </Button>
-                          <span>를 이용해보세요.</span>
-                        </div>
+                          <div className="flex flex-row text-sm font-medium">
+                            <Button onClick={handleCommPageClick}>
+                              <span>로그인 후&nbsp;</span>
+                              <span className="font-semibold text-blue-main">
+                                히어로
+                              </span>
+                            </Button>
+                            <span>를 이용해보세요.</span>
+                          </div>
                       </>
                     )}
                     <div>
@@ -106,7 +106,7 @@ function MainPage({ setLoginModal }: PropsType) {
                     </div>
                     <div className="mt-8 w-40 items-center">
                       <Button
-                        onClick={() => setLoginModal(true)}
+                        onClick={handleCommPageClick}
                         type="blueTextBtn"
                       >
                         이용하러 가기
@@ -145,7 +145,7 @@ function MainPage({ setLoginModal }: PropsType) {
                         </p>
                         <div className="w-1/3">
                           <Button
-                            onClick={() => navigate("/comm")}
+                            onClick={handleCommPageClick}
                             type="blueTextBtn"
                           >
                             회의 시작하기
@@ -242,7 +242,7 @@ function MainPage({ setLoginModal }: PropsType) {
                         </p>
                         <div className="w-1/3">
                           <Button
-                            onClick={() => navigate("/comm")}
+                            onClick={handleCommPageClick}
                             type="blueTextBtn"
                           >
                             메모 보러가기

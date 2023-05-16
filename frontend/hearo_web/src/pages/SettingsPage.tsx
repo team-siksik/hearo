@@ -105,14 +105,13 @@ function SettingsPage() {
       <MypageSideBar/>
       <div className="fixed right-0 mt-16 w-[82%] h-full"> 
         <ConvertBar/>
-        <div className="right-0 mt-28 mx-10 p-4 mb-4 h-[70%] shadow-gray-200 rounded-2xl shadow-md">
-
-        <div className="flex flex-row justify-center">
-          <div className="w-[50%] h-100 border-r-2 grid grid-rows-1">
-            <div className="flex flex-col items-center my-20">
-                <div className="h-34 w-34 rounded border-blue-main">
-                <div
-                  className="h-32 w-32 rounded border-blue-main"
+        <div className="fixed w-[76%] right-0 mx-10 mb-4 mt-28 h-[70%] shadow-gray-200 rounded-b-2xl shadow-md">
+          <div className="flex flex-row justify-center">
+            <div className="w-[50%] h-100 border-r-2 grid grid-rows-1">
+              <div className="flex flex-col items-center my-20">
+                  <div className="h-34 w-34 rounded border-blue-main">
+                  <div
+                    className="h-32 w-32 rounded border-blue-main"
                   // css={css`
                   //   background-image: url(${loginedUser?.profileImg});
                   //   background-image: url(${loginedUser?.profileImg});
@@ -136,12 +135,11 @@ function SettingsPage() {
 
           {/* 오른쪽페이지 */}
           <div className="w-[50%] h-full">  
-            <div className="h-80 mx-4 flex flex-row justify-center">
-
+            <div className="h-72 mt-10 mx-4 flex flex-row justify-center">
               <div className="flex flex-col">
-                <div className="p-2.5 flex flex-row">
-                  <SpeakerWaveIcon className="h-6 w-6"/>
-                  <div className="pl-4 text-xl font-normal">음성 설정</div>
+                <div className="flex flex-row justify-center p-4 items-stretch">
+                  <SpeakerWaveIcon className="h-6 w-6 self-center"/>
+                  <div className="pl-4 text-2xl font-medium self-center">음성 설정</div>
                 </div>
 
               {/* 드롭다운 */}
@@ -169,58 +167,17 @@ function SettingsPage() {
                           showGenDropDown={false}
                           toggleDropDown={(): void => gendertoggledown()}
                           genderSelection={genderSelection} 
-                        />
-                      )}
-                    </div>
-                  </button>
-                  <div className="z-0 mt-1 h-0.5 w-[100%] bg-gray-300"/>
-              </div>
-
-            </div>
-              
-              {/* 글자크기설정 */}
-              <div className="flex flex-col">
-                <div className="p-2.5 flex flex-row">
-                  <SquaresPlusIcon className="h-6 w-6"/>
-                  <div className="pl-4 text-xl font-normal">글자 크기 설정</div>
-                </div>
-
-              {/* 드롭다운 */}
-              <div className="m-4 font-light">
-                <button
-                  className="text-2xl w-40"
-                  onClick={(): void => fontsizetoggledown()}
-                  onBlur={(e: React.FocusEvent<HTMLButtonElement>): void =>
-                    dismissHandler(e)
-                  }
-                  >
-                  <div className="flex flex-row">
-                    <div className="flex-grow">{selectFontSize}</div>
-                      <div className="flex flex-row space-x-2">
-                        <ChevronDownIcon className="h-8 w-8 pt-" />
-                      </div>
-                    </div>
-                  
-                    {/* 드롭다운 열릴 시 */}
-                    <div className="pr-8 text-xl">
-                      {showFontDropDown && (
-                        // FIXME: 드롭다운 typescript 오류 수정해야함
-                        <DropDown
-                          fontsize={fontsize()}
-                          showFontDropDown={false}
-                          toggleDropDown={(): void => fontsizetoggledown()}
-                          fontSizeSelection={fontSizeSelection} 
-                        />
-                      )}
+                          />
+                        )}
                       </div>
                     </button>
-                    <div className="z-0 mt-1 h-0.5 w-[100%] bg-gray-300" />
+                    <div className="z-0 mt-1 h-0.5 w-[100%] bg-gray-300"/>
                   </div>
                 </div>
               </div>
 
               {/* 환경설정 - 로그아웃, 회원탈퇴 버튼 */}
-              <div className="h-30 flex items-center justify-center">
+              <div className="h-20 flex items-center justify-center">
                 <div className="flex w-40 flex-col">
                   <Button onClick={onLogoutButton} type="accountLogoutButton">
                     로그아웃
@@ -243,7 +200,7 @@ function SettingsPage() {
           {modalType === "logout" && (
             <div>
               <div className="mb-1 text-xl font-semibold">
-                정말 로그아웃하시겠습니까?
+                로그아웃하시겠습니까?
               </div>
               <div className="m-1 mt-4 flex flex-row justify-center text-2xl font-bold">
                 <Button onClick={ModalOff} type="deleteButton">
