@@ -46,7 +46,7 @@ class _SignLangState extends State<SignLang> {
   void initState() {
     videoSocket.connect();
     videoSocket.enterRoom();
-
+    videoSocket.getSignLang();
     availableCameras().then((availableCameras) {
       cameras = availableCameras;
       late CameraDescription frontCamera;
@@ -115,7 +115,7 @@ class _SignLangState extends State<SignLang> {
   }
 
   Timer timeSend() {
-    return Timer.periodic(Duration(milliseconds: (500)), (timer) {
+    return Timer.periodic(Duration(milliseconds: (600)), (timer) {
       // 1초에 30번 실행되는 함수 호출
       takePicture();
     });
@@ -127,15 +127,16 @@ class _SignLangState extends State<SignLang> {
     final bytes = await file.readAsBytes();
     videoSocket.sendVideo(base64.encode(bytes));
 
+    print("$temp @@@@");
     // 이전에 등록된 핸들러 제거
     videoSocket.socket.off("word");
     print("A@@@@A");
+    await getSignLang();
 
     // 새로운 핸들러 등록
-    getSignLang();
   }
 
-  void getSignLang() {
+  getSignLang() {
     videoSocket.socket.on("word", (data) {
       print("$data, @@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
       processData(data); // 데이터 처리 함수 호출
@@ -191,6 +192,7 @@ class _SignLangState extends State<SignLang> {
         children: [
           TextButton(
               onPressed: () {
+                takePicture();
                 setState(() {
                   print("아");
                   print("$temp @@@@@@@@@@@@@@@@@");
