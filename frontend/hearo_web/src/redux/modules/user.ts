@@ -57,6 +57,7 @@ const initialState: UserType = {
   isLoading: false,
 };
 
+
 // middleware
 const googleLogin = createAsyncThunk(
   "users/googleLogin",
@@ -115,6 +116,7 @@ const getUserEmail = createAsyncThunk(
     return response;
   }
 );
+
 
 // 리듀서 슬라이스
 const userSlice = createSlice({
