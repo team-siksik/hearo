@@ -303,7 +303,11 @@ export const RecordAPI = {
     ),
 
   //메모 삭제
-  deleteMemo: (accessToken: string, recordSeq: number, deleteMemoSeqList: []) =>
+  deleteMemo: (
+    accessToken: string,
+    recordSeq: number,
+    deleteMemoSeqList: number[]
+  ) =>
     api.put(
       `/record/${recordSeq}/memo/delete`,
       {
