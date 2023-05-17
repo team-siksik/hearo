@@ -104,12 +104,27 @@ mp_holistic = mp.solutions.holistic
 
 # 인식할 수 있는 수어 단어 목록 로드
 words = get_words_list_from_router()
+words_dict = {
+    "well-exist": "안녕하세요",
+    "meet": "만나다",
+    "glad": "반가워요",
+    "hobby": "취미",
+    "what": "무엇인가요",
+    "hiking": "등산",
+    "like": "좋아해요",
+    "thank": "고마워요",
+    "everyone": "여러분",
+    "effort": "수고했어요",
+    "me": "저",
+    "you": "당신",
+    "many": "많아요"
+}
 
 # 수어 인식 모델 로드
 model = load_model("ai_code/sl_recognition/model/sl_recognizer.h5")
 
 # 글로벌 변수 선언
-global sequence, word_sequence
+global word_before
 
 
 @socket_manager.on("image")
@@ -146,8 +161,16 @@ async def image(sid, data):
         logger.debug(f"! confidence smaller than {threshold} !")
         return
 
-    # 추론 결과 전송
+    # 두 글자 단어(안녕하세요) 처리
     word = words[i_pred]
-    await socket_manager.emit("word", word, room_id, skip_sid=sid)
+    if word == "well":
+        word_before = "well"
+        return
+    if word == "exist" and word_before == "well":
+        word = "well-exist"
+        word_before = None
 
-    logger.info(f"image: {sid} received result '{word}'")
+    # 추론 결과 전송
+    await socket_manager.emit("word", words_dict[word], room_id, skip_sid=sid)
+
+    logger.info(f"image: {sid} received result '{words_dict[word]}'")

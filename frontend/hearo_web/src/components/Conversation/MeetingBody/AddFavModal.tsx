@@ -16,10 +16,10 @@ export default function AddFavModal({ setOpenAddFavModal }: PropsType) {
       <h3>자주 쓰는 말 추가</h3>
       <p>자주 사용하시는 말로 추가하시겠습니까?</p>
       <div>
-        <Button onClick={() => setOpenAddFavModal(false)} type="blueTextBtn">
+        <Button onClick={() => setOpenAddFavModal(false)} type="accountDeleteButton">
           아니오
         </Button>
-        <Button onClick={() => console.log("yes!")} type="blueBgBtn">
+        <Button onClick={() => console.log("yes!")} type="addButton">
           추가하기
         </Button>
       </div>
