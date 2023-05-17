@@ -22,6 +22,7 @@ async def root():
 
 @socket_manager.on("audio")
 async def audio(sid, data):
+    logger.info("영민이의 오디오")
     audio_data = data["audio"]
 
     # 버퍼에 음성 데이터 추가
