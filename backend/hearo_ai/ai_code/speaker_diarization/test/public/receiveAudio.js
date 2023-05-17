@@ -4,7 +4,7 @@ onmessage = (e) => {
   const ws = new WebSocket("ws://k8a6031.p.ssafy.io:7007/");
 
   ws.onmessage = (event) => {
-    const message = event.data;
+    const message = event.data.data;
     postMessage(`Received: ${message}`);
   };
 
