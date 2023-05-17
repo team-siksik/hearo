@@ -44,7 +44,7 @@ function ConvertBar() {
   };
 
   const FavClick = () => {
-    navigate("/mypage/favcontents");
+    navigate("/mypage/frequent");
   };
 
   // 로그인된 상태에서만 MyPage로 이동

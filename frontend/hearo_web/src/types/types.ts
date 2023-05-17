@@ -10,6 +10,11 @@ export interface MemoType {
   timestamp: number;
 }
 
+export interface FrequentType { 
+  frequentSeq : number;
+  sentence : string;
+}
+
 export interface RecordListType {
   recordSeq: number;
   conversationSeq: number;
@@ -33,8 +38,10 @@ export interface RecordItemType {
   modDtm: string;
   memoList: MemoFromServerType[];
 }
+
 export interface MemoFromServerType {
   memoSeq: number;
   content: string;
   timestamp: number;
 }
+
