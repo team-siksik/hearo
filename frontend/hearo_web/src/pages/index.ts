@@ -1,6 +1,6 @@
 import ConversationPage from "./ConversationPage";
 import MainPage from "./MainPage";
-import FavContentsPage from "./FavContetnsPage";
+import FrequentPage from "./FrequentPage";
 import SettingsPage from "./SettingsPage";
 import AgainPage from "./AgainPage";
 import NotFound404 from "./NotFound404";
@@ -13,7 +13,7 @@ import RecordPage from "./RecordPage";
 export {
   ConversationPage,
   MainPage,
-  FavContentsPage,
+  FrequentPage,
   SettingsPage,
   AgainPage,
   SocketTest,
