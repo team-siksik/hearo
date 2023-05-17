@@ -15,10 +15,11 @@ interface ProfileType {
     fontSize: Number;
     voiceSetting: Number;
   } | null;
-  FrequentList: FrequentType[],
+  frequentList: FrequentType[],
 };
 
 const initialState: ProfileType  = {
+  isLoggedIn: false,
   user: {
     accessToken: "",
   },
@@ -28,8 +29,17 @@ const initialState: ProfileType  = {
     fontSize: 0,
     voiceSetting: 0,
   },
-  isLoggedIn: false,
-  FrequentList: [],
+  frequentList: [],
+}
+
+interface newUserSettingData {
+  newFontSize : number;
+  newVoiceSetting : number;
+}
+
+interface newFrequentData {
+  frequentSeq : number;
+  newsentence : String;
 }
 
 // get user Setting
@@ -44,6 +54,42 @@ const getUserSetting = createAsyncThunk(
   }
 );
 
+// update user Setting
+const changeUserSetting = createAsyncThunk(
+  "profile/changeUserSetting",
+  async (newSetting: newUserSettingData, thunkAPI) => {
+    const {newFontSize, newVoiceSetting} = newSetting;
+    const accessToken = localStorage.getItem("accessToken");
+    const response = await ProfileAPI.updateUserSetting(
+      accessToken!,
+      newFontSize,
+      newVoiceSetting
+    );
+    if (!response) {
+      throw new Error();
+    }
+    return {newSetting};
+  }
+)
+
+const changeFrequent = createAsyncThunk(
+  "profile/changeFrequent",
+  async (newFrequent: newFrequentData, thunkAPI) => {
+    const {newsentence, frequentSeq } = newFrequent;
+    const accessToken = localStorage.getItem("accessToken");
+    const response = await ProfileAPI.updateMyPhrase(
+      accessToken!,
+      newsentence,
+      frequentSeq,
+    );
+    if (response!) {
+      throw new Error();
+    }
+    return { newFrequent };
+    }
+  );
+
+
 // get user Frequent
 const getFrequent = createAsyncThunk(
   "profile/getFrequent",
@@ -57,6 +103,8 @@ const getFrequent = createAsyncThunk(
   }
 );
 
+
+
 // FIXME: response 변경해야함
 // 'void' 형식 식의 truthiness를 테스트할 수 없습니다.
 // delete user Frequent 
@@ -67,20 +115,19 @@ const deleteFrequent = createAsyncThunk(
     const response = await ProfileAPI.deleteMyPhrase(
       accessToken!,
       frequentSeq);
-    if (!response) {
+    if (response!) {
       throw new Error();
     }
     return frequentSeq;
   }
 );
 
-
 const profileSlice = createSlice({
   name: "profile",
   initialState,
   reducers: {
     addMyPhrase: (state, action: PayloadAction<FrequentType>) => {
-      state.FrequentList.push(action.payload);
+      state.frequentList.push(action.payload);
     },
   },
 
@@ -90,6 +137,12 @@ const profileSlice = createSlice({
       state.user = action.payload;
       state.setting = action.payload.setting;
     });
+    builder.addCase(getFrequent.fulfilled, (state, action) => {
+      state.user = action.payload;
+      state.setting = action.payload.setting;
+      state.frequentList = action.payload.frequentList;
+    });
+
     
     // FIXME: types.ts에 frequentSeq가 number형식임
     builder.addCase(deleteFrequent.fulfilled, (state, action) => {
@@ -99,7 +152,7 @@ const profileSlice = createSlice({
       //   }
       // );
       const payloadArray = Array.isArray(action.payload) ? action.payload : [action.payload];
-      const newFrequentList = state.FrequentList.filter(
+      const newFrequentList = state.frequentList.filter(
         (frequent: FrequentType) => !payloadArray.includes(frequent.frequentSeq)
       );
       return {
