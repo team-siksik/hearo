@@ -130,20 +130,18 @@ class _SoundClassGlassState extends State<SoundClassGlass> {
   };
   int count = 0;
   void processData(data) async {
-    print(
-        "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
     setState(() {
       what = data;
       memo[what]++;
     });
     if (warning.contains(info[what])) {
       if (memo[what] % 10 == 0) {
-        if (memo[what] != 0) {
-          memo[what] = 0;
-        }
         await LocalNotification.sampleNotification(
             info[what], "주위에 ${info[what]} 이/가 있습니다.");
         sendAlarmToGlasses(what);
+        if (memo[what] != 0) {
+          memo[what] = 0;
+        }
       }
     }
   }
