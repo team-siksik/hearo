@@ -21,6 +21,8 @@ class _Screen2State extends State<BlueSearch> {
     super.initState();
     if (bluetoothController.device.value?.state != null) {
       Get.to(() => HomeScreenGlasses());
+    } else {
+      bluetoothController.initialize();
     }
 
     setState(() {
@@ -54,14 +56,14 @@ class _Screen2State extends State<BlueSearch> {
                       height: size.width,
                       child: InkWell(
                         onTap: () async {
-                          print("@@@@@@@@@@@@@@@");
-                          print(bluetoothController.state.value);
-                          print(BluetoothDeviceState.connected);
-                          print(bluetoothController.device.value?.state);
-                          print(
-                              '${bluetoothController.writeCharacteristic.toString()} @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
-                          print(
-                              '${bluetoothController.flag.value} @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
+                          // print("@@@@@@@@@@@@@@@");
+                          // print(bluetoothController.state.value);
+                          // print(BluetoothDeviceState.connected);
+                          // print(bluetoothController.device.value?.state);
+                          // print(
+                          //     '${bluetoothController.writeCharacteristic.toString()} @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
+                          // print(
+                          //     '${bluetoothController.flag.value} @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
                           bluetoothController.device.value?.state
                               .listen((BluetoothDeviceState state) {
                             if (state == BluetoothDeviceState.connected) {
@@ -95,14 +97,19 @@ class _Screen2State extends State<BlueSearch> {
                                       ? "assets/images/findblue.png"
                                       : "assets/images/searchglass.png"),
                                 ),
-                                Text(isScanning
-                                    ? "H - Glass 찾는중..."
-                                    : "H - Glass 찾기위해 클릭"),
-                                TextButton(
-                                    onPressed: () {
-                                      bluetoothController.disconnect();
-                                    },
-                                    child: Text("연결해제"))
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                Text(
+                                    isScanning
+                                        ? "H - Glass 찾는중..."
+                                        : "H - Glass 찾기위해 클릭",
+                                    style: TextStyle(fontSize: 28)),
+                                // TextButton(
+                                //     onPressed: () {
+                                //       bluetoothController.disconnect();
+                                //     },
+                                //     child: Text("연결해제"))
                               ]),
                         ),
                       ),
