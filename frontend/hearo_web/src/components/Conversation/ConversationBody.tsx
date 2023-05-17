@@ -17,7 +17,7 @@ import { saveMeeting, startMeeting } from "@/redux/modules/meeting";
 
 //FIXME: accessToken 연결 전 수정해야함
 const accessToken =
-  "eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJ0ZWFtc2lrc2lrMkBnbWFpbC5jb20iLCJpYXQiOjE2ODQxOTk2MzUsImV4cCI6MTY4NDMyOTIzNX0.uKlQfCf4tXmS088BMYXCsougugIXCaRwn9qFmaVRGxw";
+  "eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJ0ZWFtc2lrc2lrMkBnbWFpbC5jb20iLCJpYXQiOjE2ODQyODYxNDgsImV4cCI6MTY4NDQxNTc0OH0.TuvTMcTBcnAPhsSQqriOA-CPt84kIykqzNG6TyGveTY";
 const roomNo = 1343;
 
 const socketURl = "http://k8a6031.p.ssafy.io:80/";
@@ -445,7 +445,6 @@ function ConversationBody({
         socket.current?.emit("close_room", { room_id: roomNo });
         socket.current?.close();
         socket.current = null;
-        
       }
       setIsRecording(false);
       setTimerStarted(false);
@@ -475,22 +474,22 @@ function ConversationBody({
 
   //room close http api request
   async function closeRoomAPI(blob?: Blob) {
-    MeetingAPI.finishMeeting(accessToken, roomSequence.current!);
-    // .then(() => {
-    //   if (blob) {
-    //     dispatch(saveMeeting(blob))
-    //       .then(() => {
-    //         // successfully finished and saved meeting
-    //         navigate("/records");
-    //       })
-    //       .catch((err) => {
-    //         console.log("room save error", err);
-    //       });
-    //   }
-    // })
-    // .catch((err) => {
-    //   console.log("room close error", err);
-    // });
+    MeetingAPI.finishMeeting(accessToken, roomSequence.current!)
+      .then(() => {
+        if (blob) {
+          dispatch(saveMeeting(blob))
+            .then(() => {
+              // successfully finished and saved meeting
+              navigate("/records");
+            })
+            .catch((err) => {
+              console.log("room save error", err);
+            });
+        }
+      })
+      .catch((err) => {
+        console.log("room close error", err);
+      });
   }
 
   useEffect(() => {
