@@ -105,12 +105,34 @@ class _SoundClassState extends State<SoundClass> {
     }
   }
 
-  void processData(data) {
+  List warning = ["개", "사이렌", "엔진", "착암기", "드릴", "자동차 경적"];
+  Map memo = {
+    "dog_bark": 0,
+    "children_playing": 0,
+    "air_conditioner": 0,
+    "street_music": 0,
+    "gun_shot": 0,
+    "siren": 0,
+    "engine_idling": 0,
+    "jackhammer": 0,
+    "drilling": 0,
+    "car_horn": 0,
+  };
+  int count = 0;
+  void processData(data) async {
     setState(() {
       what = data;
+      memo[what]++;
     });
-    LocalNotification.sampleNotification(
-        info[what], "주위에 ${info[what]} 이/가 있습니다.");
+    if (warning.contains(info[what])) {
+      if (memo[what] % 10 == 0) {
+        if (memo[what] != 0) {
+          memo[what] = 0;
+        }
+        await LocalNotification.sampleNotification(
+            info[what], "주위에 ${info[what]} 이/가 있습니다.");
+      }
+    }
   }
 
   void _recordAndSendEverySecond() async {
