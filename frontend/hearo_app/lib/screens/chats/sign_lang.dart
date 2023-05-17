@@ -1,12 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'dart:typed_data';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:hearo_app/skills/socket_overall.dart';
 import 'package:hearo_app/widgets/common/custom_app_bar_inner.dart';
-import 'package:image/image.dart' as img;
 
 class SignLang extends StatefulWidget {
   const SignLang({Key? key}) : super(key: key);
@@ -35,18 +33,19 @@ class _SignLangState extends State<SignLang> {
     "start",
     "start",
   ];
-  @override
-  void setState(VoidCallback fn) {
-    if (mounted) {
-      super.setState(fn);
-    }
-  }
+  // @override
+  // void setState(VoidCallback fn) {
+  //   if (mounted) {
+  //     super.setState(fn);
+  //   }
+  // }
 
   @override
   void initState() {
+    print("@@@@ASDFADS@@@@");
     videoSocket.connect();
     videoSocket.enterRoom();
-    videoSocket.getSignLang();
+    getSignLang();
     availableCameras().then((availableCameras) {
       cameras = availableCameras;
       late CameraDescription frontCamera;
@@ -90,34 +89,24 @@ class _SignLangState extends State<SignLang> {
     }
   }
 
-  void startImageStream() async {
-    if (!isStreamingImages) {
-      setState(() {
-        isStreamingImages = true;
-      });
-      cameraController.startImageStream((CameraImage availableImage) {
-        if (isStreamingImages) {
-          processCameraImage(availableImage);
-        }
-      });
-    }
-  }
-
   void startSend() {
     setState(() {
       isStreamingImages = true;
     });
-    timer = timeSend();
+
     // 일정 시간(예: 600초) 후에 함수 멈추기
     Timer(Duration(seconds: 10), () {
       stopFunction();
     });
+
+    timer = timeSend();
   }
 
   Timer timeSend() {
-    return Timer.periodic(Duration(milliseconds: (600)), (timer) {
-      // 1초에 30번 실행되는 함수 호출
-      takePicture();
+    return Timer.periodic(Duration(milliseconds: 600), (timer) {
+      setState(() {
+        takePicture();
+      });
     });
   }
 
@@ -126,32 +115,26 @@ class _SignLangState extends State<SignLang> {
     final File file = File(image.path);
     final bytes = await file.readAsBytes();
     videoSocket.sendVideo(base64.encode(bytes));
-
-    print("$temp @@@@");
-    // 이전에 등록된 핸들러 제거
-    videoSocket.socket.off("word");
-    print("A@@@@A");
-    await getSignLang();
-
-    // 새로운 핸들러 등록
   }
 
-  getSignLang() {
+  Future<void> getSignLang() async {
+    await Future.delayed(Duration.zero); // 다음 프레임에서 실행되도록 미세 지연을 추가합니다.
+
     videoSocket.socket.on("word", (data) {
-      print("$data, @@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
       processData(data); // 데이터 처리 함수 호출
+      setState(() {}); // temp 변수를 업데이트하고 위젯을 다시 렌더링합니다.
     });
   }
 
   void processData(data) async {
     final updatedTemp = List.from(temp); // temp 리스트를 복사하여 새로운 리스트 생성
+    print(updatedTemp);
     updatedTemp.add(data); // 새로운 데이터를 추가
 
     print('$data @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@98@@@@');
     print(
         '${data.runtimeType} @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
-    print("$what @@@@@@@@@@@");
-    print("&&&&@@@@&&&&&&&&&");
+
     print("$temp, @@@@");
 
     setState(() {
@@ -168,19 +151,6 @@ class _SignLangState extends State<SignLang> {
     }
   }
 
-  Future<void> processCameraImage(CameraImage image) async {
-    final img.Image convertedImage = img.Image.fromBytes(
-      width: image.planes[0].width as int,
-      height: image.planes[0].height as int,
-      bytes: image.planes[0].bytes as ByteBuffer,
-    );
-
-    final List<int> imageBytes = img.encodePng(convertedImage);
-    final String base64Image = base64Encode(imageBytes);
-
-    videoSocket.sendVideo(base64Image);
-  }
-
   @override
   Widget build(BuildContext context) {
     if (!cameraController.value.isInitialized) {
@@ -192,7 +162,6 @@ class _SignLangState extends State<SignLang> {
         children: [
           TextButton(
               onPressed: () {
-                takePicture();
                 setState(() {
                   print("아");
                   print("$temp @@@@@@@@@@@@@@@@@");

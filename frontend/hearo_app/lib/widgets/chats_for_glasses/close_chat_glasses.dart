@@ -78,7 +78,7 @@ class CloseChatGlasses extends StatelessWidget {
       ),
       child: Text(
         "대화 종료",
-        style: TextStyle(color: Color(0xff1A73E8)),
+        style: TextStyle(color: Color.fromARGB(255, 232, 26, 74)),
       ),
     );
   }
