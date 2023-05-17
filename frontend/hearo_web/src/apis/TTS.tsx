@@ -1,7 +1,8 @@
 /**
  * tts 연결 및 테스트
  */
-import React, { SetStateAction, useEffect, useState } from "react";
+import { useAppSelector } from "@/redux/hooks";
+import React, { SetStateAction, useEffect, useRef, useState } from "react";
 
 interface PropsType {
   text: string;
@@ -9,10 +10,25 @@ interface PropsType {
 }
 
 function TTS({ text, setText }: PropsType) {
+  const voicePreference = useAppSelector(
+    (state) => state.user.setting?.voiceSetting
+  );
+  const voiceGender = useRef<string>("");
+  const gender = useRef<string>("");
+  useEffect(() => {
+    if (voicePreference === 0) {
+      voiceGender.current = "ko-KR-Neural2-A";
+      gender.current = "female";
+    } else {
+      voiceGender.current = "ko-KR-Neural2-C";
+      gender.current = "male";
+    }
+  }, [voicePreference]);
+
   const [audio, setAudio] = useState();
   const [playing, setPlaying] = useState<boolean>(false);
 
-  function textToSpeeach(_text: string) {
+  function textToSpeech(_text: string) {
     const url = `https://texttospeech.googleapis.com/v1/text:synthesize?key=${
       import.meta.env.VITE_GOOGLE_API_KEY
     }`;
@@ -20,11 +36,10 @@ function TTS({ text, setText }: PropsType) {
       input: {
         text: _text,
       },
-      //TODO: 추후에 설정을 user정보에 저장하고 값이 바뀌면 음성 바뀌게 할 수 있어야 함
       voice: {
         languageCode: "ko-KR",
-        name: "ko-KR-Neural2-B",
-        ssmlGender: "FEMALE",
+        name: voiceGender.current,
+        ssmlGender: gender.current,
       },
       audioConfig: {
         audioEncoding: "MP3",
@@ -53,7 +68,7 @@ function TTS({ text, setText }: PropsType) {
 
   useEffect(() => {
     if (text !== "") {
-      textToSpeeach(text);
+      textToSpeech(text);
     }
   }, [text]);
 
