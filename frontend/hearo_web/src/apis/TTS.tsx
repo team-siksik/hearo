@@ -2,7 +2,7 @@
  * tts 연결 및 테스트
  */
 import { useAppSelector } from "@/redux/hooks";
-import React, { SetStateAction, useEffect, useState } from "react";
+import React, { SetStateAction, useEffect, useRef, useState } from "react";
 
 interface PropsType {
   text: string;
@@ -13,13 +13,15 @@ function TTS({ text, setText }: PropsType) {
   const voicePreference = useAppSelector(
     (state) => state.user.setting?.voiceSetting
   );
-  const [voice, setVoice] = useState<string>("");
-
+  const voiceGender = useRef<string>("");
+  const gender = useRef<string>("");
   useEffect(() => {
     if (voicePreference === 0) {
-      setVoice("ko-KR-Neural2-A");
+      voiceGender.current = "ko-KR-Neural2-A";
+      gender.current = "female";
     } else {
-      setVoice("ko-KR-Neural2-C");
+      voiceGender.current = "ko-KR-Neural2-C";
+      gender.current = "male";
     }
   }, [voicePreference]);
 
@@ -34,11 +36,10 @@ function TTS({ text, setText }: PropsType) {
       input: {
         text: _text,
       },
-      //TODO: 추후에 설정을 user정보에 저장하고 값이 바뀌면 음성 바뀌게 할 수 있어야 함
       voice: {
         languageCode: "ko-KR",
-        name: "ko-KR-Neural2-B",
-        ssmlGender: "FEMALE",
+        name: voiceGender.current,
+        ssmlGender: gender.current,
       },
       audioConfig: {
         audioEncoding: "MP3",
