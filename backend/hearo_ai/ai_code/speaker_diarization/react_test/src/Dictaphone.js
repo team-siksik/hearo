@@ -11,6 +11,8 @@ const Dictaphone = () => {
     browserSupportsSpeechRecognition,
   } = useSpeechRecognition();
 
+  SpeechRecognition.startListening({ continuous: true });
+
   if (!browserSupportsSpeechRecognition) {
     return <span>Browser doesn't support speech recognition.</span>;
   }
