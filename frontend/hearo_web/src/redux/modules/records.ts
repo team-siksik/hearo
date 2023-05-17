@@ -58,6 +58,7 @@ const getRecordDetail = createAsyncThunk(
   }
 );
 
+
 // 대화기록 삭제
 const deleteRecords = createAsyncThunk(
   "record/deleteRecords",
