@@ -11,16 +11,8 @@ interface TimeFormat {
   minutes: string;
   seconds: string;
 }
-function Timer({ timerStarted, setSeconds, seconds }: TimerProps) {
-  useEffect(() => {
-    if (timerStarted) {
-      const interval = setInterval(() => {
-        setSeconds((seconds) => seconds + 1);
-      }, 1000);
-      return () => clearInterval(interval);
-    }
-  }, [timerStarted]);
 
+function Timer({ timerStarted, setSeconds, seconds }: TimerProps) {
   const formatTime = (time: number): string => {
     const minutes = Math.floor(time / 60);
     const seconds = time % 60;
@@ -30,6 +22,14 @@ function Timer({ timerStarted, setSeconds, seconds }: TimerProps) {
     };
     return `${timeFormat.minutes}:${timeFormat.seconds}`;
   };
+  useEffect(() => {
+    if (timerStarted) {
+      const interval = setInterval(() => {
+        setSeconds((seconds) => seconds + 1);
+      }, 1000);
+      return () => clearInterval(interval);
+    }
+  }, [timerStarted]);
 
   return (
     <>
