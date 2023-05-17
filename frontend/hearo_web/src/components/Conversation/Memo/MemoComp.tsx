@@ -2,6 +2,8 @@ import React, { SetStateAction, useEffect, useRef, useState } from "react";
 import { MemoList } from "@/components";
 import { motion, AnimatePresence } from "framer-motion";
 import { MemoType } from "@/types/types";
+import { useAppDispatch } from "@/redux/hooks";
+import { meetingAction } from "@/redux/modules/meeting";
 
 interface PropsType {
   openMemoPage: boolean;
@@ -10,6 +12,7 @@ interface PropsType {
   seconds: number;
 }
 function MemoComp({ openMemoPage, memoList, setMemoList, seconds }: PropsType) {
+  const dispatch = useAppDispatch();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   function handleSendClick() {
@@ -23,6 +26,12 @@ function MemoComp({ openMemoPage, memoList, setMemoList, seconds }: PropsType) {
           timestamp: seconds,
         },
       ]);
+      dispatch(
+        meetingAction.addMemo({
+          content: msg,
+          timestamp: seconds,
+        })
+      );
       if (textareaRef.current) {
         textareaRef.current.value = "";
       }
@@ -47,14 +56,13 @@ function MemoComp({ openMemoPage, memoList, setMemoList, seconds }: PropsType) {
     <section className="h-full border-l border-gray-300 px-2">
       <div className="memoTitle">
         <h5 className="mb-2 text-lg font-bold">메모장</h5>
-        <MemoList memoList={memoList} />
+        <MemoList memoList={memoList} setMemoList={setMemoList} />
       </div>
       <div className="memoInput relative mt-3 h-[22%] w-full rounded-lg border border-gray-200">
         <textarea
           name="memo"
           className="h-[5.5rem] w-full resize-none rounded-lg p-2 focus:border-none focus:outline-none"
           id="memo"
-          //TODO: 수정
           maxLength={500}
           ref={textareaRef}
           placeholder="메모 작성하기"
