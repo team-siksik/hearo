@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { ArrowLeftIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import { useNavigate } from "react-router-dom";
 import { Button, Modal, MypageSideBar, ConvertBar } from "@/components";
+import { useAppSelector } from "@/redux/hooks";
 
 interface MessageType {
   id: number;
@@ -29,7 +30,6 @@ function FavContentsPage() {
     setModalType("add");
     setShowModal(true);
   };
-
   // 겹치지 않게 id를 기억한다
   const [idToDelete, setIdToDelete] = useState(0);
   const onDeleteButtonClick = (id: number) => {
@@ -72,9 +72,30 @@ function FavContentsPage() {
     setShowModal(false);
   };
 
+  const handleOnKeyDown = (e: any) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      onModalSave();
+    }
+  };
+
+
   const ModalOff = () => {
     setShowModal(false);
   };
+
+  const scrollableContainerRef = useRef<HTMLDivElement>(null);
+  // 스크롤 컨테이너의 맨 밑으로 이동하는 함수
+  const scrollToBottom = () => {
+    const scrollableContainer = scrollableContainerRef.current;
+    if (scrollableContainer) {
+      scrollableContainer.scrollTop = scrollableContainer.scrollHeight;
+    }
+  };
+  // 출력되는 내용이 변경될 때마다 스크롤 맨 밑으로 이동
+  useEffect(() => {
+    scrollToBottom();
+  }, [contents]); // contents는 출력되는 내용의 배열
 
   return (
     <div>
@@ -83,21 +104,21 @@ function FavContentsPage() {
         <ConvertBar />
 
         {/* 출력되는 내용 */}
-        <div className="right-0 mx-10 mb-4 mt-28 h-[64%] overflow-y-auto rounded-2xl p-4 shadow-md shadow-gray-200">
+        <div ref={scrollableContainerRef} className="right-0 mx-10 mb-4 mt-28 h-[64%] overflow-y-auto rounded-2xl p-4 shadow-md shadow-gray-200">
           <div className="mt-4 space-y-6 px-6 py-2">
-            {contents.map((c) => (
-              <div key={c.id}>
-                <div className="flex flex-row">
-                  <div className="flex-grow text-gray-950">{c.content}</div>
-                  <div className="flex flex-row space-x-2">
-                    <button onClick={() => onDeleteButtonClick(c.id)}>
-                      <XMarkIcon className="h-6 w-6" />
-                    </button>
+              {contents.map((c) => (
+                <div key={c.id}>
+                  <div className="flex flex-row">
+                    <div className="flex-grow text-gray-950">{c.content}</div>
+                    <div className="flex flex-row space-x-2">
+                      <button onClick={() => onDeleteButtonClick(c.id)}>
+                        <XMarkIcon className="h-6 w-6" />
+                      </button>
+                    </div>
                   </div>
+                  <hr className="my-2 h-0.5 bg-black px-6 opacity-10" />
                 </div>
-                <hr className="my-2 h-0.5 bg-black px-6 opacity-10" />
-              </div>
-            ))}
+              ))}
           </div>
         </div>
         <div className="fixed bottom-4 right-10 w-32">
@@ -120,6 +141,7 @@ function FavContentsPage() {
                 autoFocus
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
+                onKeyDown={handleOnKeyDown}
               />
               <div className="m-1 mt-3 flex flex-row justify-center text-2xl font-bold">
                 <button
