@@ -1,6 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, SetStateAction } from "react";
 import {
-  SquaresPlusIcon,
   SpeakerWaveIcon,
   ChevronDownIcon,
   UserCircleIcon,
@@ -13,35 +12,24 @@ import {
   userActions,
 } from "@/redux/modules/user";
 import { useAppSelector, useAppDispatch } from "@/redux/hooks";
-import { css } from "@emotion/react";
 
-function SettingsPage() {
+interface PropsType {
+  setShowModal: React.Dispatch<SetStateAction<boolean>>;
+}
+
+// 마이페이지 - 환경설정
+function SettingsPage({setShowModal}:PropsType) {
   const dispatch = useAppDispatch();
-  const [user, setUser] = useState<number>(0);
-  const [showModal, setShowModal] = useState<boolean>(false);
+  const navigate = useNavigate();
   const [modalType, setModalType] = useState<"logout" | "delete">("logout");
-  const navigate = useNavigate(); 
   const loginedUser = useAppSelector((state) => state.user.user);
-
-  // useState를 사용하여 현재 선택된 글자크기를 저장합니다.
-  const [fontSize, setFontSize] = useState<number | string>();
-
-  // 버튼 클릭 시 선택된 글자크기를 업데이트하는 함수입니다.
-  const handleClick = (size: string) => {
-    setFontSize(size);
-  };
+  const [openModal, setOpenModal] = useState<boolean>(false);
 
   // 드롭다운을 위한 설정
   const [showGenDropDown, setShowGenDropDown] = useState<boolean>(false);
-  const [showFontDropDown, setShowFontDropDown] = useState<boolean>(false);
   const [selectGender, setSelectGender] = useState<string>("여성(기본)");
   const gender = () => {
     return ["여성(기본)", "남성"];
-  };
-
-  const [selectFontSize, setSelectFontSize] = useState<string>("보통");
-  const fontsize = () => {
-    return ["작게", "보통", "크게"];
   };
 
   // 드롭다운 on/off
@@ -49,15 +37,9 @@ function SettingsPage() {
     setShowGenDropDown(!showGenDropDown);
   };
 
-  const fontsizetoggledown = () => {
-    setShowFontDropDown(!showFontDropDown);
-  };
-
-  // 이게 뭘까?
   const dismissHandler = (event: React.FocusEvent<HTMLButtonElement>): void => {
     if (event.currentTarget === event.target) {
       setShowGenDropDown(false);
-      setShowFontDropDown(false);
     }
   };
 
@@ -66,40 +48,36 @@ function SettingsPage() {
     setSelectGender(gender);
   };
 
-  // 폰트크기선택
-  const fontSizeSelection = (fontsize: string): void => {
-    setSelectFontSize(fontsize);
-  };
-
   const onLogoutButton = () => {
+    setOpenModal(true);
     setModalType("logout");
     setShowModal(true);
   };
 
-  // const onDeleteButtonClick = (id: any) => {
-  //   setModalType("delete");
-  //   setUser(id);
-  //   setShowModal(true);
-  // };
-
   const onDeleteButtonClick = () => {
+    setOpenModal(true);
     setModalType("delete");
     setShowModal(true);
   };
 
   const ModalOff = () => {
+    setOpenModal(false);
     setShowModal(false);
   };
 
-  const handleLogoutClick = () => {
+  function handleLogoutClick(){
     dispatch(googleLogout(localStorage.getItem("accessToken")!));
     dispatch(userActions.logoutAction());
+    alert('정상적으로 로그아웃되었습니다. 메인페이지로 이동합니다');
+    navigate("/");
   };
 
   function deleteAccount() {
     dispatch(googleWithdraw(localStorage.getItem("accessToken")!));
+    
   }
 
+  // FIXME: 모달 밖을 눌러서 모달을 닫았을 때, 재클릭 시 모달이 더이상 뜨지 않는 현상 
   return (
     <div>
       <MypageSideBar/>
@@ -195,9 +173,9 @@ function SettingsPage() {
         </div>
       </div>
       {/* 로그아웃, 회원탈퇴 모달  */}
-      {showModal && (
+      {openModal && 
         <Modal open={true} cannotExit={false}>
-          {modalType === "logout" && (
+          {(modalType === "logout") ? (
             <div>
               <div className="mb-1 text-xl font-semibold">
                 로그아웃하시겠습니까?
@@ -211,10 +189,8 @@ function SettingsPage() {
                 </Button>
               </div>
             </div>
-          )}
-
-          {modalType === "delete" && (
-            <div>
+          ) :
+          ( <div>
               <div className="mb-2 text-xl font-semibold text-red-main ">
                 회원탈퇴
               </div>
@@ -234,7 +210,7 @@ function SettingsPage() {
             </div>
           )}
         </Modal>
-      )}
+        }
     </div>
   );
 }
