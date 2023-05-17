@@ -108,14 +108,20 @@ class BlueTestController extends GetxController {
   void subscribeToCharacteristic() {
     readCharacteristic.value!.setNotifyValue(true).then((_) {
       readCharacteristic.value!.value.listen((value) {
-        print(value);
-        flag.value = utf8.decode(value);
-        print(flag.value);
+        print("$value @@@@");
+        print("${value.runtimeType} @@@@");
+        try {
+          flag.value = utf8.decode(value);
+        } catch (e) {
+          print('Decoding error: $e');
+          flag.value = '3'; // 디코딩 에러 발생 시 기본 값 또는 에러 처리에 맞는 값으로 설정
+        }
+        print("${flag.value} @@@@");
         String bluetoothValue = utf8.decode(value); // 블루투스 값 디코딩
-        if (bluetoothValue == '0') {
-          Get.to(ChatHomeGlasses()); // '0'일 때 ChatHomeGlasses 이동
-        } else if (bluetoothValue == '1') {
-          Get.to(SoundClassGlass()); // '1'일 때 SoundClassGlass 이동
+        if (bluetoothValue == '1') {
+          Get.to(ChatHomeGlasses()); // '1'일 때 ChatHomeGlasses 이동
+        } else if (bluetoothValue == '0') {
+          Get.to(SoundClassGlass()); // '0'일 때 SoundClassGlass 이동
         }
       });
     });

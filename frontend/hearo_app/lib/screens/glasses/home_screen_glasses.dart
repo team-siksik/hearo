@@ -113,8 +113,14 @@ class _HomeScreenGlassesState extends State<HomeScreenGlasses> {
                               positive = false;
                             }
                           });
-                          setState(() => positive = b);
                           return Future.delayed(Duration(seconds: 4));
+                        },
+                        onTap: () {
+                          if (positive) {
+                            bluetoothController.disconnect();
+                          } else {
+                            bluetoothController.readData();
+                          }
                         },
                         colorBuilder: (b) => b
                             ? Color.fromARGB(188, 255, 126, 117)
