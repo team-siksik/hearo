@@ -4,12 +4,10 @@ import 'package:get/get.dart';
 import 'package:hearo_app/controller/chat_controller.dart';
 import 'package:hearo_app/widgets/chats/custom_app_bar_chat.dart';
 import 'package:hearo_app/widgets/chats/favorite_star.dart';
-import 'package:hearo_app/widgets/chats/show_info_first.dart';
+import 'package:hearo_app/widgets/chats/show_info.dart';
 import 'package:hearo_app/widgets/chats/speech_bubble.dart';
 import 'package:wakelock/wakelock.dart';
 import 'package:flutter_tts/flutter_tts.dart';
-import 'package:audioplayers/audioplayers.dart';
-import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 
@@ -21,17 +19,19 @@ class ChatHome extends StatefulWidget {
 }
 
 class _ChatHomeState extends State<ChatHome> {
-  String mode = "side";
   final SpeechToText _speechToText = SpeechToText();
+  final _scrollController = ScrollController();
+  final chatController = Get.put(ChatController());
+  final FlutterTts tts = FlutterTts();
+
+  TextEditingController textController = TextEditingController();
+  String mode = "side";
   bool _speechEnabled = false;
   String _lastWords = '';
-  final _scrollController = ScrollController();
   List chattings = [];
   List yourChattings = [];
   List myChattings = [];
-  final chatController = Get.put(ChatController());
-  TextEditingController textController = TextEditingController();
-  final FlutterTts tts = FlutterTts();
+
   void addChat(chat) {
     // 새로운 항목을 ListView에 추가
     setState(() {
@@ -53,9 +53,12 @@ class _ChatHomeState extends State<ChatHome> {
   /// Each time to start a speech recognition session
   void _startListening() async {
     await _speechToText.listen(
-        onResult: _onSpeechResult,
-        listenFor: Duration(minutes: 3),
-        pauseFor: Duration(seconds: 50));
+      onResult: _onSpeechResult,
+      listenFor: Duration(minutes: 30),
+      pauseFor: Duration(seconds: 60),
+      cancelOnError: true,
+      listenMode: ListenMode.deviceDefault,
+    );
     if (_lastWords.trim() != "") {
       chattings.add({"who": 1, "message": _lastWords});
       yourChattings.add(_lastWords);
@@ -98,21 +101,14 @@ class _ChatHomeState extends State<ChatHome> {
     // tts.setVoice({"name": "ko-kr-x-kob-network", "locale": "ko-KR"});
     // 들어오자마자 모달
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      showInfoFirst(context);
+      showInfo(context);
     });
     // playAudio();
     _initSpeech();
     _startListening();
-    Future.delayed(Duration(milliseconds: 3300), () async {
-      playAudioStop();
+    Future.delayed(Duration(milliseconds: 2000), () async {
       Get.back();
     });
-  }
-
-  final AssetsAudioPlayer assetsAudioPlayer = AssetsAudioPlayer.newPlayer();
-
-  void playAudioStop() async {
-    assetsAudioPlayer.stop(); //정지
   }
 
   @override
@@ -121,11 +117,6 @@ class _ChatHomeState extends State<ChatHome> {
     Wakelock.disable();
     _stopListening();
     super.dispose();
-  }
-
-  AudioPlayer player = AudioPlayer();
-  Future playSound() async {
-    await player.play(DeviceFileSource("assets/audios/hearo_start.wav"));
   }
 
   void changeMode() {
@@ -148,7 +139,7 @@ class _ChatHomeState extends State<ChatHome> {
         },
         child: Scaffold(
           floatingActionButton: AvatarGlow(
-            animate: !_speechToText.isNotListening,
+            animate: _speechToText.isListening,
             glowColor: const Color(0xffE63E43),
             endRadius: 75.0,
             duration: Duration(milliseconds: 2000),

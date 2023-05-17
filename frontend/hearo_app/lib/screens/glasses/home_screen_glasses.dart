@@ -273,10 +273,35 @@ class _HomeScreenGlassesState extends State<HomeScreenGlasses> {
                 ),
               ],
             ),
-            Icon(
-              Icons.help_outline_rounded,
-              size: 28,
-            )
+            IconButton(
+                onPressed: () {
+                  if (idx == 0) {
+                    showModalBottomSheet(
+                      context: context,
+                      builder: (context) {
+                        return Image.asset("assets/images/temp1.png");
+                      },
+                    );
+                  } else if (idx == 2) {
+                    showModalBottomSheet(
+                      context: context,
+                      builder: (context) {
+                        return Image.asset("assets/images/temp2.png");
+                      },
+                    );
+                  } else {
+                    showModalBottomSheet(
+                      context: context,
+                      builder: (context) {
+                        return Image.asset("assets/images/temp3.png");
+                      },
+                    );
+                  }
+                },
+                icon: Icon(
+                  Icons.help_outline_rounded,
+                  size: 28,
+                ))
           ],
         ),
       ),

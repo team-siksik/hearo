@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hearo_app/controller/blue_test_controller.dart';
+import 'package:hearo_app/widgets/chats/help_icon_widget.dart';
 import 'package:hearo_app/widgets/chats/info_icon_widget.dart';
 import 'package:hearo_app/widgets/chats_for_glasses/close_chat_glasses.dart';
 
@@ -30,7 +31,7 @@ class _CustomAppBarChatGlassesState extends State<CustomAppBarChatGlasses> {
       foregroundColor: Colors.black,
       elevation: 0,
       centerTitle: true,
-      title: Text(""),
+      title: HelpIconWidget(),
       backgroundColor: Colors.transparent,
       actions: <Widget>[CloseChatGlasses()],
     );
