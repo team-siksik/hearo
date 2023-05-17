@@ -5,7 +5,13 @@ import {
   UserCircleIcon,
 } from "@heroicons/react/24/solid";
 import { useNavigate } from "react-router-dom";
-import { Button, Modal, DropDown, MypageSideBar, ConvertBar } from "@/components";
+import {
+  Button,
+  Modal,
+  DropDown,
+  MypageSideBar,
+  ConvertBar,
+} from "@/components";
 import {
   googleLogout,
   googleWithdraw,
@@ -97,7 +103,7 @@ function SettingsPage({setShowModal}:PropsType) {
                   //   background-size: cover;
                   // `}
                   >
-                  <UserCircleIcon/>
+                    <UserCircleIcon />
                   </div>
                 </div>
               <div className="flex flex-col text-center p-4">

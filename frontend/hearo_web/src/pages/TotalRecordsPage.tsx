@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { RecordpageSideBar } from "@/components";
+import { RecordpageSideBar, Spinner } from "@/components";
 import { RecordsItem } from "@/components";
 import { RecordAPI } from "@/apis/api";
 import { TrashIcon } from "@heroicons/react/24/solid";
@@ -51,10 +51,10 @@ function TotalRecordsPage() {
           style={{ width: "calc(82% - 1rem)" }}
         >
           <div className="space-y-4 pb-12">
-            {/* FIXME: 페이지 안에서 삭제하고 오면 제데로 로드안됨 */}
             {recordList.length === 0 ? (
-              //TODO: 로딩중
-              <div className="h-96 font-bold">isLoading</div>
+              <div className="flex h-96 items-center justify-center font-bold">
+                <Spinner loading={true} />
+              </div>
             ) : (
               recordList.map((records, idx) => (
                 <RecordsItem record={records} key={idx} />
