@@ -23,6 +23,20 @@ cap = cv2.VideoCapture(0)
 cap.set(cv2.CAP_PROP_FRAME_WIDTH, 480)
 cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
 
+# 지원하는 해상도 목록 출력
+# supported_resolutions = []
+# for i in range(100):
+#     width = cap.get(cv2.CAP_PROP_FRAME_WIDTH)
+#     height = cap.get(cv2.CAP_PROP_FRAME_HEIGHT)
+#     if width == 0 or height == 0:
+#         break
+#     supported_resolutions.append((int(width), int(height)))
+#     cap.read()
+
+# for resolution in supported_resolutions:
+#     print(f"Width: {resolution[0]}, Height: {resolution[1]}")
+
+
 with mp_holistic.Holistic(min_detection_confidence=0.5, min_tracking_confidence=0.5) as holistic:
     while cap.isOpened():
         for word_idx, word in enumerate(words):
