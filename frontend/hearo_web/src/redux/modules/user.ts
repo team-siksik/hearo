@@ -57,6 +57,7 @@ const initialState: UserType = {
   isLoading: false,
 };
 
+
 // middleware
 const googleLogin = createAsyncThunk(
   "users/googleLogin",
@@ -97,12 +98,11 @@ const getUserInfo = createAsyncThunk(
   "user/getUserInfo",
   async (userData: UserDataType, thunkAPI) => {
     const { accessToken, singleId } = userData;
-    console.log(accessToken, singleId);
     const response = await UserAPI.getUserInfo(accessToken, singleId);
     if (!response) {
       throw new Error();
     }
-    return response;
+    return response.data.data;
   }
 );
 // get user info with email
@@ -117,13 +117,13 @@ const getUserEmail = createAsyncThunk(
   }
 );
 
+
 // 리듀서 슬라이스
 const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
     logoutAction(state: UserType) {
-      console.log("logoutReducer");
       state.isLoggedIn = false;
       state.user = null;
     },
@@ -153,7 +153,7 @@ const userSlice = createSlice({
         state.user = null;
       })
       .addCase(getUserInfo.fulfilled, (state, action) => {
-        state.user = action.payload.data;
+        state.user = action.payload;
       })
       .addCase(getUserEmail.fulfilled, (state, action) => {
         state.user = action.payload.data;

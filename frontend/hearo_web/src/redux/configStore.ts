@@ -3,12 +3,14 @@ import { composeWithDevTools } from "redux-devtools-extension";
 import userReducer from "./modules/user";
 import meetingReducer from "./modules/meeting";
 import recordReducer from "./modules/records";
+import profileReducer from "./modules/profile";
 
 // root reducer
 const rootReducer = combineReducers({
   user: userReducer,
   meeting: meetingReducer,
   record: recordReducer,
+  profile: profileReducer,
 });
 
 // store 생성, 기본 미들웨어로 redux-thunk를 추가하고 개발 환경에서 리덕스 개발자 도구(Redux DevTools Extension)를 활성화해줍니다.

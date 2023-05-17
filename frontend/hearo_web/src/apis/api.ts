@@ -1,4 +1,3 @@
-import { MemoType } from "@/types/types";
 import axios from "axios";
 axios.defaults.withCredentials = true;
 
@@ -304,7 +303,11 @@ export const RecordAPI = {
     ),
 
   //메모 삭제
-  deleteMemo: (accessToken: string, recordSeq: number, deleteMemoSeqList: []) =>
+  deleteMemo: (
+    accessToken: string,
+    recordSeq: number,
+    deleteMemoSeqList: number[]
+  ) =>
     api.put(
       `/record/${recordSeq}/memo/delete`,
       {
