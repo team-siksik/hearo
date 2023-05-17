@@ -20,7 +20,7 @@ async def root():
     return {"message": "hearo!"}
 
 
-@socket_manager.on("/audio")
+@socket_manager.on("audio")
 async def audio(sid, data):
     audio_data = data["audio"]
 
