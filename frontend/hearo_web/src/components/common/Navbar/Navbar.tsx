@@ -143,7 +143,6 @@ const Navbar = ({
               ></div>
             </div>
             <p className="hover:cursor-pointer">{user?.nickname} 님</p>
-            {/* <p>김야옹 님</p> */}
           </section>
         ) : (
           <section className="user-box">
