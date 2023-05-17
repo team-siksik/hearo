@@ -7,6 +7,7 @@ import {
   ExitModal,
   MeetingSidebar,
   FloatingButton,
+  RecordpageSideBar,
 } from "@/components";
 import startVoice from "@/assets/Sounds/start.wav";
 import { useNavigate } from "react-router-dom";
@@ -72,7 +73,8 @@ function ConversationPage() {
           setOpenInfoModal={setOpenInfoModal}
         />
       ) : null}
-      <MeetingSidebar />
+      {/* <MeetingSidebar /> */}
+      <RecordpageSideBar />
       <audio ref={audioRef} src={startVoice} />
       <div className="absolute right-0 mt-[4.25rem] w-[82%]">
         <ConversationHeader
