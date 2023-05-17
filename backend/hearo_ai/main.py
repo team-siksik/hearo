@@ -34,13 +34,14 @@ app.add_middleware(
 )
 
 
-from router import common, sl_recognition, sound_classification, speaker_diarization, text_generate
+from router import common, sl_recognition, sound_classification, speaker_diarization, text_generate, speaker_diarization2
 
 
 # 라우터 설정
 common.router.include_router(sl_recognition.router)
 common.router.include_router(sound_classification.router)
 common.router.include_router(speaker_diarization.router)
+common.router.include_router(speaker_diarization2.router)
 common.router.include_router(text_generate.router)
 
 app.include_router(common.router)
