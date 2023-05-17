@@ -1,3 +1,5 @@
+// ignore_for_file: library_private_types_in_public_api, empty_catches
+
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';

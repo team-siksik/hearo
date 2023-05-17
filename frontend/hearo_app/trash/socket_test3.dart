@@ -1,3 +1,5 @@
+// ignore_for_file: empty_catches
+
 import 'dart:convert';
 import 'dart:io';
 import 'dart:async';

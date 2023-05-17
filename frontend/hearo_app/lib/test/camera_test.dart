@@ -1,3 +1,5 @@
+// ignore_for_file: constant_identifier_names
+
 import 'dart:async';
 import 'dart:convert';
 import 'dart:isolate';
@@ -129,7 +131,7 @@ class _CameraTestState extends State<CameraTest> {
 }
 
 class CameraIsolate {
-  static const int _TIMER_DELAY = 33; // 30 fps
+  static const _TIMER_DELAY = 33; // 30 fps
   final CameraController cameraController;
   final SocketOverall videoSocket;
 

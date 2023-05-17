@@ -19,16 +19,15 @@ class SoundClass extends StatefulWidget {
 class _SoundClassState extends State<SoundClass> {
   final SocketOverall audioSocket = SocketOverall();
   final FlutterSoundRecorder _audioRecorder = FlutterSoundRecorder();
-  final FlutterSoundPlayer _audioPlayer = FlutterSoundPlayer();
   late String _recordingFilePath;
   bool _isRecording = false;
   Map info = {
     "default": "소음 인식",
-    "dog_bark": "개",
-    "children_playing": "어린이",
+    "dog_bark": "개가 짖음",
+    "children_playing": "일상",
     "air_conditioner": "에어컨",
-    "street_music": "음악",
-    "gun_shot": "총",
+    "street_music": "일상",
+    "gun_shot": "일상",
     "siren": "사이렌",
     "engine_idling": "엔진",
     "jackhammer": "착암기",
@@ -36,13 +35,14 @@ class _SoundClassState extends State<SoundClass> {
     "car_horn": "자동차 경적",
     "Loading": "로딩 중",
     "Mic error": "마이크 에러",
+    "nowdays": "일상",
   };
   String what = 'default';
   @override
   void initState() {
     super.initState();
     _initializeAudioRecorder();
-    _initializeAudioPlayer();
+
     audioSocket.connect();
     audioSocket.enterRoom();
     setState(() {});
@@ -51,7 +51,6 @@ class _SoundClassState extends State<SoundClass> {
   @override
   void dispose() {
     _audioRecorder.closeRecorder();
-    _audioPlayer.closePlayer();
     audioSocket.closeRoom();
     audioSocket.disconnect();
     super.dispose();
@@ -59,10 +58,6 @@ class _SoundClassState extends State<SoundClass> {
 
   Future<void> _initializeAudioRecorder() async {
     await _audioRecorder.openRecorder();
-  }
-
-  Future<void> _initializeAudioPlayer() async {
-    await _audioPlayer.openPlayer();
   }
 
   Future<void> _startRecording() async {
@@ -105,18 +100,18 @@ class _SoundClassState extends State<SoundClass> {
     }
   }
 
-  List warning = ["개", "사이렌", "엔진", "착암기", "드릴", "자동차 경적"];
+  List warning = ["개가 짖음", "사이렌", "엔진", "착암기", "드릴", "자동차 경적"];
   Map memo = {
-    "dog_bark": 0,
-    "children_playing": 0,
-    "air_conditioner": 0,
-    "street_music": 0,
-    "gun_shot": 0,
-    "siren": 0,
-    "engine_idling": 0,
-    "jackhammer": 0,
-    "drilling": 0,
-    "car_horn": 0,
+    "dog_bark": -1,
+    "children_playing": -1,
+    "air_conditioner": -1,
+    "street_music": -1,
+    "gun_shot": -1,
+    "siren": -1,
+    "engine_idling": -1,
+    "jackhammer": -1,
+    "drilling": -1,
+    "car_horn": -1,
   };
   int count = 0;
   void processData(data) async {
@@ -125,7 +120,7 @@ class _SoundClassState extends State<SoundClass> {
       memo[what]++;
     });
     if (warning.contains(info[what])) {
-      if (memo[what] % 10 == 0) {
+      if (memo[what] % 13 == 0) {
         if (memo[what] != 0) {
           memo[what] = 0;
         }
@@ -137,7 +132,7 @@ class _SoundClassState extends State<SoundClass> {
 
   void _recordAndSendEverySecond() async {
     _initializeAudioRecorder();
-    _initializeAudioPlayer();
+
     setState(() {
       _isRecording = true;
     });
@@ -152,6 +147,7 @@ class _SoundClassState extends State<SoundClass> {
   void _stopSendRecording() async {
     setState(() {
       _isRecording = false;
+      what = "default";
     });
     await _audioRecorder.stopRecorder();
     await _audioRecorder.closeRecorder();
@@ -212,8 +208,14 @@ class _SoundClassState extends State<SoundClass> {
 
   Expanded information() {
     String txt = info[what];
+    String asset = what;
     if (txt == "드릴" || txt == "착암기") {
       txt = "공사중";
+    }
+    if (asset == "gun_shot" ||
+        asset == "street_music" ||
+        asset == "children_playing") {
+      asset = "nowdays";
     }
     return Expanded(
         child: Center(
@@ -223,7 +225,7 @@ class _SoundClassState extends State<SoundClass> {
           SizedBox(
               height: 250,
               width: 250,
-              child: Image.asset("assets/images/$what.png")),
+              child: Image.asset("assets/images/$asset.png")),
           Text(
             txt,
             style: TextStyle(fontSize: 32),
