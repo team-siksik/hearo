@@ -10,7 +10,6 @@ from utils import get_words_list, joint_to_angle, time_to_string
 name = 'ny'
 
 words = get_words_list()
-seq_length = 30
 secs_for_action = 30
 
 created_time = time_to_string(time.time())
@@ -24,13 +23,13 @@ cap = cv2.VideoCapture(0)
 
 with mp_holistic.Holistic(min_detection_confidence=0.5, min_tracking_confidence=0.5) as holistic:
     while cap.isOpened():
-        for idx, word in enumerate(words):
+        for word_idx, word in enumerate(words):
             data = []
 
             success, image = cap.read()
 
             if not success:
-                print("Ignoring empty camera frame.")
+                print("EMPTY CAMERA FRAME")
                 continue
 
             image = cv2.flip(image, 1)
@@ -65,7 +64,6 @@ with mp_holistic.Holistic(min_detection_confidence=0.5, min_tracking_confidence=
                 pose = np.zeros((12, 3))
                 left_joint, right_joint = np.zeros((21, 3)), np.zeros((21, 3))
                 left_angle, right_angle = np.zeros((15,)), np.zeros((15,))
-
 
                 for idx, lm in enumerate(results.pose_landmarks.landmark):
                     if 10 < idx < 23:
@@ -104,7 +102,7 @@ with mp_holistic.Holistic(min_detection_confidence=0.5, min_tracking_confidence=
                 )
 
                 d = np.concatenate([pose.flatten(), left_joint.flatten(), left_angle, right_joint.flatten(), right_angle])
-                d = np.append(d, idx)
+                d = np.append(d, word_idx)
                 data.append(d)  # (193,)
 
                 cv2.imshow(word.upper(), image)
@@ -114,14 +112,10 @@ with mp_holistic.Holistic(min_detection_confidence=0.5, min_tracking_confidence=
             data = np.array(data)
             print(word, data.shape)
 
-            sequence_data = []
-            for seq in range(len(data) - seq_length):
-                sequence_data.append(data[seq: seq + seq_length])
+            size = data.shape[0]
 
-            sequence_data = np.array(sequence_data)
-            print(word, sequence_data.shape)
-
-            np.save(os.path.join("dataset", f"{word}_{name}_{created_time}"), sequence_data)
+            np.save(os.path.join("dataset", f"{word}_{name}_{size}_{created_time}"), data)
+            
         break
 
 cap.release()

@@ -23,11 +23,11 @@ function MainPage({ setLoginModal }: PropsType) {
   // const nickname = isLoggedIn ? user?.nickname : "";
 
   const handleCommPageClick = () => {
-    (isLoggedIn) ? navigate("/comm") : setLoginModal(true);
-  }
+    isLoggedIn ? navigate("/comm") : setLoginModal(true);
+  };
 
   const handleRecordPageClick = () => {
-    (isLoggedIn) ? navigate("/records") : setLoginModal(true);
+    isLoggedIn ? navigate("/records") : setLoginModal(true);
   };
 
   // 스크롤 위치에 따른 motion.div 애니메이션 구현
@@ -37,7 +37,6 @@ function MainPage({ setLoginModal }: PropsType) {
     const handleScroll = () => {
       setScrollPosition(window.scrollY);
     };
-
     window.addEventListener("scroll", handleScroll);
 
     return () => {
