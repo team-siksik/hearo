@@ -147,7 +147,7 @@ function SettingsPage({ setShowModal }: PropsType) {
 
                       {/* 드롭다운 열릴 시 */}
                       <div className="pr-8 text-xl">
-                        {showGenDropDown && (
+                        {/* {showGenDropDown && (
                           // FIXME: 드롭다운 typescript 오류 수정해야함
                           <DropDown
                             gender={gender()}
@@ -155,7 +155,7 @@ function SettingsPage({ setShowModal }: PropsType) {
                             toggleDropDown={(): void => gendertoggledown()}
                             genderSelection={genderSelection}
                           />
-                        )}
+                        )} */}
                       </div>
                     </button>
                     <div className="z-0 mt-1 h-0.5 w-[100%] bg-gray-300" />
