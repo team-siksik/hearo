@@ -6,7 +6,7 @@ class BluetoothTransmitter:
         self.mic = mic
         self.camera = camera
         # 음량 임계값 설정
-        self.threshold = 10000
+        self.threshold = 1000
         self.samples = array.array('H', [0] * 160)
     
     async def data_transmit(self, service):
@@ -15,13 +15,14 @@ class BluetoothTransmitter:
             volume = sum(self.samples) // len(self.samples)
             if volume > self.threshold:
                 print("음성 감지됨 - 시간:", time.monotonic())
+#                 print(bytes(self.samples))
                 self.bluetooth.write(bytes(self.samples))
 
         elif service == 2:
             print("doing nohing")
-            self.bluetooth.write(bytes(self.samples))
         return True
             
     def refresh(self):
         self.samples = array.array('H', [0] * 160)
+
 
