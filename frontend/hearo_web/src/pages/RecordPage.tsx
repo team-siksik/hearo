@@ -231,6 +231,7 @@ function RecordPage() {
                 {recordData.memoList.map((item: MemoFromServerType, idx) => {
                   return (
                     <div key={item.memoSeq} className="relative mb-3">
+                      //FIXME: fix
                       <MemoItem item={item} />
                       <div
                         className="absolute right-4 top-0 w-4"
