@@ -18,19 +18,9 @@ function Button({ type, children, onClick }: PropsType) {
         <button onClick={onClick} className="rounded-xl px-4 py-1 shadow-md">
           {children}
         </button>
-      ) : type === "blueBgBtn" ? (
-        <button
-          className="group relative w-full transform overflow-hidden rounded-xl bg-blue-main px-4 py-2 shadow-md "
-          onClick={onClick}
-        >
-          <div className="absolute inset-0 w-3 bg-white transition-all duration-[250ms] ease-out group-hover:w-full"></div>
-          <span className="relative text-white group-hover:text-blue-main">
-            {children}
-          </span>
-        </button>
       ) : type === "blueTextBtn" ? (
         <button
-          className="group relative w-full overflow-hidden rounded-xl border border-blue-main px-4 py-2 shadow-md"
+          className="group relative w-full overflow-hidden rounded-xl border border-blue-main bg-white px-4 py-2 shadow-md"
           onClick={onClick}
         >
           <div className="absolute inset-0 w-3 bg-blue-main transition-all duration-[250ms] ease-out group-hover:w-full"></div>
@@ -50,6 +40,16 @@ function Button({ type, children, onClick }: PropsType) {
           className="group relative m-4 w-full overflow-hidden rounded-xl border 
           border-blue-main bg-white px-4 py-2 text-blue-main
           shadow-md transition-all duration-[250ms] ease-out hover:bg-blue-50"
+          onClick={onClick}
+        >
+          <div className="absolute inset-0 w-3  "></div>
+          <span className="relative">{children}</span>
+        </button>
+      ) : type === "settingFavAddButton" ? (
+        <button
+          className="group relative m-4 w-full overflow-hidden rounded-xl border 
+          border-blue-main bg-blue-main px-4 py-2 text-white
+          shadow-md transition-all duration-[250ms] ease-out hover:bg-blue-50 hover:text-blue-main"
           onClick={onClick}
         >
           <div className="absolute inset-0 w-3  "></div>
@@ -83,7 +83,7 @@ function Button({ type, children, onClick }: PropsType) {
         </button>
       ) : type === "accountDeleteButton" ? (
         <button
-          className="mt-4 w-full overflow-hidden rounded-xl border border-red-main bg-red-500 px-4 py-2
+          className="mb-4 mt-4 w-full overflow-hidden rounded-xl border border-red-main bg-red-500 px-4 py-2
         text-white shadow-md transition-all duration-[250ms] ease-out hover:bg-red-main"
           onClick={onClick}
         >
@@ -100,6 +100,19 @@ function Button({ type, children, onClick }: PropsType) {
           <span className="relative text-black">
             <div className="text-center">{children}</div>
           </span>
+        </button>
+      ) : type === "addButton" ? (
+        <button
+          className="
+          bg-wight group relative w-full
+          overflow-hidden          
+          rounded-xl border border-blue-main bg-white px-4 py-2 
+          text-blue-main
+          shadow-md  hover:border-0 hover:bg-blue-50"
+          onClick={onClick}
+        >
+          <div className="absolute inset-0 w-3"></div>
+          <span className="relative">{children}</span>
         </button>
       ) : (
         <button onClick={onClick}>{children}</button>
