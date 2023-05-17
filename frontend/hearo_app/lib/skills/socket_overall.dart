@@ -79,6 +79,7 @@ class SocketOverall {
 
   void getSignLang() {
     socket.on("word", (data) {
+      print("$data, @@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
       return data;
     });
   }

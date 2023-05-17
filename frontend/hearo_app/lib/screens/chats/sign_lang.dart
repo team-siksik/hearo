@@ -16,10 +16,31 @@ class SignLang extends StatefulWidget {
 }
 
 class _SignLangState extends State<SignLang> {
+  late Timer timer;
   final SocketOverall videoSocket = SocketOverall();
   late List<CameraDescription> cameras;
   late CameraController cameraController;
   bool isStreamingImages = false;
+  String what = '카메라 버튼을 눌러 인식 시작';
+  List temp = [
+    "start",
+    "start",
+    "start",
+    "start",
+    "start",
+    "start",
+    "start",
+    "start",
+    "start",
+    "start",
+    "start",
+  ];
+  @override
+  void setState(VoidCallback fn) {
+    if (mounted) {
+      super.setState(fn);
+    }
+  }
 
   @override
   void initState() {
@@ -35,7 +56,8 @@ class _SignLangState extends State<SignLang> {
           break;
         }
       }
-      cameraController = CameraController(frontCamera, ResolutionPreset.medium);
+      cameraController =
+          CameraController(frontCamera, ResolutionPreset.veryHigh);
 
       cameraController.initialize().then((_) {
         if (!mounted) {
@@ -50,10 +72,22 @@ class _SignLangState extends State<SignLang> {
 
   @override
   void dispose() {
+    stopFunction(); // 타이머를 멈추는 함수 호출
+
     cameraController.dispose();
     videoSocket.closeRoom();
     videoSocket.disconnect();
     super.dispose();
+  }
+
+  void stopFunction() {
+    // 타이머가 실행 중인 경우에만 취소
+    if (timer.isActive) {
+      timer.cancel();
+      setState(() {
+        isStreamingImages = false;
+      });
+    }
   }
 
   void startImageStream() async {
@@ -73,39 +107,55 @@ class _SignLangState extends State<SignLang> {
     setState(() {
       isStreamingImages = true;
     });
-    Timer timer = timeSend();
-
+    timer = timeSend();
     // 일정 시간(예: 600초) 후에 함수 멈추기
-    Timer(Duration(seconds: 600), () {
-      stopFunction(timer);
+    Timer(Duration(seconds: 10), () {
+      stopFunction();
     });
   }
 
   Timer timeSend() {
-    return Timer.periodic(Duration(milliseconds: (1000 ~/ 30)), (timer) {
+    return Timer.periodic(Duration(milliseconds: (500)), (timer) {
       // 1초에 30번 실행되는 함수 호출
       takePicture();
     });
   }
 
   void takePicture() async {
-    try {
-      final image = await cameraController.takePicture();
-      final File file = File(image.path);
-      final bytes = await file.readAsBytes();
-      final encodedImage = base64.encode(bytes);
-      videoSocket.sendVideo(encodedImage);
-    } catch (e) {
-      print(e);
-    }
+    final image = await cameraController.takePicture();
+    final File file = File(image.path);
+    final bytes = await file.readAsBytes();
+    videoSocket.sendVideo(base64.encode(bytes));
+
+    // 이전에 등록된 핸들러 제거
+    videoSocket.socket.off("word");
+    print("A@@@@A");
+
+    // 새로운 핸들러 등록
+    getSignLang();
   }
 
-  void stopFunction(Timer timer) {
-    setState(() {
-      isStreamingImages = false;
+  void getSignLang() {
+    videoSocket.socket.on("word", (data) {
+      print("$data, @@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+      processData(data); // 데이터 처리 함수 호출
     });
-    timer.cancel();
-    print('함수가 멈추었습니다.');
+  }
+
+  void processData(data) async {
+    final updatedTemp = List.from(temp); // temp 리스트를 복사하여 새로운 리스트 생성
+    updatedTemp.add(data); // 새로운 데이터를 추가
+
+    print('$data @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@98@@@@');
+    print(
+        '${data.runtimeType} @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
+    print("$what @@@@@@@@@@@");
+    print("&&&&@@@@&&&&&&&&&");
+    print("$temp, @@@@");
+
+    setState(() {
+      temp = updatedTemp; // 업데이트된 리스트로 temp 변수를 갱신
+    });
   }
 
   void stopImageStream() {
@@ -139,14 +189,47 @@ class _SignLangState extends State<SignLang> {
       appBar: CustomAppBarInner(name: "수어 인식"),
       body: Column(
         children: [
+          TextButton(
+              onPressed: () {
+                setState(() {
+                  print("아");
+                  print("$temp @@@@@@@@@@@@@@@@@");
+                });
+              },
+              child: Text(what)),
+          SizedBox(
+            height: 50,
+            child: ListView.separated(
+              separatorBuilder: (context, index) => SizedBox(
+                width: 10,
+              ),
+              scrollDirection: Axis.horizontal,
+              itemCount: temp.length,
+              itemBuilder: (context, index) {
+                var sample = temp[index];
+                return Text(
+                  sample,
+                  style: TextStyle(fontSize: 28),
+                );
+              },
+            ),
+          ),
           AspectRatio(
-            aspectRatio: 1 / 1,
+            aspectRatio: 2 / 3,
             child: CameraPreview(cameraController),
           ),
+          // CameraPreview(cameraController),
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: isStreamingImages ? stopImageStream : startSend,
+        onPressed: isStreamingImages
+            ? stopImageStream
+            : () async {
+                setState(() {
+                  temp = [];
+                });
+                startSend();
+              },
         child: Icon(isStreamingImages ? Icons.stop : Icons.videocam),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
