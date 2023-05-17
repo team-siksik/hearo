@@ -21,6 +21,7 @@ from BluetoothTransmitter import BluetoothTransmitter
 # 로그용 현재 시간
 start_time = time.time()
 
+
 # 핀 및 기본 정보
 # bluetooth
 bluetooth = busio.UART(board.GP0, board.GP1, baudrate=9600)
@@ -79,7 +80,7 @@ mycam.Camera_Init()
 utime.sleep(1)
 mycam.clear_fifo_flag()
 mycam.set_format(JPEG)
-mycam.Camera_Init()
+mycam.OV2640_set_JPEG_size(OV2640_320x240)
 mycam.set_bit(ARDUCHIP_TIM,VSYNC_LEVEL_MASK)
 trasmitter = BluetoothTransmitter(bluetooth, mic, mycam)
 
@@ -90,46 +91,51 @@ def loading(sleep_time):
     output.splash.append(loading_grid)
     time.sleep(sleep_time)
 # camera capture
-def read_fifo_burst():
-    print("capture working")
-    count=0
-    lenght=mycam.read_fifo_length()
+def capture_image():
+    mycam.flush_fifo()
+    mycam.clear_fifo_flag()
+    mycam.start_capture()
+    finished = 0
+    while finished == 0:
+        if mycam.get_bit(ARDUCHIP_TRIG,CAP_DONE_MASK)!=0:
+            finished = get_still(mycam)
+    print('Capture Finished!')
+def get_still(mycam):
+    once_number = 128
+    buffer=bytearray(once_number)
+    count = 0
+    finished = 0
+    length = mycam.read_fifo_length()
     mycam.SPI_CS_LOW()
     mycam.set_fifo_burst()
-    while True:
-        mycam.spi.readinto(buffer,start=0,end=once_number)
-        bluetooth.write(buffer)
-        utime.sleep(0.00015)
-        count+=once_number
-        if count+once_number>lenght:
-            count=lenght-count
-            mycam.spi.readinto(buffer,start=0,end=count)
-            bluetooth.write(buffer)
+
+    while finished == 0:
+        mycam.spi.readinto(buffer, start=0, end=once_number)
+        print(str(count) + ' of ' + str(length))
+        bluetooth.write(bytes(buffer))
+        count += once_number
+        if count + once_number > length:
+            print(str(count) + ' of ' + str(length))
+            count = length - count
+            mycam.spi.readinto(buffer, start=0, end=count)
+            bluetooth.write(bytes(buffer))
             mycam.SPI_CS_HIGH()
             mycam.clear_fifo_flag()
-            break
+            finished = 1
+            return finished
 # Load font
 print("Font time: {:.2f} seconds".format(time.time() - start_time))
-font_file = "NotoSans-Medium_10.bdf"
+font_file = "NotoSans-Medium_10.pcf"
 korean_words = open("korean.txt", "r").read()
 font = bitmap_font.load_font(font_file)
 loading(3)
-# loading_font
-async def loading_font():
-    print("Font time: {:.2f} seconds".format(time.time() - start_time))
-    for i in range(0, len(korean_words),5):
-        print("Font{} time: {:.2f} seconds".format(i, time.time() - start_time))
-        font.load_glyphs(korean_words[i:i+5])
-        print("Font{} time: {:.2f} seconds".format(i, time.time() - start_time))
-        await asyncio.sleep(0.3)
-    return 0
-
 print("start bluetooth")
 output.splash.pop(-1)
 print("Font load time: {:.2f} seconds".format(time.time() - start_time))
 async def main():
     service = 1
     already_pressed = False
+    isCapturing = False
 #     loading_task = asyncio.create_task(loading_font())
     while True:
 #         print("running")
@@ -137,16 +143,16 @@ async def main():
         if touchpad.value and not already_pressed:
             already_pressed = touchpad.value
             print("pressed1")
-            time.sleep(0.5)
+            time.sleep(0.8)
             if touchpad.value and already_pressed:
                 print("start capturing")
-                mycam.flush_fifo();
-                mycam.clear_fifo_flag();
-                mycam.start_capture();
-                if mycam.get_bit(ARDUCHIP_TRIG,CAP_DONE_MASK)!=0:
-                    print("working?")
-                    read_fifo_burst() 
+                print("Triggered")
+                if not isCapturing:
+                    isCapturing = True
+                    capture_image();
+                utime.sleep(0.1)
             else:
+                isCapturing = False
                 service = (service + 1) % 3
                 print(service)
                 if service == 0:
