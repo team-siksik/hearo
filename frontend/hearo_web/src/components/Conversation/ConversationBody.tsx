@@ -16,8 +16,7 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { saveMeeting, startMeeting } from "@/redux/modules/meeting";
 
 //FIXME: accessToken 연결 전 수정해야함
-const accessToken =
-  "eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJ0ZWFtc2lrc2lrMkBnbWFpbC5jb20iLCJpYXQiOjE2ODQxOTk2MzUsImV4cCI6MTY4NDMyOTIzNX0.uKlQfCf4tXmS088BMYXCsougugIXCaRwn9qFmaVRGxw";
+const accessToken = localStorage.getItem("accessToken");
 const roomNo = 1343;
 
 const socketURl = "http://k8a6031.p.ssafy.io:80/";
@@ -293,7 +292,6 @@ function ConversationBody({
     setIsStarted(true);
     setIsLoading(true);
 
-    //TODO: socket으로 보내는 recorder
     const subRecorder1 = new Recorder(input, {
       workerPath: { recorderWorkerPath },
     });
@@ -357,7 +355,7 @@ function ConversationBody({
     if (!isRecording) {
       const start = async () => {
         try {
-          const result = await dispatch(startMeeting(accessToken));
+          const result = await dispatch(startMeeting(accessToken!));
           if (result) {
             record()
               .then((response) => {
@@ -476,7 +474,7 @@ function ConversationBody({
 
   //room close http api request
   async function closeRoomAPI(blob?: Blob) {
-    MeetingAPI.finishMeeting(accessToken, roomSequence.current!)
+    MeetingAPI.finishMeeting(accessToken!, roomSequence.current!)
       .then(() => {
         if (blob) {
           dispatch(saveMeeting(blob))
@@ -604,7 +602,6 @@ function ConversationBody({
             대화를 시작하는 버튼을 눌러주세요
           </Alert>
         )}
-        {/* {audio && <audio src={audio} controls />} */}
         <FloatingButton
           type="memo"
           onClick={() => {

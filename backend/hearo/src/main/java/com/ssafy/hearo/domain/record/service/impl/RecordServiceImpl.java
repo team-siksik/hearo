@@ -50,6 +50,7 @@ public class RecordServiceImpl implements RecordService {
             float frameRate = format.getFrameRate();
             durationInSeconds = (long)(audioFileLength / frameRate);
         } catch (Exception e) {
+            log.info(e.getMessage());
             throw new ErrorException(RecordErrorCode.RECORD_TIME_CALCULATION_FAILED);
         }
         String minute = String.format("%02d", durationInSeconds / 60);
@@ -79,6 +80,7 @@ public class RecordServiceImpl implements RecordService {
                 }
             }
         } catch (Exception e) {
+            log.info(e.getMessage());
             throw new ErrorException(RecordErrorCode.GET_RECORD_PREVIEW_FAILED);
         }
         return preview;
@@ -168,6 +170,7 @@ public class RecordServiceImpl implements RecordService {
             JsonParser jsonParser = new JsonParser();
             clovaJson = jsonParser.parse(reader).getAsJsonObject().toString();
         } catch (Exception e) {
+            log.info(e.getMessage());
             throw new ErrorException(RecordErrorCode.GET_RECORD_FAILED);
         }
         log.info("[getRecord] 클로바 URL -> JSON 텍스트 형식으로 변환 완료");

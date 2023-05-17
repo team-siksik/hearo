@@ -166,4 +166,4 @@ const profileSlice = createSlice({
 export const ProfileAction = profileSlice.actions;
 export default profileSlice.reducer;
 
-export { getUserSetting, getFrequent, deleteFrequent}
+export { getUserSetting, getFrequent, deleteFrequent, changeUserSetting, changeFrequent}
