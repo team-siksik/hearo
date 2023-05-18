@@ -155,7 +155,12 @@ transcoder_cache = {}
 
 @socket_manager.on("audio")
 async def audio(sid, data):
-    logger.info("STT: sd router api 호출")
+    logger.info("STT: {sid} sent audio")
+
+    room_id = data['room_id']
+    audio = data['audio']
+
+    waveform(room_id, audio)
 
     if sid in transcoder_cache:
         transcoder = transcoder_cache[sid]
@@ -165,7 +170,7 @@ async def audio(sid, data):
         transcoder_cache[sid] = transcoder
         logger.info(f"STT: Transcoder started for room {sid}")
 
-    transcoder.write(data['audio'])
+    transcoder.write(audio)
 
     if transcoder.transcript:
         logger.info(transcoder.transcript)
@@ -173,25 +178,41 @@ async def audio(sid, data):
         transcoder.transcript = None
     else:
         sending = {"final" : transcoder.final, "transcript" : "nothing"}
-    await socket_manager.emit("data", sending)
+
+    await socket_manager.emit("data", sending, room_id)
 
 
-@socket_manager.on("waveform")
-async def waveform(sid, data):
-    logger.info(f"waveform: {sid} sent audio")
+# @socket_manager.on("waveform")
+# async def waveform(sid, data):
+#     logger.info(f"waveform: {sid} sent audio")
 
-    room_id = data["room_id"]
-    audio_data = data["audio"]
+#     room_id = data["room_id"]
+#     audio_data = data["audio"]
 
-    await socket_manager.emit("info", f"{sid} sent audio", room_id)
+#     await socket_manager.emit("info", f"{sid} sent audio", room_id)
 
-    binary_data = base64.b64decode(audio_data)
+#     binary_data = base64.b64decode(audio_data)
 
-    buffer = io.BytesIO(binary_data)
-    audio, sr = librosa.load(buffer, sr=None)
-    stft = np.abs(librosa.stft(audio))
-    spectral_centroids = librosa.feature.spectral_centroid(S=stft, sr=sr)
-    logger.info(spectral_centroids)
+#     buffer = io.BytesIO(binary_data)
+#     audio, sr = librosa.load(buffer, sr=None)
+#     stft = np.abs(librosa.stft(audio))
+#     spectral_centroids = librosa.feature.spectral_centroid(S=stft, sr=sr)
+#     logger.info(spectral_centroids)
 
-    average = np.mean(np.array(spectral_centroids).flatten())
-    logger.info(average)
+#     average = np.mean(np.array(spectral_centroids).flatten())
+#     logger.info(average)
+
+
+async def waveform(room_id, wav_data):
+    file_path = 'temp.wav'
+    with open(file_path, 'wb') as f:
+        f.write(wav_data)
+    waveform, sr = librosa.load(file_path)
+
+    spectrum_centroid = librosa.feature.spectral_centroid(y=waveform, sr=sr)
+    logger.info(f"waveform: {spectrum_centroid}")
+
+    average = np.mean(np.array(spectrum_centroid).flatten())
+    logger.info(f"waveform: {average}")
+
+    os.remove(file_path)
