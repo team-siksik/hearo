@@ -29,16 +29,15 @@ function ConvertBar() {
   useEffect(() => {
     // console.log(location.pathname)
     const parseurl = location.pathname.split("/mypage/")[1];
-    function check() { 
-      if (parseurl === 'settings')
-      return setIsSettingClickFocused(true)
+    function check() {
+      if (parseurl === "settings") return setIsSettingClickFocused(true);
       else {
         return setIsSettingClickFocused(false);
       }
     }
     check();
   }, [location.pathname]);
-  
+
   const SettingClick = () => {
     navigate("/mypage/settings");
   };
@@ -78,7 +77,7 @@ function ConvertBar() {
               >
                 <div className="flex flex-row text-2xl font-light">
                   <BookmarkIcon className="m-1 mr-2 h-6 w-6" />
-                  자주쓰는 말
+                  자주 쓰는 말
                 </div>
               </button>
             </>
@@ -94,11 +93,11 @@ function ConvertBar() {
               </button>
               <button
                 onClick={FavClick}
-                className="ml-4 flex h-10 flex-row justify-between hover:cursor-pointer border-b-4 border-blue-main text-blue-main"
+                className="ml-4 flex h-10 flex-row justify-between border-b-4 border-blue-main text-blue-main hover:cursor-pointer"
               >
                 <div className="flex flex-row text-2xl font-light">
                   <BookmarkIcon className="m-1 mr-2 h-6 w-6" />
-                  자주쓰는 말
+                  자주 쓰는 말
                 </div>
               </button>
             </>

@@ -7,9 +7,9 @@ import bactrianCamel from "@/assets/Icon/bactrianCamel.json";
 interface PropsType {}
 function DownloadPage() {
   return (
-    <div className="flex h-[100vh]">
-      <div className="m-auto">
-        <div style={{ marginTop: "8rem", marginBottom: "8rem" }}>
+    <div className="h-[100vh] w-[100%] snap-y snap-mandatory overflow-auto">
+      <div className="flex h-[100vh] w-[100%] snap-center">
+        <div className="m-auto">
           <Player
             src={bactrianCamel}
             loop
@@ -40,8 +40,10 @@ function DownloadPage() {
             </a>
           </div>
         </div>
+      </div>
 
-        <div style={{ marginTop: "8rem", marginBottom: "8rem" }}>
+      <div className="flex h-[100vh] w-[100%] snap-center">
+        <div className="m-auto">
           <Player
             src={OfficeMen}
             loop
@@ -58,7 +60,7 @@ function DownloadPage() {
                 <span className="text-xl">Office</span>
               </p>
             </div>
-            <div className="mt-6">
+            <div className="my-7">
               <p>회사에서, 학교에서, 회의가 필요한 어디에서나</p>
               <p>
                 <span className="font-semibold text-blue-main">
@@ -67,12 +69,7 @@ function DownloadPage() {
                 를 통해 회의에 편하게 참여하세요!
               </p>
             </div>
-            <p className="mt-6 text-sm">PC 환경에서 접속해 주세요.</p>
-          </div>
-          <div className="my-7">
-            <a href="https://k8a603.p.ssafy.io/" download>
-              <Button type="blueTextBtn">Hearo Office 바로가기</Button>
-            </a>
+            <p className="my-6 text-sm">PC 환경에서 접속해 주세요.</p>
           </div>
         </div>
       </div>
