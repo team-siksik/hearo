@@ -14,6 +14,7 @@ import Alert from "../common/ui/Alert";
 import { MemoType } from "@/types/types";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { saveMeeting, startMeeting } from "@/redux/modules/meeting";
+import { getUserSetting } from "@/redux/modules/profile";
 
 //FIXME: accessToken 연결 전 수정해야함
 const accessToken = localStorage.getItem("accessToken");
@@ -95,7 +96,6 @@ function ConversationBody({
 
   // Text-to-Speech를 위한 text
   const [text, setText] = useState<string>("");
-
   const addMemoList = useAppSelector((state) => state.meeting.memoList);
   const [memoList, setMemoList] = useState<MemoType[]>([]);
 
@@ -446,7 +446,6 @@ function ConversationBody({
         socket.current?.emit("close_room", { room_id: roomNo });
         socket.current?.close();
         socket.current = null;
-        
       }
       setIsRecording(false);
       setTimerStarted(false);
