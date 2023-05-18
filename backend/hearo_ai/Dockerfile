@@ -19,7 +19,5 @@ ENV GOOGLE_APPLICATION_CREDENTIALS=./credential.json
 
 COPY . .
 
-ENV SSL_CERT_PATH=./ssl_certificate.pem
-ENV SSL_KEY_PATH=./ssl_private_key.pem
 
 CMD ["uvicorn", "main:/app", "--host", "0.0.0.0", "--port", "8090"]
