@@ -125,7 +125,6 @@ class Transcoder(object):
         except Exception as e:
             logger.error(f"STT: error occurred - {e}")
 
-
     def stream_generator(self):
         logger.info(f"STT: start stream_generator - {self.closed}")
 
@@ -155,7 +154,7 @@ transcoder_cache = {}
 
 @socket_manager.on("audio")
 async def audio(sid, data):
-    logger.info("STT: {sid} sent audio")
+    logger.info(f"STT: {sid} sent audio")
 
     room_id = data['room_id']
     audio = data['audio']
