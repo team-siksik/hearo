@@ -56,7 +56,7 @@ function MainPage({ setLoginModal }: PropsType) {
           <Layout>
             <div className="relative">
               {/* 안녕하세요, 000 님 */}
-              <div className="flex min-h-screen w-full flex-row justify-center ">
+              <div className="flex min-h-screen w-full justify-center flex-row ">
                 <div className="flex items-center">
                   <Player
                     src={Mainmeeting}
@@ -69,12 +69,12 @@ function MainPage({ setLoginModal }: PropsType) {
                       <h1 className="font-chewy text-5xl font-extrabold">
                         HEARO
                       </h1>
-                      <span> Office</span>
+                      <span>&nbsp;Office</span>
                     </div>
                     {isLoggedIn ? (
                       <>
                         <div className="text-sm">
-                          안녕하세요, {user?.nickname}님!!!
+                          안녕하세요, {user?.nickname}님!!!&nbsp;
                         </div>
                         <div className="flex flex-row text-sm font-medium">
                           <div className="text-blue-main">히어로</div>
@@ -83,16 +83,17 @@ function MainPage({ setLoginModal }: PropsType) {
                       </>
                     ) : (
                       <>
-                        <div className="text-sm">반가워요.</div>{" "}
-                        <div className="flex flex-row text-sm font-medium">
-                          <Button onClick={handleCommPageClick}>
-                            <span>로그인 후&nbsp;</span>
-                            <span className="font-semibold text-blue-main">
-                              히어로
-                            </span>
-                          </Button>
-                          <span>를 이용해보세요.</span>
-                        </div>
+                        <div className="text-sm">반가워요.</div>
+
+                          <div className="flex flex-row text-sm font-medium">
+                            <Button onClick={handleCommPageClick}>
+                              <span>로그인 후&nbsp;</span>
+                              <span className="font-semibold text-blue-main">
+                                히어로
+                              </span>
+                            </Button>
+                            <span>를 이용해보세요.</span>
+                          </div>
                       </>
                     )}
                     <div>
@@ -108,7 +109,10 @@ function MainPage({ setLoginModal }: PropsType) {
                       </p>
                     </div>
                     <div className="mt-8 w-40 items-center">
-                      <Button onClick={handleCommPageClick} type="blueTextBtn">
+                      <Button
+                        onClick={handleCommPageClick}
+                        type="blueTextBtn"
+                      >
                         이용하러 가기
                       </Button>
                     </div>
@@ -268,7 +272,7 @@ function MainPage({ setLoginModal }: PropsType) {
               <div className="h-24 w-full"></div>
             </div>
           </Layout>
-
+          
           {/* footer */}
           <footer className="h-72 bg-blue-950">
             <div className="p-4 pb-2">
