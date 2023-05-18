@@ -146,6 +146,7 @@ async def audio_processor(websocket, path):
     while transcoder.closed is False:
         try:
             data = await websocket.recv()
+            print(type(data))
         except websockets.ConnectionClosed:
             print("Connection closed")
             transcoder.closed = True
