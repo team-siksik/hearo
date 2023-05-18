@@ -15,6 +15,7 @@ interface DelItem {
 
 // 초기상태
 const initialState = {
+  isLoading: false,
   recordList: [],
   isLast: false,
   recordData: {
@@ -57,7 +58,6 @@ const getRecordDetail = createAsyncThunk(
     return response.data.data;
   }
 );
-
 
 // 대화기록 삭제
 const deleteRecords = createAsyncThunk(
@@ -119,13 +119,21 @@ const recordSlice = createSlice({
 
   //middleware
   extraReducers: (builder) => {
+    builder.addCase(getRecordList.pending, (state) => {
+      state.isLoading = true;
+    });
     builder.addCase(getRecordList.fulfilled, (state, action) => {
+      state.isLoading = false;
       state.isLast = action.payload.isLast;
       state.recordList = action.payload.recordList;
+    });
+    builder.addCase(getRecordDetail.pending, (state) => {
+      state.isLoading = true;
     });
     builder.addCase(getRecordDetail.fulfilled, (state, action) => {
       return {
         ...state,
+        isLoading: false,
         recordData: action.payload,
       };
     });

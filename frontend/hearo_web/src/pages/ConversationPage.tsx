@@ -71,7 +71,7 @@ function ConversationPage() {
         />
       ) : null}
       {/* <MeetingSidebar /> */}
-      <RecordpageSideBar />
+      <RecordpageSideBar isStarted={isStarted} />
       <audio ref={audioRef} src={startVoice} />
       <div className="absolute right-0 mt-[4.25rem] w-[82%]">
         <ConversationHeader
