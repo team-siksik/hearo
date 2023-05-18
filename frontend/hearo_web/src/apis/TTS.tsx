@@ -17,13 +17,22 @@ function TTS({ text, setText }: PropsType) {
   const voicePreference = useAppSelector(
     (state) => state.profile.setting?.voiceSetting
   );
+  const [voicePrefer, setVoicePrefer] = useState<number>(0);
+
+  useEffect(() => {
+    if (voicePreference === 1) {
+      setVoicePrefer(1);
+    } else {
+      setVoicePrefer(2);
+    }
+  }, [voicePreference]);
 
   useEffect(() => {
     dispatch(getUserSetting());
   }, []);
 
   useEffect(() => {
-    if (voicePreference === 1) {
+    if (voicePrefer === 1) {
       voiceGender.current = "ko-KR-Neural2-A";
       gender.current = "female";
     } else {
