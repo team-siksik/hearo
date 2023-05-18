@@ -5,7 +5,7 @@ import { css } from "@emotion/react";
 import { Layout, Button, ConversationInfo } from "@/components";
 import screenshot1 from "@/assets/screenshot1.png";
 import screenshot2 from "@/assets/screenshot2.png";
-import Carousel6 from "@/assets/Carousel6.svg";
+import screenshot3 from "@/assets/screenshot3.png";
 import { motion } from "framer-motion";
 import { Player } from "@lottiefiles/react-lottie-player";
 import Mainmeeting from "@/assets/Icon/Mainmeeting.json";
@@ -55,7 +55,6 @@ function MainPage({ setLoginModal }: PropsType) {
         <>
           <Layout>
             <div className="relative">
-              {/* 안녕하세요, 000 님 */}
               <div className="flex min-h-screen w-full flex-row justify-center ">
                 <div className="flex items-center">
                   <Player
@@ -65,31 +64,6 @@ function MainPage({ setLoginModal }: PropsType) {
                     style={{ width: "600px", height: "300px" }}
                   />
                   <div className="sticky top-48 m-4 flex h-80 w-[50%] flex-col items-start justify-center bg-white">
-                    {/* {isLoggedIn ? (
-                      <>
-                        <div className="text-sm">
-                          안녕하세요, {user?.nickname}님!!!&nbsp;
-                        </div>
-                        <div className="flex flex-row text-sm font-medium">
-                          <div className="text-blue-main">히어로</div>
-                          <div>에 오신 것을 환영해요 ^____^</div>
-                        </div>
-                      </>
-                    ) : (
-                      <>
-                        <div className="text-sm">반가워요.</div>
-
-                          <div className="flex flex-row text-sm font-medium">
-                            <Button onClick={handleCommPageClick}>
-                              <span>로그인 후&nbsp;</span>
-                              <span className="font-semibold text-blue-main">
-                                히어로
-                              </span>
-                            </Button>
-                            <span>를 이용해보세요.</span>
-                          </div>
-                      </>
-                    )} */}
                     <div className="text-blue-main">
                       <p className="text-l mb-1 font-semibold">
                         소리를 잇는 다리,
@@ -125,9 +99,9 @@ function MainPage({ setLoginModal }: PropsType) {
                   animate={
                     scrollPosition > 200
                       ? { opacity: 1, x: 0 }
-                      : { opacity: 0, x: "-100vw" }
+                      : { opacity: 0, x: "-30vw" }
                   }
-                  transition={{ duration: 1.5 }}
+                  transition={{ duration: 1 }}
                 >
                   <div className="grid grid-cols-2 ">
                     <div className="col1">
@@ -137,19 +111,17 @@ function MainPage({ setLoginModal }: PropsType) {
                           회의 시작하기
                         </h3>
                         <p className="my-4 text-xl">
-                          <span className="font-bold">실시간</span>으로
-                          <span className="font-bold"> 분리</span>
-                          하여 보여줍니다. <br /> 회의를 시작해서 회의장에서
-                          당당하게 목소리를 내어 회의를 이끌어보세요.
-                          <br />
-                          <span>그리고 모든 걸 기록해서, 활용해보세요.</span>
+                          <p>나누는 이야기를 실시간으로 확인할 수 있습니다.</p>
+                          <p>하고 싶은 말을 Text-to-Speech로 재생할 수 있고,</p>
+                          <p>chatGPT로부터 말을 추천받을 수도 있어요!</p>
+                          <p>중요한 내용은 메모장에 기록해 보세요.</p>
                         </p>
                         <div className="w-1/3">
                           <Button
                             onClick={handleCommPageClick}
                             type="blueTextBtn"
                           >
-                            회의 시작하기
+                            시작하기
                           </Button>
                         </div>
                       </div>
@@ -157,7 +129,7 @@ function MainPage({ setLoginModal }: PropsType) {
                     <div className="col2 flex items-center justify-center">
                       <div
                         css={css`
-                          background-image: url(${screenshot1});
+                          background-image: url(${screenshot2});
                           background-repeat: no-repeat;
                           background-position: center;
                           background-size: contain;
@@ -183,7 +155,7 @@ function MainPage({ setLoginModal }: PropsType) {
                     <div className="col1 flex items-center justify-center">
                       <div
                         css={css`
-                          background-image: url(${screenshot2});
+                          background-image: url(${screenshot1});
                           background-repeat: no-repeat;
                           background-position: center;
                           background-size: contain;
@@ -194,29 +166,17 @@ function MainPage({ setLoginModal }: PropsType) {
                     </div>
                     <div className="col2">
                       <h3 className="text-2xl font-bold text-blue-main">
-                        회의 기록 확인
+                        회의 기록들 한눈에 보기
                       </h3>
                       <p className="my-4 text-xl">
-                        기록한 회의를 확인해보세요. 회의 중에 남긴 메모도 확인할
-                        수 있고, 회의 중에
-                        <span className="font-bold"> chatGPT</span>으로부터
-                        <span className="font-bold">
-                          {" "}
-                          대화 상황에 알맞은 대답을 추천
-                        </span>{" "}
-                        받을 수 있어요!
-                        <br />
-                        <span>
-                          회의록의 제목을 수정할 수 있고, 음성을 재생할 수
-                          있어요!
-                        </span>
+                        진행한 회의를 한눈에 확인할 수 있어요.
                       </p>
                       <div className="w-1/3">
                         <Button
                           onClick={handleRecordPageClick}
                           type="blueTextBtn"
                         >
-                          회의 기록 확인하기
+                          보러가기
                         </Button>
                       </div>
                     </div>
@@ -237,19 +197,17 @@ function MainPage({ setLoginModal }: PropsType) {
                       {/* 회의 시작하기 */}
                       <div className="startMeeting">
                         <h3 className="text-2xl font-bold text-blue-main">
-                          메모 확인하기
+                          내 기록 보기
                         </h3>
                         <p className="my-4 text-xl">
-                          <span className="font-bold">실시간</span>으로
-                          <span className="font-bold"> 분리</span>
-                          하여 보여줍니다.
+                          회의에서 나눈 이야기와 작성한 메모를 확인할 수 있어요.
                         </p>
                         <div className="w-1/3">
                           <Button
                             onClick={handleCommPageClick}
                             type="blueTextBtn"
                           >
-                            메모 보러가기
+                            보러가기
                           </Button>
                         </div>
                       </div>
@@ -257,7 +215,7 @@ function MainPage({ setLoginModal }: PropsType) {
                     <div className="col2 flex items-center justify-center">
                       <div
                         css={css`
-                          background-image: url(${Carousel6});
+                          background-image: url(${screenshot3});
                           background-repeat: no-repeat;
                           background-position: center;
                           background-size: contain;
@@ -274,7 +232,7 @@ function MainPage({ setLoginModal }: PropsType) {
           </Layout>
 
           {/* footer */}
-          <footer className="bg-neutral-700 px-20 py-10 text-sm text-gray-300">
+          <footer className="bg-neutral-700 px-20 py-10 text-sm leading-6 text-gray-300">
             <div className="mb-3">
               서비스 이용약관 | 개인정보 처리방침 | 회사 안내
             </div>
