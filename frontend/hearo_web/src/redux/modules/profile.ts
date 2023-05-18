@@ -14,7 +14,7 @@ interface ProfileType {
     userSeq: Number;
     fontSize: Number;
     voiceSetting: Number;
-  } | null;
+  };
   FrequentList: FrequentType[];
 }
 
@@ -35,12 +35,28 @@ const initialState: ProfileType = {
 // get user Setting
 const getUserSetting = createAsyncThunk(
   "profile/getUserSetting",
-  async (accessToken: string, thunkAPI) => {
-    const response = await ProfileAPI.getUserSetting(accessToken);
+  async (thunkAPI) => {
+    const accessToken = localStorage.getItem("accessToken");
+    const response = await ProfileAPI.getUserSetting(accessToken!);
     if (!response) {
       throw new Error();
     }
     return response.data.data;
+  }
+);
+
+const updateUserSetting = createAsyncThunk(
+  "profile/updateUserSetting",
+  async (voiceSetting: number, thunkAPI) => {
+    const accessToken = localStorage.getItem("accessToken");
+    const response = await ProfileAPI.updateUserSetting(
+      accessToken!,
+      voiceSetting
+    );
+    if (!response) {
+      throw new Error();
+    }
+    return { voiceSetting };
   }
 );
 
@@ -83,10 +99,17 @@ const profileSlice = createSlice({
   //middleware
   extraReducers: (builder) => {
     builder.addCase(getUserSetting.fulfilled, (state, action) => {
-      state.user = action.payload;
-      state.setting = action.payload.setting;
+      state.setting = action.payload;
     });
-
+    builder.addCase(updateUserSetting.fulfilled, (state, action) => {
+      return {
+        ...state,
+        setting: {
+          ...state.setting,
+          voiceSetting: action.payload.voiceSetting,
+        },
+      };
+    });
     // FIXME: types.ts에 frequentSeq가 number형식임
     // builder.addCase(deleteFrequent.fulfilled, (state, action) => {
     //   // const newFrequentList = state.FrequentList.filter(
@@ -115,4 +138,5 @@ export {
   getUserSetting,
   getFrequent,
   // deleteFrequent
+  updateUserSetting,
 };
