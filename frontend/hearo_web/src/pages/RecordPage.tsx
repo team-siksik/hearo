@@ -2,6 +2,7 @@ import { TrashIcon } from "@heroicons/react/24/solid";
 import { ReactComponent as CrossIconRed } from "@/assets/Icon/CrossIconRed.svg";
 import { PencilSquareIcon } from "@heroicons/react/24/outline";
 import { useNavigate, useLocation, useParams } from "react-router-dom";
+import { AnimatePresence, motion } from "framer-motion";
 import {
   Button,
   Dialog,
@@ -11,9 +12,7 @@ import {
 } from "@/components";
 import React, { useState, useEffect, useRef } from "react";
 import { RecordpageSideBar } from "@/components";
-import { RecordAPI } from "@/apis/api";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { useDispatch } from "react-redux";
 import {
   changeRecordTitleAsync,
   deleteMemoAsync,
@@ -43,7 +42,7 @@ function RecordPage() {
   const dispatch = useAppDispatch();
   const location = useLocation();
   const [dialog, setDialog] = useState<DialogType[]>([]);
-
+  const [openMemo, setOpenMemo] = useState<boolean>(false);
   useEffect(() => {
     dispatch(getRecordDetail(Number(location.pathname.substring(9))));
   }, [location]);
@@ -128,6 +127,10 @@ function RecordPage() {
     }
   }
 
+  function addMemo() {
+    setOpenMemo((prev) => !prev);
+  }
+
   return (
     <div>
       <RecordpageSideBar />
@@ -206,47 +209,95 @@ function RecordPage() {
               </div> */}
             </div>
           </div>
-          <div
-            className={
-              recordData?.memoList?.length > 0 ? "grid grid-cols-3 gap-4" : ""
-            }
-          >
-            <div className="col-span-2 my-4 flex w-full flex-col rounded-md p-4 shadow-md">
-              {dialog &&
-                dialog.map((item, idx) => (
-                  // TODO: ADD Favorite Context
-                  <div key={item.start}>
-                    <div>{item.speaker.name}</div>
-                    <div className="flex flex-row items-center">
-                      <Dialog type={item.speaker.label}>{item.text}</Dialog>
-                      <div className="text-sm text-gray-400">
-                        {formatTime(item.start)}
+          <div className="flex scroll-mx-0 flex-row">
+            <motion.div
+              key="left"
+              // className={
+              //   recordData?.memoList?.length > 0 ? "grid grid-cols-3 gap-4" : ""
+              // }
+              style={{
+                maxHeight: "600px",
+                width: openMemo || recordData.memoList ? "70%" : "100%",
+                transition: "width 0.5s",
+                overflow: "auto",
+              }}
+            >
+              <div className="my-4 flex w-full flex-col rounded-md p-4 shadow-md">
+                {dialog &&
+                  dialog.map((item, idx) => (
+                    // TODO: ADD Favorite Context
+                    <div key={item.start}>
+                      <div>{item.speaker.name}</div>
+                      <div className="flex flex-row items-center">
+                        <Dialog type={item.speaker.label}>{item.text}</Dialog>
+                        <div className="text-sm text-gray-400">
+                          {formatTime(item.start)}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
-            </div>
-            {recordData?.memoList?.length > 0 && (
-              <div className="relative col-span-1 my-4 flex w-full flex-col rounded-md p-4 shadow-md">
-                {recordData.memoList.map((item: MemoFromServerType, idx) => {
-                  return (
-                    <div key={item.memoSeq} className="relative mb-3">
-                      //FIXME: fix
-                      {/* <MemoItem item={item} /> */}
-                      <div
-                        className="absolute right-4 top-0 w-4"
-                        onClick={(e) => deleteMemo(item.memoSeq)}
-                      >
-                        <CrossIconRed />
-                      </div>
-                    </div>
-                  );
-                })}
-                <div>
-                  <FloatingButton type="memoInRecord"></FloatingButton>
-                </div>
+                  ))}
               </div>
-            )}
+            </motion.div>
+            <AnimatePresence>
+              {openMemo && (
+                <motion.div
+                  key="right"
+                  style={{
+                    width: "30%",
+                    minHeight: "100px",
+                  }}
+                  initial={{ width: "0%", minHeight: "100px" }}
+                  animate={{ width: "30%", minHeight: "100px" }}
+                  exit={{ width: "0%", minHeight: "100px" }}
+                  transition={{ duration: 0.5 }}
+                >
+                  {recordData?.memoList?.length > 0 ? (
+                    <div className="h-full border-l border-gray-300 px-2">
+                      {recordData.memoList.map(
+                        (item: MemoFromServerType, idx) => {
+                          return (
+                            <div key={item.memoSeq} className="relative mb-3">
+                              <MemoItem item={item} idx={idx} />
+                              <div
+                                className="absolute right-4 top-0 w-4"
+                                onClick={(e) => deleteMemo(item.memoSeq)}
+                              >
+                                <CrossIconRed />
+                              </div>
+                            </div>
+                          );
+                        }
+                      )}
+                    </div>
+                  ) : (
+                    <div className="memoInput relative mt-3 w-full rounded-lg border border-gray-200">
+                      <textarea
+                        name="memo"
+                        className="h-[5.5rem] w-full resize-none rounded-lg p-2 focus:border-none focus:outline-none"
+                        id="memo"
+                        maxLength={500}
+                        // ref={textareaRef}
+                        placeholder="메모 작성하기"
+                        // onKeyDown={handleKeyDown}
+                      ></textarea>
+                      <div className="addMemoBtnBox absolute bottom-1 right-2 flex items-center">
+                        <button
+                          className="addMemoBtn h-8 rounded-lg border border-blue-200 px-4"
+                          type="button"
+                          // onClick={handleSendClick}
+                        >
+                          추가
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
+          <div onClick={addMemo}>
+            <FloatingButton type="memoInRecord"></FloatingButton>
           </div>
           <div className="audio mb-4">
             <audio
