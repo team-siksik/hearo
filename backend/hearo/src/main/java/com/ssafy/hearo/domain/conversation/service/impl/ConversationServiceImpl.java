@@ -198,7 +198,7 @@ public class ConversationServiceImpl implements ConversationService {
         // body
         Map<String, Object> body = new HashMap<>();
         body.put("url", inputS3Url);
-        body.put("language", "ko-KR");
+        body.put("language", "enko");
         body.put("completion", "sync");
         // request
         HttpEntity httpEntity = new StringEntity(new Gson().toJson(body), ContentType.APPLICATION_JSON);
