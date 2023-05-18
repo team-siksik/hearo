@@ -82,6 +82,7 @@ export const ProfileAPI = {
         Authorization: `${accessToken}`,
       },
     }),
+
   // add to user fav comment list
   addMyPhrase: (accessToken: string, sentence: string) =>
     api.post(

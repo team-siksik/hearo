@@ -6,7 +6,8 @@ import { ProfileAPI } from "@/apis/api";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useDispatch } from "react-redux";
 import { FrequentType } from "@/types/types";
-import { getFrequent } from "@/redux/modules/profile";
+import { getFrequent, deleteFrequent } from "@/redux/modules/profile";
+import { error } from "console";
 
 // TODO: 수정추가해야함
 interface MessageType {
@@ -23,13 +24,15 @@ function FrequentPage() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
+  const FrequentData = useAppSelector((state) => state.profile.FrequentList);
+
   useEffect(() => {
     dispatch(getFrequent());
   }, []);
 
-  // 자주 쓰는 말 조회
-  // 개별기록조회
-  const FrequentData = useAppSelector((state) => state.profile.FrequentList);
+  useEffect(() => {
+    setFrequentData(FrequentData);
+  }, [FrequentData]);
 
   const accessToken = localStorage.getItem("accessToken");
   useEffect(() => {
@@ -147,7 +150,7 @@ function FrequentPage() {
           className="fixed right-0 mx-10 mb-4 mt-28 h-[64%] w-[76%] overflow-y-scroll rounded-2xl p-4 shadow-md shadow-gray-200"
         >
           <div className="mt-4 space-y-6 px-6 py-2">
-            {FrequentData.map((c) => (
+            {frequentData.map((c) => (
               <div key={c.frequentSeq}>
                 <div className="flex flex-row">
                   <div className="flex-grow text-gray-950">{c.sentence}</div>
@@ -170,7 +173,7 @@ function FrequentPage() {
       </div>
       {/* 모달발생 시  */}
       {showModal && (
-        <Modal open={true} cannotExit={false}>
+        <Modal open={true} cannotExit={false} setShowModal={setShowModal}>
           {modalType === "add" && (
             <div>
               <div className="mb-2 text-xl font-semibold">
