@@ -316,7 +316,11 @@ class _ChatHomeState extends State<ChatHome> {
                             onPressed: () async {
                               var value = chatController.inputSay;
                               if (value.trim().isEmpty) {
-                                _startListening();
+                                if (_speechToText.isNotListening) {
+                                  _startListening();
+                                } else {
+                                  _stopListening();
+                                }
                                 return;
                               }
                               if (_speechToText.isListening) {
@@ -331,10 +335,6 @@ class _ChatHomeState extends State<ChatHome> {
                               });
                               _scrollController.jumpTo(
                                   _scrollController.position.maxScrollExtent);
-                              await Future.delayed(Duration(milliseconds: 800));
-                              if (_speechToText.isNotListening) {
-                                _startListening();
-                              }
                             },
                             icon: Icon(Icons.send_rounded,
                                 color: Color.fromARGB(255, 97, 97, 97))),

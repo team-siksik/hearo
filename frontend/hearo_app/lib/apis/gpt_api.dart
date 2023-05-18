@@ -6,7 +6,8 @@ import 'package:hearo_app/controller/login_controller.dart';
 LoginController loginController = Get.put(LoginController());
 // const base = 'http://10.0.2.2:8080/api/v1/profile/frequent';
 // const base = 'http://k8a603.p.ssafy.io:8090/run/generate';
-const base = 'http://k8a6031.p.ssafy.io:80/api/v1/tg/generate';
+// const base = 'http://k8a6031.p.ssafy.io:80/api/v1/tg/generate';
+const base = 'https://k8a6031.p.ssafy.io:8090/api/v1/tg/generate';
 
 class ApiGpt {
   static Future sayCreateApi(sentence) async {
