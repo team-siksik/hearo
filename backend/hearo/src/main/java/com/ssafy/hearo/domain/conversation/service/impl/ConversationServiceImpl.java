@@ -228,7 +228,7 @@ public class ConversationServiceImpl implements ConversationService {
         Record record = Record.builder()
                 .conversation(conversation)
                 .account(account)
-                .title(regDtm)
+                .title(regDtm + "의 대화")
                 .recorededFile(inputS3Url)
                 .clovaFile(outputS3Url)
                 .build();
