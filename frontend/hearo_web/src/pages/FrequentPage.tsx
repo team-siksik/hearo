@@ -6,6 +6,7 @@ import { ProfileAPI } from "@/apis/api";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useDispatch } from "react-redux";
 import { FrequentType } from "@/types/types";
+import { getFrequent } from "@/redux/modules/profile";
 
 // TODO: 수정추가해야함
 interface MessageType {
@@ -14,13 +15,17 @@ interface MessageType {
   speaker: string;
 }
 
-function FavContentsPage() {
+function FrequentPage() {
   const [showModal, setShowModal] = useState<boolean>(false);
   const [modalType, setModalType] = useState<"add" | "delete">("add");
   const [frequentData, setFrequentData] = useState<FrequentType[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(getFrequent());
+  }, []);
 
   // 자주 쓰는 말 조회
   // 개별기록조회
@@ -70,7 +75,7 @@ function FavContentsPage() {
         alert("이미 추가된 내용입니다!");
         return;
       }
-      // addMyPhraseAPI();
+      addMyPhraseAPI();
       setInputValue("");
       setShowModal(false);
     } else if (modalType === "delete") {
@@ -80,19 +85,15 @@ function FavContentsPage() {
     }
   }
 
-  // FIXME: 에러 수정해야함
-  // async function addMyPhraseAPI() {
-  //   try {
-  //     const response = await ProfileAPI.addMyPhrase(accessToken!, inputValue);
-  //     const newData: FrequentType = {
-  //       frequentSeq: response.data.data, // 서버에서 반환된 frequentSeq 값 사용
-  //       sentence: inputValue,
-  //     };
-  //     setFrequentData((prevData) => [...prevData, newData]);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // }
+  async function addMyPhraseAPI() {
+    try {
+      await ProfileAPI.addMyPhrase(accessToken!, inputValue);
+      const response = await ProfileAPI.getMyPhraseList(accessToken!);
+      setFrequentData(response.data.data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   async function deleteMyPhraseAPI() {
     try {
@@ -225,4 +226,4 @@ function FavContentsPage() {
   );
 }
 
-export default FavContentsPage;
+export default FrequentPage;
