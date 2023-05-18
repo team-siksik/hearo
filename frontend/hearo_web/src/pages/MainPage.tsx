@@ -64,14 +64,8 @@ function MainPage({ setLoginModal }: PropsType) {
                     autoplay
                     style={{ width: "600px", height: "300px" }}
                   />
-                  <div className="sticky top-48 m-4 flex h-80 w-[50%] flex-col items-center justify-center bg-white">
-                    <div className="m-4 flex flex-row items-end text-xl text-blue-main">
-                      <h1 className="font-chewy text-5xl font-extrabold">
-                        HEARO
-                      </h1>
-                      <span> Office</span>
-                    </div>
-                    {isLoggedIn ? (
+                  <div className="sticky top-48 m-4 flex h-80 w-[50%] flex-col items-start justify-center bg-white">
+                    {/* {isLoggedIn ? (
                       <>
                         <div className="text-sm">
                           안녕하세요, {user?.nickname}님!!!
@@ -94,22 +88,21 @@ function MainPage({ setLoginModal }: PropsType) {
                           <span>를 이용해보세요.</span>
                         </div>
                       </>
-                    )}
-                    <div>
-                      <p className="pt-4">
-                        <span className="font-semibold">
-                          회사에서, 학교에서, 단체에서
-                        </span>
-                        회의를 위해 소리를 잇는 다리
-                        <span className="text-xl font-bold text-blue-main">
-                          히어로
-                        </span>
-                        입니다.
+                    )} */}
+                    <div className="text-blue-main">
+                      <p className="text-l font-semibold mb-1">소리를 잇는 다리,</p>
+                      <p>
+                        <span className="text-5xl font-chewy font-extrabold mr-1">HEARO</span>
+                        <span className="text-xl">Office</span>
                       </p>
                     </div>
-                    <div className="mt-8 w-40 items-center">
+                    <div className="mt-4">
+                      <p>회사에서, 학교에서, 회의가 필요한 어디에서나</p>
+                      <p><span className="text-blue-main">Hearo Office</span>를 통해 회의에 편하게 참여하세요!</p>
+                    </div>
+                    <div className="mt-6 w-40 items-center">
                       <Button onClick={handleCommPageClick} type="blueTextBtn">
-                        이용하러 가기
+                      시작하기
                       </Button>
                     </div>
                   </div>
