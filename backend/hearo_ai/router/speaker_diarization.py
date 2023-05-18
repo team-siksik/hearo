@@ -33,11 +33,11 @@ class Transcoder(object):
         self.closed = True
         self.transcript = None
         self.final = False
-        print("init", self.language, self.rate)
+        logger.info("init", self.language, self.rate)
 
     def start(self):
         """Start up streaming speech call"""
-        print("restart")
+        logger.info("restart")
         threading.Thread(target=self.process).start()
         self.closed = False
 
@@ -99,7 +99,7 @@ class Transcoder(object):
                     for content in audio_generator)
 
         responses = client.streaming_recognize(streaming_config, requests)
-        print(responses)
+        logger.info(responses)
         try:
             self.response_loop(responses)
         except Exception as e:
@@ -107,7 +107,7 @@ class Transcoder(object):
             self.start()
 
     def stream_generator(self):
-        print("start stream_generator", self.closed)
+        logger.info("start stream_generator", self.closed)
         while not self.closed:
             chunk = self.buff.get()
             if chunk is None:
@@ -137,6 +137,7 @@ transcoder.start()
 @socket_manager.on("audio")
 async def audio(sid, data):
     global transcoder
+    logger.info("audio: sd router api 호출")
     transcoder.write(data)
     # print(transcoder.transcript)
     if transcoder.transcript:
