@@ -26,9 +26,9 @@ class Transcoder(object):
     """
     Converts audio chunks to text
     """
-    def __init__(self, rate, language):
+    def __init__(self, encoding, rate, language):
         self.buff = queue.Queue()
-        # self.encoding = encoding
+        self.encoding = encoding
         self.language = language
         self.rate = rate
         self.closed = True
@@ -91,7 +91,7 @@ class Transcoder(object):
         #You can add speech contexts for better recognition
         client = speech.SpeechClient()
         config = speech.RecognitionConfig(
-            # encoding=self.encoding,
+            encoding=self.encoding,
             sample_rate_hertz=self.rate,
             language_code=self.language,
         )
@@ -148,7 +148,6 @@ async def audio(sid, data):
 
     logger.info("audio: sd router api 호출")
     logger.info(type(data))
-    logger.info(data)
     transcoder.write(data)
     # print(transcoder.transcript)
     if transcoder.transcript:
