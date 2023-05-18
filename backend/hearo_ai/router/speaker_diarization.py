@@ -116,6 +116,7 @@ class Transcoder(object):
 
         except Exception as e:
             logger.error("An error occurred during speech processing: %s", e)
+            self.start()
             # Perform error handling or recovery actions here
 
     def stream_generator(self):
@@ -154,7 +155,7 @@ async def audio(sid, data):
         logger.info(f"Transcoder started for room {sid}")
 
     logger.info("audio: sd router api 호출")
-    logger.info(type(data))
+    logger.info(type(data["audio"]))
     transcoder.write(data['audio'])
     # print(transcoder.transcript)
     if transcoder.transcript:
