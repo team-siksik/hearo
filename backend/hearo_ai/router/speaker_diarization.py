@@ -7,7 +7,7 @@ import threading
 import re
 import os
 # os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "C:/Coding/S08P31A603/backend/hearo_ai/credential.json"
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "/app/credential.json"
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "credential.json"
 logger.info(os.environ["GOOGLE_APPLICATION_CREDENTIALS"])
 router = APIRouter(prefix="/sd")
 
