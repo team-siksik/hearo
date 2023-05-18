@@ -7,7 +7,7 @@ import { meetingAction } from "@/redux/modules/meeting";
 interface PropsType {
   item: MemoType;
   idx: number;
-  setMemoList: React.Dispatch<SetStateAction<MemoType[]>>;
+  setMemoList?: React.Dispatch<SetStateAction<MemoType[]>>;
 }
 interface TimeFormat {
   minutes: string;
@@ -26,11 +26,13 @@ function MemoItem({ item, idx, setMemoList }: PropsType) {
     return `${timeFormat.minutes}:${timeFormat.seconds}`;
   }
 
-  function deleteMemo() {
-    setMemoList((prev) => {
-      return prev.filter((item, i) => i !== idx);
-    });
-    dispatch(meetingAction.deleteMemo(idx));
+  function deleteMemoInMeeting() {
+    if (setMemoList) {
+      setMemoList((prev) => {
+        return prev.filter((item, i) => i !== idx);
+      });
+      dispatch(meetingAction.deleteMemo(idx));
+    }
   }
   return (
     <div className="relative w-full rounded-md border border-gray-200 p-2">
@@ -40,9 +42,13 @@ function MemoItem({ item, idx, setMemoList }: PropsType) {
         </p>
         <p className="memoContent">{item.content}</p>
       </div>
-      <div className="absolute right-1 top-1" onClick={deleteMemo}>
-        <CrossIconRed />
-      </div>
+      <>
+        {setMemoList ? (
+          <div className="absolute right-1 top-1" onClick={deleteMemoInMeeting}>
+            <CrossIconRed />
+          </div>
+        ) : null}
+      </>
     </div>
   );
 }

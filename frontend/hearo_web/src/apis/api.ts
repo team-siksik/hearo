@@ -60,15 +60,11 @@ export const ProfileAPI = {
     }),
 
   // update user setting info
-  updateUserSetting: (
-    accessToken: string,
-    fontSize: number,
-    voiceSetting: number
-  ) =>
+  updateUserSetting: (accessToken: string, voiceSetting: number) =>
     api.put(
       `/profile/setting/update`,
       {
-        fontSize: fontSize, // 글자 크기: int (1: 작음, 2: 보통(기본값), 3: 큼)
+        fontSize: 1, // 글자 크기: int (1: 작음, 2: 보통(기본값), 3: 큼)
         voiceSetting: voiceSetting, // 목소리 설정: int (1: 여성(기본값), 2: 남성)
       },
       {
@@ -163,7 +159,6 @@ export const MeetingAPI = {
         },
       }
     ),
-
   finishMeeting: (accessToken: string, roomSeq: number) =>
     api.put(
       `/conversation/room/${roomSeq}/close`,
@@ -181,6 +176,16 @@ export const MeetingAPI = {
         "Content-Type": "multipart/form-data",
       },
     }),
+  recommendGPT: (content: string) =>
+    api.post(
+      `/tg/generate`,
+      { text: content },
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    ),
 };
 
 // 대화기록API

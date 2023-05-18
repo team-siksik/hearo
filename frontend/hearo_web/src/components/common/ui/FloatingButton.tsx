@@ -37,7 +37,7 @@ export default function FloatingButton({ type, onClick }: PropsType) {
       ) : type === "memoInRecord" ? (
         <motion.button
           whileHover={{ scale: 1.1 }}
-          className="fixed bottom-24 right-10 h-12 w-12 rounded-full bg-blue-main shadow-sm hover:shadow-md"
+          className="fixed bottom-24 right-10 z-10 h-12 w-12 rounded-full bg-blue-main shadow-sm hover:shadow-md"
           onClick={onClick}
         >
           <EditIcon
