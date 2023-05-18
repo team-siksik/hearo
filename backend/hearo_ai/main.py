@@ -27,8 +27,8 @@ socket_manager = SocketManager(app)
 ssl_context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
 ssl_context.load_cert_chain("/app/ssl_certificate.pem", "/app/ssl_private_key.pem")
 
-# socket_manager에 SSL 컨텍스트 추가
-socket_manager.configure_ssl_context(ssl_context)
+# FastAPI 애플리케이션에 SSL 컨텍스트 설정
+app.ssl_context = ssl_context
 
 # cors 설정
 origins = ["*"]
