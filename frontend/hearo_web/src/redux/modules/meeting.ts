@@ -12,6 +12,7 @@ interface MeetingType {
     roomId: string;
   };
   memoList: MemoType[];
+  gptRecommend: string[];
 }
 
 // 초기상태
@@ -23,6 +24,7 @@ const initialState: MeetingType = {
     roomId: "",
   },
   memoList: [],
+  gptRecommend: [],
 };
 
 // middleware
@@ -68,6 +70,17 @@ const saveMeeting = createAsyncThunk(
   }
 );
 
+const recommendGPT = createAsyncThunk(
+  "meeting/recommendGPT",
+  async (content: string, thunkAPI) => {
+    const response = await MeetingAPI.recommendGPT(content);
+    if (!response) {
+      throw new Error();
+    }
+    return response.data.data;
+  }
+);
+
 // 리듀서 슬라이스
 const meetingSlice = createSlice({
   name: "meeting",
@@ -87,10 +100,16 @@ const meetingSlice = createSlice({
   //middleware
   extraReducers: (builder) => {
     builder.addCase(startMeeting.fulfilled, (state, action) => {
-      state.roomInfo.roomSeq = action.payload.roomSeq;
-      state.roomInfo.regDtm = action.payload.regDtm;
-      state.roomInfo.endDtm = action.payload.endDtm;
-      state.roomInfo.roomId = action.payload.roomId;
+      return {
+        ...state,
+        roomInfo: action.payload,
+      };
+    });
+    builder.addCase(recommendGPT.fulfilled, (state, action) => {
+      return {
+        ...state,
+        gptRecommend: action.payload,
+      };
     });
   },
 });
@@ -99,4 +118,4 @@ const meetingSlice = createSlice({
 export const meetingAction = meetingSlice.actions;
 export default meetingSlice.reducer;
 
-export { startMeeting, saveMeeting };
+export { startMeeting, saveMeeting, recommendGPT };
