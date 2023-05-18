@@ -79,6 +79,7 @@ class Transcoder(object):
             if not result.is_final:
                 logger.info(f"STT: result(not final) - {transcript + overwrite_chars}")
                 num_chars_printed = len(transcript)
+                self.final = False
 
             else:
                 logger.info(f"STT: result(final) - {transcript + overwrite_chars}")
@@ -160,6 +161,8 @@ async def audio(sid, data):
     room_id = data['room_id']
     audio = data['audio']
 
+    waveform(room_id, audio)
+
     if sid in transcoder_cache:
         transcoder = transcoder_cache[sid]
     else:
@@ -178,7 +181,6 @@ async def audio(sid, data):
         sending = {"final" : transcoder.final, "transcript" : "nothing"}
 
     await socket_manager.emit("data", sending, room_id)
-    await waveform(room_id, audio)
 
 
 # @socket_manager.on("waveform")
