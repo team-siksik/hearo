@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { RecordpageSideBar, Spinner } from "@/components";
+import { MypageSideBar, RecordpageSideBar, Spinner } from "@/components";
 import { RecordsItem } from "@/components";
 import { RecordAPI } from "@/apis/api";
 import { TrashIcon } from "@heroicons/react/24/solid";
@@ -30,8 +30,7 @@ function TotalRecordsPage() {
   const [nextPage, setNextPage] = useState<number>(0);
   const [openRemoveRecordModal, setOpenRemoveRecordModal] =
     useState<boolean>(false);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-
+  const isLoading = useAppSelector((state) => state.record.isLoading);
   const [totalRecords, setTotalRecords] = useState<RecordItem[]>([]);
   const recordList = useAppSelector((state) => state.record.recordList);
 
@@ -41,7 +40,7 @@ function TotalRecordsPage() {
 
   return (
     <div>
-      <RecordpageSideBar />
+      <MypageSideBar />
       <div
         className="absolute right-0 mt-20 w-[82%] overflow-auto"
         style={{ paddingTop: "16px" }}
@@ -51,9 +50,15 @@ function TotalRecordsPage() {
           style={{ width: "calc(82% - 1rem)" }}
         >
           <div className="space-y-4 pb-12">
-            {recordList.length === 0 ? (
+            {isLoading ? (
               <div className="flex h-96 items-center justify-center font-bold">
                 <Spinner loading={true} />
+              </div>
+            ) : recordList.length === 0 ? (
+              <div className="flex h-96 items-center justify-center font-bold">
+                <p className="font-Pretendard-Bold">
+                  저장된 대화 기록이 없습니다.
+                </p>
               </div>
             ) : (
               recordList.map((records, idx) => (
