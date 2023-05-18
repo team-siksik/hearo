@@ -13,6 +13,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
+      theme: ThemeData(fontFamily: "Pretendard"),
+      themeMode: ThemeMode.system,
       debugShowCheckedModeBanner: false,
       builder: (context, child) {
         return MediaQuery(
