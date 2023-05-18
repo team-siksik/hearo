@@ -24,7 +24,7 @@ function FavContentsPage() {
 
   // 자주 쓰는 말 조회
   // 개별기록조회
-  const FrequentData = useAppSelector((state) => state.profile.frequentList);
+  const FrequentData = useAppSelector((state) => state.profile.FrequentList);
 
   const accessToken = localStorage.getItem("accessToken");
   useEffect(() => {

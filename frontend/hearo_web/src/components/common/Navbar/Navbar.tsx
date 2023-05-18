@@ -136,7 +136,7 @@ const Navbar = ({
               <div
                 className="h-5 w-5 rounded"
                 css={css`
-                  background-image: url(${user?.profileImg});
+                  background-image: url(${user?.image_url});
                   background-position: center;
                   background-size: cover;
                 `}
