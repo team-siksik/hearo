@@ -43,6 +43,7 @@ function RecordPage() {
   const location = useLocation();
   const [dialog, setDialog] = useState<DialogType[]>([]);
   const [openMemo, setOpenMemo] = useState<boolean>(false);
+
   useEffect(() => {
     dispatch(getRecordDetail(Number(location.pathname.substring(9))));
   }, [location]);
@@ -62,18 +63,10 @@ function RecordPage() {
     return `${timeFormat.minutes}:${timeFormat.seconds}`;
   };
 
-  // 게별기록조회
+  // 개별 기록 조회
   const recordData = useAppSelector(
     (state) => state.record.recordData
   ) as RecordItemType;
-
-  const accessToken = localStorage.getItem("accessToken");
-  useEffect(() => {
-    if (!accessToken) {
-      navigate("/login");
-      return;
-    }
-  }, []);
 
   useEffect(() => {
     if (recordData.clovaFile) {
