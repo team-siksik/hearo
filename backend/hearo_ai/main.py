@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi_socketio import SocketManager
+import ssl
 
 import logging
 import sys
@@ -22,6 +23,13 @@ app = FastAPI()
 
 # socket 설정
 socket_manager = SocketManager(app)
+
+# SSL 컨텍스트 생성
+ssl_context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
+ssl_context.load_cert_chain("./ssl_certificate.pem", "./ssl_private_key.pem")
+
+# socket_manager에 SSL 컨텍스트 추가
+socket_manager.configure_ssl_context(ssl_context)
 
 # cors 설정
 origins = ["*"]
