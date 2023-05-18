@@ -120,6 +120,8 @@ function ConversationBody({
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
+  const reader = new FileReader();
+
   useEffect(() => {
     roomSequence.current = roomSeq;
   }, [roomSeq]);
@@ -192,9 +194,13 @@ function ConversationBody({
       const intervalKey = setInterval(() => {
         subRecorder.current?.exportWAV((blob: Blob) => {
           socketSend(blob);
+          reader.readAsDataURL(blob);
+          reader.onloadend = function () {
+            socketSend(reader.result);
+          };
           subRecorder.current?.clear();
         }, "audio/wav");
-      }, 250);
+      }, 1000);
       setIntervalKey(intervalKey);
       try {
         subRecorder.current?.record();
@@ -213,21 +219,22 @@ function ConversationBody({
     });
 
     socket1.on("data", (e) => {
-      const { data } = e;
-      onEvent(MSG_WEB_SOCKET, data);
-      // socket server에서 보낸 데이터가 object일 때
-      if (data instanceof Object && !(data instanceof Blob)) {
-        onError(ERR_SERVER, "WebSocket: onEvent: got Object, not a Blob");
-      }
-      // socket server에서 보낸 데이터가 blob일 때
-      else if (data instanceof Blob) {
-        onError(ERR_SERVER, "WebSocket: got Blob");
-      }
-      // socket server에서 보낸 데이터가 string이나 나머지일 때
-      else {
-        // const response = JSON.parse(data);
-        console.log(data);
-      }
+      console.log(e);
+      // const { data } = e;
+      // onEvent(MSG_WEB_SOCKET, data);
+      // // socket server에서 보낸 데이터가 object일 때
+      // if (data instanceof Object && !(data instanceof Blob)) {
+      //   onError(ERR_SERVER, "WebSocket: onEvent: got Object, not a Blob");
+      // }
+      // // socket server에서 보낸 데이터가 blob일 때
+      // else if (data instanceof Blob) {
+      //   onError(ERR_SERVER, "WebSocket: got Blob");
+      // }
+      // // socket server에서 보낸 데이터가 string이나 나머지일 때
+      // else {
+      //   // const response = JSON.parse(data);
+      //   console.log(data);
+      // }
     });
 
     // info 라는 이벤트 메시지를 받았을 때
@@ -389,10 +396,12 @@ function ConversationBody({
         }
         //If item is like string or sth
       } else {
-        socket.current?.emit("send_message_to_room", {
-          room_id: roomNo,
-          message: item,
-        });
+        // socket.current?.emit("send_message_to_room", {
+        //   room_id: roomNo,
+        //   message: item,
+        // });
+        socket.current?.emit("waveform", { room_id: roomNo, audio: item }); // base64
+
         onEvent(MSG_SEND, `Send tag: ${item}`);
       }
     } else {
@@ -427,6 +436,11 @@ function ConversationBody({
       subRecorder.current?.exportWAV((blob: Blob) => {
         // socket send audio
         socketSend(blob);
+        reader.readAsDataURL(blob);
+        reader.onloadend = function () {
+          var base64String = reader.result;
+          socketSend(base64String);
+        };
         // socket send recording finish sign
         socketSend("finish_audio");
         subRecorder.current?.clear();
