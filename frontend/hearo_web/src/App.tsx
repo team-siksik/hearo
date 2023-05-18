@@ -39,36 +39,44 @@ function App() {
 
   return (
     <div className="App font-Pretendard-Regular">
-      <Navbar
-        loginModal={loginModal}
-        setLoginModal={setLoginModal}
-        setOpenProfileModal={setOpenProfileModal}
-      />
-      <Routes>
-        <Route path="/" element={<MainPage setLoginModal={setLoginModal} />} />
-        <Route path="/stt" element={<STT />} />
-        <Route path="/socket" element={<SocketTest />} />
-        <Route path="/recordtest" element={<STTTest />} />
-        <Route path="/test" element={<TestPage />} />
-        <Route path="/login/oauth2/code/google" element={<Google />} />
-        <Route path="*" element={<NotFound404 />} />
+      <BrowserView>
+        <Navbar
+          loginModal={loginModal}
+          setLoginModal={setLoginModal}
+          setOpenProfileModal={setOpenProfileModal}
+        />
+        <Routes>
+          <Route
+            path="/"
+            element={<MainPage setLoginModal={setLoginModal} />}
+          />
+          <Route path="/stt" element={<STT />} />
+          <Route path="/socket" element={<SocketTest />} />
+          <Route path="/recordtest" element={<STTTest />} />
+          <Route path="/test" element={<TestPage />} />
+          <Route path="/login/oauth2/code/google" element={<Google />} />
+          <Route path="*" element={<NotFound404 />} />
 
-        <Route element={<PrivateRoutes />}>
-          <Route path="/comm" element={<ConversationPage />} />
-          <Route path="/records" element={<TotalRecordsPage />} />
-          <Route path="/records/:id" element={<RecordPage />} />
-          <Route path="/mypage/frequent" element={<FrequentPage />} />
-          <Route path="/mypage/settings" element={<SettingsPage />} />
-        </Route>
-      </Routes>
-      {/* 로그인 창 */}
-      {loginModal && (
-        <LoginModal loginModal={loginModal} setLoginModal={setLoginModal} />
-      )}
-      {/* 로그인 된 후 프로필모달창 */}
-      {isLoggedIn && openProfileModal && (
-        <ProfileModal setOpenProfileModal={setOpenProfileModal} />
-      )}
+          <Route element={<PrivateRoutes />}>
+            <Route path="/comm" element={<ConversationPage />} />
+            <Route path="/records" element={<TotalRecordsPage />} />
+            <Route path="/records/:id" element={<RecordPage />} />
+            <Route path="/mypage/frequent" element={<FrequentPage />} />
+            <Route path="/mypage/settings" element={<SettingsPage />} />
+          </Route>
+        </Routes>
+        {/* 로그인 창 */}
+        {loginModal && (
+          <LoginModal loginModal={loginModal} setLoginModal={setLoginModal} />
+        )}
+        {/* 로그인 된 후 프로필모달창 */}
+        {isLoggedIn && openProfileModal && (
+          <ProfileModal setOpenProfileModal={setOpenProfileModal} />
+        )}
+      </BrowserView>
+      <MobileView>
+        <DownloadPage />
+      </MobileView>
     </div>
   );
 }
