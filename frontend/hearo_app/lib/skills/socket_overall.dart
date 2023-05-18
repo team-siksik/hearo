@@ -8,7 +8,7 @@ class SocketOverall {
   final so_io.Socket socket;
 
   SocketOverall()
-      : socket = so_io.io('http://k8a6031.p.ssafy.io:80/', <String, dynamic>{
+      : socket = so_io.io('https://k8a6031.p.ssafy.io:8090/', <String, dynamic>{
           'transports': ['websocket'],
           'autoConnect': false,
           'path': '/ws/socket.io',
