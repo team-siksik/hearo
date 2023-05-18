@@ -6,8 +6,7 @@ import { ProfileAPI } from "@/apis/api";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useDispatch } from "react-redux";
 import { FrequentType } from "@/types/types";
-import { getFrequent, deleteFrequent } from "@/redux/modules/profile";
-import { error } from "console";
+import { getFrequent } from "@/redux/modules/profile";
 
 // TODO: 수정추가해야함
 interface MessageType {
@@ -23,6 +22,10 @@ function FrequentPage() {
   const inputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(getFrequent());
+  }, []);
 
   const FrequentData = useAppSelector((state) => state.profile.FrequentList);
 
