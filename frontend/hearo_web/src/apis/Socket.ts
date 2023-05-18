@@ -22,3 +22,28 @@ socket.on("disconnect", (reason) => {
   // ... socket.disconnect();
 });
 export default socket;
+
+// import React, { useState } from "react";
+
+// const Socket = () => {
+//   const websocket = new WebSocket("wss://k8a6031.p.ssafy.io:7007/");
+
+//   // 소켓을 통해 메시지가 전달된 경우, 실행되는 함수
+//   websocket.onmessage = function (message) {
+//     const msg = JSON.parse(message.data);
+//   };
+
+//   websocket.onclose = function (e) {
+//     console.log("web socket closed");
+//   };
+
+//   websocket.onerror = function (e) {
+//     console.log("websocket error");
+//   };
+
+//   websocket.onopen = function () {
+//     console.log("websocket connected");
+//   };
+// };
+
+// export default Socket;

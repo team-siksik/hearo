@@ -22,6 +22,8 @@ interface PropsType {
   setOpenRemoveRecordModal?: React.Dispatch<SetStateAction<boolean>>;
   setShowModal?: React.Dispatch<SetStateAction<boolean>>;
   setOpenAlertModal?: React.Dispatch<SetStateAction<boolean>>;
+  setOpenMyPageModal?: React.Dispatch<SetStateAction<boolean>>;
+  setOpenSidebarModal?: React.Dispatch<SetStateAction<boolean>>;
 }
 
 const customModalStyles: ReactModal.Styles = {
@@ -63,6 +65,37 @@ const profileModalStyles: ReactModal.Styles = {
     width: "100%",
     height: "100vh",
     zIndex: "10",
+    position: "fixed",
+    top: "0",
+    left: "0",
+    boxShadow: "0 8 10",
+  },
+  content: {
+    // 모달 박스의 스타일
+    width: "18%",
+    height: "fit-content",
+    zIndex: "150",
+    position: "absolute",
+    textAlign: "center",
+    top: "30%",
+    left: "90%",
+    transform: "translate(-50%, -50%)",
+    borderRadius: "20px",
+    boxShadow: "2px 2px 2px rgba(0, 0, 0, 0.25)",
+    backgroundColor: "white",
+    overflow: "auto",
+    transition: "opacity 1.0s ease-in-out",
+  },
+};
+
+// 메모 추가 모달 스타일
+const addMemoModalStyle: ReactModal.Styles = {
+  overlay: {
+    // 검은색으로 칠해지는 모달 아래부분
+    backgroundColor: " rgba(0, 0, 0, 0.4)",
+    width: "100%",
+    height: "100%",
+    zIndex: "5",
     position: "absolute",
     top: "0",
     left: "0",
@@ -132,6 +165,8 @@ function Modal({
   setOpenRemoveRecordModal,
   setShowModal,
   setOpenAlertModal,
+  setOpenMyPageModal,
+  setOpenSidebarModal,
 }: PropsType) {
   const [openModal, setOpenModal] = useState<boolean>(open);
 
@@ -165,6 +200,12 @@ function Modal({
     }
     if (setOpenAlertModal) {
       setOpenAlertModal((prev) => !prev);
+    }
+    if (setOpenMyPageModal) {
+      setOpenMyPageModal((prev) => !prev);
+    }
+    if (setOpenSidebarModal) {
+      setOpenSidebarModal((prev) => !prev);
     }
   }
   return (
@@ -219,6 +260,12 @@ function Modal({
             }
             if (setOpenAlertModal) {
               setOpenAlertModal((prev) => !prev);
+            }
+            if (setOpenMyPageModal) {
+              setOpenMyPageModal((prev) => !prev);
+            }
+            if (setOpenSidebarModal) {
+              setOpenSidebarModal((prev) => !prev);
             }
           }}
           shouldCloseOnOverlayClick={cannotExit ? false : true}

@@ -169,23 +169,25 @@ function ConversationBody({
   }
 
   function createSocket() {
-    const socket = io(socketURl, {
+    const socket1 = io(socketURl, {
       reconnectionDelayMax: 10000,
       //   autoConnect: false,
       transports: ["websocket"],
       path: "/ws/socket.io",
     });
 
-    if (!socket) {
+    if (!socket1) {
       throw new Error("socket error!");
     }
 
     // start recording if socket is connected
-    socket.on("connect", () => {
+    socket1.on("connect", () => {
       console.log("connected");
-      socket.emit("enter_room", {
+      socket.current = socket1;
+      socket1.emit("enter_room", {
         room_id: roomNo, //FIXME: random room key로 들어감 추후 수정
       });
+
       console.log("enter_the_room");
       const intervalKey = setInterval(() => {
         subRecorder.current?.exportWAV((blob: Blob) => {
@@ -203,14 +205,14 @@ function ConversationBody({
       onEvent(MSG_WEB_SOCKET_OPEN, "socket_open");
     });
 
-    socket.on("stt", (e) => {
+    socket1.on("stt", (e) => {
       // socket server에서 보낸 데이터가 stt string
       console.log(e);
       onPartialResults(e);
       conversation.push(e); // 화면에 보여지기 위해서 conversation array에 추가
     });
 
-    socket.on("message", (e) => {
+    socket1.on("data", (e) => {
       const { data } = e;
       onEvent(MSG_WEB_SOCKET, data);
       // socket server에서 보낸 데이터가 object일 때
@@ -229,7 +231,7 @@ function ConversationBody({
     });
 
     // info 라는 이벤트 메시지를 받았을 때
-    socket.on("info", (e) => {
+    socket1.on("info", (e) => {
       const data = e;
       // onEvent(MSG_WEB_SOCKET, data);
       // socket server에서 보낸 데이터가 object일 때
@@ -246,20 +248,20 @@ function ConversationBody({
       }
     });
 
-    socket.on("disconnect", (e) => {
+    socket1.on("disconnect", (e) => {
       console.log("web socket closed");
       onEvent(MSG_WEB_SOCKET_CLOSE, e);
     });
 
-    socket.on("error", (e) => {
+    socket1.on("error", (e) => {
       onEvent(ERR_SOCKET, e);
     });
 
-    socket.on("connect_error", (err) => {
+    socket1.on("connect_error", (err) => {
       console.log(`connect_error due to ${err.message}`);
     });
 
-    return socket;
+    return socket1;
   }
 
   function onPartialResults(script: any) {
@@ -444,6 +446,7 @@ function ConversationBody({
         socket.current?.emit("close_room", { room_id: roomNo });
         socket.current?.close();
         socket.current = null;
+        
       }
       setIsRecording(false);
       setTimerStarted(false);
