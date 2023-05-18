@@ -11,6 +11,7 @@ import { redirect, useNavigate } from "react-router-dom";
 import ConversationBody1 from "@/components/Conversation/ConversationBody1";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { getUserSetting } from "@/redux/modules/profile";
+import { MessageType } from "@/types/types";
 
 function ConversationPage() {
   const [seconds, setSeconds] = useState<number>(0);
@@ -27,6 +28,8 @@ function ConversationPage() {
   const [timerStarted, setTimerStarted] = useState<boolean>(false);
   // tts
   const [newMessage, setNewMessage] = useState<string>("");
+  //전체 대화
+  const [conversation, setConversation] = useState<MessageType[]>([]);
 
   // 음성재생 함수
   const togglePlay = () => {
@@ -88,10 +91,14 @@ function ConversationPage() {
           setIsStarted={setIsStarted}
           togglePlay={togglePlay}
           seconds={seconds}
+          conversation={conversation}
+          setConversation={setConversation}
         />
         <ConversationFooter
           isStarted={isStarted}
           setNewMessage={setNewMessage}
+          conversation={conversation}
+          setConversation={setConversation}
         />
       </div>
       {/* // 음성 재생 -> 회의 시작 페이지로 자동 이동 */}
