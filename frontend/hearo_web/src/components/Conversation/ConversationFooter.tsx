@@ -2,13 +2,21 @@ import React, { useEffect, useRef, useState } from "react";
 import { Button, FavContents, GPTRecommend, Input } from "@/components";
 import { ReactComponent as Star } from "@/assets/Icon/StarIcon.svg";
 import { ReactComponent as Send } from "@/assets/Icon/SendIcon.svg";
+import { MessageType } from "@/types/types";
 
 interface PropsType {
   setNewMessage: React.Dispatch<React.SetStateAction<string>>;
   isStarted: boolean;
+  conversation: MessageType[];
+  setConversation: React.Dispatch<React.SetStateAction<MessageType[]>>;
 }
 
-function ConversationFooter({ setNewMessage, isStarted }: PropsType) {
+function ConversationFooter({
+  setNewMessage,
+  isStarted,
+  conversation,
+  setConversation,
+}: PropsType) {
   const [openFavModal, setOpenFavModal] = useState<boolean>(false);
 
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -21,6 +29,7 @@ function ConversationFooter({ setNewMessage, isStarted }: PropsType) {
   function handleSendClick() {
     // 내가 input창의 내용 보내기 및 읽기
     const msg = inputRef.current?.value ?? "";
+    // conversation.push({ content: msg, speaker: "user" });
     setNewMessage(msg);
     if (inputRef.current) {
       inputRef.current.value = "";
