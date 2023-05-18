@@ -172,6 +172,6 @@ async def image(sid, data):
         word_before = None
 
     # 추론 결과 전송
-    await socket_manager.emit("word", words_dict[word], room_id, skip_sid=sid)
+    await socket_manager.emit("word", words_dict[word], room_id)
 
     logger.info(f"image: {sid} received result '{words_dict[word]}'")
