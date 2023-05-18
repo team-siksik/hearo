@@ -3,8 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { useAppSelector, useAppDispatch } from "@/redux/hooks";
 import { css } from "@emotion/react";
 import { Layout, Button, ConversationInfo } from "@/components";
-import Carousel4 from "@/assets/Carousel4.svg";
-import Carousel5 from "@/assets/Carousel5.svg";
+import screenshot1 from "@/assets/screenshot1.png";
+import screenshot2 from "@/assets/screenshot2.png";
 import Carousel6 from "@/assets/Carousel6.svg";
 import { motion } from "framer-motion";
 import { Player } from "@lottiefiles/react-lottie-player";
@@ -137,10 +137,10 @@ function MainPage({ setLoginModal }: PropsType) {
                           회의 시작하기
                         </h3>
                         <p className="my-4 text-xl">
-                          <span className="font-bold">실시간</span>으로=
-                          <span className="font-bold">분리</span>
-                          하여 보여줍니다. 회의를 시작해서 회의장에서 당당하게
-                          목소리를 내어 회의를 이끌어보세요.
+                          <span className="font-bold">실시간</span>으로
+                          <span className="font-bold"> 분리</span>
+                          하여 보여줍니다. <br /> 회의를 시작해서 회의장에서
+                          당당하게 목소리를 내어 회의를 이끌어보세요.
                           <br />
                           <span>그리고 모든 걸 기록해서, 활용해보세요.</span>
                         </p>
@@ -157,12 +157,12 @@ function MainPage({ setLoginModal }: PropsType) {
                     <div className="col2 flex items-center justify-center">
                       <div
                         css={css`
-                          background-image: url(${Carousel4});
+                          background-image: url(${screenshot1});
                           background-repeat: no-repeat;
                           background-position: center;
                           background-size: contain;
-                          width: 600px;
-                          height: 400px;
+                          width: 400px;
+                          height: 200px;
                         `}
                       ></div>
                     </div>
@@ -183,12 +183,12 @@ function MainPage({ setLoginModal }: PropsType) {
                     <div className="col1 flex items-center justify-center">
                       <div
                         css={css`
-                          background-image: url(${Carousel5});
+                          background-image: url(${screenshot2});
                           background-repeat: no-repeat;
                           background-position: center;
                           background-size: contain;
-                          width: 600px;
-                          height: 300px;
+                          width: 400px;
+                          height: 200px;
                         `}
                       ></div>
                     </div>
@@ -198,10 +198,13 @@ function MainPage({ setLoginModal }: PropsType) {
                       </h3>
                       <p className="my-4 text-xl">
                         기록한 회의를 확인해보세요. 회의 중에 남긴 메모도 확인할
-                        수 있고, 회의록에 따라{" "}
-                        <span className="font-bold">chatGPT</span> 으로부터{" "}
-                        <span className="font-bold">todo-list도 추천</span> 받을
-                        수 있어요!
+                        수 있고, 회의 중에
+                        <span className="font-bold"> chatGPT</span>으로부터
+                        <span className="font-bold">
+                          {" "}
+                          대화 상황에 알맞은 대답을 추천
+                        </span>{" "}
+                        받을 수 있어요!
                         <br />
                         <span>
                           회의록의 제목을 수정할 수 있고, 음성을 재생할 수
@@ -237,8 +240,8 @@ function MainPage({ setLoginModal }: PropsType) {
                           메모 확인하기
                         </h3>
                         <p className="my-4 text-xl">
-                          <span className="font-bold">실시간</span> 으로
-                          <span className="font-bold">분리</span>
+                          <span className="font-bold">실시간</span>으로
+                          <span className="font-bold"> 분리</span>
                           하여 보여줍니다.
                         </p>
                         <div className="w-1/3">
@@ -271,42 +274,28 @@ function MainPage({ setLoginModal }: PropsType) {
           </Layout>
 
           {/* footer */}
-          <footer className="h-72 bg-blue-950">
-            <div className="p-4 pb-2">
-              <div className="flex flex-row items-end">
-                <h5 className="font-chewy text-4xl font-bold text-white">
-                  Hearo
-                </h5>
-                <span className="text-2xl font-medium text-white">
-                  &nbsp;Office
-                </span>
-              </div>
-              <p className="flex w-full justify-start text-lg text-white">
-                소리를 잇는 연결고리
+          <footer className="bg-neutral-700 px-20 py-10 text-sm text-gray-300">
+            <div className="mb-3">
+              서비스 이용약관 | 개인정보 처리방침 | 회사 안내
+            </div>
+            <div className="mb-3">
+              <p>김동준 | 팀장, Frontend</p>
+              <p>김나연 | Backend, AI</p>
+              <p>남기성 | Frontend</p>
+              <p>노현정 | Frontend</p>
+              <p>박장훈 | CI/CD, AI</p>
+              <p>홍영민 | Iot, Backend</p>
+            </div>
+            <div>
+              <p>
+                주식회사 히어로 | 대표 김동준 | 서울특별시 강남구 역삼동
+                테헤란로 212
               </p>
-            </div>
-            <div className="grid grid-cols-3 gap-4 px-4 py-0 pb-6">
-              <div className="flex flex-col items-center justify-center text-white">
-                <div className="text-lg font-light">CICD / AI</div>
-                <div className="text-2xl font-semibold">박장훈</div>
-              </div>
-              <div className="flex flex-col items-center justify-center text-white">
-                <div className="text-lg font-light">IoT</div>
-                <div className="pb-4 text-2xl font-semibold">홍영민</div>
-                <div className="text-lg font-light">백엔드</div>
-                <div className="text-2xl font-semibold">김나연</div>
-              </div>
-              <div className="flex flex-col items-center justify-center text-white">
-                <div className="text-lg font-light">Web 프론트엔드</div>
-                <div className="pb-4 text-2xl font-semibold">
-                  노현정, 남기성
-                </div>
-                <div className="text-lg font-light">App 프론트엔드</div>
-                <div className="text-2xl font-semibold ">김동준</div>
-              </div>
-            </div>
-            <div className="bottom-0 flex justify-center align-baseline font-chewy text-2xl text-white">
-              &copy; Hearo by SSAFY A603 srp
+              <p>사업자 등록 번호 000-00-00000</p>
+              <p>
+                <span className="mr-1 font-chewy">HEARO</span>
+                &copy; 2023 by TEAM 6_6, Inc. All rights reserved.
+              </p>
             </div>
           </footer>
         </>
