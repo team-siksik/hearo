@@ -1,4 +1,4 @@
-import React, { useState, SetStateAction } from "react";
+import React, { useState, SetStateAction, useEffect } from "react";
 import {
   SpeakerWaveIcon,
   ChevronDownIcon,
@@ -18,22 +18,26 @@ import {
   userActions,
 } from "@/redux/modules/user";
 import { useAppSelector, useAppDispatch } from "@/redux/hooks";
-
-interface PropsType {
-  setShowModal: React.Dispatch<SetStateAction<boolean>>;
-}
+import { getUserSetting } from "@/redux/modules/profile";
 
 // 마이페이지 - 환경설정
-function SettingsPage({ setShowModal }: PropsType) {
+function SettingsPage() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const [modalType, setModalType] = useState<"logout" | "delete">("logout");
   const loginedUser = useAppSelector((state) => state.user.user);
+  const settings = useAppSelector((state) => state.profile.setting);
+
+  useEffect(() => {
+    dispatch(getUserSetting());
+  }, []);
+
   const [openModal, setOpenModal] = useState<boolean>(false);
 
   // 드롭다운을 위한 설정
   const [showGenDropDown, setShowGenDropDown] = useState<boolean>(false);
-  const [selectGender, setSelectGender] = useState<string>("여성(기본)");
+  const [selectGender, setSelectGender] = useState<string>("");
+
   const gender = () => {
     return ["여성(기본)", "남성"];
   };
@@ -57,18 +61,15 @@ function SettingsPage({ setShowModal }: PropsType) {
   const onLogoutButton = () => {
     setOpenModal(true);
     setModalType("logout");
-    setShowModal(true);
   };
 
   const onDeleteButtonClick = () => {
     setOpenModal(true);
     setModalType("delete");
-    setShowModal(true);
   };
 
   const ModalOff = () => {
     setOpenModal(false);
-    setShowModal(false);
   };
 
   function handleLogoutClick() {
@@ -80,6 +81,7 @@ function SettingsPage({ setShowModal }: PropsType) {
 
   function deleteAccount() {
     dispatch(googleWithdraw(localStorage.getItem("accessToken")!));
+    
   }
 
   // FIXME: 모달 밖을 눌러서 모달을 닫았을 때, 재클릭 시 모달이 더이상 뜨지 않는 현상
@@ -106,12 +108,12 @@ function SettingsPage({ setShowModal }: PropsType) {
                 </div>
                 <div className="flex flex-col p-4 text-center">
                   <div className="text-3xl text-blue-main">
-                    {loginedUser?.nickname}김야옹
+                    {loginedUser?.nickname}
                     <span className="text-black">님</span>
                   </div>
                   <div className="text-3xl">반갑습니다</div>
                   <div className="pt-4 text-xl">
-                    설정 변경을 통해{" "}
+                    설정 변경을 통해
                     <span className="text-blue-main">히어로</span>를<p></p>더
                     편리하게 이용해보세요!
                   </div>
@@ -139,7 +141,9 @@ function SettingsPage({ setShowModal }: PropsType) {
                       }
                     >
                       <div className="flex flex-row">
-                        <div className="flex-grow">{selectGender}</div>
+                        <div className="flex-grow">
+                          {settings?.voiceSetting === 1 ? "여성[기본]" : "남성"}
+                        </div>
                         <div className="flex flex-row space-x-2">
                           <ChevronDownIcon className="h-8 w-8" />
                         </div>
@@ -147,15 +151,14 @@ function SettingsPage({ setShowModal }: PropsType) {
 
                       {/* 드롭다운 열릴 시 */}
                       <div className="pr-8 text-xl">
-                        {/* {showGenDropDown && (
-                          // FIXME: 드롭다운 typescript 오류 수정해야함
+                        {showGenDropDown && (
                           <DropDown
                             gender={gender()}
                             showGenDropDown={false}
                             toggleDropDown={(): void => gendertoggledown()}
                             genderSelection={genderSelection}
                           />
-                        )} */}
+                        )}
                       </div>
                     </button>
                     <div className="z-0 mt-1 h-0.5 w-[100%] bg-gray-300" />
@@ -183,7 +186,7 @@ function SettingsPage({ setShowModal }: PropsType) {
       </div>
       {/* 로그아웃, 회원탈퇴 모달  */}
       {openModal && (
-        <Modal open={true} cannotExit={false}>
+        <Modal open={true} cannotExit={false} setOpenMyPageModal={setOpenModal}>
           {modalType === "logout" ? (
             <div>
               <div className="mb-1 text-xl font-semibold">
@@ -219,7 +222,7 @@ function SettingsPage({ setShowModal }: PropsType) {
             </div>
           )}
         </Modal>
-      )}
+        )}
     </div>
   );
 }
