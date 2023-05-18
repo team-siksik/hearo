@@ -81,6 +81,7 @@ function SettingsPage() {
 
   function deleteAccount() {
     dispatch(googleWithdraw(localStorage.getItem("accessToken")!));
+    
   }
 
   // FIXME: 모달 밖을 눌러서 모달을 닫았을 때, 재클릭 시 모달이 더이상 뜨지 않는 현상
@@ -221,7 +222,7 @@ function SettingsPage() {
             </div>
           )}
         </Modal>
-      )}
+        )}
     </div>
   );
 }
