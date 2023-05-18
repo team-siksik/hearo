@@ -30,3 +30,5 @@ archive.zip
 human_jenkins_test.sh
 keys.py
 credential.json
+ssl_certificate.pem
+ssl_private_key.pem
