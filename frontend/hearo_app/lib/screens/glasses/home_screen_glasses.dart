@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hearo_app/controller/blue_test_controller.dart';
@@ -157,27 +155,19 @@ class _HomeScreenGlassesState extends State<HomeScreenGlasses> {
                   padding: const EdgeInsets.fromLTRB(20, 10, 20, 5),
                   child: Column(children: [
                     InkWell(
-                      onTap: () async {
-                        String data = "hearochat";
-                        List<int> bytes = utf8.encode(data);
-                        await bluetoothController.writeCharacteristic.value!
-                            .write(bytes);
+                      onTap: () {
                         Get.to(() => ChatHomeGlasses());
                       },
                       child: naviButton(size, 0),
                     ),
                     InkWell(
-                      onTap: () async {
-                        String data = "hearosound";
-                        List<int> bytes = utf8.encode(data);
-                        await bluetoothController.writeCharacteristic.value!
-                            .write(bytes);
+                      onTap: () {
                         Get.to(() => SoundClassGlass());
                       },
                       child: naviButton(size, 2),
                     ),
                     InkWell(
-                      onTap: () async {
+                      onTap: () {
                         Get.to(() => SignLang());
                       },
                       child: naviButton(size, 1),

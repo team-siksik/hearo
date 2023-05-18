@@ -55,13 +55,14 @@ class _ChatHomeState extends State<ChatHome> {
     await _speechToText.listen(
       onResult: _onSpeechResult,
       listenFor: Duration(minutes: 30),
-      pauseFor: Duration(seconds: 60),
+      // pauseFor: Duration(seconds: 60),
       cancelOnError: true,
       listenMode: ListenMode.deviceDefault,
     );
     if (_lastWords.trim() != "") {
       chattings.add({"who": 1, "message": _lastWords});
       yourChattings.add(_lastWords);
+      await Future.delayed(Duration.zero);
       _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
       _lastWords = '';
     }
@@ -106,9 +107,6 @@ class _ChatHomeState extends State<ChatHome> {
     // playAudio();
     _initSpeech();
     _startListening();
-    Future.delayed(Duration(milliseconds: 2000), () async {
-      Get.back();
-    });
   }
 
   @override
@@ -303,7 +301,11 @@ class _ChatHomeState extends State<ChatHome> {
                             onPressed: () async {
                               var value = chatController.inputSay;
                               if (value.trim().isEmpty) {
+                                _startListening();
                                 return;
+                              }
+                              if (_speechToText.isListening) {
+                                _speechToText.stop();
                               }
                               addChat(value);
                               await tts.speak(textController.text);
@@ -312,6 +314,7 @@ class _ChatHomeState extends State<ChatHome> {
                                 textController.text = '';
                                 FocusScope.of(context).unfocus();
                               });
+                              _startListening();
                               _scrollController.jumpTo(
                                   _scrollController.position.maxScrollExtent);
                             },
