@@ -33,6 +33,7 @@ class _SignLangState extends State<SignLang> {
     videoSocket.socket.on(
       "word",
       (data) {
+        print("$data @@@@@@@@@@@");
         signContoller.addSigns(data);
       },
     );
@@ -41,7 +42,7 @@ class _SignLangState extends State<SignLang> {
       cameras = availableCameras;
       late CameraDescription frontCamera;
       for (final camera in cameras) {
-        if (camera.lensDirection == CameraLensDirection.back) {
+        if (camera.lensDirection == CameraLensDirection.front) {
           frontCamera = camera;
           break;
         }
