@@ -42,7 +42,7 @@ class _SignLangState extends State<SignLang> {
       cameras = availableCameras;
       late CameraDescription frontCamera;
       for (final camera in cameras) {
-        if (camera.lensDirection == CameraLensDirection.front) {
+        if (camera.lensDirection == CameraLensDirection.back) {
           frontCamera = camera;
           break;
         }
@@ -167,7 +167,7 @@ class _SignLangState extends State<SignLang> {
                     style: TextStyle(fontSize: 24),
                   ),
                   SizedBox(
-                    height: 10,
+                    height: 20,
                   ),
                   isLoading
                       ? Padding(
@@ -177,7 +177,8 @@ class _SignLangState extends State<SignLang> {
                               width: 150,
                               child: CircularProgressIndicator()),
                         )
-                      : SizedBox(
+                      : Container(
+                          alignment: Alignment.center,
                           height: 300,
                           child: ListView.separated(
                             separatorBuilder: (context, index) => SizedBox(
