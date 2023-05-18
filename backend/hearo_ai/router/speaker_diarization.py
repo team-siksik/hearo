@@ -171,41 +171,24 @@ async def audio(sid, data):
     transcoder.write(audio)
 
     if transcoder.transcript:
-        logger.info(transcoder.transcript)
         sending = {"final" : transcoder.final, "transcript" : transcoder.transcript}
         transcoder.transcript = None
     else:
         sending = {"final" : transcoder.final, "transcript" : "nothing"}
 
     await socket_manager.emit("data", sending, room_id)
-    await waveform(room_id, audio)
 
 
-# @socket_manager.on("waveform")
-# async def waveform(sid, data):
-#     logger.info(f"waveform: {sid} sent audio")
+@socket_manager.on("waveform")
+async def waveform(sid, data):
+    logger.info(f"waveform: {sid} sent audio")
 
-#     room_id = data["room_id"]
-#     audio_data = data["audio"]
+    room_id = data["room_id"]
+    audio = data["audio"]
 
-#     await socket_manager.emit("info", f"{sid} sent audio", room_id)
-
-#     binary_data = base64.b64decode(audio_data)
-
-#     buffer = io.BytesIO(binary_data)
-#     audio, sr = librosa.load(buffer, sr=None)
-#     stft = np.abs(librosa.stft(audio))
-#     spectral_centroids = librosa.feature.spectral_centroid(S=stft, sr=sr)
-#     logger.info(spectral_centroids)
-
-#     average = np.mean(np.array(spectral_centroids).flatten())
-#     logger.info(average)
-
-
-async def waveform(room_id, wav_data):
     file_path = 'temp.wav'
     with open(file_path, 'wb') as f:
-        f.write(wav_data)
+        f.write(audio)
     waveform, sr = librosa.load(file_path)
 
     spectrum_centroid = librosa.feature.spectral_centroid(y=waveform, sr=sr)
