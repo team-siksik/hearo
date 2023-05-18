@@ -6,6 +6,8 @@ import { ProfileAPI } from "@/apis/api";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useDispatch } from "react-redux";
 import { FrequentType } from "@/types/types";
+import { getFrequent, deleteFrequent } from "@/redux/modules/profile";
+import { error } from "console";
 
 // TODO: 수정추가해야함
 interface MessageType {
@@ -14,17 +16,23 @@ interface MessageType {
   speaker: string;
 }
 
-function FavContentsPage() {
+function FrequentPage() {
   const [showModal, setShowModal] = useState<boolean>(false);
   const [modalType, setModalType] = useState<"add" | "delete">("add");
   const [frequentData, setFrequentData] = useState<FrequentType[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
-  // 자주 쓰는 말 조회
-  // 개별기록조회
   const FrequentData = useAppSelector((state) => state.profile.FrequentList);
+
+  useEffect(() => {
+    dispatch(getFrequent());
+  }, []);
+
+  useEffect(() => {
+    setFrequentData(FrequentData);
+  }, [FrequentData]);
 
   const accessToken = localStorage.getItem("accessToken");
   useEffect(() => {
@@ -70,7 +78,7 @@ function FavContentsPage() {
         alert("이미 추가된 내용입니다!");
         return;
       }
-      // addMyPhraseAPI();
+      addMyPhraseAPI();
       setInputValue("");
       setShowModal(false);
     } else if (modalType === "delete") {
@@ -80,19 +88,15 @@ function FavContentsPage() {
     }
   }
 
-  // FIXME: 에러 수정해야함
-  // async function addMyPhraseAPI() {
-  //   try {
-  //     const response = await ProfileAPI.addMyPhrase(accessToken!, inputValue);
-  //     const newData: FrequentType = {
-  //       frequentSeq: response.data.data, // 서버에서 반환된 frequentSeq 값 사용
-  //       sentence: inputValue,
-  //     };
-  //     setFrequentData((prevData) => [...prevData, newData]);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // }
+  async function addMyPhraseAPI() {
+    try {
+      await ProfileAPI.addMyPhrase(accessToken!, inputValue);
+      const response = await ProfileAPI.getMyPhraseList(accessToken!);
+      setFrequentData(response.data.data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   async function deleteMyPhraseAPI() {
     try {
@@ -146,7 +150,7 @@ function FavContentsPage() {
           className="fixed right-0 mx-10 mb-4 mt-28 h-[64%] w-[76%] overflow-y-scroll rounded-2xl p-4 shadow-md shadow-gray-200"
         >
           <div className="mt-4 space-y-6 px-6 py-2">
-            {FrequentData.map((c) => (
+            {frequentData.map((c) => (
               <div key={c.frequentSeq}>
                 <div className="flex flex-row">
                   <div className="flex-grow text-gray-950">{c.sentence}</div>
@@ -169,7 +173,7 @@ function FavContentsPage() {
       </div>
       {/* 모달발생 시  */}
       {showModal && (
-        <Modal open={true} cannotExit={false}>
+        <Modal open={true} cannotExit={false} setShowModal={setShowModal}>
           {modalType === "add" && (
             <div>
               <div className="mb-2 text-xl font-semibold">
@@ -225,4 +229,4 @@ function FavContentsPage() {
   );
 }
 
-export default FavContentsPage;
+export default FrequentPage;
