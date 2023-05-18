@@ -11,7 +11,7 @@ interface PropsType {
 
 function TTS({ text, setText }: PropsType) {
   const voicePreference = useAppSelector(
-    (state) => state.user.setting?.voiceSetting
+    (state) => state.profile.setting?.voiceSetting
   );
   const voiceGender = useRef<string>("");
   const gender = useRef<string>("");

@@ -9,7 +9,7 @@ interface UserType {
     userSeq: number;
     accessToken: string;
     email: string;
-    profileImg: string;
+    image_url: string;
     delYn: string;
     role: string;
   } | null;
@@ -26,7 +26,7 @@ interface LoginPayloadType {
   nickname: string;
   email: string;
   accessToken: string;
-  profileImg: string;
+  image_url: string;
   delYn: string;
   role: string;
 }
@@ -43,7 +43,7 @@ const initialState: UserType = {
     userSeq: 0,
     email: "",
     accessToken: "",
-    profileImg: "",
+    image_url: "",
     delYn: "",
     role: "",
   },
@@ -56,7 +56,6 @@ const initialState: UserType = {
   isLoggedIn: false,
   isLoading: false,
 };
-
 
 // middleware
 const googleLogin = createAsyncThunk(
@@ -116,7 +115,6 @@ const getUserEmail = createAsyncThunk(
     return response;
   }
 );
-
 
 // 리듀서 슬라이스
 const userSlice = createSlice({
