@@ -155,7 +155,7 @@ async def audio(sid, data):
 
     logger.info("audio: sd router api 호출")
     logger.info(type(data))
-    transcoder.write(data)
+    transcoder.write(data['audio'])
     # print(transcoder.transcript)
     if transcoder.transcript:
         logger.info(transcoder.transcript)
