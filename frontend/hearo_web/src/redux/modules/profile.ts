@@ -70,22 +70,18 @@ const getFrequent = createAsyncThunk("profile/getFrequent", async () => {
   return response.data.data;
 });
 
-// FIXME: response 변경해야함
-// 'void' 형식 식의 truthiness를 테스트할 수 없습니다.
 // delete user Frequent
-// const deleteFrequent = createAsyncThunk(
-//   "profile/deleteFrequent",
-//   async (frequentSeq: number, thunkAPI) => {
-//     const accessToken = localStorage.getItem("accessToken");
-//     const response = await ProfileAPI.deleteMyPhrase(
-//       accessToken!,
-//       frequentSeq);
-//     // if (!response) {
-//       // throw new Error();
-//     }
-//     return frequentSeq;
-//   }
-// );
+const deleteFrequent = createAsyncThunk(
+  "profile/deleteFrequent",
+  async (frequentSeq: number, thunkAPI) => {
+    const accessToken = localStorage.getItem("accessToken");
+    const response = await ProfileAPI.deleteMyPhrase(accessToken!, frequentSeq);
+    if (!response) {
+      throw new Error();
+    }
+    return frequentSeq;
+  }
+);
 
 const profileSlice = createSlice({
   name: "profile",
@@ -108,6 +104,12 @@ const profileSlice = createSlice({
           ...state.setting,
           voiceSetting: action.payload.voiceSetting,
         },
+      };
+    });
+    builder.addCase(getFrequent.fulfilled, (state, action) => {
+      return {
+        ...state,
+        FrequentList: action.payload,
       };
     });
     // FIXME: types.ts에 frequentSeq가 number형식임
@@ -134,9 +136,4 @@ const profileSlice = createSlice({
 export const ProfileAction = profileSlice.actions;
 export default profileSlice.reducer;
 
-export {
-  getUserSetting,
-  getFrequent,
-  // deleteFrequent
-  updateUserSetting,
-};
+export { getUserSetting, getFrequent, deleteFrequent, updateUserSetting };
