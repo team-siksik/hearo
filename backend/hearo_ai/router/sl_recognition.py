@@ -125,6 +125,7 @@ model = load_model("ai_code/sl_recognition/model/sl_recognizer.h5")
 
 # 글로벌 변수 선언
 global word_before
+word_before = None
 
 
 @socket_manager.on("image")
