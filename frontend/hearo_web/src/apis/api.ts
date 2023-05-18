@@ -159,7 +159,6 @@ export const MeetingAPI = {
         },
       }
     ),
-
   finishMeeting: (accessToken: string, roomSeq: number) =>
     api.put(
       `/conversation/room/${roomSeq}/close`,
