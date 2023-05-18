@@ -8,6 +8,7 @@ import {
   Dialog,
   FloatingButton,
   MemoItem,
+  MypageSideBar,
   RemoveRecordModal,
 } from "@/components";
 import React, { useState, useEffect, useRef } from "react";
@@ -43,6 +44,10 @@ function RecordPage() {
   const location = useLocation();
   const [dialog, setDialog] = useState<DialogType[]>([]);
   const [openMemo, setOpenMemo] = useState<boolean>(false);
+
+  useEffect(() => {
+    console.log(openMemo, recordData.memoList);
+  }, []);
 
   useEffect(() => {
     dispatch(getRecordDetail(Number(location.pathname.substring(9))));
@@ -126,7 +131,7 @@ function RecordPage() {
 
   return (
     <div>
-      <RecordpageSideBar />
+      <MypageSideBar />
       <div className="absolute right-0 mt-[4.25rem] w-[82%]">
         <div className="mx-8">
           <div className="flex items-stretch justify-between ">
