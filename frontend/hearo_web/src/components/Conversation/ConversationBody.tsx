@@ -11,7 +11,7 @@ import { Socket, io } from "socket.io-client";
 import { AnimatePresence, motion } from "framer-motion";
 import { decodeUnicode } from "@/STT/Transcription";
 import Alert from "../common/ui/Alert";
-import { MemoType } from "@/types/types";
+import { MemoType, MessageType } from "@/types/types";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { saveMeeting, startMeeting } from "@/redux/modules/meeting";
 
@@ -51,12 +51,6 @@ const MSG_AUDIOCONTEXT_RESUMED = 13;
  * @returns (화자 분리되어) 대화 내역 출력
  */
 
-interface MessageType {
-  // idx: number;
-  content: string;
-  speaker: string;
-}
-
 interface PropsType {
   message?: string;
   isStarted: boolean;
@@ -64,6 +58,8 @@ interface PropsType {
   togglePlay: () => void;
   setTimerStarted: React.Dispatch<React.SetStateAction<boolean>>;
   seconds: number;
+  conversation: MessageType[];
+  setConversation: React.Dispatch<React.SetStateAction<MessageType[]>>;
 }
 
 function ConversationBody({
@@ -73,6 +69,8 @@ function ConversationBody({
   togglePlay,
   setTimerStarted,
   seconds,
+  conversation,
+  setConversation,
 }: PropsType) {
   // person Id
   const [id, setId] = useState<number>(0);
@@ -81,16 +79,13 @@ function ConversationBody({
   const [isLoading, setIsLoading] = useState<boolean>(false);
   // const [isFinal, setIsFinal] = useState<boolean>(false);
   const isFinal = useRef<boolean>(false);
+  const partialResult = useRef<string>("");
 
   const [openMemoPage, setOpenMemoPage] = useState<boolean>(false);
   const [openExitModal, setOpenExitModal] = useState<boolean>(false);
   const [openAlertModal, setOpenAlertModal] = useState<boolean>(false);
   const [openGPTModal, setOpenGPTModal] = useState<boolean>(false);
   const [openAddFavModal, setOpenAddFavModal] = useState<boolean>(false);
-
-  // 전체 대화 텍스트
-  const [conversation, setConversation] = useState<MessageType[]>([]);
-  const [partialResult, setPartialResult] = useState<string>("");
 
   // Text-to-Speech를 위한 text
   const [text, setText] = useState<string>("");
@@ -143,15 +138,19 @@ function ConversationBody({
   useEffect(() => {
     if (message) {
       setText(message);
-      // setId((prev) => prev + 1);
-      setConversation((prevConversation) => [
-        ...prevConversation,
-        {
-          // idx: id,
-          content: message,
-          speaker: "user",
-        },
-      ]);
+      conversation.push({
+        content: message,
+        speaker: "user",
+      });
+      partialResult.current = "";
+      // setConversation((prevConversation) => [
+      //   ...prevConversation,
+      //   {
+      //     // idx: id,
+      //     content: message,
+      //     speaker: "user",
+      //   },
+      // ]);
     }
   }, [message]);
 
@@ -213,30 +212,29 @@ function ConversationBody({
       onEvent(MSG_WEB_SOCKET_OPEN, "socket_open");
     });
 
-    socket1.on("stt", (e) => {
-      // socket server에서 보낸 데이터가 stt string
-      console.log(e);
-      onPartialResults(e);
-      conversation.push(e); // 화면에 보여지기 위해서 conversation array에 추가
-    });
-
     socket1.on("data", (e) => {
       const { final, transcript } = e;
-      console.log(final, transcript);
+      console.log(final, transcript, partialResult, ...conversation);
       if (transcript !== "nothing") {
-        if (conversation.length === 0) {
-          isFinal.current = false;
+        if (
+          partialResult.current === "" ||
+          conversation[conversation.length - 1].speaker === "user"
+        ) {
+          // 대화 내역이 없을 때
+          partialResult.current = transcript;
           conversation.push({
             content: transcript,
             speaker: "other1",
           });
         } else {
+          // 대화 중일 때
           if (final === isFinal.current) {
+            partialResult.current = transcript;
             conversation[conversation.length - 1].content = transcript;
           } else {
-            isFinal.current = final;
+            partialResult.current = "";
             conversation.push({
-              content: transcript,
+              content: "",
               speaker: "other1",
             });
           }
@@ -302,8 +300,7 @@ function ConversationBody({
       .replace(/\]/gi, "")
       .replace(/\(/gi, "")
       .replace(/\)/gi, "");
-    if (result !== "." && !result.includes("^"))
-      setPartialResult((prev) => result);
+    if (result !== "." && !result.includes("^")) partialResult.current = result;
   }
 
   async function record() {
