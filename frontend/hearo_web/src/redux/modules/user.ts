@@ -152,9 +152,11 @@ const userSlice = createSlice({
       })
       .addCase(getUserInfo.fulfilled, (state, action) => {
         state.user = action.payload;
+        state.isLoggedIn = true;
       })
       .addCase(getUserEmail.fulfilled, (state, action) => {
         state.user = action.payload.data;
+        state.isLoggedIn = true;
       });
   },
 });
