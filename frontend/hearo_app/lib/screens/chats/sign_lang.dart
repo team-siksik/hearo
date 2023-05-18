@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:hearo_app/controller/sign_controller.dart';
 import 'package:hearo_app/skills/socket_overall.dart';
 import 'package:hearo_app/widgets/common/custom_app_bar_inner.dart';
 
@@ -14,49 +16,37 @@ class SignLang extends StatefulWidget {
 }
 
 class _SignLangState extends State<SignLang> {
+  bool isCameraOn = false;
   late Timer timer;
   final SocketOverall videoSocket = SocketOverall();
   late List<CameraDescription> cameras;
   late CameraController cameraController;
   bool isStreamingImages = false;
+  bool isLoading = false;
   String what = '카메라 버튼을 눌러 인식 시작';
-  List temp = [
-    "start",
-    "start",
-    "start",
-    "start",
-    "start",
-    "start",
-    "start",
-    "start",
-    "start",
-    "start",
-    "start",
-  ];
-  // @override
-  // void setState(VoidCallback fn) {
-  //   if (mounted) {
-  //     super.setState(fn);
-  //   }
-  // }
+  SignContoller signContoller = Get.put(SignContoller());
 
   @override
   void initState() {
-    print("@@@@ASDFADS@@@@");
     videoSocket.connect();
     videoSocket.enterRoom();
-    getSignLang();
+    videoSocket.socket.on(
+      "word",
+      (data) {
+        signContoller.addSigns(data);
+      },
+    );
+    signContoller.signs.value = [];
     availableCameras().then((availableCameras) {
       cameras = availableCameras;
       late CameraDescription frontCamera;
       for (final camera in cameras) {
-        if (camera.lensDirection == CameraLensDirection.front) {
+        if (camera.lensDirection == CameraLensDirection.back) {
           frontCamera = camera;
           break;
         }
       }
-      cameraController =
-          CameraController(frontCamera, ResolutionPreset.veryHigh);
+      cameraController = CameraController(frontCamera, ResolutionPreset.medium);
 
       cameraController.initialize().then((_) {
         if (!mounted) {
@@ -97,6 +87,10 @@ class _SignLangState extends State<SignLang> {
     // 일정 시간(예: 600초) 후에 함수 멈추기
     Timer(Duration(seconds: 10), () {
       stopFunction();
+      setState(() {
+        isCameraOn = false;
+        isLoading = false;
+      });
     });
 
     timer = timeSend();
@@ -104,9 +98,7 @@ class _SignLangState extends State<SignLang> {
 
   Timer timeSend() {
     return Timer.periodic(Duration(milliseconds: 600), (timer) {
-      setState(() {
-        takePicture();
-      });
+      takePicture();
     });
   }
 
@@ -121,31 +113,20 @@ class _SignLangState extends State<SignLang> {
     await Future.delayed(Duration.zero); // 다음 프레임에서 실행되도록 미세 지연을 추가합니다.
 
     videoSocket.socket.on("word", (data) {
-      processData(data); // 데이터 처리 함수 호출
-      setState(() {}); // temp 변수를 업데이트하고 위젯을 다시 렌더링합니다.
+      processData(data);
+      setState(() {});
     });
   }
 
   void processData(data) async {
-    final updatedTemp = List.from(temp); // temp 리스트를 복사하여 새로운 리스트 생성
-    print(updatedTemp);
-    updatedTemp.add(data); // 새로운 데이터를 추가
-
-    print('$data @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@98@@@@');
-    print(
-        '${data.runtimeType} @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
-
-    print("$temp, @@@@");
-
-    setState(() {
-      temp = updatedTemp; // 업데이트된 리스트로 temp 변수를 갱신
-    });
+    signContoller.addSigns(data);
   }
 
   void stopImageStream() {
     if (isStreamingImages) {
       setState(() {
         isStreamingImages = false;
+        isCameraOn = false;
       });
       cameraController.stopImageStream();
     }
@@ -158,50 +139,77 @@ class _SignLangState extends State<SignLang> {
     }
     return Scaffold(
       appBar: CustomAppBarInner(name: "수어 인식"),
-      body: Column(
-        children: [
-          TextButton(
-              onPressed: () {
-                setState(() {
-                  print("아");
-                  print("$temp @@@@@@@@@@@@@@@@@");
-                });
-              },
-              child: Text(what)),
-          SizedBox(
-            height: 50,
-            child: ListView.separated(
-              separatorBuilder: (context, index) => SizedBox(
-                width: 10,
-              ),
-              scrollDirection: Axis.horizontal,
-              itemCount: temp.length,
-              itemBuilder: (context, index) {
-                var sample = temp[index];
-                return Text(
-                  sample,
-                  style: TextStyle(fontSize: 28),
-                );
-              },
-            ),
-          ),
-          AspectRatio(
-            aspectRatio: 2 / 3,
-            child: CameraPreview(cameraController),
-          ),
-          // CameraPreview(cameraController),
-        ],
-      ),
+      body: !isCameraOn
+          ? Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.video_camera_front_rounded,
+                        color: Colors.blueAccent,
+                        size: 30,
+                      ),
+                      Text(
+                        "을 눌러 수어 인식 시작",
+                        style: TextStyle(fontSize: 20),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Text(
+                    "인식 단어 목록",
+                    style: TextStyle(fontSize: 24),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  isLoading
+                      ? Padding(
+                          padding: const EdgeInsets.all(50),
+                          child: SizedBox(
+                              height: 150,
+                              width: 150,
+                              child: CircularProgressIndicator()),
+                        )
+                      : SizedBox(
+                          height: 300,
+                          child: ListView.separated(
+                            separatorBuilder: (context, index) => SizedBox(
+                              width: 10,
+                            ),
+                            itemCount: signContoller.signs.value.length,
+                            itemBuilder: (context, index) {
+                              var sample = signContoller.signs.value[index];
+                              return Text(
+                                sample,
+                                style: TextStyle(fontSize: 28),
+                              );
+                            },
+                          ),
+                        ),
+                ])
+          : CameraPreview(cameraController),
       floatingActionButton: FloatingActionButton(
         onPressed: isStreamingImages
             ? stopImageStream
             : () async {
                 setState(() {
-                  temp = [];
+                  isLoading = true;
+                });
+                await Future.delayed(Duration(seconds: 2));
+                setState(() {
+                  isCameraOn = true;
+                  signContoller.signs.value = [];
                 });
                 startSend();
               },
-        child: Icon(isStreamingImages ? Icons.stop : Icons.videocam),
+        child: Icon(
+            isStreamingImages ? Icons.stop : Icons.video_camera_front_outlined),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );

@@ -90,8 +90,10 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     const Text(
                       "구글아이디로 로그인",
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w600,
+                      ),
                     )
                   ],
                 ),

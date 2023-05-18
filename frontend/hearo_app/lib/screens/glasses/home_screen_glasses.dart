@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hearo_app/controller/blue_test_controller.dart';
 import 'package:hearo_app/controller/login_controller.dart';
+import 'package:hearo_app/screens/chats/sign_lang.dart';
 import 'package:hearo_app/screens/glasses/chat_home_glasses.dart';
 import 'package:hearo_app/screens/glasses/sound_class_glass.dart';
 import 'package:hearo_app/screens/mysettings/favorite_say.dart';
@@ -161,17 +162,15 @@ class _HomeScreenGlassesState extends State<HomeScreenGlasses> {
                     ),
                     InkWell(
                       onTap: () {
-                        // Get.to(() => SoundClassGlass(
-                        //       device: bluetoothController.device.value!,
-                        //     ));
-                      },
-                      child: naviButton(size, 1),
-                    ),
-                    InkWell(
-                      onTap: () {
                         Get.to(() => SoundClassGlass());
                       },
                       child: naviButton(size, 2),
+                    ),
+                    InkWell(
+                      onTap: () {
+                        Get.to(() => SignLang());
+                      },
+                      child: naviButton(size, 1),
                     ),
                     Expanded(
                       child: Row(
