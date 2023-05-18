@@ -7,14 +7,13 @@ import {
   RecordpageSideBar,
 } from "@/components";
 import startVoice from "@/assets/Sounds/start.wav";
-import { useNavigate } from "react-router-dom";
+import { redirect, useNavigate } from "react-router-dom";
 import ConversationBody1 from "@/components/Conversation/ConversationBody1";
-import { useAppDispatch } from "@/redux/hooks";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { getUserSetting } from "@/redux/modules/profile";
 
 function ConversationPage() {
   const [seconds, setSeconds] = useState<number>(0);
-
   // info audio
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const audioRef = useRef<HTMLAudioElement>(null);
