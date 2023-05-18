@@ -46,10 +46,6 @@ function RecordPage() {
   const [openMemo, setOpenMemo] = useState<boolean>(false);
 
   useEffect(() => {
-    console.log(openMemo, recordData.memoList);
-  }, []);
-
-  useEffect(() => {
     dispatch(getRecordDetail(Number(location.pathname.substring(9))));
   }, [location]);
 
@@ -215,7 +211,8 @@ function RecordPage() {
               // }
               style={{
                 maxHeight: "600px",
-                width: openMemo || recordData.memoList ? "70%" : "100%",
+                width:
+                  openMemo || recordData.memoList?.length > 0 ? "70%" : "100%",
                 transition: "width 0.5s",
                 overflow: "auto",
               }}
@@ -245,9 +242,9 @@ function RecordPage() {
                     minHeight: "100px",
                   }}
                   initial={{ width: "0%", minHeight: "100px" }}
-                  animate={{ width: "30%", minHeight: "100px" }}
+                  animate={{ width: "30%", minHeight: "0" }}
                   exit={{ width: "0%", minHeight: "100px" }}
-                  transition={{ duration: 0.5 }}
+                  transition={{ duration: 0.3 }}
                 >
                   {recordData?.memoList?.length > 0 ? (
                     <div className="h-full border-l border-gray-300 px-2">
@@ -280,7 +277,7 @@ function RecordPage() {
                       ></textarea>
                       <div className="addMemoBtnBox absolute bottom-1 right-2 flex items-center">
                         <button
-                          className="addMemoBtn h-8 rounded-lg border border-blue-200 px-4"
+                          className="addMemoBtn h-8 rounded-lg bg-blue-100 px-4 hover:bg-blue-200"
                           type="button"
                           // onClick={handleSendClick}
                         >
