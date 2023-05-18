@@ -61,31 +61,30 @@ const updateUserSetting = createAsyncThunk(
 );
 
 // get user Frequent
-const getFrequent = createAsyncThunk("profile/getFrequent", async () => {
-  const accessToken = localStorage.getItem("accessToken");
-  const response = await ProfileAPI.getMyPhraseList(accessToken!);
-  if (!response) {
-    throw new Error();
+const getFrequent = createAsyncThunk(
+  "profile/getFrequent",
+  async (thunkAPI) => {
+    const accessToken = localStorage.getItem("accessToken");
+    const response = await ProfileAPI.getMyPhraseList(accessToken!);
+    if (!response) {
+      throw new Error();
+    }
+    return response.data.data;
   }
-  return response.data.data;
-});
+);
 
-// FIXME: response 변경해야함
-// 'void' 형식 식의 truthiness를 테스트할 수 없습니다.
 // delete user Frequent
-// const deleteFrequent = createAsyncThunk(
-//   "profile/deleteFrequent",
-//   async (frequentSeq: number, thunkAPI) => {
-//     const accessToken = localStorage.getItem("accessToken");
-//     const response = await ProfileAPI.deleteMyPhrase(
-//       accessToken!,
-//       frequentSeq);
-//     // if (!response) {
-//       // throw new Error();
-//     }
-//     return frequentSeq;
-//   }
-// );
+const deleteFrequent = createAsyncThunk(
+  "profile/deleteFrequent",
+  async (frequentSeq: number, thunkAPI) => {
+    const accessToken = localStorage.getItem("accessToken");
+    const response = await ProfileAPI.deleteMyPhrase(accessToken!, frequentSeq);
+    if (!response) {
+      throw new Error();
+    }
+    return { frequentSeq };
+  }
+);
 
 const profileSlice = createSlice({
   name: "profile",
@@ -110,33 +109,27 @@ const profileSlice = createSlice({
         },
       };
     });
-    // FIXME: types.ts에 frequentSeq가 number형식임
-    // builder.addCase(deleteFrequent.fulfilled, (state, action) => {
-    //   // const newFrequentList = state.FrequentList.filter(
-    //   //   (frequent: FrequentType) => {
-    //   //     return !action.payload.includes(frequent.frequentSeq);
-    //   //   }
-    //   // );
-    //   const payloadArray = Array.isArray(action.payload)
-    //     ? action.payload
-    //     : [action.payload];
-    //   const newFrequentList = state.FrequentList.filter(
-    //     (frequent: FrequentType) => !payloadArray.includes(frequent.frequentSeq)
-    //   );
-    //   return {
-    //     ...state,
-    //     FrequentData: newFrequentList,
-    //   };
-    // });
+    builder.addCase(getFrequent.fulfilled, (state, action) => {
+      return {
+        ...state,
+        FrequentList: action.payload,
+      };
+    });
+    builder.addCase(deleteFrequent.fulfilled, (state, action) => {
+      const newFrequentList = state.FrequentList.filter(
+        (frequent: FrequentType) => {
+          return frequent.frequentSeq !== action.payload.frequentSeq;
+        }
+      );
+      return {
+        ...state,
+        FrequentData: newFrequentList,
+      };
+    });
   },
 });
 
 export const ProfileAction = profileSlice.actions;
 export default profileSlice.reducer;
 
-export {
-  getUserSetting,
-  getFrequent,
-  // deleteFrequent
-  updateUserSetting,
-};
+export { getUserSetting, getFrequent, deleteFrequent, updateUserSetting };
