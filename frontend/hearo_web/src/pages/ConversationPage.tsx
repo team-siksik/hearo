@@ -4,19 +4,16 @@ import {
   ConversationBody,
   ConversationFooter,
   ConversationInfo,
-  ExitModal,
-  MeetingSidebar,
-  FloatingButton,
   RecordpageSideBar,
 } from "@/components";
 import startVoice from "@/assets/Sounds/start.wav";
-import { useNavigate } from "react-router-dom";
-
-// TODO: 좌측 기능, 우측 버튼, 챗봇버튼(?)
+import { redirect, useNavigate } from "react-router-dom";
+import ConversationBody1 from "@/components/Conversation/ConversationBody1";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { getUserSetting } from "@/redux/modules/profile";
 
 function ConversationPage() {
   const [seconds, setSeconds] = useState<number>(0);
-
   // info audio
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const audioRef = useRef<HTMLAudioElement>(null);
