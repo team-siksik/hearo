@@ -30,7 +30,6 @@ class _CustomAppBarChatGlassesState extends State<CustomAppBarChatGlasses> {
       automaticallyImplyLeading: false,
       foregroundColor: Colors.black,
       elevation: 0,
-      centerTitle: true,
       title: HelpIconWidget(),
       backgroundColor: Colors.transparent,
       actions: <Widget>[CloseChatGlasses()],
