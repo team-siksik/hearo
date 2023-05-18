@@ -64,7 +64,7 @@ const profileModalStyles: ReactModal.Styles = {
     width: "100%",
     height: "100vh",
     zIndex: "10",
-    position: "absolute",
+    position: "fixed",
     top: "0",
     left: "0",
     boxShadow: "0 8 10",
