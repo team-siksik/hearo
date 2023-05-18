@@ -349,35 +349,15 @@ export default function STT({}: PropsType) {
 
   return (
     <div className="m-10 flex flex-col ">
-      <div className="flex flex-col">
-        <button onClick={startRecord}>시작</button>
-        <button onClick={stopRecord}>종료</button>
+      <div className="m-auto ">
+        <button
+          className="mt-12 h-20 w-52 border border-red-main"
+          onClick={startRecord}
+        >
+          시작
+        </button>
         {audio && <audio src={audio} controls />}
       </div>
     </div>
   );
 }
-//   return (
-//     <div className="m-10 flex flex-col ">
-//       <div className="flex flex-row">
-
-//         {!isRecording ? (
-//           <button
-//             className="m-3 border-spacing-1 border border-blue-main"
-//             onClick={startRecord}
-//           >
-//             {/* 대화 시작하기 */}
-//           </button>
-//         ) : (
-//           <button
-//             className="m-3 border-spacing-1 border border-blue-main"
-//             onClick={stopRecord}
-//           >
-//             {/* 녹음 종료 */}
-//           </button>
-//         )}
-//         {audio && <audio src={audio} controls />}
-//       </div>
-//     </div>
-//   );
-// }

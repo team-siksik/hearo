@@ -1,50 +1,53 @@
-import React from "react";
+import React, { useState } from "react";
 import Button from "../common/ui/Button";
 import { useNavigate } from "react-router-dom";
 import { BookOpenIcon, Cog6ToothIcon } from "@heroicons/react/24/solid";
+import Modal from "../common/ui/Modal";
 
-// TODO: 로그인된 상태에서 AUTH TOKEN 들고다녀야함
+interface PropsType {
+  isStarted?: boolean;
+}
 
-function RecordpageSideBar() {
+function RecordpageSideBar({ isStarted }: PropsType) {
   const navigate = useNavigate();
   const isLoggedin = !!localStorage.getItem("access_token");
+  const [openModal, setOpenModal] = useState<boolean>(false);
 
   const handleConversationPageClick = () => {
     navigate("/comm");
   };
 
   const handleRecordPageClick = () => {
-    navigate("/records");
+    if (isStarted) {
+      setOpenModal(true);
+    } else {
+      navigate("/records");
+    }
   };
 
   // 로그인된 상태에서만 MyPage로 이동
   const handleMypageClick = () => {
-    navigate("/mypage/settings");
+    if (isStarted) {
+      setOpenModal(true);
+    } else {
+      navigate("/mypage/settings");
+    }
   };
-
-  // 로그인된 상태에서만 MyPage로 이동
-  // const handleMypageClick = () => {
-  //   if (isLoggedin) {
-  //     navigate("/mypage");
-  //   } else {
-  //     로그인되어 있지 않은 경우 로그인 페이지로 이동하도록 처리
-  //     navigate("/login");
-  //     setLoginModal(true);
-  //   }
-  // };
 
   return (
     <div
       className="fixed left-0 top-16 h-full w-[18%] min-w-fit border border-slate-200 bg-slate-50"
       style={{ height: "100%" }}
     >
-      {/* <div className="fixed left-0 top-16 h-100% w-[18%] min-w-fit border border-slate-200 bg-slate-50"> */}
       <div className="flex h-full flex-col text-xl font-semibold">
         <div className="w-full border-b border-slate-200">
           <div className="m-6 h-[10%] w-[80%] items-center">
-            <Button onClick={handleConversationPageClick} type="blueTextBtn">
-              회의 시작하기
-            </Button>
+            <button
+              className=" group relative w-full overflow-hidden rounded-xl bg-gray-200 px-4 py-2 font-Pretendard-Regular shadow-md"
+              disabled
+            >
+              <span className="relative text-gray-400">회의 시작하기</span>
+            </button>
           </div>
         </div>
         <div
@@ -70,6 +73,22 @@ function RecordpageSideBar() {
           </div>
         </div>
       </div>
+      {openModal && (
+        <Modal
+          open={openModal}
+          cannotExit={false}
+          setOpenSidebarModal={setOpenModal}
+        >
+          <p>
+            대화중에 페이지를 이동하시면 대화가 저장되지 않습니다. <br />
+            이동하시겠습니까?
+          </p>
+          <div className="flex flex-row">
+            <button>취소</button>
+            <button>나가기</button>
+          </div>
+        </Modal>
+      )}
     </div>
   );
 }
