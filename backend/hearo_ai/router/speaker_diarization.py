@@ -3,28 +3,39 @@ from main import socket_manager, logger
 from google.cloud import speech
 from collections import deque
 from six.moves import queue
+
+import numpy as np
 import threading
+import librosa
+import base64
 import re
 import os
+import io
 
-logger.info(os.environ["GOOGLE_APPLICATION_CREDENTIALS"])
+
 router = APIRouter(prefix="/sd")
 
-# 버퍼 크기 (1초에 해당하는 샘플 수)
-RATE=16000
-BUFFER_SIZE = RATE  # 예시로 버퍼 크기를 RATE로 설정했습니다.
-# 음성 데이터를 저장하는 버퍼
-audio_buffer = deque(maxlen=BUFFER_SIZE)
 
 @router.get("/test")
 async def root():
-
     logger.info("root: sd router api 호출")
     return {"message": "hearo!"}
+
+
+logger.info(f"STT: {os.environ['GOOGLE_APPLICATION_CREDENTIALS']}")
+
+# 버퍼 크기 (1초에 해당하는 샘플 수)
+RATE=16000
+BUFFER_SIZE = RATE
+
+# 음성 데이터를 저장하는 버퍼
+audio_buffer = deque(maxlen=BUFFER_SIZE)
+
 class Transcoder(object):
     """
     Converts audio chunks to text
     """
+
     def __init__(self, encoding, rate, language):
         self.buff = queue.Queue()
         self.encoding = encoding
@@ -33,11 +44,9 @@ class Transcoder(object):
         self.closed = True
         self.transcript = None
         self.final = False
-        logger.info(f"init {self.language}, {self.rate}")
 
     def start(self):
         """Start up streaming speech call"""
-        logger.info("restart")
         self.closed = False
         threading.Thread(target=self.process).start()
 
@@ -63,23 +72,22 @@ class Transcoder(object):
 
             # Display interim results, but with a carriage return at the end of the
             # line, so subsequent lines will overwrite them.
-            #
             # If the previous result was longer than this one, we need to print
             # some extra spaces to overwrite the previous result
             overwrite_chars = " " * (num_chars_printed - len(transcript))
 
             if not result.is_final:
-                logger.info(f"stt result not final {transcript + overwrite_chars}")
+                logger.info(f"STT: result(not final) - {transcript + overwrite_chars}")
                 num_chars_printed = len(transcript)
 
             else:
-                logger.info(f"stt result final {transcript + overwrite_chars}")
+                logger.info(f"STT: result(final) - {transcript + overwrite_chars}")
                 self.final = True
 
                 # Exit recognition if any of the transcribed phrases could be
                 # one of our keywords.
                 if re.search(r"\b(그만|중지)\b", transcript, re.I):
-                    logger.info("Exiting..")
+                    logger.info("STT: Exiting..")
                     break
                 num_chars_printed = 0
 
@@ -87,6 +95,7 @@ class Transcoder(object):
         """
         Audio stream recognition and result parsing
         """
+
         try:
             # Create a Speech client
             client = speech.SpeechClient()
@@ -109,18 +118,17 @@ class Transcoder(object):
 
             # Perform streaming recognition
             responses = client.streaming_recognize(streaming_config, requests)
-            logger.info(responses)
 
             # Process the responses
             self.response_loop(responses)
 
         except Exception as e:
-            logger.error("An error occurred during speech processing: %s", e)
-            self.start()
-            # Perform error handling or recovery actions here
+            logger.error(f"STT: error occurred - {e}")
+
 
     def stream_generator(self):
-        logger.info(f"start stream_generator {self.closed}")
+        logger.info(f"STT: start stream_generator - {self.closed}")
+
         while not self.closed:
             chunk = self.buff.get()
             if chunk is None:
@@ -142,26 +150,69 @@ class Transcoder(object):
         """
         self.buff.put(data)
 
+
 transcoder_cache = {}
 
 @socket_manager.on("audio")
 async def audio(sid, data):
+    logger.info("STT: {sid} sent audio")
+
+    room_id = data['room_id']
+    audio = data['audio']
+
+    waveform(room_id, audio)
+
     if sid in transcoder_cache:
         transcoder = transcoder_cache[sid]
     else:
         transcoder = Transcoder(rate=RATE, language="ko-KR", encoding=speech.RecognitionConfig.AudioEncoding.LINEAR16)
         transcoder.start()
         transcoder_cache[sid] = transcoder
-        logger.info(f"Transcoder started for room {sid}")
+        logger.info(f"STT: Transcoder started for room {sid}")
 
-    logger.info("audio: sd router api 호출")
-    logger.info(type(data["audio"]))
-    transcoder.write(data['audio'])
-    # print(transcoder.transcript)
+    transcoder.write(audio)
+
     if transcoder.transcript:
         logger.info(transcoder.transcript)
         sending = {"final" : transcoder.final, "transcript" : transcoder.transcript}
         transcoder.transcript = None
     else:
         sending = {"final" : transcoder.final, "transcript" : "nothing"}
-    await socket_manager.emit("data", sending)
+
+    await socket_manager.emit("data", sending, room_id)
+
+
+# @socket_manager.on("waveform")
+# async def waveform(sid, data):
+#     logger.info(f"waveform: {sid} sent audio")
+
+#     room_id = data["room_id"]
+#     audio_data = data["audio"]
+
+#     await socket_manager.emit("info", f"{sid} sent audio", room_id)
+
+#     binary_data = base64.b64decode(audio_data)
+
+#     buffer = io.BytesIO(binary_data)
+#     audio, sr = librosa.load(buffer, sr=None)
+#     stft = np.abs(librosa.stft(audio))
+#     spectral_centroids = librosa.feature.spectral_centroid(S=stft, sr=sr)
+#     logger.info(spectral_centroids)
+
+#     average = np.mean(np.array(spectral_centroids).flatten())
+#     logger.info(average)
+
+
+async def waveform(room_id, wav_data):
+    file_path = 'temp.wav'
+    with open(file_path, 'wb') as f:
+        f.write(wav_data)
+    waveform, sr = librosa.load(file_path)
+
+    spectrum_centroid = librosa.feature.spectral_centroid(y=waveform, sr=sr)
+    logger.info(f"waveform: {spectrum_centroid}")
+
+    average = np.mean(np.array(spectrum_centroid).flatten())
+    logger.info(f"waveform: {average}")
+
+    os.remove(file_path)
