@@ -4,9 +4,13 @@ from google.cloud import speech
 from collections import deque
 from six.moves import queue
 
+import numpy as np
 import threading
+import librosa
+import base64
 import re
 import os
+import io
 
 
 router = APIRouter(prefix="/sd")
@@ -170,3 +174,24 @@ async def audio(sid, data):
     else:
         sending = {"final" : transcoder.final, "transcript" : "nothing"}
     await socket_manager.emit("data", sending)
+
+
+@socket_manager.on("waveform")
+async def waveform(sid, data):
+    logger.info(f"waveform: {sid} sent audio")
+
+    room_id = data["room_id"]
+    audio_data = data["audio"]
+
+    await socket_manager.emit("info", f"{sid} sent audio", room_id)
+
+    binary_data = base64.b64decode(audio_data)
+
+    buffer = io.BytesIO(binary_data)
+    audio, sr = librosa.load(buffer, sr=None)
+    stft = np.abs(librosa.stft(audio))
+    spectral_centroids = librosa.feature.spectral_centroid(S=stft, sr=sr)
+    logger.info(spectral_centroids)
+
+    average = np.mean(np.array(spectral_centroids).flatten())
+    logger.info(average)
