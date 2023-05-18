@@ -12,6 +12,7 @@ export class Recorder {
   exportWAV: (cb: any, type: any) => void;
   exportRAW: (cb: any, type: any) => void;
   export16kMono: (cb: any, type: any) => void;
+  exportBase64: (cb: any, type: any) => void;
   forceDownload: (blob: any, filename: any) => void;
 
   constructor(source: MediaStreamAudioSourceNode, cfg: any) {
@@ -97,7 +98,15 @@ export class Recorder {
         type,
       });
     };
-
+    this.exportBase64 = function (cb, type) {
+      currCallback = cb || config.callback;
+      type = type || config.type || "audio/base64";
+      if (!currCallback) throw new Error("Callback not set");
+      worker.postMessage({
+        command: "exportBase64",
+        type,
+      });
+    };
     worker.onmessage = function (e) {
       const blob = e.data;
       currCallback(blob);

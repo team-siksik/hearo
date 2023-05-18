@@ -45,10 +45,10 @@ function RecordsItem({ record }: RecordsItemProps) {
             </div>
           </div>
           <div>
-            <div className="my-2 text-blue-main">
-              {record.preview ? record.preview : "내용 없음"}
-            </div>
-            <div className="text-sm">{record.title}</div>
+            <div className="my-2 text-blue-main">{record.title}</div>
+          </div>
+          <div className="text-sm">
+            {record.preview ? record.preview : "내용 없음"}
           </div>
         </div>
         <div

@@ -4,15 +4,13 @@ import {
   ConversationBody,
   ConversationFooter,
   ConversationInfo,
-  ExitModal,
-  MeetingSidebar,
-  FloatingButton,
   RecordpageSideBar,
 } from "@/components";
 import startVoice from "@/assets/Sounds/start.wav";
 import { useNavigate } from "react-router-dom";
-
-// TODO: 좌측 기능, 우측 버튼, 챗봇버튼(?)
+import ConversationBody1 from "@/components/Conversation/ConversationBody1";
+import { useAppDispatch } from "@/redux/hooks";
+import { getUserSetting } from "@/redux/modules/profile";
 
 function ConversationPage() {
   const [seconds, setSeconds] = useState<number>(0);
