@@ -21,10 +21,6 @@ async def root():
 
     logger.info("root: sd router api 호출")
     return {"message": "hearo!"}
-
-async def disconnect():
-    global transcoder
-    pass
 class Transcoder(object):
     """
     Converts audio chunks to text
