@@ -18,7 +18,7 @@ import { saveMeeting, startMeeting } from "@/redux/modules/meeting";
 const accessToken = localStorage.getItem("accessToken");
 //TODO: room number, 백엔드랑 정해야 함
 const roomNo = 1343;
-const socketURl = "wws://k8a6031.p.ssafy.io:80/";
+const socketURl = "http://k8a6031.p.ssafy.io:80/";
 const recorderWorkerPath = "../STT/recorderWorker.js";
 
 // Error codes (mostly following Android error names and codes)
@@ -176,7 +176,7 @@ function ConversationBody({
       reconnectionDelayMax: 10000,
       //   autoConnect: false,
       transports: ["websocket"],
-      path: "/wss/socket.io",
+      path: "/ws/socket.io",
     });
 
     if (!socket1) {
