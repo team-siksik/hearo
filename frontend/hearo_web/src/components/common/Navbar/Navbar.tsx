@@ -24,12 +24,17 @@ const Navbar = ({
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
-  const flexBetween = "flex items-center justify-between";
   const [isMenuToggled, setIsMenuToggled] = useState<boolean>(false);
-  const navbarBackground = "z-10 bg-white drop-shadow";
   const user = useAppSelector((state) => state.user.user);
+
   // 로그인여부
   const isLoggedIn = localStorage.getItem("accessToken") ? true : false;
+
+  useEffect(() => {
+    console.log(isLoggedIn, user);
+
+    return () => {};
+  }, [user]);
 
   useEffect(() => {
     if (isLoggedIn) {
@@ -41,50 +46,6 @@ const Navbar = ({
       );
     }
   }, [isLoggedIn]);
-
-  // 음성재생 컴포넌트 활용
-  const [comp, setComp] = useState<string>("main");
-  const [isPlaying, setIsPlaying] = useState(false);
-  const audioRef = useRef<HTMLAudioElement>(null);
-
-  // TODO : 음성재생 모달도 로그인된 상태에서만 접근 가능하도록 조치해야함
-  // 음성재생 함수
-  const togglePlay = () => {
-    if (isLoggedIn) {
-      if (audioRef.current) {
-        if (isPlaying) {
-          audioRef.current.pause();
-        } else {
-          setComp("voice_play");
-          audioRef.current.play();
-        }
-        setIsPlaying(!isPlaying);
-      }
-    } else {
-      // 알림을 주고 보내기
-      navigate("/login");
-    }
-  };
-
-  useEffect(() => {
-    function handleAudioEnded() {
-      setIsPlaying(false);
-      setTimeout(() => {
-        // setComp("comm");
-        navigate("/comm");
-      }, 1000);
-    }
-
-    if (audioRef.current) {
-      audioRef.current.addEventListener("ended", handleAudioEnded);
-    }
-
-    return () => {
-      if (audioRef.current) {
-        audioRef.current.removeEventListener("ended", handleAudioEnded);
-      }
-    };
-  }, []);
 
   // 로고클릭 시 메인페이지로 이동
   const homeClick = () => {
@@ -108,6 +69,7 @@ const Navbar = ({
   }
 
   function handleProfile() {
+    console.log("show profile");
     if (!showModal) {
       setOpenProfileModal(true);
     } else {
