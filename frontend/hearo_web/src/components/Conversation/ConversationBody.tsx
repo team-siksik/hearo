@@ -5,21 +5,19 @@ import AddFavModal from "./MeetingBody/AddFavModal";
 import GPTRecommend from "./GPTRecommend";
 import ExitModal from "./ExitModal";
 import { Recorder } from "@/STT/recorder";
-import { TTS, STT } from "@/apis";
+import { TTS } from "@/apis";
 import { MeetingAPI } from "@/apis/api";
 import { Socket, io } from "socket.io-client";
 import { AnimatePresence, motion } from "framer-motion";
 import { decodeUnicode } from "@/STT/Transcription";
 import Alert from "../common/ui/Alert";
-import { MemoType } from "@/types/types";
+import { MemoType, MessageType } from "@/types/types";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { saveMeeting, startMeeting } from "@/redux/modules/meeting";
-import { getUserSetting } from "@/redux/modules/profile";
 
-//FIXME: accessToken 연결 전 수정해야함
 const accessToken = localStorage.getItem("accessToken");
+//TODO: room number, 백엔드랑 정해야 함
 const roomNo = 1343;
-
 const socketURl = "http://k8a6031.p.ssafy.io:80/";
 const recorderWorkerPath = "../STT/recorderWorker.js";
 
@@ -53,12 +51,6 @@ const MSG_AUDIOCONTEXT_RESUMED = 13;
  * @returns (화자 분리되어) 대화 내역 출력
  */
 
-interface MessageType {
-  id: number;
-  content: string;
-  speaker: string;
-}
-
 interface PropsType {
   message?: string;
   isStarted: boolean;
@@ -66,6 +58,8 @@ interface PropsType {
   togglePlay: () => void;
   setTimerStarted: React.Dispatch<React.SetStateAction<boolean>>;
   seconds: number;
+  conversation: MessageType[];
+  setConversation: React.Dispatch<React.SetStateAction<MessageType[]>>;
 }
 
 function ConversationBody({
@@ -75,24 +69,23 @@ function ConversationBody({
   togglePlay,
   setTimerStarted,
   seconds,
+  conversation,
+  setConversation,
 }: PropsType) {
   // person Id
   const [id, setId] = useState<number>(0);
   const [started, setStarted] = useState<boolean>(false);
   // regarding component status
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isSTTLoading, setIsSTTLoading] = useState<boolean>(false);
+  // const [isFinal, setIsFinal] = useState<boolean>(false);
+  const isFinal = useRef<boolean>(false);
+  const partialResult = useRef<string>("");
 
   const [openMemoPage, setOpenMemoPage] = useState<boolean>(false);
   const [openExitModal, setOpenExitModal] = useState<boolean>(false);
   const [openAlertModal, setOpenAlertModal] = useState<boolean>(false);
-  // get GPT 추천 modal
   const [openGPTModal, setOpenGPTModal] = useState<boolean>(false);
-  // 자주 쓰는 말 modal
   const [openAddFavModal, setOpenAddFavModal] = useState<boolean>(false);
-  // 전체 대화 텍스트
-  const [conversation, setConversation] = useState<MessageType[]>([]);
-  const [partialResult, setPartialResult] = useState<string>("");
 
   // Text-to-Speech를 위한 text
   const [text, setText] = useState<string>("");
@@ -120,6 +113,8 @@ function ConversationBody({
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
+  const reader = new FileReader();
+
   useEffect(() => {
     roomSequence.current = roomSeq;
   }, [roomSeq]);
@@ -143,11 +138,19 @@ function ConversationBody({
   useEffect(() => {
     if (message) {
       setText(message);
-      setId((prev) => prev + 1);
-      setConversation((prevConversation) => [
-        ...prevConversation,
-        { id: id, content: message, speaker: "user" },
-      ]);
+      conversation.push({
+        content: message,
+        speaker: "user",
+      });
+      partialResult.current = "";
+      // setConversation((prevConversation) => [
+      //   ...prevConversation,
+      //   {
+      //     // idx: id,
+      //     content: message,
+      //     speaker: "user",
+      //   },
+      // ]);
     }
   }, [message]);
 
@@ -192,9 +195,13 @@ function ConversationBody({
       const intervalKey = setInterval(() => {
         subRecorder.current?.exportWAV((blob: Blob) => {
           socketSend(blob);
+          // reader.readAsDataURL(blob);
+          // reader.onloadend = function () {
+          //   socketSend(reader.result);
+          // };
           subRecorder.current?.clear();
         }, "audio/wav");
-      }, 250);
+      }, 1000);
       setIntervalKey(intervalKey);
       try {
         subRecorder.current?.record();
@@ -205,29 +212,49 @@ function ConversationBody({
       onEvent(MSG_WEB_SOCKET_OPEN, "socket_open");
     });
 
-    socket1.on("stt", (e) => {
-      // socket server에서 보낸 데이터가 stt string
-      console.log(e);
-      onPartialResults(e);
-      conversation.push(e); // 화면에 보여지기 위해서 conversation array에 추가
-    });
-
     socket1.on("data", (e) => {
-      const { data } = e;
-      onEvent(MSG_WEB_SOCKET, data);
-      // socket server에서 보낸 데이터가 object일 때
-      if (data instanceof Object && !(data instanceof Blob)) {
-        onError(ERR_SERVER, "WebSocket: onEvent: got Object, not a Blob");
+      const { final, transcript } = e;
+      console.log(final, transcript, partialResult, ...conversation);
+      if (transcript !== "nothing") {
+        if (
+          partialResult.current === "" ||
+          conversation[conversation.length - 1].speaker === "user"
+        ) {
+          // 대화 내역이 없을 때
+          partialResult.current = transcript;
+          conversation.push({
+            content: transcript,
+            speaker: "other1",
+          });
+        } else {
+          // 대화 중일 때
+          if (final === isFinal.current) {
+            partialResult.current = transcript;
+            conversation[conversation.length - 1].content = transcript;
+          } else {
+            partialResult.current = "";
+            conversation.push({
+              content: "",
+              speaker: "other1",
+            });
+          }
+        }
       }
-      // socket server에서 보낸 데이터가 blob일 때
-      else if (data instanceof Blob) {
-        onError(ERR_SERVER, "WebSocket: got Blob");
-      }
-      // socket server에서 보낸 데이터가 string이나 나머지일 때
-      else {
-        // const response = JSON.parse(data);
-        console.log(data);
-      }
+      // const { data } = e;
+      // onEvent(MSG_WEB_SOCKET, data);
+      // // socket server에서 보낸 데이터가 object일 때
+      // if (data instanceof Object && !(data instanceof Blob)) {
+      //   onError(ERR_SERVER, "WebSocket: onEvent: got Object, not a Blob");
+      // }
+      // // socket server에서 보낸 데이터가 blob일 때
+      // else if (data instanceof Blob) {
+      //   onError(ERR_SERVER, "WebSocket: got Blob");
+      // }
+      // // socket server에서 보낸 데이터가 string이나 나머지일 때
+      // else {
+      //   // const response = JSON.parse(data);
+      //   console.log(data);
+      // }
     });
 
     // info 라는 이벤트 메시지를 받았을 때
@@ -273,8 +300,7 @@ function ConversationBody({
       .replace(/\]/gi, "")
       .replace(/\(/gi, "")
       .replace(/\)/gi, "");
-    if (result !== "." && !result.includes("^"))
-      setPartialResult((prev) => result);
+    if (result !== "." && !result.includes("^")) partialResult.current = result;
   }
 
   async function record() {
@@ -382,17 +408,19 @@ function ConversationBody({
       // If item is an audio blob
       if (item instanceof Blob) {
         if (item.size > 0) {
-          socket.current?.emit("audio", { audio: item });
+          socket.current?.emit("audio", { room_id: roomNo, audio: item });
           onEvent(AUDIO_SEND, `Send: blob: ${item.type}, ${item.size}`);
         } else {
           onEvent(MSG_SEND_EMPTY, `Send: blob: ${item.type}, EMPTY`);
         }
         //If item is like string or sth
       } else {
-        socket.current?.emit("send_message_to_room", {
-          room_id: roomNo,
-          message: item,
-        });
+        // socket.current?.emit("send_message_to_room", {
+        //   room_id: roomNo,
+        //   message: item,
+        // });
+        socket.current?.emit("waveform", { room_id: roomNo, audio: item }); // base64
+
         onEvent(MSG_SEND, `Send tag: ${item}`);
       }
     } else {
@@ -427,6 +455,11 @@ function ConversationBody({
       subRecorder.current?.exportWAV((blob: Blob) => {
         // socket send audio
         socketSend(blob);
+        // reader.readAsDataURL(blob);
+        // reader.onloadend = function () {
+        //   var base64String = reader.result;
+        //   socketSend(base64String);
+        // };
         // socket send recording finish sign
         socketSend("finish_audio");
         subRecorder.current?.clear();
@@ -518,7 +551,7 @@ function ConversationBody({
           </div>
         ) : (
           <div className="flex scroll-mx-0 flex-row">
-            {conversation ? (
+            {conversation.length > 0 ? (
               <motion.div
                 key="left"
                 style={{
@@ -531,12 +564,11 @@ function ConversationBody({
                 {text && <TTS text={text} setText={setText} />}
                 {conversation.map((item, idx) => {
                   return (
-                    <>
+                    <div key={idx}>
                       {item.speaker === "user" ? (
                         <Dialog
                           setOpenAddFavModal={setOpenAddFavModal}
                           onClick={handleDialogClick}
-                          key={item.id}
                           type={"user_text"}
                         >
                           {item.content}
@@ -544,23 +576,22 @@ function ConversationBody({
                       ) : (
                         <Dialog
                           onClick={handleGPTClick}
-                          key={item.id}
                           type={
                             item.speaker === "other1"
-                              ? "other1_text"
+                              ? "1"
                               : item.speaker === "other2"
-                              ? "other2_text"
+                              ? "2"
                               : item.speaker === "other3"
-                              ? "other3_text"
+                              ? "3"
                               : item.speaker === "other4"
-                              ? "other4_text"
+                              ? "4"
                               : ""
                           }
                         >
                           {item.content}
                         </Dialog>
                       )}
-                    </>
+                    </div>
                   );
                 })}
                 <div className="scroll-bottom" ref={messageEndRef}></div>

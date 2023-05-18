@@ -31,12 +31,6 @@ const Navbar = ({
   const isLoggedIn = localStorage.getItem("accessToken") ? true : false;
 
   useEffect(() => {
-    console.log(isLoggedIn, user);
-
-    return () => {};
-  }, [user]);
-
-  useEffect(() => {
     if (isLoggedIn) {
       dispatch(
         getUserInfo({

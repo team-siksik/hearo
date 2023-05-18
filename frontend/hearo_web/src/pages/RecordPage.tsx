@@ -2,7 +2,7 @@ import { TrashIcon } from "@heroicons/react/24/solid";
 import { ReactComponent as CrossIconRed } from "@/assets/Icon/CrossIconRed.svg";
 import { PencilSquareIcon } from "@heroicons/react/24/outline";
 import { useNavigate, useLocation, useParams } from "react-router-dom";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useAnimation } from "framer-motion";
 import {
   Button,
   Dialog,
@@ -14,6 +14,8 @@ import {
 import React, { useState, useEffect, useRef } from "react";
 import { RecordpageSideBar } from "@/components";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { ReactComponent as Caretdown } from "@/assets/Icon/Caretdown.svg";
+import { ReactComponent as Caretup } from "@/assets/Icon/Caretup.svg";
 import {
   changeRecordTitleAsync,
   deleteMemoAsync,
@@ -42,12 +44,10 @@ function RecordPage() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const location = useLocation();
+  const controls = useAnimation();
   const [dialog, setDialog] = useState<DialogType[]>([]);
   const [openMemo, setOpenMemo] = useState<boolean>(false);
-
-  useEffect(() => {
-    console.log(openMemo, recordData.memoList);
-  }, []);
+  const [showInfo, setShowInfo] = useState<boolean>(false);
 
   useEffect(() => {
     dispatch(getRecordDetail(Number(location.pathname.substring(9))));
@@ -129,6 +129,10 @@ function RecordPage() {
     setOpenMemo((prev) => !prev);
   }
 
+  function handleInfoButton() {
+    setShowInfo((prev) => !prev);
+  }
+
   return (
     <div>
       <MypageSideBar />
@@ -183,19 +187,34 @@ function RecordPage() {
             </div>
           </div>
 
-          <div className="flex flex-col rounded-md border p-4 shadow-md">
-            <div className="flex flex-row items-center">
+          <div className="mb-2 flex flex-col rounded-md border p-4 shadow-md ">
+            <div
+              className="flex flex-row items-center"
+              onClick={handleInfoButton}
+            >
               <h2 className="mr-2 font-semibold">녹음 정보</h2>
               <div className="flex-grow border-b"></div>
+              {showInfo ? (
+                <div className="px-2">
+                  <Caretup />
+                </div>
+              ) : (
+                <div className="px-2">
+                  <Caretdown />
+                </div>
+              )}
             </div>
-            <div className="mt-4">
-              <div className="my-2 flex flex-row items-center">
-                <h3 className="mr-2 text-gray-600">
-                  녹음 일시: {recordData?.regDtm}
-                </h3>
-                <p className="font-bold">{recordData.recordingTime}</p>
-              </div>
-              {/* <div className="my-2 flex flex-row items-center">
+            {showInfo && (
+              <div className="mt-4">
+                <div className="my-2  items-center">
+                  <p className="mr-2 text-gray-600">
+                    녹음 일시: {recordData?.regDtm}
+                  </p>
+                  <p className="mr-2 text-gray-600">
+                    녹음 길이: {recordData.recordingTime}
+                  </p>
+                </div>
+                {/* <div className="my-2 flex flex-row items-center">
                 <h3 className="mr-2 text-gray-600">
                   즐겨찾기: {recordData.isFavorite}
                 </h3>
@@ -205,7 +224,8 @@ function RecordPage() {
                     : "즐겨찾기에 추가되지 않음"}
                 </p>
               </div> */}
-            </div>
+              </div>
+            )}
           </div>
           <div className="flex scroll-mx-0 flex-row">
             <motion.div
@@ -215,7 +235,8 @@ function RecordPage() {
               // }
               style={{
                 maxHeight: "600px",
-                width: openMemo || recordData.memoList ? "70%" : "100%",
+                width:
+                  openMemo || recordData.memoList?.length > 0 ? "70%" : "100%",
                 transition: "width 0.5s",
                 overflow: "auto",
               }}
@@ -245,9 +266,9 @@ function RecordPage() {
                     minHeight: "100px",
                   }}
                   initial={{ width: "0%", minHeight: "100px" }}
-                  animate={{ width: "30%", minHeight: "100px" }}
+                  animate={{ width: "30%", minHeight: "0" }}
                   exit={{ width: "0%", minHeight: "100px" }}
-                  transition={{ duration: 0.5 }}
+                  transition={{ duration: 0.3 }}
                 >
                   {recordData?.memoList?.length > 0 ? (
                     <div className="h-full border-l border-gray-300 px-2">
@@ -280,7 +301,7 @@ function RecordPage() {
                       ></textarea>
                       <div className="addMemoBtnBox absolute bottom-1 right-2 flex items-center">
                         <button
-                          className="addMemoBtn h-8 rounded-lg border border-blue-200 px-4"
+                          className="addMemoBtn h-8 rounded-lg bg-blue-100 px-4 hover:bg-blue-200"
                           type="button"
                           // onClick={handleSendClick}
                         >
