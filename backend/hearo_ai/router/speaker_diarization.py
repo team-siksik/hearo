@@ -8,6 +8,7 @@ import re
 import os
 # os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "C:/Coding/S08P31A603/backend/hearo_ai/credential.json"
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "/app/credential.json"
+logger.info(os.environ["GOOGLE_APPLICATION_CREDENTIALS"])
 router = APIRouter(prefix="/sd")
 
 # 버퍼 크기 (1초에 해당하는 샘플 수)
@@ -33,18 +34,15 @@ class Transcoder(object):
         self.closed = True
         self.transcript = None
         self.final = False
-        self.connected = False
         logger.info("init", self.language, self.rate)
 
     def start(self):
         """Start up streaming speech call"""
         logger.info("restart")
-        self.connected = True
-        threading.Thread(target=self.process).start()
         self.closed = False
+        threading.Thread(target=self.process).start()
 
     def ending(self):
-        self.connected = False
         self.closed = True
 
     def response_loop(self, responses):
@@ -101,17 +99,17 @@ class Transcoder(object):
             config=config,
             interim_results=True)
         audio_generator = self.stream_generator()
-        if self.connected:
-            requests = (speech.StreamingRecognizeRequest(audio_content=content)
-                        for content in audio_generator)
+        requests = (speech.StreamingRecognizeRequest(audio_content=content)
+                    for content in audio_generator)
 
-            responses = client.streaming_recognize(streaming_config, requests)
-            logger.info(responses)
-            try:
-                self.response_loop(responses)
-            except Exception as e:
-                print("error", e)
-                self.start()
+        responses = client.streaming_recognize(streaming_config, requests)
+        logger.info(responses)
+        try:
+            self.response_loop(responses)
+        except Exception as e:
+            logger.info("error")
+            logger.info(e)
+            self.start()
 
     def stream_generator(self):
         logger.info("start stream_generator", self.closed)
@@ -135,23 +133,26 @@ class Transcoder(object):
         Writes data to the buffer
         """
         self.buff.put(data)
-transcoder = Transcoder(
-    # encoding=speech.RecognitionConfig.AudioEncoding.LINEAR16,
-    rate=RATE,
-    language="ko-KR"
-)
+
+transcoder_cache = {}
+
 @socket_manager.on("audio")
 async def audio(sid, data):
-    global transcoder
-    if not transcoder.connected:
+    if sid in transcoder_cache:
+        transcoder = transcoder_cache[sid]
+    else:
+        transcoder = Transcoder(rate=RATE, language="ko-KR")
         transcoder.start()
-        logger.info("transcoder 시작")
+        transcoder_cache[sid] = transcoder
+        logger.info(f"Transcoder started for room {sid}")
+
     logger.info("audio: sd router api 호출")
     logger.info(type(data))
+    logger.info(data)
     transcoder.write(data)
     # print(transcoder.transcript)
     if transcoder.transcript:
-        print(transcoder.transcript)
+        logger.info(transcoder.transcript)
         sending = {"final" : transcoder.final, "transcript" : transcoder.transcript}
         transcoder.transcript = None
     else:
