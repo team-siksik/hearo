@@ -33,7 +33,7 @@ class Transcoder(object):
         self.closed = True
         self.transcript = None
         self.final = False
-        logger.info("init", self.language, self.rate)
+        logger.info(f"init {self.language}, {self.rate}")
 
     def start(self):
         """Start up streaming speech call"""
@@ -87,31 +87,39 @@ class Transcoder(object):
         """
         Audio stream recognition and result parsing
         """
-        #You can add speech contexts for better recognition
-        client = speech.SpeechClient()
-        config = speech.RecognitionConfig(
-            encoding=self.encoding,
-            sample_rate_hertz=self.rate,
-            language_code=self.language,
-        )
-        streaming_config = speech.StreamingRecognitionConfig(
-            config=config,
-            interim_results=True)
-        audio_generator = self.stream_generator()
-        requests = (speech.StreamingRecognizeRequest(audio_content=content)
-                    for content in audio_generator)
-
-        responses = client.streaming_recognize(streaming_config, requests)
-        logger.info(responses)
         try:
+            # Create a Speech client
+            client = speech.SpeechClient()
+
+            # Configure recognition settings
+            config = speech.RecognitionConfig(
+                encoding=self.encoding,
+                sample_rate_hertz=self.rate,
+                language_code=self.language,
+            )
+            streaming_config = speech.StreamingRecognitionConfig(
+                config=config,
+                interim_results=True
+            )
+
+            # Generate audio content for streaming requests
+            audio_generator = self.stream_generator()
+            requests = (speech.StreamingRecognizeRequest(audio_content=content)
+                        for content in audio_generator)
+
+            # Perform streaming recognition
+            responses = client.streaming_recognize(streaming_config, requests)
+            logger.info(responses)
+
+            # Process the responses
             self.response_loop(responses)
+
         except Exception as e:
-            logger.info("error")
-            logger.info(e)
-            self.start()
+            logger.error("An error occurred during speech processing: %s", e)
+            # Perform error handling or recovery actions here
 
     def stream_generator(self):
-        logger.info("start stream_generator", self.closed)
+        logger.info(f"start stream_generator {self.closed}")
         while not self.closed:
             chunk = self.buff.get()
             if chunk is None:
