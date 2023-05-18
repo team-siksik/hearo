@@ -44,9 +44,6 @@ function ConversationFooter({ setNewMessage, isStarted }: PropsType) {
     e.preventDefault();
   }
 
-  useEffect(() => {
-    console.log(isStarted);
-  }, []);
   return (
     <>
       <div className="fixed bottom-0 z-10 h-12 w-full border-t-2 bg-white ">
