@@ -59,14 +59,30 @@ class _ChatHomeState extends State<ChatHome> {
       cancelOnError: true,
       listenMode: ListenMode.deviceDefault,
     );
+
+    await Future.delayed(Duration.zero);
+    if (_speechToText.isNotListening) {
+      _startListening();
+    }
+
     if (_lastWords.trim() != "") {
       chattings.add({"who": 1, "message": _lastWords});
       yourChattings.add(_lastWords);
       await Future.delayed(Duration.zero);
-      _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
       _lastWords = '';
+      _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
     }
-    setState(() {});
+
+    setState(() {}); // Check if speech recognition is still ongoing
+
+    if (!_speechEnabled) {
+      _initSpeech();
+    }
+
+    await Future.delayed(Duration.zero);
+    if (_speechToText.isNotListening) {
+      _startListening();
+    }
   }
 
   void _stopListening() async {
@@ -78,7 +94,6 @@ class _ChatHomeState extends State<ChatHome> {
     setState(() {
       _lastWords = result.recognizedWords;
     });
-
     if (!_speechEnabled) {
       _initSpeech();
     }
@@ -138,15 +153,15 @@ class _ChatHomeState extends State<ChatHome> {
         child: Scaffold(
           floatingActionButton: AvatarGlow(
             animate: _speechToText.isListening,
-            glowColor: const Color(0xffE63E43),
+            glowColor: Color.fromARGB(130, 230, 62, 68),
             endRadius: 75.0,
             duration: Duration(milliseconds: 2000),
             repeatPauseDuration: Duration(milliseconds: 100),
             repeat: true,
             child: FloatingActionButton(
               backgroundColor: _speechToText.isNotListening
-                  ? Colors.black45
-                  : Color(0xffe63e43),
+                  ? const Color.fromARGB(49, 0, 0, 0)
+                  : Color.fromARGB(130, 230, 62, 68),
               onPressed: _speechToText.isNotListening
                   ? _startListening
                   : _stopListening,
@@ -314,9 +329,12 @@ class _ChatHomeState extends State<ChatHome> {
                                 textController.text = '';
                                 FocusScope.of(context).unfocus();
                               });
-                              _startListening();
                               _scrollController.jumpTo(
                                   _scrollController.position.maxScrollExtent);
+                              await Future.delayed(Duration(milliseconds: 800));
+                              if (_speechToText.isNotListening) {
+                                _startListening();
+                              }
                             },
                             icon: Icon(Icons.send_rounded,
                                 color: Color.fromARGB(255, 97, 97, 97))),

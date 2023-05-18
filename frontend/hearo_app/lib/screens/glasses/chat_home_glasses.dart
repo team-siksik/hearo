@@ -56,14 +56,28 @@ class _ChatHomeGlassesState extends State<ChatHomeGlasses> {
       listenFor: Duration(minutes: 3),
       pauseFor: Duration(seconds: 50),
     );
-
+    await Future.delayed(Duration.zero);
+    if (_speechToText.isNotListening) {
+      _startListening();
+    }
     if (_lastWords.trim().isNotEmpty) {
       chattings.add({"who": 1, "message": _lastWords});
       sendMessageToGlasses(_lastWords);
+      await Future.delayed(Duration.zero);
       _lastWords = '';
+      _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
     }
 
     setState(() {});
+
+    if (!_speechEnabled) {
+      _initSpeech();
+    }
+
+    await Future.delayed(Duration.zero);
+    if (_speechToText.isNotListening) {
+      _startListening();
+    }
   }
 
   void _stopListening() async {
@@ -256,6 +270,13 @@ class _ChatHomeGlassesState extends State<ChatHomeGlasses> {
                                     });
                                     _scrollController.jumpTo(_scrollController
                                         .position.maxScrollExtent);
+                                    _scrollController.jumpTo(_scrollController
+                                        .position.maxScrollExtent);
+                                    await Future.delayed(
+                                        Duration(milliseconds: 800));
+                                    if (_speechToText.isNotListening) {
+                                      _startListening();
+                                    }
                                   },
                                   icon: Icon(Icons.send_rounded,
                                       color: Color.fromARGB(255, 97, 97, 97))),
