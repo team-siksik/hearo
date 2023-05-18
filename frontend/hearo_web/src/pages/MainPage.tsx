@@ -1,6 +1,6 @@
 import React, { SetStateAction, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAppSelector } from "@/redux/hooks";
+import { useAppSelector, useAppDispatch } from "@/redux/hooks";
 import { css } from "@emotion/react";
 import { Layout, Button, ConversationInfo } from "@/components";
 import Carousel4 from "@/assets/Carousel4.svg";
@@ -9,6 +9,7 @@ import Carousel6 from "@/assets/Carousel6.svg";
 import { motion } from "framer-motion";
 import { Player } from "@lottiefiles/react-lottie-player";
 import Mainmeeting from "@/assets/Icon/Mainmeeting.json";
+import { getUserSetting } from "@/redux/modules/profile";
 
 interface PropsType {
   setLoginModal: React.Dispatch<SetStateAction<boolean>>;
@@ -28,6 +29,10 @@ function MainPage({ setLoginModal }: PropsType) {
 
   const handleRecordPageClick = () => {
     isLoggedIn ? navigate("/records") : setLoginModal(true);
+  };
+
+  const isDesktop = () => {
+    return true;
   };
 
   // 스크롤 위치에 따른 motion.div 애니메이션 구현
