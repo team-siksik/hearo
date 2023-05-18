@@ -1,6 +1,6 @@
 import React, { SetStateAction, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAppSelector } from "@/redux/hooks";
+import { useAppSelector, useAppDispatch } from "@/redux/hooks";
 import { css } from "@emotion/react";
 import { Layout, Button, ConversationInfo } from "@/components";
 import Carousel4 from "@/assets/Carousel4.svg";
@@ -9,6 +9,7 @@ import Carousel6 from "@/assets/Carousel6.svg";
 import { motion } from "framer-motion";
 import { Player } from "@lottiefiles/react-lottie-player";
 import Mainmeeting from "@/assets/Icon/Mainmeeting.json";
+import { getUserSetting } from "@/redux/modules/profile";
 
 interface PropsType {
   setLoginModal: React.Dispatch<SetStateAction<boolean>>;
@@ -28,6 +29,10 @@ function MainPage({ setLoginModal }: PropsType) {
 
   const handleRecordPageClick = () => {
     isLoggedIn ? navigate("/records") : setLoginModal(true);
+  };
+
+  const isDesktop = () => {
+    return true;
   };
 
   // 스크롤 위치에 따른 motion.div 애니메이션 구현
@@ -59,17 +64,11 @@ function MainPage({ setLoginModal }: PropsType) {
                     autoplay
                     style={{ width: "600px", height: "300px" }}
                   />
-                  <div className="sticky top-48 m-4 flex h-80 w-[50%] flex-col items-center justify-center bg-white">
-                    <div className="m-4 flex flex-row items-end text-xl text-blue-main">
-                      <h1 className="font-chewy text-5xl font-extrabold">
-                        HEARO
-                      </h1>
-                      <span> Office</span>
-                    </div>
-                    {isLoggedIn ? (
+                  <div className="sticky top-48 m-4 flex h-80 w-[50%] flex-col items-start justify-center bg-white">
+                    {/* {isLoggedIn ? (
                       <>
                         <div className="text-sm">
-                          안녕하세요, {user?.nickname}님!!!
+                          안녕하세요, {user?.nickname}님!!!&nbsp;
                         </div>
                         <div className="flex flex-row text-sm font-medium">
                           <div className="text-blue-main">히어로</div>
@@ -78,33 +77,40 @@ function MainPage({ setLoginModal }: PropsType) {
                       </>
                     ) : (
                       <>
-                        <div className="text-sm">반가워요.</div>{" "}
-                        <div className="flex flex-row text-sm font-medium">
-                          <Button onClick={handleCommPageClick}>
-                            <span>로그인 후&nbsp;</span>
-                            <span className="font-semibold text-blue-main">
-                              히어로
-                            </span>
-                          </Button>
-                          <span>를 이용해보세요.</span>
-                        </div>
+                        <div className="text-sm">반가워요.</div>
+
+                          <div className="flex flex-row text-sm font-medium">
+                            <Button onClick={handleCommPageClick}>
+                              <span>로그인 후&nbsp;</span>
+                              <span className="font-semibold text-blue-main">
+                                히어로
+                              </span>
+                            </Button>
+                            <span>를 이용해보세요.</span>
+                          </div>
                       </>
-                    )}
-                    <div>
-                      <p className="pt-4">
-                        <span className="font-semibold">
-                          회사에서, 학교에서, 단체에서
+                    )} */}
+                    <div className="text-blue-main">
+                      <p className="text-l mb-1 font-semibold">
+                        소리를 잇는 다리,
+                      </p>
+                      <p>
+                        <span className="mr-1 font-chewy text-5xl font-extrabold">
+                          HEARO
                         </span>
-                        회의를 위해 소리를 잇는 다리
-                        <span className="text-xl font-bold text-blue-main">
-                          히어로
-                        </span>
-                        입니다.
+                        <span className="text-xl">Office</span>
                       </p>
                     </div>
-                    <div className="mt-8 w-40 items-center">
+                    <div className="mt-4">
+                      <p>회사에서, 학교에서, 회의가 필요한 어디에서나</p>
+                      <p>
+                        <span className="text-blue-main">Hearo Office</span>를
+                        통해 회의에 편하게 참여하세요!
+                      </p>
+                    </div>
+                    <div className="mt-6 w-40 items-center">
                       <Button onClick={handleCommPageClick} type="blueTextBtn">
-                        이용하러 가기
+                        시작하기
                       </Button>
                     </div>
                   </div>
