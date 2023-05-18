@@ -18,6 +18,8 @@ audio_buffer = deque(maxlen=BUFFER_SIZE)
 
 @router.get("/test")
 async def root():
+    global transcoder
+    transcoder.start()
     logger.info("root: sd router api 호출")
     return {"message": "hearo!"}
 
@@ -133,7 +135,6 @@ transcoder = Transcoder(
     rate=RATE,
     language="ko-KR"
 )
-transcoder.start()
 @socket_manager.on("audio")
 async def audio(sid, data):
     global transcoder
