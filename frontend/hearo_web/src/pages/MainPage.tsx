@@ -3,8 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { useAppSelector, useAppDispatch } from "@/redux/hooks";
 import { css } from "@emotion/react";
 import { Layout, Button, ConversationInfo } from "@/components";
-import Carousel4 from "@/assets/Carousel4.svg";
-import Carousel5 from "@/assets/Carousel5.svg";
+import screenshot1 from "@/assets/screenshot1.png";
+import screenshot2 from "@/assets/screenshot2.png";
 import Carousel6 from "@/assets/Carousel6.svg";
 import { motion } from "framer-motion";
 import { Player } from "@lottiefiles/react-lottie-player";
@@ -137,10 +137,10 @@ function MainPage({ setLoginModal }: PropsType) {
                           회의 시작하기
                         </h3>
                         <p className="my-4 text-xl">
-                          <span className="font-bold">실시간</span>으로=
-                          <span className="font-bold">분리</span>
-                          하여 보여줍니다. 회의를 시작해서 회의장에서 당당하게
-                          목소리를 내어 회의를 이끌어보세요.
+                          <span className="font-bold">실시간</span>으로
+                          <span className="font-bold"> 분리</span>
+                          하여 보여줍니다. <br /> 회의를 시작해서 회의장에서
+                          당당하게 목소리를 내어 회의를 이끌어보세요.
                           <br />
                           <span>그리고 모든 걸 기록해서, 활용해보세요.</span>
                         </p>
@@ -157,12 +157,12 @@ function MainPage({ setLoginModal }: PropsType) {
                     <div className="col2 flex items-center justify-center">
                       <div
                         css={css`
-                          background-image: url(${Carousel4});
+                          background-image: url(${screenshot1});
                           background-repeat: no-repeat;
                           background-position: center;
                           background-size: contain;
-                          width: 600px;
-                          height: 400px;
+                          width: 400px;
+                          height: 200px;
                         `}
                       ></div>
                     </div>
@@ -183,12 +183,12 @@ function MainPage({ setLoginModal }: PropsType) {
                     <div className="col1 flex items-center justify-center">
                       <div
                         css={css`
-                          background-image: url(${Carousel5});
+                          background-image: url(${screenshot2});
                           background-repeat: no-repeat;
                           background-position: center;
                           background-size: contain;
-                          width: 600px;
-                          height: 300px;
+                          width: 400px;
+                          height: 200px;
                         `}
                       ></div>
                     </div>
@@ -198,10 +198,13 @@ function MainPage({ setLoginModal }: PropsType) {
                       </h3>
                       <p className="my-4 text-xl">
                         기록한 회의를 확인해보세요. 회의 중에 남긴 메모도 확인할
-                        수 있고, 회의록에 따라{" "}
-                        <span className="font-bold">chatGPT</span> 으로부터{" "}
-                        <span className="font-bold">todo-list도 추천</span> 받을
-                        수 있어요!
+                        수 있고, 회의 중에
+                        <span className="font-bold"> chatGPT</span>으로부터
+                        <span className="font-bold">
+                          {" "}
+                          대화 상황에 알맞은 대답을 추천
+                        </span>{" "}
+                        받을 수 있어요!
                         <br />
                         <span>
                           회의록의 제목을 수정할 수 있고, 음성을 재생할 수
@@ -237,8 +240,8 @@ function MainPage({ setLoginModal }: PropsType) {
                           메모 확인하기
                         </h3>
                         <p className="my-4 text-xl">
-                          <span className="font-bold">실시간</span> 으로
-                          <span className="font-bold">분리</span>
+                          <span className="font-bold">실시간</span>으로
+                          <span className="font-bold"> 분리</span>
                           하여 보여줍니다.
                         </p>
                         <div className="w-1/3">
