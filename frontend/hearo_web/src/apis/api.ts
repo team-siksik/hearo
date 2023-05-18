@@ -83,7 +83,7 @@ export const ProfileAPI = {
       },
     }),
   // add to user fav comment list
-  addMyPhrase: (accessToken: string, sentence: string) => {
+  addMyPhrase: (accessToken: string, sentence: string) =>
     api.post(
       `profile/frequent`,
       {
@@ -95,15 +95,14 @@ export const ProfileAPI = {
           "Content-Type": "application/json",
         },
       }
-    );
-  },
+    ),
 
   // update user fav comment
   updateMyPhrase: (
     accessToken: string,
     sentence: string,
     frequentSeq: number
-  ) => {
+  ) =>
     api.put(
       `/profile/frequent/${frequentSeq}`,
       {
@@ -115,11 +114,10 @@ export const ProfileAPI = {
           "Content-Type": "application/json",
         },
       }
-    );
-  },
+    ),
 
   // delete user fav comment
-  deleteMyPhrase: (accessToken: string, frequentSeq: number) => {
+  deleteMyPhrase: (accessToken: string, frequentSeq: number) =>
     api.put(
       `/profile/frequent/${frequentSeq}/delete`,
       {},
@@ -128,8 +126,7 @@ export const ProfileAPI = {
           Authorization: `${accessToken}`,
         },
       }
-    );
-  },
+    ),
 };
 
 export const GPTAPI = {
