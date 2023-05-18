@@ -1,7 +1,8 @@
 /**
  * tts 연결 및 테스트
  */
-import { useAppSelector } from "@/redux/hooks";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { getUserSetting } from "@/redux/modules/profile";
 import React, { SetStateAction, useEffect, useRef, useState } from "react";
 
 interface PropsType {
@@ -10,13 +11,19 @@ interface PropsType {
 }
 
 function TTS({ text, setText }: PropsType) {
+  const dispatch = useAppDispatch();
+  const voiceGender = useRef<string>("");
+  const gender = useRef<string>("");
   const voicePreference = useAppSelector(
     (state) => state.profile.setting?.voiceSetting
   );
-  const voiceGender = useRef<string>("");
-  const gender = useRef<string>("");
+
   useEffect(() => {
-    if (voicePreference === 0) {
+    dispatch(getUserSetting());
+  }, []);
+
+  useEffect(() => {
+    if (voicePreference === 1) {
       voiceGender.current = "ko-KR-Neural2-A";
       gender.current = "female";
     } else {
