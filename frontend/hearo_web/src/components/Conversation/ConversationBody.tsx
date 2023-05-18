@@ -444,6 +444,7 @@ function ConversationBody({
         socket.current?.emit("close_room", { room_id: roomNo });
         socket.current?.close();
         socket.current = null;
+        
       }
       setIsRecording(false);
       setTimerStarted(false);

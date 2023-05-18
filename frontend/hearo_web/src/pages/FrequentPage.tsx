@@ -1,9 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
-import { ArrowLeftIcon, XMarkIcon } from "@heroicons/react/24/solid";
+import { XMarkIcon } from "@heroicons/react/24/solid";
 import { useNavigate } from "react-router-dom";
 import { Button, Modal, MypageSideBar, ConvertBar } from "@/components";
-import { useAppSelector } from "@/redux/hooks";
+import { ProfileAPI } from "@/apis/api";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { useDispatch } from "react-redux";
+import { FrequentType } from "@/types/types";
 
+// TODO: 수정추가해야함
 interface MessageType {
   id: number;
   content: string;
@@ -11,43 +15,50 @@ interface MessageType {
 }
 
 function FavContentsPage() {
-  const [id, setId] = useState<number>(0);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [modalType, setModalType] = useState<"add" | "delete">("add");
-  // const inputRef = useRef(null);
+  const [frequentData, setFrequentData] = useState<FrequentType[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
-  // TODO: API작업해야함
-  const [contents, setContents] = useState<MessageType[]>([
-    { id: 1, content: "안녕하세요 저는 청각장애인입니다.", speaker: "user" },
-    { id: 2, content: "뭐 먹었어?", speaker: "user" },
-    { id: 3, content: "고기 먹었어?", speaker: "user" },
-    { id: 4, content: "감사합니다.", speaker: "user" },
-    { id: 5, content: "스시 먹었어?", speaker: "user" },
-  ]);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
+  // 자주 쓰는 말 조회
+  // 개별기록조회
+  const FrequentData = useAppSelector((state) => state.profile.FrequentList);
+
+  const accessToken = localStorage.getItem("accessToken");
+  useEffect(() => {
+    if (!accessToken) {
+      navigate("/login");
+      return;
+    }
+  }, [accessToken, navigate]);
   // 추가 버튼
   const onAddButtonClick = () => {
     setModalType("add");
     setShowModal(true);
   };
+
   // 겹치지 않게 id를 기억한다
   const [idToDelete, setIdToDelete] = useState(0);
-  const onDeleteButtonClick = (id: number) => {
+  const onDeleteButtonClick = (frequentSeq: number) => {
     setModalType("delete");
-    setIdToDelete(id);
-    setId(id);
+    setIdToDelete(frequentSeq);
+    // setId(frequentSeq);
     setShowModal(true);
   };
 
-  // 중복되는 내용이면 입력을 막는 함수
   const isDuplicateContent = (contentToCheck: string) => {
-    return contents.some((content) => content.content === contentToCheck);
+    return FrequentData.some(
+      (FrequentData) => FrequentData.sentence === contentToCheck
+    );
   };
 
   // 내용이 입력되었는지 안되었는지 확인하는 함수
   const [inputValue, setInputValue] = useState("");
+
   // 길어서 주의가 필요함
-  const onModalSave = () => {
+  function onModalSave() {
     if (modalType === "add") {
       if (inputValue.trim() === "") {
         setInputValue("");
@@ -59,18 +70,45 @@ function FavContentsPage() {
         alert("이미 추가된 내용입니다!");
         return;
       }
-      const newId = contents.length + 1;
-      setContents([
-        ...contents,
-        { id: newId, content: inputValue, speaker: "user" },
-      ]);
+      // addMyPhraseAPI();
+      setInputValue("");
+      setShowModal(false);
     } else if (modalType === "delete") {
-      const newContents = contents.filter((c) => c.id !== idToDelete);
-      setContents(newContents);
+      deleteMyPhraseAPI();
+      setInputValue("");
+      setShowModal(false);
     }
-    setInputValue("");
-    setShowModal(false);
-  };
+  }
+
+  // FIXME: 에러 수정해야함
+  // async function addMyPhraseAPI() {
+  //   try {
+  //     const response = await ProfileAPI.addMyPhrase(accessToken!, inputValue);
+  //     const newData: FrequentType = {
+  //       frequentSeq: response.data.data, // 서버에서 반환된 frequentSeq 값 사용
+  //       sentence: inputValue,
+  //     };
+  //     setFrequentData((prevData) => [...prevData, newData]);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // }
+
+  async function deleteMyPhraseAPI() {
+    try {
+      await ProfileAPI.deleteMyPhrase(accessToken!, idToDelete);
+      setFrequentData((prevData) =>
+        prevData.filter((data) => data.frequentSeq !== idToDelete)
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  interface FrequentType {
+    frequentSeq: number;
+    sentence: string;
+  }
 
   const handleOnKeyDown = (e: any) => {
     if (e.key === "Enter") {
@@ -78,7 +116,6 @@ function FavContentsPage() {
       onModalSave();
     }
   };
-
 
   const ModalOff = () => {
     setShowModal(false);
@@ -95,7 +132,7 @@ function FavContentsPage() {
   // 출력되는 내용이 변경될 때마다 스크롤 맨 밑으로 이동
   useEffect(() => {
     scrollToBottom();
-  }, [contents]); // contents는 출력되는 내용의 배열
+  }, [FrequentData]); // contents는 출력되는 내용의 배열
 
   return (
     <div>
@@ -104,21 +141,24 @@ function FavContentsPage() {
         <ConvertBar />
 
         {/* 출력되는 내용 */}
-        <div ref={scrollableContainerRef} className="right-0 mx-10 mb-4 mt-28 h-[64%] overflow-y-auto rounded-2xl p-4 shadow-md shadow-gray-200">
+        <div
+          ref={scrollableContainerRef}
+          className="fixed right-0 mx-10 mb-4 mt-28 h-[64%] w-[76%] overflow-y-scroll rounded-2xl p-4 shadow-md shadow-gray-200"
+        >
           <div className="mt-4 space-y-6 px-6 py-2">
-              {contents.map((c) => (
-                <div key={c.id}>
-                  <div className="flex flex-row">
-                    <div className="flex-grow text-gray-950">{c.content}</div>
-                    <div className="flex flex-row space-x-2">
-                      <button onClick={() => onDeleteButtonClick(c.id)}>
-                        <XMarkIcon className="h-6 w-6" />
-                      </button>
-                    </div>
+            {FrequentData.map((c) => (
+              <div key={c.frequentSeq}>
+                <div className="flex flex-row">
+                  <div className="flex-grow text-gray-950">{c.sentence}</div>
+                  <div className="flex flex-row space-x-2">
+                    <button onClick={() => onDeleteButtonClick(c.frequentSeq)}>
+                      <XMarkIcon className="h-6 w-6" />
+                    </button>
                   </div>
-                  <hr className="my-2 h-0.5 bg-black px-6 opacity-10" />
                 </div>
-              ))}
+                <hr className="my-2 h-0.5 bg-black px-6 opacity-10" />
+              </div>
+            ))}
           </div>
         </div>
         <div className="fixed bottom-4 right-10 w-32">
