@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-import ssl
+from fastapi_socketio import SocketManager
+
 import logging
 import sys
 
@@ -19,6 +20,9 @@ logger.addHandler(console_handler)
 # fastapi app 생성
 app = FastAPI()
 
+# socket 설정
+socket_manager = SocketManager(app)
+
 # cors 설정
 origins = ["*"]
 app.add_middleware(
@@ -28,6 +32,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 from router import common, sl_recognition, sound_classification, speaker_diarization, text_generate
 
