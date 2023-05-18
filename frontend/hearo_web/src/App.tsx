@@ -32,7 +32,6 @@ function App() {
   const navigate = useNavigate();
   const user = useAppSelector((state) => state.user.user);
   const isLogin = useAppSelector((state) => state.user.isLoggedIn);
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
 
   const [loginModal, setLoginModal] = useState<boolean>(false);
   const [openProfileModal, setOpenProfileModal] = useState<boolean>(false);
@@ -70,7 +69,7 @@ function App() {
           <LoginModal loginModal={loginModal} setLoginModal={setLoginModal} />
         )}
         {/* 로그인 된 후 프로필모달창 */}
-        {isLoggedIn && openProfileModal && (
+        {isLogin && openProfileModal && (
           <ProfileModal setOpenProfileModal={setOpenProfileModal} />
         )}
       </BrowserView>
