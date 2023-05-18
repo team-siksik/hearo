@@ -20,7 +20,7 @@ function Button({ type, children, onClick }: PropsType) {
         </button>
       ) : type === "blueTextBtn" ? (
         <button
-          className="group relative w-full overflow-hidden rounded-xl border border-blue-main bg-white px-4 py-2 shadow-md"
+          className=" group relative w-full overflow-hidden rounded-xl border border-blue-main bg-white px-4 py-2 font-Pretendard-Regular shadow-md"
           onClick={onClick}
         >
           <div className="absolute inset-0 w-3 bg-blue-main transition-all duration-[250ms] ease-out group-hover:w-full"></div>

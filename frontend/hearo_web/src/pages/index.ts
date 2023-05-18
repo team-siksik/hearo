@@ -7,6 +7,7 @@ import NotFound404 from "./NotFound404";
 import SocketTest from "./SocketTest";
 import TotalRecordsPage from "./TotalRecordsPage";
 import RecordPage from "./RecordPage";
+import DownloadPage from "./DownloadPage";
 // settingpage 및 favcontentspage 구현에 따른 마이페이지 삭제
 // import Mypage from "./MyPage";
 
@@ -21,4 +22,5 @@ export {
   TotalRecordsPage,
   RecordPage,
   // Mypage,
+  DownloadPage,
 };
