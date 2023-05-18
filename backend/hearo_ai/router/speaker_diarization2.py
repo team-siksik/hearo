@@ -15,9 +15,9 @@ async def root():
     return {"message": "hearo!"}
 
 
-@socket_manager.on("audio2")
-async def audio(sid, data):
-    logger.info(f"audio: {sid} sent audio")
+@socket_manager.on("waveform")
+async def waveform(sid, data):
+    logger.info(f"waveform: {sid} sent audio")
 
     room_id = data["room_id"]
     audio_data = data["audio"]
@@ -30,7 +30,7 @@ async def audio(sid, data):
     audio, sr = librosa.load(buffer, sr=None)
     stft = np.abs(librosa.stft(audio))
     spectral_centroids = librosa.feature.spectral_centroid(S=stft, sr=sr)
-    flattened_array = np.array(spectral_centroids).flatten()
-    average = np.mean(flattened_array)
-    
+    logger.info(spectral_centroids)
+
+    average = np.mean(np.array(spectral_centroids).flatten())
     logger.info(average)
