@@ -1,25 +1,19 @@
-from fastapi import APIRouter
-from main import socket_manager, logger
-from google.cloud import speech
-from collections import deque
-from six.moves import queue
-import threading
-import re
 import os
-# os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "C:/Coding/S08P31A603/backend/hearo_ai/credential.json"
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "/app/credential.json"
-router = APIRouter(prefix="/sd")
 
-# 버퍼 크기 (1초에 해당하는 샘플 수)
-RATE=16000
-BUFFER_SIZE = RATE  # 예시로 버퍼 크기를 RATE로 설정했습니다.
-# 음성 데이터를 저장하는 버퍼
-audio_buffer = deque(maxlen=BUFFER_SIZE)
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "C:/Coding/S08P31A603/backend/hearo_ai/credential.json"
+import asyncio
+import sys
+import re
+import websockets
+import json
+import threading
+from six.moves import queue
+from google.cloud import speech
+# from google.cloud.speech import types
 
-@router.get("/test")
-async def root():
-    logger.info("root: sd router api 호출")
-    return {"message": "hearo!"}
+
+IP = 'localhost'
+PORT = 8000
 
 class Transcoder(object):
     """
@@ -66,18 +60,21 @@ class Transcoder(object):
             overwrite_chars = " " * (num_chars_printed - len(transcript))
 
             if not result.is_final:
-                logger.info(f"stt result not final {transcript + overwrite_chars}")
+                sys.stdout.write(transcript + overwrite_chars + "\r")
+                sys.stdout.flush()
+
                 num_chars_printed = len(transcript)
 
             else:
-                logger.info(f"stt result final {transcript + overwrite_chars}")
+                print(transcript + overwrite_chars)
                 self.final = True
 
                 # Exit recognition if any of the transcribed phrases could be
                 # one of our keywords.
                 if re.search(r"\b(그만|중지)\b", transcript, re.I):
-                    logger.info("Exiting..")
+                    print("Exiting..")
                     break
+
                 num_chars_printed = 0
 
     def process(self):
@@ -128,21 +125,41 @@ class Transcoder(object):
         Writes data to the buffer
         """
         self.buff.put(data)
-transcoder = Transcoder(
-    encoding=speech.RecognitionConfig.AudioEncoding.LINEAR16,
-    rate=RATE,
-    language="ko-KR"
-)
-transcoder.start()
-@socket_manager.on("audio")
-async def audio(sid, data):
-    global transcoder
-    transcoder.write(data)
-    # print(transcoder.transcript)
-    if transcoder.transcript:
-        print(transcoder.transcript)
-        sending = {"final" : transcoder.final, "transcript" : transcoder.transcript}
-        transcoder.transcript = None
-    else:
-        sending = {"final" : transcoder.final, "transcript" : "nothing"}
-    await socket_manager.emit("data", sending)
+
+
+async def audio_processor(websocket, path):
+    """
+    Collects audio from the stream, writes it to buffer and return the output of Google speech to text
+    """
+    config = await websocket.recv()
+    if not isinstance(config, str):
+        print("ERROR, no config")
+        return
+    config = json.loads(config)
+    transcoder = Transcoder(
+        encoding=speech.RecognitionConfig.AudioEncoding.LINEAR16,
+        rate=config["rate"],
+        language=config["language"]
+    )
+    transcoder.start()
+    print("conected")
+    while transcoder.closed is False:
+        try:
+            data = await websocket.recv()
+        except websockets.ConnectionClosed:
+            print("Connection closed")
+            transcoder.closed = True
+            break
+        transcoder.write(data)
+        # print(transcoder.transcript)
+        if transcoder.transcript:
+            print(transcoder.transcript)
+            sending = {"final" : transcoder.final, "transcript" : transcoder.transcript}
+            transcoder.transcript = None
+        else:
+            sending = {"final" : transcoder.final, "transcript" : "nothing"}
+        await websocket.send(json.dumps(sending))
+
+start_server = websockets.serve(audio_processor, IP, PORT)
+asyncio.get_event_loop().run_until_complete(start_server)
+asyncio.get_event_loop().run_forever()
