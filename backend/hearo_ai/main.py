@@ -1,7 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import ssl
-from starlette.middleware.httpsredirect import HTTPSRedirectMiddleware
 import logging
 import sys
 
@@ -24,7 +23,6 @@ app = FastAPI()
 origins = ["*"]
 app.add_middleware(
     CORSMiddleware,
-    HTTPSRedirectMiddleware,
     allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
