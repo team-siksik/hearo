@@ -177,7 +177,7 @@ function ConversationBody({
       reconnectionDelayMax: 10000,
       //   autoConnect: false,
       transports: ["websocket"],
-      path: "/wws/socket.io",
+      path: "/ws/socket.io",
     });
 
     if (!socket1) {
