@@ -141,7 +141,7 @@ async def audio(sid, data):
     if sid in transcoder_cache:
         transcoder = transcoder_cache[sid]
     else:
-        transcoder = Transcoder(rate=RATE, language="ko-KR")
+        transcoder = Transcoder(rate=RATE, language="ko-KR", encoding=speech.RecognitionConfig.AudioEncoding.LINEAR16)
         transcoder.start()
         transcoder_cache[sid] = transcoder
         logger.info(f"Transcoder started for room {sid}")
