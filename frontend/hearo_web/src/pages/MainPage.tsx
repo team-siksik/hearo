@@ -68,7 +68,7 @@ function MainPage({ setLoginModal }: PropsType) {
                     {/* {isLoggedIn ? (
                       <>
                         <div className="text-sm">
-                          안녕하세요, {user?.nickname}님!!!
+                          안녕하세요, {user?.nickname}님!!!&nbsp;
                         </div>
                         <div className="flex flex-row text-sm font-medium">
                           <div className="text-blue-main">히어로</div>
@@ -77,32 +77,40 @@ function MainPage({ setLoginModal }: PropsType) {
                       </>
                     ) : (
                       <>
-                        <div className="text-sm">반가워요.</div>{" "}
-                        <div className="flex flex-row text-sm font-medium">
-                          <Button onClick={handleCommPageClick}>
-                            <span>로그인 후&nbsp;</span>
-                            <span className="font-semibold text-blue-main">
-                              히어로
-                            </span>
-                          </Button>
-                          <span>를 이용해보세요.</span>
-                        </div>
+                        <div className="text-sm">반가워요.</div>
+
+                          <div className="flex flex-row text-sm font-medium">
+                            <Button onClick={handleCommPageClick}>
+                              <span>로그인 후&nbsp;</span>
+                              <span className="font-semibold text-blue-main">
+                                히어로
+                              </span>
+                            </Button>
+                            <span>를 이용해보세요.</span>
+                          </div>
                       </>
                     )} */}
                     <div className="text-blue-main">
-                      <p className="text-l font-semibold mb-1">소리를 잇는 다리,</p>
+                      <p className="text-l mb-1 font-semibold">
+                        소리를 잇는 다리,
+                      </p>
                       <p>
-                        <span className="text-5xl font-chewy font-extrabold mr-1">HEARO</span>
+                        <span className="mr-1 font-chewy text-5xl font-extrabold">
+                          HEARO
+                        </span>
                         <span className="text-xl">Office</span>
                       </p>
                     </div>
                     <div className="mt-4">
                       <p>회사에서, 학교에서, 회의가 필요한 어디에서나</p>
-                      <p><span className="text-blue-main">Hearo Office</span>를 통해 회의에 편하게 참여하세요!</p>
+                      <p>
+                        <span className="text-blue-main">Hearo Office</span>를
+                        통해 회의에 편하게 참여하세요!
+                      </p>
                     </div>
                     <div className="mt-6 w-40 items-center">
                       <Button onClick={handleCommPageClick} type="blueTextBtn">
-                      시작하기
+                        시작하기
                       </Button>
                     </div>
                   </div>

@@ -1,4 +1,10 @@
-import { Routes, Route } from "react-router-dom";
+import {
+  Routes,
+  Route,
+  redirect,
+  Navigate,
+  useNavigate,
+} from "react-router-dom";
 import { Google, STT } from "@/apis";
 import {
   ConversationPage,
@@ -20,51 +26,57 @@ import { BrowserView, MobileView } from "react-device-detect";
 import STTTest from "./apis/STT";
 // import { PrivateRoute } from "./PrivateRoute";
 import TestPage from "./pages/TestPage";
+import { PrivateRoutes } from "./PrivateRoutes";
 
 function App() {
-  const isLoggedIn = useAppSelector((state) => state.user.isLoggedIn);
+  const navigate = useNavigate();
   const user = useAppSelector((state) => state.user.user);
+  const isLogin = useAppSelector((state) => state.user.isLoggedIn);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
 
   const [loginModal, setLoginModal] = useState<boolean>(false);
   const [openProfileModal, setOpenProfileModal] = useState<boolean>(false);
-  // const isLoggedin = !!localStorage.getItem("accessToken");
 
   return (
     <div className="App">
-      {/* <BrowserView>
+      <BrowserView>
         <Navbar
           loginModal={loginModal}
           setLoginModal={setLoginModal}
           setOpenProfileModal={setOpenProfileModal}
-          />
+        />
         <Routes>
-          <Route path="/" element={<MainPage setLoginModal={setLoginModal} />} /> */}
-          {/* <Route element={<PrivateRoute />}> */}
-          {/* <Route path="/stt" element={<STT />} />
+          <Route
+            path="/"
+            element={<MainPage setLoginModal={setLoginModal} />}
+          />
+          <Route path="/stt" element={<STT />} />
           <Route path="/socket" element={<SocketTest />} />
           <Route path="/recordtest" element={<STTTest />} />
-          <Route path="/comm" element={<ConversationPage />} />
-          <Route path="/records" element={<TotalRecordsPage />} />
-          <Route path="/test" element={<TestPage />} />
-          <Route path="/records/:id" element={<RecordPage />} />
-          <Route path="/mypage/frequent" element={<FrequentPage />} />
-          <Route path="/mypage/settings" element={<SettingsPage />} />
-          <Route path="/login/oauth2/code/google" element={<Google />} />
-          <Route path="*" element={<NotFound404 />} /> */}
-          {/* </Route> */}
-        {/* </Routes> */}
+          <Route path="*" element={<NotFound404 />} />
+
+          <Route element={<PrivateRoutes />}>
+            <Route path="/comm" element={<ConversationPage />} />
+            <Route path="/records" element={<TotalRecordsPage />} />
+            <Route path="/test" element={<TestPage />} />
+            <Route path="/records/:id" element={<RecordPage />} />
+            <Route path="/mypage/frequent" element={<FrequentPage />} />
+            <Route path="/mypage/settings" element={<SettingsPage />} />
+            <Route path="/login/oauth2/code/google" element={<Google />} />
+          </Route>
+        </Routes>
         {/* 로그인 창 */}
-        {/* {loginModal && (
+        {loginModal && (
           <LoginModal loginModal={loginModal} setLoginModal={setLoginModal} />
-          )} */}
+        )}
         {/* 로그인 된 후 프로필모달창 */}
-        {/* {isLoggedIn && openProfileModal && (
+        {isLoggedIn && openProfileModal && (
           <ProfileModal setOpenProfileModal={setOpenProfileModal} />
-          )} */}
-      {/* </BrowserView> */}
-      {/* <MobileView> */}
-        <DownloadPage/>
-      {/* </MobileView> */}
+        )}
+      </BrowserView>
+      <MobileView>
+        <DownloadPage />
+      </MobileView>
     </div>
   );
 }
