@@ -22,4 +22,4 @@ COPY . .
 ENV SSL_CERT_PATH=./ssl_certificate.pem
 ENV SSL_KEY_PATH=./ssl_private_key.pem
 
-CMD ["uvicorn", "main:/app", "--host", "0.0.0.0", "--port", "80", "--ssl-keyfile",  "$SSL_KEY_PATH", "--ssl-certfile", "$SSL_CERT_PATH"]
+CMD ["uvicorn", "main:/app", "--host", "0.0.0.0", "--port", "80"]
