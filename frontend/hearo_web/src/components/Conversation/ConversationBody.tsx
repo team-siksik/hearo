@@ -5,7 +5,7 @@ import AddFavModal from "./MeetingBody/AddFavModal";
 import GPTRecommend from "./GPTRecommend";
 import ExitModal from "./ExitModal";
 import { Recorder } from "@/STT/recorder";
-import { TTS, STT } from "@/apis";
+import { TTS } from "@/apis";
 import { MeetingAPI } from "@/apis/api";
 import { Socket, io } from "socket.io-client";
 import { AnimatePresence, motion } from "framer-motion";
@@ -14,12 +14,10 @@ import Alert from "../common/ui/Alert";
 import { MemoType } from "@/types/types";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { saveMeeting, startMeeting } from "@/redux/modules/meeting";
-import { getUserSetting } from "@/redux/modules/profile";
 
-//FIXME: accessToken 연결 전 수정해야함
 const accessToken = localStorage.getItem("accessToken");
+//TODO: room number, 백엔드랑 정해야 함
 const roomNo = 1343;
-
 const socketURl = "http://k8a6031.p.ssafy.io:80/";
 const recorderWorkerPath = "../STT/recorderWorker.js";
 
@@ -54,7 +52,7 @@ const MSG_AUDIOCONTEXT_RESUMED = 13;
  */
 
 interface MessageType {
-  id: number;
+  // idx: number;
   content: string;
   speaker: string;
 }
@@ -81,15 +79,15 @@ function ConversationBody({
   const [started, setStarted] = useState<boolean>(false);
   // regarding component status
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isSTTLoading, setIsSTTLoading] = useState<boolean>(false);
+  // const [isFinal, setIsFinal] = useState<boolean>(false);
+  const isFinal = useRef<boolean>(false);
 
   const [openMemoPage, setOpenMemoPage] = useState<boolean>(false);
   const [openExitModal, setOpenExitModal] = useState<boolean>(false);
   const [openAlertModal, setOpenAlertModal] = useState<boolean>(false);
-  // get GPT 추천 modal
   const [openGPTModal, setOpenGPTModal] = useState<boolean>(false);
-  // 자주 쓰는 말 modal
   const [openAddFavModal, setOpenAddFavModal] = useState<boolean>(false);
+
   // 전체 대화 텍스트
   const [conversation, setConversation] = useState<MessageType[]>([]);
   const [partialResult, setPartialResult] = useState<string>("");
@@ -145,10 +143,14 @@ function ConversationBody({
   useEffect(() => {
     if (message) {
       setText(message);
-      setId((prev) => prev + 1);
+      // setId((prev) => prev + 1);
       setConversation((prevConversation) => [
         ...prevConversation,
-        { id: id, content: message, speaker: "user" },
+        {
+          // idx: id,
+          content: message,
+          speaker: "user",
+        },
       ]);
     }
   }, [message]);
@@ -194,10 +196,10 @@ function ConversationBody({
       const intervalKey = setInterval(() => {
         subRecorder.current?.exportWAV((blob: Blob) => {
           socketSend(blob);
-          reader.readAsDataURL(blob);
-          reader.onloadend = function () {
-            socketSend(reader.result);
-          };
+          // reader.readAsDataURL(blob);
+          // reader.onloadend = function () {
+          //   socketSend(reader.result);
+          // };
           subRecorder.current?.clear();
         }, "audio/wav");
       }, 1000);
@@ -219,7 +221,27 @@ function ConversationBody({
     });
 
     socket1.on("data", (e) => {
-      console.log(e);
+      const { final, transcript } = e;
+      console.log(final, transcript);
+      if (transcript !== "nothing") {
+        if (conversation.length === 0) {
+          isFinal.current = false;
+          conversation.push({
+            content: transcript,
+            speaker: "other1",
+          });
+        } else {
+          if (final === isFinal.current) {
+            conversation[conversation.length - 1].content = transcript;
+          } else {
+            isFinal.current = final;
+            conversation.push({
+              content: transcript,
+              speaker: "other1",
+            });
+          }
+        }
+      }
       // const { data } = e;
       // onEvent(MSG_WEB_SOCKET, data);
       // // socket server에서 보낸 데이터가 object일 때
@@ -389,7 +411,7 @@ function ConversationBody({
       // If item is an audio blob
       if (item instanceof Blob) {
         if (item.size > 0) {
-          socket.current?.emit("audio", { audio: item });
+          socket.current?.emit("audio", { room_id: roomNo, audio: item });
           onEvent(AUDIO_SEND, `Send: blob: ${item.type}, ${item.size}`);
         } else {
           onEvent(MSG_SEND_EMPTY, `Send: blob: ${item.type}, EMPTY`);
@@ -436,11 +458,11 @@ function ConversationBody({
       subRecorder.current?.exportWAV((blob: Blob) => {
         // socket send audio
         socketSend(blob);
-        reader.readAsDataURL(blob);
-        reader.onloadend = function () {
-          var base64String = reader.result;
-          socketSend(base64String);
-        };
+        // reader.readAsDataURL(blob);
+        // reader.onloadend = function () {
+        //   var base64String = reader.result;
+        //   socketSend(base64String);
+        // };
         // socket send recording finish sign
         socketSend("finish_audio");
         subRecorder.current?.clear();
@@ -532,7 +554,7 @@ function ConversationBody({
           </div>
         ) : (
           <div className="flex scroll-mx-0 flex-row">
-            {conversation ? (
+            {conversation.length > 0 ? (
               <motion.div
                 key="left"
                 style={{
@@ -545,12 +567,11 @@ function ConversationBody({
                 {text && <TTS text={text} setText={setText} />}
                 {conversation.map((item, idx) => {
                   return (
-                    <>
+                    <div key={idx}>
                       {item.speaker === "user" ? (
                         <Dialog
                           setOpenAddFavModal={setOpenAddFavModal}
                           onClick={handleDialogClick}
-                          key={item.id}
                           type={"user_text"}
                         >
                           {item.content}
@@ -558,23 +579,22 @@ function ConversationBody({
                       ) : (
                         <Dialog
                           onClick={handleGPTClick}
-                          key={item.id}
                           type={
                             item.speaker === "other1"
-                              ? "other1_text"
+                              ? "1"
                               : item.speaker === "other2"
-                              ? "other2_text"
+                              ? "2"
                               : item.speaker === "other3"
-                              ? "other3_text"
+                              ? "3"
                               : item.speaker === "other4"
-                              ? "other4_text"
+                              ? "4"
                               : ""
                           }
                         >
                           {item.content}
                         </Dialog>
                       )}
-                    </>
+                    </div>
                   );
                 })}
                 <div className="scroll-bottom" ref={messageEndRef}></div>
