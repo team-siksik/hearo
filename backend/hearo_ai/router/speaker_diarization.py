@@ -18,30 +18,38 @@ audio_buffer = deque(maxlen=BUFFER_SIZE)
 
 @router.get("/test")
 async def root():
-    global transcoder
-    transcoder.start()
+
     logger.info("root: sd router api 호출")
     return {"message": "hearo!"}
 
+async def disconnect():
+    global transcoder
+    pass
 class Transcoder(object):
     """
     Converts audio chunks to text
     """
-    def __init__(self, encoding, rate, language):
+    def __init__(self, rate, language):
         self.buff = queue.Queue()
-        self.encoding = encoding
+        # self.encoding = encoding
         self.language = language
         self.rate = rate
         self.closed = True
         self.transcript = None
         self.final = False
+        self.connected = False
         logger.info("init", self.language, self.rate)
 
     def start(self):
         """Start up streaming speech call"""
         logger.info("restart")
+        self.connected = True
         threading.Thread(target=self.process).start()
         self.closed = False
+
+    def ending(self):
+        self.connected = False
+        self.closed = True
 
     def response_loop(self, responses):
         num_chars_printed = 0
@@ -89,7 +97,7 @@ class Transcoder(object):
         #You can add speech contexts for better recognition
         client = speech.SpeechClient()
         config = speech.RecognitionConfig(
-            encoding=self.encoding,
+            # encoding=self.encoding,
             sample_rate_hertz=self.rate,
             language_code=self.language,
         )
@@ -97,16 +105,17 @@ class Transcoder(object):
             config=config,
             interim_results=True)
         audio_generator = self.stream_generator()
-        requests = (speech.StreamingRecognizeRequest(audio_content=content)
-                    for content in audio_generator)
+        if self.connected:
+            requests = (speech.StreamingRecognizeRequest(audio_content=content)
+                        for content in audio_generator)
 
-        responses = client.streaming_recognize(streaming_config, requests)
-        logger.info(responses)
-        try:
-            self.response_loop(responses)
-        except Exception as e:
-            print("error", e)
-            self.start()
+            responses = client.streaming_recognize(streaming_config, requests)
+            logger.info(responses)
+            try:
+                self.response_loop(responses)
+            except Exception as e:
+                print("error", e)
+                self.start()
 
     def stream_generator(self):
         logger.info("start stream_generator", self.closed)
@@ -131,14 +140,18 @@ class Transcoder(object):
         """
         self.buff.put(data)
 transcoder = Transcoder(
-    encoding=speech.RecognitionConfig.AudioEncoding.LINEAR16,
+    # encoding=speech.RecognitionConfig.AudioEncoding.LINEAR16,
     rate=RATE,
     language="ko-KR"
 )
 @socket_manager.on("audio")
 async def audio(sid, data):
     global transcoder
+    if not transcoder.connected:
+        transcoder.start()
+        logger.info("transcoder 시작")
     logger.info("audio: sd router api 호출")
+    logger.info(type(data))
     transcoder.write(data)
     # print(transcoder.transcript)
     if transcoder.transcript:
