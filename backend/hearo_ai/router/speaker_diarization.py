@@ -6,6 +6,19 @@ from six.moves import queue
 import threading
 import re
 import os
+
+import json
+
+# Specify the path to your JSON file
+file_path = "credential.json"
+
+# Read the JSON file
+with open(file_path, "r") as file:
+    data = json.load(file)
+
+# Print the data
+print(data)
+
 # os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "C:/Coding/S08P31A603/backend/hearo_ai/credential.json"
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "credential.json"
 logger.info(os.environ["GOOGLE_APPLICATION_CREDENTIALS"])
