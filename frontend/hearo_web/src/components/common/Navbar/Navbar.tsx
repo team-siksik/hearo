@@ -123,7 +123,7 @@ const Navbar = ({
             <Player src={MainLogo} loop autoplay style={{ width: "60px" }} />
             <div className="flex flex-row items-end">
               <h1 className="font-chewy text-3xl font-extrabold ">HEARO </h1>
-              <span>&nbsp;Office</span>
+              <span className="mx-1 font-Pretendard-Regular">Office</span>
             </div>
           </button>
         </div>

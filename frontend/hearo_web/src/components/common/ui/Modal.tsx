@@ -23,6 +23,7 @@ interface PropsType {
   setShowModal?: React.Dispatch<SetStateAction<boolean>>;
   setOpenAlertModal?: React.Dispatch<SetStateAction<boolean>>;
   setOpenMyPageModal?: React.Dispatch<SetStateAction<boolean>>;
+  setOpenSidebarModal?: React.Dispatch<SetStateAction<boolean>>;
 }
 
 const customModalStyles: ReactModal.Styles = {
@@ -165,6 +166,7 @@ function Modal({
   setShowModal,
   setOpenAlertModal,
   setOpenMyPageModal,
+  setOpenSidebarModal,
 }: PropsType) {
   const [openModal, setOpenModal] = useState<boolean>(open);
 
@@ -201,6 +203,9 @@ function Modal({
     }
     if (setOpenMyPageModal) {
       setOpenMyPageModal((prev) => !prev);
+    }
+    if (setOpenSidebarModal) {
+      setOpenSidebarModal((prev) => !prev);
     }
   }
   return (
@@ -258,6 +263,9 @@ function Modal({
             }
             if (setOpenMyPageModal) {
               setOpenMyPageModal((prev) => !prev);
+            }
+            if (setOpenSidebarModal) {
+              setOpenSidebarModal((prev) => !prev);
             }
           }}
           shouldCloseOnOverlayClick={cannotExit ? false : true}
