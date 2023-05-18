@@ -186,6 +186,9 @@ const workercode = () => {
       case "export16kMono":
         export16kMono(e.data.type);
         break;
+      case "exportBase64":
+        exportBase64(e.data.type);
+        break;
       case "getBuffer":
         getBuffer();
         break;
@@ -206,6 +209,13 @@ const workercode = () => {
   function record(inputBuffer) {
     recBuffers.push(inputBuffer[0]);
     recLength += inputBuffer[0].length;
+  }
+
+  function exportBase64(type) {
+    const buffer = mergeBuffers(recBuffers, recLength);
+    const samples = resampler.resampler(buffer);
+    const dataview = encodeBase64(samples);
+    this.postMessage(dataview);
   }
 
   function exportWAV(type) {
@@ -337,6 +347,14 @@ const workercode = () => {
     const view = new DataView(buffer);
     floatTo16BitPCM(view, 0, samples);
     return view;
+  }
+
+  function encodeBase64(samples) {
+    let binary = "";
+    for (let i = 0; i < samples.length; i++) {
+      binary += String.fromCharCode(samples[i]);
+    }
+    return btoa(binary);
   }
 };
 let code = workercode.toString();
