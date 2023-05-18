@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi_socketio import SocketManager
 import ssl
-
+from starlette.middleware.httpsredirect import HTTPSRedirectMiddleware
 import logging
 import sys
 
@@ -35,12 +35,12 @@ socket_manager.configure_ssl_context(ssl_context)
 origins = ["*"]
 app.add_middleware(
     CORSMiddleware,
+    HTTPSRedirectMiddleware,
     allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
 
 from router import common, sl_recognition, sound_classification, speaker_diarization, text_generate
 
