@@ -10,8 +10,6 @@ RUN apt-get update \
 WORKDIR /app
 
 COPY ./requirements.txt ./requirements.txt
-COPY ./ssl_certificate.pem ./ssl_certificate.pem
-COPY ./ssl_private_key.pem ./ssl_private_key.pem
 
 RUN pip install --no-cache-dir --upgrade -r ./requirements.txt
 
