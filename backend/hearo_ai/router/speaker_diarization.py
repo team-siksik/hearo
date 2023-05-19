@@ -44,6 +44,8 @@ class Transcoder(object):
         self.closed = True
         self.transcript = None
         self.final = False
+        self.idx = 0
+        self.split = False
 
     def start(self):
         """Start up streaming speech call"""
@@ -80,11 +82,13 @@ class Transcoder(object):
                 logger.info(f"STT: result(not final) - {transcript + overwrite_chars}")
                 num_chars_printed = len(transcript)
                 self.final = False
+                self.idx = len(transcript)
 
             else:
                 logger.info(f"STT: result(final) - {transcript + overwrite_chars}")
                 self.final = True
-
+                self.split = False
+                self.idx = 0
                 # Exit recognition if any of the transcribed phrases could be
                 # one of our keywords.
                 if re.search(r"\b(그만|중지)\b", transcript, re.I):
@@ -156,9 +160,9 @@ transcoder_cache = {}
 @socket_manager.on("audio")
 async def audio(sid, data):
     logger.info(f"STT: {sid} sent audio")
-    idx = 0
     room_id = data['room_id']
     audio = data['audio']
+    split = data["split"]
 
     waveform(room_id, audio)
 
@@ -169,11 +173,16 @@ async def audio(sid, data):
         transcoder.start()
         transcoder_cache[sid] = transcoder
         logger.info(f"STT: Transcoder started for room {sid}")
-
+    if split:
+        transcoder.split = True
+        return
     transcoder.write(audio)
 
     if transcoder.transcript:
-        sending = {"final" : transcoder.final, "transcript" : transcoder.transcript}
+        tr = transcoder.transcript
+        if transcoder.split: 
+            tr = tr[transcoder.idx:]
+        sending = {"final" : transcoder.final, "transcript" : tr}
         transcoder.transcript = None
     else:
         sending = {"final" : transcoder.final, "transcript" : "nothing"}
