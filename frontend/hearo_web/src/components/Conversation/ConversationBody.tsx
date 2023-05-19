@@ -19,7 +19,7 @@ const accessToken = localStorage.getItem("accessToken");
 //TODO: room number, 백엔드랑 정해야 함
 const roomNo = 1343;
 // const socketURl = "http://k8a6031.p.ssafy.io:80/";
-const socketURl = "https://k8a6031.p.ssafy.io/";
+const socketURl = "https://k8a6031.p.ssafy.io:8090/";
 const recorderWorkerPath = "../STT/recorderWorker.js";
 
 // Error codes (mostly following Android error names and codes)
@@ -28,21 +28,6 @@ const ERR_NETWORK = 2;
 const ERR_AUDIO = 3;
 const ERR_SERVER = 4;
 const ERR_CLIENT = 5;
-
-// Event codes
-const MSG_WAITING_MICROPHONE = 1;
-const MSG_MEDIA_STREAM_CREATED = 2;
-const MSG_INIT_RECORDER = 3;
-const MSG_RECORDING = 4;
-const AUDIO_SEND = 5;
-const MSG_SEND_EMPTY = 6;
-const MSG_SEND = 7;
-const MSG_WEB_SOCKET = 8;
-const MSG_WEB_SOCKET_OPEN = 9;
-const MSG_WEB_SOCKET_CLOSE = 10;
-const MSG_STOP = 11;
-const MSG_SERVER_CHANGED = 12;
-const MSG_AUDIOCONTEXT_RESUMED = 13;
 
 /**
  * socket.io 연결
@@ -55,12 +40,14 @@ const MSG_AUDIOCONTEXT_RESUMED = 13;
 interface PropsType {
   message?: string;
   isStarted: boolean;
-  setIsStarted: React.Dispatch<SetStateAction<boolean>>;
-  togglePlay: () => void;
-  setTimerStarted: React.Dispatch<React.SetStateAction<boolean>>;
   seconds: number;
   conversation: MessageType[];
-  setConversation: React.Dispatch<React.SetStateAction<MessageType[]>>;
+  togglePlay: () => void;
+  setIsStarted: React.Dispatch<SetStateAction<boolean>>;
+  setTimerStarted: React.Dispatch<SetStateAction<boolean>>;
+  setConversation: React.Dispatch<SetStateAction<MessageType[]>>;
+  setRequestString: React.Dispatch<SetStateAction<string>>;
+  setOpenGPTModal: React.Dispatch<SetStateAction<boolean>>;
 }
 
 function ConversationBody({
@@ -72,6 +59,8 @@ function ConversationBody({
   seconds,
   conversation,
   setConversation,
+  setOpenGPTModal,
+  setRequestString,
 }: PropsType) {
   // person Id
   const [id, setId] = useState<number>(0);
@@ -85,7 +74,7 @@ function ConversationBody({
   const [openMemoPage, setOpenMemoPage] = useState<boolean>(false);
   const [openExitModal, setOpenExitModal] = useState<boolean>(false);
   const [openAlertModal, setOpenAlertModal] = useState<boolean>(false);
-  const [openGPTModal, setOpenGPTModal] = useState<boolean>(false);
+
   const [openAddFavModal, setOpenAddFavModal] = useState<boolean>(false);
 
   // Text-to-Speech를 위한 text
@@ -120,9 +109,9 @@ function ConversationBody({
     roomSequence.current = roomSeq;
   }, [roomSeq]);
 
-  function onEvent(code: any, data: any) {
-    console.log(`msg: ${code} : ${data || ""}\n`);
-  }
+  // function onEvent(code: any, data: any) {
+  //   console.log(`msg: ${code} : ${data || ""}\n`);
+  // }
   function onError(code: any, data: any) {
     console.log(`Error: ${code} : ${data}\n`);
   }
@@ -167,9 +156,10 @@ function ConversationBody({
     togglePlay();
   }
 
-  function handleGPTClick() {
+  function handleGPTClick(str: string) {
     //TODO: 상대방 말 클릭 -> gpt 추천 -> 추천 리스트
-    setOpenGPTModal(!openGPTModal);
+    setOpenGPTModal(true);
+    setRequestString(str);
   }
 
   function createSocket() {
@@ -177,7 +167,7 @@ function ConversationBody({
       reconnectionDelayMax: 10000,
       //   autoConnect: false,
       transports: ["websocket"],
-      path: "/wss/socket.io",
+      path: "/ws/socket.io",
     });
 
     if (!socket1) {
@@ -189,7 +179,7 @@ function ConversationBody({
       console.log("connected");
       socket.current = socket1;
       socket1.emit("enter_room", {
-        room_id: roomNo, //FIXME: random room key로 들어감 추후 수정
+        room_id: roomNo,
       });
 
       console.log("enter_the_room");
@@ -210,12 +200,11 @@ function ConversationBody({
       } catch (err) {
         console.log("subRecorder doesn't work");
       }
-      onEvent(MSG_WEB_SOCKET_OPEN, "socket_open");
+      // onEvent(MSG_WEB_SOCKET_OPEN, "socket_open");
     });
 
     socket1.on("data", (e) => {
       const { final, transcript } = e;
-      console.log(final, transcript, partialResult, ...conversation);
       if (transcript !== "nothing") {
         if (
           partialResult.current === "" ||
@@ -264,7 +253,7 @@ function ConversationBody({
       // onEvent(MSG_WEB_SOCKET, data);
       // socket server에서 보낸 데이터가 object일 때
       if (data instanceof Object && !(data instanceof Blob)) {
-        onError(ERR_SERVER, "WebSocket: onEvent: got Object, not a Blob");
+        // onError(ERR_SERVER, "WebSocket: onEvent: got Object, not a Blob");
       }
       // socket server에서 보낸 데이터가 blob일 때
       else if (data instanceof Blob) {
@@ -272,17 +261,17 @@ function ConversationBody({
       }
       // socket server에서 보낸 데이터가 string이나 나머지일 때
       else {
-        console.log(data);
+        // console.log(data);
       }
     });
 
     socket1.on("disconnect", (e) => {
-      console.log("web socket closed");
-      onEvent(MSG_WEB_SOCKET_CLOSE, e);
+      // console.log("web socket closed");
+      // onEvent(MSG_WEB_SOCKET_CLOSE, e);
     });
 
     socket1.on("error", (e) => {
-      onEvent(ERR_SOCKET, e);
+      // onEvent(ERR_SOCKET, e);
     });
 
     socket1.on("connect_error", (err) => {
@@ -332,7 +321,7 @@ function ConversationBody({
       audioBitsPerSecond: 16000,
       // mimeType: "audio/wav; codecs=opus",
     });
-    onEvent(MSG_INIT_RECORDER, "Recorder initialized");
+    // onEvent(MSG_INIT_RECORDER, "Recorder initialized");
     // setMediaRecorder(mediaRecorder);
     mediaRecorder.current = mediaRecorder1;
 
@@ -359,7 +348,7 @@ function ConversationBody({
 
     //audioContext.state가 'suspended'이면 재실행함 -> 반대로 'running'일 경우, suspend()함수로 일시정지 시킬 수 있음
     audioContext.resume().then(() => {
-      onEvent(MSG_AUDIOCONTEXT_RESUMED, "Audio context resumed");
+      // onEvent(MSG_AUDIOCONTEXT_RESUMED, "Audio context resumed");
     });
 
     return mediaRecorder;
@@ -367,16 +356,16 @@ function ConversationBody({
 
   // recording start
   function startRecord() {
-    onEvent(
-      MSG_WAITING_MICROPHONE,
-      "Waiting for approval to access your microphone ..."
-    );
+    // onEvent(
+    //   MSG_WAITING_MICROPHONE,
+    //   "Waiting for approval to access your microphone ..."
+    // );
     if (mediaRecorder.current) {
-      console.log(mediaRecorder.current);
+      // console.log(mediaRecorder.current);
       return;
     }
     if (socket.current) {
-      console.log(socket.current);
+      // console.log(socket.current);
       cancel();
       return;
     }
@@ -410,9 +399,9 @@ function ConversationBody({
       if (item instanceof Blob) {
         if (item.size > 0) {
           socket.current?.emit("audio", { room_id: roomNo, audio: item });
-          onEvent(AUDIO_SEND, `Send: blob: ${item.type}, ${item.size}`);
+          // onEvent(AUDIO_SEND, `Send: blob: ${item.type}, ${item.size}`);
         } else {
-          onEvent(MSG_SEND_EMPTY, `Send: blob: ${item.type}, EMPTY`);
+          // onEvent(MSG_SEND_EMPTY, `Send: blob: ${item.type}, EMPTY`);
         }
         //If item is like string or sth
       } else {
@@ -422,7 +411,7 @@ function ConversationBody({
         // });
         socket.current?.emit("waveform", { room_id: roomNo, audio: item }); // base64
 
-        onEvent(MSG_SEND, `Send tag: ${item}`);
+        // onEvent(MSG_SEND, `Send tag: ${item}`);
       }
     } else {
       onError(ERR_CLIENT, `No web socket connection: failed to send: ${item}`);
@@ -445,11 +434,11 @@ function ConversationBody({
       try {
         subRecorder.current?.stop();
         subRecorder.current?.clear();
-        console.log("subRecorder stop");
+        // console.log("subRecorder stop");
       } catch {
-        console.log("subRecorder stop error");
+        // console.log("subRecorder stop error");
       }
-      onEvent(MSG_STOP, "Stopped recording");
+      // onEvent(MSG_STOP, "Stopped recording");
 
       // Push the remaining audio to the server
 
@@ -495,7 +484,7 @@ function ConversationBody({
     if (subRecorder) {
       subRecorder.current?.stop();
       subRecorder.current?.clear();
-      onEvent(MSG_STOP, "Stopped recording");
+      // onEvent(MSG_STOP, "Stopped recording");
     }
     if (socket) {
       socket.current?.emit("close_room", { room_id: roomNo });
@@ -576,7 +565,7 @@ function ConversationBody({
                         </Dialog>
                       ) : (
                         <Dialog
-                          onClick={handleGPTClick}
+                          onClick={(e) => handleGPTClick(item.content)}
                           type={
                             item.speaker === "other1"
                               ? "1"
@@ -626,7 +615,13 @@ function ConversationBody({
             </AnimatePresence>
           </div>
         )}
-        {openGPTModal && <GPTRecommend setOpenGPTModal={setOpenGPTModal} />}
+        {/* {openGPTModal && (
+          <GPTRecommend
+            setOpenGPTModal={setOpenGPTModal}
+            requestString={requestString}
+            // setGptRecommend={setGptRecommend}
+          />
+        )} */}
         {openAddFavModal && (
           <AddFavModal setOpenAddFavModal={setOpenAddFavModal} />
         )}
