@@ -6,12 +6,22 @@ interface PropsType {
   children: React.ReactNode;
   setOpenAddFavModal?: React.Dispatch<SetStateAction<boolean>>;
   onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
+  favContent?: string;
+  setChosenFavItem?: React.Dispatch<SetStateAction<string>>;
 }
 
 // TODO: 화자별로 색깔 다르게 분리해야 함
-function Dialog({ type, children, setOpenAddFavModal, onClick }: PropsType) {
+function Dialog({
+  type,
+  children,
+  setOpenAddFavModal,
+  onClick,
+  favContent,
+  setChosenFavItem,
+}: PropsType) {
   const onLongPress = useLongPress(() => {
     if (setOpenAddFavModal) setOpenAddFavModal(true);
+    if (setChosenFavItem) setChosenFavItem(favContent!);
   });
 
   return (
@@ -30,70 +40,70 @@ function Dialog({ type, children, setOpenAddFavModal, onClick }: PropsType) {
         ) : type === "1" ? (
           <div
             onClick={onClick}
-            className="user_dialog m-2 inline-block h-fit w-fit max-w-sm rounded-xl p-2 shadow-md"
+            className="user_dialog m-2 inline-block h-fit w-fit max-w-sm rounded-xl bg-slate-100 p-2 shadow-md"
           >
             {children}
           </div>
         ) : type === "2" ? (
           <div
             onClick={onClick}
-            className="user_dialog m-2 inline-block h-fit w-fit max-w-sm rounded-xl bg-red-100 p-2 shadow-md"
+            className="user_dialog m-2 inline-block h-fit w-fit max-w-sm rounded-xl bg-blue-100 p-2 shadow-md"
           >
             {children}
           </div>
         ) : type === "3" ? (
           <div
             onClick={onClick}
-            className="user_dialog m-2 inline-block h-fit w-fit max-w-sm rounded-xl bg-red-100 p-2 shadow-md"
+            className="user_dialog m-2 inline-block h-fit w-fit max-w-sm rounded-xl bg-green-100 p-2 shadow-md"
           >
             {children}
           </div>
         ) : type === "4" ? (
           <div
             onClick={onClick}
-            className="user_dialog m-2 inline-block h-fit w-fit max-w-sm rounded-xl bg-red-100 p-2 shadow-md"
+            className="user_dialog m-2 inline-block h-fit w-fit max-w-sm rounded-xl bg-orange-100 p-2 shadow-md"
           >
             {children}
           </div>
         ) : type === "5" ? (
           <div
             onClick={onClick}
-            className="user_dialog m-2 inline-block h-fit w-fit max-w-sm rounded-xl bg-red-100 p-2 shadow-md"
+            className="user_dialog m-2 inline-block h-fit w-fit max-w-sm rounded-xl bg-teal-100 p-2 shadow-md"
           >
             {children}
           </div>
         ) : type === "6" ? (
           <div
             onClick={onClick}
-            className="user_dialog m-2 inline-block h-fit w-fit max-w-sm rounded-xl bg-red-100 p-2 shadow-md"
+            className="user_dialog m-2 inline-block h-fit w-fit max-w-sm rounded-xl bg-yellow-100 p-2 shadow-md"
           >
             {children}
           </div>
         ) : type === "7" ? (
           <div
             onClick={onClick}
-            className="user_dialog m-2 inline-block h-fit w-fit max-w-sm rounded-xl bg-red-100 p-2 shadow-md"
+            className="user_dialog m-2 inline-block h-fit w-fit max-w-sm rounded-xl bg-indigo-100 p-2 shadow-md"
           >
             {children}
           </div>
         ) : type === "8" ? (
           <div
             onClick={onClick}
-            className="user_dialog m-2 inline-block h-fit w-fit max-w-sm rounded-xl bg-red-100 p-2 shadow-md"
+            className="user_dialog m-2 inline-block h-fit w-fit max-w-sm rounded-xl bg-purple-100 p-2 shadow-md"
           >
             {children}
           </div>
         ) : type === "9" ? (
           <div
             onClick={onClick}
-            className="user_dialog m-2 inline-block h-fit w-fit max-w-sm rounded-xl bg-red-100 p-2 shadow-md"
+            className="user_dialog m-2 inline-block h-fit w-fit max-w-sm rounded-xl bg-pink-100 p-2 shadow-md"
           >
             {children}
           </div>
         ) : type === "10" ? (
           <div
             onClick={onClick}
-            className="user_dialog m-2 inline-block h-fit w-fit max-w-sm rounded-xl bg-red-100 p-2 shadow-md"
+            className="user_dialog m-2 inline-block h-fit w-fit max-w-sm rounded-xl bg-cyan-100 p-2 shadow-md"
           >
             {children}
           </div>
