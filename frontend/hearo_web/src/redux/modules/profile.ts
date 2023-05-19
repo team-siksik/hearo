@@ -2,6 +2,7 @@
 import { ProfileAPI } from "@/apis/api";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { FrequentType } from "@/types/types";
+import { FrequentPage } from "@/pages";
 
 // ProfileAPI 초기상태
 interface ProfileType {
@@ -73,6 +74,19 @@ const getFrequent = createAsyncThunk(
   }
 );
 
+const addFrequent = createAsyncThunk(
+  "profile/addFrequent",
+  async (sentence: string, thunkAPI) => {
+    console.log(sentence);
+    const accessToken = localStorage.getItem("accessToken");
+    const response = await ProfileAPI.addMyPhrase(accessToken!, sentence);
+    if (!response) {
+      throw new Error();
+    }
+    return { sentence };
+  }
+);
+
 // delete user Frequent
 const deleteFrequent = createAsyncThunk(
   "profile/deleteFrequent",
@@ -132,4 +146,10 @@ const profileSlice = createSlice({
 export const ProfileAction = profileSlice.actions;
 export default profileSlice.reducer;
 
-export { getUserSetting, getFrequent, deleteFrequent, updateUserSetting };
+export {
+  getUserSetting,
+  getFrequent,
+  deleteFrequent,
+  updateUserSetting,
+  addFrequent,
+};
