@@ -1,14 +1,18 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { SetStateAction, useEffect, useRef, useState } from "react";
 import { Button, FavContents, GPTRecommend, Input } from "@/components";
 import { ReactComponent as Star } from "@/assets/Icon/StarIcon.svg";
 import { ReactComponent as Send } from "@/assets/Icon/SendIcon.svg";
 import { MessageType } from "@/types/types";
 
 interface PropsType {
-  setNewMessage: React.Dispatch<React.SetStateAction<string>>;
   isStarted: boolean;
+  setNewMessage: React.Dispatch<React.SetStateAction<string>>;
   conversation: MessageType[];
   setConversation: React.Dispatch<React.SetStateAction<MessageType[]>>;
+  gptRecommendItem?: string;
+  openGPTModal?: boolean;
+  setOpenGPTModal: React.Dispatch<SetStateAction<boolean>>;
+  requestString: string;
 }
 
 function ConversationFooter({
@@ -16,6 +20,9 @@ function ConversationFooter({
   isStarted,
   conversation,
   setConversation,
+  requestString,
+  openGPTModal,
+  setOpenGPTModal,
 }: PropsType) {
   const [openFavModal, setOpenFavModal] = useState<boolean>(false);
 
@@ -82,6 +89,18 @@ function ConversationFooter({
           </form>
         </div>
       </div>
+      {openGPTModal && (
+        // 모달을 닫기 위해서 setOpenGPTModal
+        // axios 요청을 하기 위해서 requestString
+        // openGPTModal
+        // input창에 올려주기 위해 inputRef
+        <GPTRecommend
+          setOpenGPTModal={setOpenGPTModal}
+          requestString={requestString}
+          openGPTModal={openGPTModal}
+          inputRef={inputRef}
+        />
+      )}
       {openFavModal ? (
         <FavContents inputRef={inputRef} setOpenFavModal={setOpenFavModal} />
       ) : null}
