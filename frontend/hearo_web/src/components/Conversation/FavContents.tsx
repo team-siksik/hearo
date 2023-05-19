@@ -1,28 +1,8 @@
-import React, { SetStateAction } from "react";
+import React, { SetStateAction, useEffect } from "react";
 import { Button, Modal } from "@/components";
-
-const mockData = [
-  {
-    id: 1,
-    content: "밥 먹었어?",
-  },
-  {
-    id: 2,
-    content: "뭐 먹었어?",
-  },
-  {
-    id: 3,
-    content: "고기 먹었어?",
-  },
-  {
-    id: 4,
-    content: "짜장면 먹었어?",
-  },
-  {
-    id: 5,
-    content: "스시 먹었어?",
-  },
-];
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { ProfileAPI } from "@/apis/api";
+import { getFrequent } from "@/redux/modules/profile";
 
 interface PropsType {
   inputRef: React.RefObject<HTMLTextAreaElement>;
@@ -34,18 +14,26 @@ function FavContents({ inputRef, setOpenFavModal }: PropsType) {
     setOpenFavModal((prev) => !prev);
     if (inputRef.current) inputRef.current.value = value;
   }
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(getFrequent());
+  }, []);
+
+  const favContent = useAppSelector((state) => state.profile.FrequentList);
+
   return (
     <Modal open={true} cannotExit={false}>
       <h4 className="mb-3 text-lg font-bold">자주 쓰는 말</h4>
       <div className="flex flex-col gap-3 ">
-        {mockData.map((item) => {
+        {favContent.map((item) => {
           return (
-            <div className="flex justify-end" key={item.id}>
+            <div className="flex justify-end" key={item.frequentSeq}>
               <Button
                 type="contentBtn"
-                onClick={() => handleClick(item.content)}
+                onClick={() => handleClick(item.sentence)}
               >
-                {item.content}
+                {item.sentence}
               </Button>
             </div>
           );
