@@ -520,7 +520,6 @@ function ConversationBody({
     if (isStarted) {
       startRecord();
     }
-    return () => {};
   }, [isStarted]);
 
   return (
@@ -615,13 +614,6 @@ function ConversationBody({
             </AnimatePresence>
           </div>
         )}
-        {/* {openGPTModal && (
-          <GPTRecommend
-            setOpenGPTModal={setOpenGPTModal}
-            requestString={requestString}
-            // setGptRecommend={setGptRecommend}
-          />
-        )} */}
         {openAddFavModal && (
           <AddFavModal setOpenAddFavModal={setOpenAddFavModal} />
         )}
