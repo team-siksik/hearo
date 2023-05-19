@@ -173,7 +173,7 @@ async def audio(sid, data):
 
     if transcoder.transcript:
         logger.info(transcoder.transcript)
-        banks = transcoder.transcript.split('')
+        banks = transcoder.transcript.split()
         transcoder.transcript = ''.join(banks)
         words = transcoder.transcript.split(' ')
         if len(words) > transcoder.idx * 10:
