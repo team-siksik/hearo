@@ -45,6 +45,7 @@ class Transcoder(object):
         self.transcript = None
         self.final = False
         self.idx = 0
+        self.before_idx = 0
         self.split = False
 
     def start(self):
@@ -175,6 +176,7 @@ async def audio(sid, data):
         logger.info(f"STT: Transcoder started for room {sid}")
     if split:
         transcoder.split = True
+        transcoder.before_idx = transcoder.idx
         logger.info("split activate")
         return
     transcoder.write(audio)
@@ -183,7 +185,7 @@ async def audio(sid, data):
         tr = transcoder.transcript
         logger.info(type(tr))
         if transcoder.split: 
-            tr = tr[transcoder.idx:]
+            tr = tr[transcoder.before_idx:]
         sending = {"final" : transcoder.final, "transcript" : tr}
         logger.info(tr)
         transcoder.transcript = None
