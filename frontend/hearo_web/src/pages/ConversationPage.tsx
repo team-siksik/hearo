@@ -77,6 +77,7 @@ function ConversationPage() {
         />
       ) : null}
       {/* <MeetingSidebar /> */}
+      {/* //TODO: sidebar에서 나가기 버튼 누르면 어느페이지로 나갈지 받아와야 함, cancel함수 불러야함 (closeRoomAPI, socket.close를 위해서 ) */}
       <RecordpageSideBar isStarted={isStarted} />
       <audio ref={audioRef} src={startVoice} />
       <div className="absolute right-0 mt-[4.25rem] w-[82%]">
