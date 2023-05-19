@@ -16,8 +16,7 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { saveMeeting, startMeeting } from "@/redux/modules/meeting";
 
 const accessToken = localStorage.getItem("accessToken");
-//TODO: room number, 백엔드랑 정해야 함
-const roomNo = 1343;
+const roomNo = 1343; // 임의 룸 넘버
 // const socketURl = "http://k8a6031.p.ssafy.io:80/";
 const socketURl = "https://k8a6031.p.ssafy.io:8090/";
 const recorderWorkerPath = "../STT/recorderWorker.js";
@@ -76,7 +75,7 @@ function ConversationBody({
   const [openAlertModal, setOpenAlertModal] = useState<boolean>(false);
 
   const [openAddFavModal, setOpenAddFavModal] = useState<boolean>(false);
-
+  const [chosenFavItem, setChosenFavItem] = useState<string>("");
   // Text-to-Speech를 위한 text
   const [text, setText] = useState<string>("");
   const addMemoList = useAppSelector((state) => state.meeting.memoList);
@@ -133,6 +132,11 @@ function ConversationBody({
         speaker: "user",
       });
       partialResult.current = "";
+      socket.current?.emit("audio", {
+        room_id: 1343,
+        audio: null,
+        split: true,
+      });
       // setConversation((prevConversation) => [
       //   ...prevConversation,
       //   {
@@ -157,7 +161,6 @@ function ConversationBody({
   }
 
   function handleGPTClick(str: string) {
-    //TODO: 상대방 말 클릭 -> gpt 추천 -> 추천 리스트
     setOpenGPTModal(true);
     setRequestString(str);
   }
@@ -203,13 +206,12 @@ function ConversationBody({
       // onEvent(MSG_WEB_SOCKET_OPEN, "socket_open");
     });
 
+    // FIXME: STT 보여진는 부분 해결해야돼
     socket1.on("data", (e) => {
       const { final, transcript } = e;
+      console.log(final, transcript);
       if (transcript !== "nothing") {
-        if (
-          partialResult.current === "" ||
-          conversation[conversation.length - 1].speaker === "user"
-        ) {
+        if (partialResult.current === "") {
           // 대화 내역이 없을 때
           partialResult.current = transcript;
           conversation.push({
@@ -218,33 +220,23 @@ function ConversationBody({
           });
         } else {
           // 대화 중일 때
-          if (final === isFinal.current) {
+          if (final === false) {
             partialResult.current = transcript;
-            conversation[conversation.length - 1].content = transcript;
-          } else {
+            let lastIdx = -1;
+            for (let i = conversation.length - 1; i == 0; i--) {
+              if (conversation[i].speaker === "other1") {
+                console.log(conversation[i].content);
+                lastIdx = i;
+                break;
+              }
+            }
+            conversation[lastIdx].content = transcript;
+          } else if (final === true) {
+            // final이 true가 나오면 partialResult을 초기화하고
             partialResult.current = "";
-            conversation.push({
-              content: "",
-              speaker: "other1",
-            });
           }
         }
       }
-      // const { data } = e;
-      // onEvent(MSG_WEB_SOCKET, data);
-      // // socket server에서 보낸 데이터가 object일 때
-      // if (data instanceof Object && !(data instanceof Blob)) {
-      //   onError(ERR_SERVER, "WebSocket: onEvent: got Object, not a Blob");
-      // }
-      // // socket server에서 보낸 데이터가 blob일 때
-      // else if (data instanceof Blob) {
-      //   onError(ERR_SERVER, "WebSocket: got Blob");
-      // }
-      // // socket server에서 보낸 데이터가 string이나 나머지일 때
-      // else {
-      //   // const response = JSON.parse(data);
-      //   console.log(data);
-      // }
     });
 
     // info 라는 이벤트 메시지를 받았을 때
@@ -398,7 +390,11 @@ function ConversationBody({
       // If item is an audio blob
       if (item instanceof Blob) {
         if (item.size > 0) {
-          socket.current?.emit("audio", { room_id: roomNo, audio: item });
+          socket.current?.emit("audio", {
+            room_id: roomNo,
+            audio: item,
+            split: false,
+          });
           // onEvent(AUDIO_SEND, `Send: blob: ${item.type}, ${item.size}`);
         } else {
           // onEvent(MSG_SEND_EMPTY, `Send: blob: ${item.type}, EMPTY`);
@@ -557,7 +553,9 @@ function ConversationBody({
                       {item.speaker === "user" ? (
                         <Dialog
                           setOpenAddFavModal={setOpenAddFavModal}
+                          favContent={item.content}
                           onClick={handleDialogClick}
+                          setChosenFavItem={setChosenFavItem}
                           type={"user_text"}
                         >
                           {item.content}
@@ -615,7 +613,10 @@ function ConversationBody({
           </div>
         )}
         {openAddFavModal && (
-          <AddFavModal setOpenAddFavModal={setOpenAddFavModal} />
+          <AddFavModal
+            setOpenAddFavModal={setOpenAddFavModal}
+            chosenFavItem={chosenFavItem}
+          />
         )}
         {openAlertModal && (
           <Alert setOpenAlertModal={setOpenAlertModal}>
