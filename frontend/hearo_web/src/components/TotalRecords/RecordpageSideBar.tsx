@@ -79,13 +79,17 @@ function RecordpageSideBar({ isStarted }: PropsType) {
           cannotExit={false}
           setOpenSidebarModal={setOpenModal}
         >
-          <p>
-            대화중에 페이지를 이동하시면 대화가 저장되지 않습니다. <br />
+          <p className="text-base font-bold">
+            대화 중에 페이지를 이동하시면 대화가 저장되지 않습니다. <br />
             이동하시겠습니까?
           </p>
           <div className="flex flex-row">
-            <button>취소</button>
-            <button>나가기</button>
+            <Button onClick={() => setOpenModal(false)} type="backButton">
+              취소
+            </Button>
+            <Button onClick={() => navigate("/")} type="deleteButton">
+              나가기
+            </Button>
           </div>
         </Modal>
       )}
