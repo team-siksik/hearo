@@ -210,7 +210,7 @@ function ConversationBody({
     socket1.on("data", (e) => {
       const { final, transcript } = e;
       console.log(final, transcript);
-      if (transcript !== "nothing") {
+      if (transcript !== "nothing" && transcript.trim() !== "") {
         if (partialResult.current === "") {
           // 대화 내역이 없을 때
           partialResult.current = transcript;
@@ -223,9 +223,9 @@ function ConversationBody({
           if (final === false) {
             partialResult.current = transcript;
             let lastIdx = -1;
-            for (let i = conversation.length - 1; i == 0; i--) {
+            for (let i = conversation.length - 1; i >= 0; i--) {
+              console.log(conversation[i].speaker);
               if (conversation[i].speaker === "other1") {
-                console.log(conversation[i].content);
                 lastIdx = i;
                 break;
               }
