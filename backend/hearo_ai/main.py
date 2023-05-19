@@ -24,7 +24,7 @@ app = FastAPI()
 socket_manager = SocketManager(app)
 
 # cors 설정
-origins = ["*"]
+origins = ["https://k8a603.p.ssafy.io"]
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
