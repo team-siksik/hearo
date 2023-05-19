@@ -139,8 +139,8 @@ function RecordPage() {
       <div className="absolute right-0 mt-[4.25rem] w-[82%]">
         <div className="mx-8">
           <div className="flex items-stretch justify-between ">
-            <div className="flex flex-row items-center">
-              <div className="self-center rounded-lg text-3xl font-bold text-gray-600">
+            <div className="flex min-w-[400px] flex-row items-center">
+              <div className="w-full self-center rounded-lg text-3xl font-bold text-gray-600">
                 <form onSubmit={(e) => e.preventDefault()}>
                   <input
                     type="text"
@@ -227,7 +227,7 @@ function RecordPage() {
               </div>
             )}
           </div>
-          <div className="flex scroll-mx-0 flex-row">
+          <div className="mb-32 flex scroll-mx-0 flex-row">
             <motion.div
               key="left"
               // className={
@@ -238,7 +238,7 @@ function RecordPage() {
                 width:
                   openMemo || recordData.memoList?.length > 0 ? "70%" : "100%",
                 transition: "width 0.5s",
-                overflow: "auto",
+                // overflow: "auto",
               }}
             >
               <div className="my-4 flex w-full flex-col rounded-md p-4 shadow-md">
