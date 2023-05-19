@@ -61,14 +61,17 @@ const updateUserSetting = createAsyncThunk(
 );
 
 // get user Frequent
-const getFrequent = createAsyncThunk("profile/getFrequent", async () => {
-  const accessToken = localStorage.getItem("accessToken");
-  const response = await ProfileAPI.getMyPhraseList(accessToken!);
-  if (!response) {
-    throw new Error();
+const getFrequent = createAsyncThunk(
+  "profile/getFrequent",
+  async (thunkAPI) => {
+    const accessToken = localStorage.getItem("accessToken");
+    const response = await ProfileAPI.getMyPhraseList(accessToken!);
+    if (!response) {
+      throw new Error();
+    }
+    return response.data.data;
   }
-  return response.data.data;
-});
+);
 
 // delete user Frequent
 const deleteFrequent = createAsyncThunk(
@@ -79,7 +82,7 @@ const deleteFrequent = createAsyncThunk(
     if (!response) {
       throw new Error();
     }
-    return frequentSeq;
+    return { frequentSeq };
   }
 );
 
@@ -112,24 +115,17 @@ const profileSlice = createSlice({
         FrequentList: action.payload,
       };
     });
-    // FIXME: types.ts에 frequentSeq가 number형식임
-    // builder.addCase(deleteFrequent.fulfilled, (state, action) => {
-    //   // const newFrequentList = state.FrequentList.filter(
-    //   //   (frequent: FrequentType) => {
-    //   //     return !action.payload.includes(frequent.frequentSeq);
-    //   //   }
-    //   // );
-    //   const payloadArray = Array.isArray(action.payload)
-    //     ? action.payload
-    //     : [action.payload];
-    //   const newFrequentList = state.FrequentList.filter(
-    //     (frequent: FrequentType) => !payloadArray.includes(frequent.frequentSeq)
-    //   );
-    //   return {
-    //     ...state,
-    //     FrequentData: newFrequentList,
-    //   };
-    // });
+    builder.addCase(deleteFrequent.fulfilled, (state, action) => {
+      const newFrequentList = state.FrequentList.filter(
+        (frequent: FrequentType) => {
+          return frequent.frequentSeq !== action.payload.frequentSeq;
+        }
+      );
+      return {
+        ...state,
+        FrequentData: newFrequentList,
+      };
+    });
   },
 });
 
