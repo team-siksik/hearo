@@ -109,7 +109,7 @@ class Transcoder(object):
             )
             streaming_config = speech.StreamingRecognitionConfig(
                 config=config,
-                # interim_results=True
+                interim_results=True
             )
 
             # Generate audio content for streaming requests
