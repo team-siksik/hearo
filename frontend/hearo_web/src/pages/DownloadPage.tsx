@@ -8,7 +8,7 @@ interface PropsType {}
 function DownloadPage() {
   return (
     <div className="h-[100vh] w-[100%] snap-y snap-mandatory overflow-auto">
-      <div className="flex h-[100vh] w-[100%] snap-center">
+      <div className="flex w-[100%] snap-center pt-24">
         <div className="m-auto">
           <Player
             src={bactrianCamel}
