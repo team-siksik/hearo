@@ -8,7 +8,6 @@ import {
 } from "@/components";
 import startVoice from "@/assets/Sounds/start.wav";
 import { redirect, useNavigate } from "react-router-dom";
-import ConversationBody1 from "@/components/Conversation/ConversationBody1";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { getUserSetting } from "@/redux/modules/profile";
 import { MessageType } from "@/types/types";
