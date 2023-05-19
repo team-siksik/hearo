@@ -112,7 +112,7 @@ class _ChatHomeGlassesState extends State<ChatHomeGlasses> {
     tts.setSpeechRate(0.6);
     tts.setVoice({"name": "ko-kr-x-ism-network", "locale": "ko-KR"});
     _initSpeech();
-    _startListening();
+    // _startListening();
   }
 
   final AssetsAudioPlayer assetsAudioPlayer = AssetsAudioPlayer.newPlayer();
