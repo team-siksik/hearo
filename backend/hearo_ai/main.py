@@ -31,7 +31,7 @@ ssl_context.load_cert_chain("/app/ssl_certificate.pem", "/app/ssl_private_key.pe
 app.ssl_context = ssl_context
 
 # cors 설정
-origins = ["*"]
+origins = ["https://k8a603.p.ssafy.io"]
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
