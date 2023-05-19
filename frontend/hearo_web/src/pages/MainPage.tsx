@@ -110,12 +110,16 @@ function MainPage({ setLoginModal }: PropsType) {
                         <h3 className="text-2xl font-bold text-blue-main">
                           회의 시작하기
                         </h3>
-                        <p className="my-4 text-xl">
-                          <p>나누는 이야기를 실시간으로 확인할 수 있습니다.</p>
-                          <p>하고 싶은 말을 Text-to-Speech로 재생할 수 있고,</p>
-                          <p>chatGPT로부터 말을 추천받을 수도 있어요!</p>
-                          <p>중요한 내용은 메모장에 기록해 보세요.</p>
-                        </p>
+                        <div className="my-4 text-xl">
+                          <div>
+                            나누는 이야기를 실시간으로 확인할 수 있습니다.
+                          </div>
+                          <div>
+                            하고 싶은 말을 Text-to-Speech로 재생할 수 있고,
+                          </div>
+                          <div>chatGPT로부터 말을 추천받을 수도 있어요!</div>
+                          <div>중요한 내용은 메모장에 기록해 보세요.</div>
+                        </div>
                         <div className="w-1/3">
                           <Button
                             onClick={handleCommPageClick}

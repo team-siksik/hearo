@@ -30,7 +30,7 @@ function Button({ type, children, onClick }: PropsType) {
         </button>
       ) : type === "simpleBlueBtn" ? (
         <button
-          className="mb-3 ml-12 rounded-full bg-blue-main px-5 py-3 text-base font-medium text-white transition duration-200 hover:bg-blue-600 active:bg-blue-700"
+          className="mb- ml-8 rounded-full bg-blue-main px-5 py-3 text-base font-medium text-white transition duration-200 hover:bg-blue-600 active:bg-blue-700"
           onClick={onClick}
         >
           {children}
