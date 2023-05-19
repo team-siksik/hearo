@@ -8,7 +8,6 @@ import {
 } from "@/components";
 import startVoice from "@/assets/Sounds/start.wav";
 import { redirect, useNavigate } from "react-router-dom";
-import ConversationBody1 from "@/components/Conversation/ConversationBody1";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { getUserSetting } from "@/redux/modules/profile";
 import { MessageType } from "@/types/types";
@@ -23,6 +22,10 @@ function ConversationPage() {
   // open modal
   const [openInfoModal, setOpenInfoModal] = useState<boolean>(false);
 
+  const [openGPTModal, setOpenGPTModal] = useState<boolean>(false);
+  const [requestString, setRequestString] = useState<string>("");
+  // const [gptRecommend, setGptRecommend] = useState<string[]>([]);
+  // const [gptRecommendItem, setGptRecommendItem] = useState<string>("");
   // started
   const [isStarted, setIsStarted] = useState<boolean>(false);
   const [timerStarted, setTimerStarted] = useState<boolean>(false);
@@ -85,20 +88,25 @@ function ConversationPage() {
           seconds={seconds}
         />
         <ConversationBody
-          setTimerStarted={setTimerStarted}
           message={newMessage}
           isStarted={isStarted}
-          setIsStarted={setIsStarted}
-          togglePlay={togglePlay}
           seconds={seconds}
           conversation={conversation}
+          togglePlay={togglePlay}
+          setIsStarted={setIsStarted}
+          setTimerStarted={setTimerStarted}
           setConversation={setConversation}
+          setRequestString={setRequestString}
+          setOpenGPTModal={setOpenGPTModal}
         />
         <ConversationFooter
           isStarted={isStarted}
           setNewMessage={setNewMessage}
           conversation={conversation}
           setConversation={setConversation}
+          setOpenGPTModal={setOpenGPTModal}
+          openGPTModal={openGPTModal}
+          requestString={requestString}
         />
       </div>
       {/* // 음성 재생 -> 회의 시작 페이지로 자동 이동 */}
