@@ -79,7 +79,7 @@ class Transcoder(object):
             overwrite_chars = " " * (num_chars_printed - len(transcript))
 
             if not result.is_final:
-                logger.info(f"STT: result(not final) - {transcript + overwrite_chars}")
+                # logger.info(f"STT: result(not final) - {transcript + overwrite_chars}")
                 num_chars_printed = len(transcript)
                 self.final = False
                 self.idx = len(transcript)
@@ -175,14 +175,17 @@ async def audio(sid, data):
         logger.info(f"STT: Transcoder started for room {sid}")
     if split:
         transcoder.split = True
+        logger.info("split activate")
         return
     transcoder.write(audio)
 
     if transcoder.transcript:
         tr = transcoder.transcript
+        logger.info(type(tr))
         if transcoder.split: 
             tr = tr[transcoder.idx:]
         sending = {"final" : transcoder.final, "transcript" : tr}
+        logger.info(tr)
         transcoder.transcript = None
     else:
         sending = {"final" : transcoder.final, "transcript" : "nothing"}
