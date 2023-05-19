@@ -44,7 +44,7 @@ class Transcoder(object):
         self.closed = True
         self.transcript = None
         self.final = False
-
+        self.idx = 0
     def start(self):
         """Start up streaming speech call"""
         self.closed = False
@@ -156,7 +156,6 @@ transcoder_cache = {}
 @socket_manager.on("audio")
 async def audio(sid, data):
     logger.info(f"STT: {sid} sent audio")
-
     room_id = data['room_id']
     audio = data['audio']
 
@@ -173,11 +172,19 @@ async def audio(sid, data):
     transcoder.write(audio)
 
     if transcoder.transcript:
-        sending = {"final" : transcoder.final, "transcript" : transcoder.transcript}
+        logger.info(transcoder.transcript)
+        words = transcoder.transcript.split(' ')
+        if len(words) > transcoder.idx * 10:
+            transcoder.idx += 1
+            transcoder.final = True
+        tr = ' '.join(transcoder.transcript[transcoder.idx * 10:])
+        sending = {"final" : transcoder.final, "transcript" : tr}
         transcoder.transcript = None
     else:
         sending = {"final" : transcoder.final, "transcript" : "nothing"}
-
+    if transcoder.final == True:
+        transcoder.idx = 0
+    
     await socket_manager.emit("data", sending, room_id)
 
 
