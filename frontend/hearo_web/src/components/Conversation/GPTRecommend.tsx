@@ -66,7 +66,9 @@ function GPTRecommend({
             );
           })
         ) : (
-          <Spinner loading={true} />
+          <div className="m-auto flex">
+            <Spinner loading={true} />
+          </div>
         )}
       </div>
     </Modal>
