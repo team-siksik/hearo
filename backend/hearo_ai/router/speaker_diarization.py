@@ -173,6 +173,8 @@ async def audio(sid, data):
 
     if transcoder.transcript:
         logger.info(transcoder.transcript)
+        banks = transcoder.transcript.split('')
+        transcoder.transcript = ''.join(banks)
         words = transcoder.transcript.split(' ')
         if len(words) > transcoder.idx * 10:
             transcoder.idx += 1
@@ -180,6 +182,7 @@ async def audio(sid, data):
         tr = ' '.join(transcoder.transcript[transcoder.idx * 10:])
         sending = {"final" : transcoder.final, "transcript" : tr}
         transcoder.transcript = None
+        transcoder.final = False
     else:
         sending = {"final" : transcoder.final, "transcript" : "nothing"}
     if transcoder.final == True:
