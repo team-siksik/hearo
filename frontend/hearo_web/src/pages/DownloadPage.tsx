@@ -35,7 +35,7 @@ function DownloadPage() {
             <p className="mt-6 text-sm">안드로이드 환경에서 사용 가능합니다.</p>
           </div>
           <div className="my-7">
-            <a href="public/hearo_05_17_01_release.apk" download>
+            <a href="public/HearoApp.apk" download>
               <Button type="blueTextBtn">Hearo 다운로드</Button>
             </a>
           </div>
