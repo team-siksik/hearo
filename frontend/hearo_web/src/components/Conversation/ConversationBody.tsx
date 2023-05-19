@@ -195,7 +195,7 @@ function ConversationBody({
           // };
           subRecorder.current?.clear();
         }, "audio/wav");
-      }, 1000);
+      }, 500);
       setIntervalKey(intervalKey);
       try {
         subRecorder.current?.record();
@@ -206,7 +206,6 @@ function ConversationBody({
       // onEvent(MSG_WEB_SOCKET_OPEN, "socket_open");
     });
 
-    // FIXME: STT 보여진는 부분 해결해야돼
     socket1.on("data", (e) => {
       const { final, transcript } = e;
       console.log(final, transcript);
