@@ -25,15 +25,13 @@ class CloseChat extends StatelessWidget {
             height: size.height * 0.1,
             child: Column(
               children: [
-                Text(
-                  '대화를 저장하고',
-                  style: TextStyle(fontSize: 20),
-                  textAlign: TextAlign.center,
-                ),
-                Text(
-                  '종료하시겠습니까?',
-                  style: TextStyle(fontSize: 20),
-                  textAlign: TextAlign.center,
+                Padding(
+                  padding: EdgeInsets.all(10),
+                  child: Text(
+                    '대화를 종료하시겠습니까?',
+                    style: TextStyle(fontSize: 20),
+                    textAlign: TextAlign.center,
+                  ),
                 ),
               ],
             ),
@@ -48,7 +46,7 @@ class CloseChat extends StatelessWidget {
                           Color.fromARGB(255, 255, 255, 255)),
                       shape: MaterialStatePropertyAll(RoundedRectangleBorder(
                           side:
-                              BorderSide(color: Color(0xffE63E43), width: 1.5),
+                              BorderSide(color: Color(0xff1A73E8), width: 1.5),
                           borderRadius:
                               BorderRadius.all(Radius.circular(30))))),
                   onPressed: () {
@@ -62,7 +60,7 @@ class CloseChat extends StatelessWidget {
                 ElevatedButton(
                   style: ButtonStyle(
                       backgroundColor:
-                          MaterialStatePropertyAll(Color(0xffe63e43)),
+                          MaterialStatePropertyAll(Color(0xff1A73E8)),
                       shape: MaterialStatePropertyAll(RoundedRectangleBorder(
                           borderRadius:
                               BorderRadius.all(Radius.circular(30))))),
@@ -70,7 +68,7 @@ class CloseChat extends StatelessWidget {
                     Get.offAll(() => HomeScreen());
                   },
                   child: const Text(
-                    '저장 후 종료',
+                    '종료하기',
                   ),
                 ),
               ],
@@ -80,7 +78,7 @@ class CloseChat extends StatelessWidget {
       ),
       child: Text(
         "대화 종료",
-        style: TextStyle(color: Color(0xffe63e43)),
+        style: TextStyle(color: Color.fromARGB(255, 230, 17, 17)),
       ),
     );
   }

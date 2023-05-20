@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hearo_app/screens/login_screen.dart';
 import 'package:get/get.dart';
-// import 'package:firebase_core/firebase_core.dart';
 
 void main() async {
-  // WidgetsFlutterBinding.ensureInitialized();
-  // await Firebase.initializeApp(); // Firebase 초기화
   runApp(const MyApp());
 }
 
@@ -16,6 +13,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
+      theme: ThemeData(fontFamily: "Pretendard"),
+      themeMode: ThemeMode.system,
       debugShowCheckedModeBanner: false,
       builder: (context, child) {
         return MediaQuery(

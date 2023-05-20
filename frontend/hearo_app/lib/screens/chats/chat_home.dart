@@ -1,15 +1,15 @@
-import 'dart:math';
+import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hearo_app/controller/chat_controller.dart';
 import 'package:hearo_app/widgets/chats/custom_app_bar_chat.dart';
 import 'package:hearo_app/widgets/chats/favorite_star.dart';
-import 'package:hearo_app/widgets/chats/show_info_first.dart';
+import 'package:hearo_app/widgets/chats/show_info.dart';
 import 'package:hearo_app/widgets/chats/speech_bubble.dart';
 import 'package:wakelock/wakelock.dart';
 import 'package:flutter_tts/flutter_tts.dart';
-import 'package:audioplayers/audioplayers.dart';
-import 'package:assets_audio_player/assets_audio_player.dart';
+import 'package:speech_to_text/speech_recognition_result.dart';
+import 'package:speech_to_text/speech_to_text.dart';
 
 class ChatHome extends StatefulWidget {
   const ChatHome({super.key});
@@ -19,24 +19,88 @@ class ChatHome extends StatefulWidget {
 }
 
 class _ChatHomeState extends State<ChatHome> {
+  final SpeechToText _speechToText = SpeechToText();
   final _scrollController = ScrollController();
-  List chattings = [];
   final chatController = Get.put(ChatController());
-  TextEditingController textController = TextEditingController();
   final FlutterTts tts = FlutterTts();
+
+  TextEditingController textController = TextEditingController();
+  String mode = "side";
+  bool _speechEnabled = false;
+  String _lastWords = '';
+  List chattings = [];
+  List yourChattings = [];
+  List myChattings = [];
+
   void addChat(chat) {
     // 새로운 항목을 ListView에 추가
     setState(() {
-      // 말풍선 확인을 위한 랜덤요소 추가
-      var random = Random();
-      var randomNumber = random.nextInt(2);
-      chattings.add({"who": randomNumber, "message": chat});
-      // chattings.add({"who": 0, "message": chat});
+      chattings.add({"who": 0, "message": chat});
+      myChattings.add(chat);
       chatController.changeSaying('');
     });
 
     // ListView를 맨 하단으로 스크롤
     _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+  }
+
+  /// This has to happen only once per app
+  void _initSpeech() async {
+    _speechEnabled = await _speechToText.initialize();
+    setState(() {});
+  }
+
+  /// Each time to start a speech recognition session
+  void _startListening() async {
+    await _speechToText.listen(
+      onResult: _onSpeechResult,
+      listenFor: Duration(minutes: 30),
+      // pauseFor: Duration(seconds: 60),
+      cancelOnError: true,
+      listenMode: ListenMode.deviceDefault,
+    );
+
+    await Future.delayed(Duration.zero);
+    if (_speechToText.isNotListening) {
+      _startListening();
+    }
+
+    if (_lastWords.trim() != "") {
+      chattings.add({"who": 1, "message": _lastWords});
+      yourChattings.add(_lastWords);
+      await Future.delayed(Duration.zero);
+      _lastWords = '';
+      _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+    }
+
+    setState(() {}); // Check if speech recognition is still ongoing
+
+    if (!_speechEnabled) {
+      _initSpeech();
+    }
+
+    await Future.delayed(Duration.zero);
+    if (_speechToText.isNotListening) {
+      _startListening();
+    }
+  }
+
+  void _stopListening() async {
+    await _speechToText.stop();
+    setState(() {});
+  }
+
+  void _onSpeechResult(SpeechRecognitionResult result) {
+    setState(() {
+      _lastWords = result.recognizedWords;
+    });
+    if (!_speechEnabled) {
+      _initSpeech();
+    }
+
+    if (_speechToText.isNotListening) {
+      _startListening();
+    }
   }
 
   @override
@@ -53,45 +117,29 @@ class _ChatHomeState extends State<ChatHome> {
     // tts.setVoice({"name": "ko-kr-x-kob-network", "locale": "ko-KR"});
     // 들어오자마자 모달
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      showInfoFirst(context);
+      showInfo(context);
     });
-    playAudio();
-    Future.delayed(Duration(milliseconds: 3300), () async {
-      playAudioStop();
-      Get.back();
-    });
-  }
-
-  final AssetsAudioPlayer assetsAudioPlayer = AssetsAudioPlayer.newPlayer();
-  void playAudio() async {
-    await assetsAudioPlayer.open(
-      Audio("assets/audios/hearo_start.wav"),
-      loopMode: LoopMode.none, //반복 여부 (LoopMode.none : 없음)
-      autoStart: false, //자동 시작 여부
-      showNotification: false, //스마트폰 알림 창에 띄울지 여부
-    );
-
-    assetsAudioPlayer.play(); //재생
-    // assetsAudioPlayer.pause(); //멈춤
-    // assetsAudioPlayer.stop(); //정지
-  }
-
-  void playAudioStop() async {
-    assetsAudioPlayer.stop(); //정지
+    // playAudio();
+    _initSpeech();
+    _startListening();
   }
 
   @override
   void dispose() {
     // 화면 꺼짐 방지 비활성화
     Wakelock.disable();
+    _stopListening();
     super.dispose();
   }
 
-  AudioPlayer player = AudioPlayer();
-  Future playSound() async {
-    // await player.setSourceAsset("assets/audios/hearo_start.wav");
-    await player.play(DeviceFileSource("assets/audios/hearo_start.wav"));
-    // await player.play(DeviceFileSource("assets/audios/hearo_start.wav"));
+  void changeMode() {
+    setState(() {
+      if (mode == "side") {
+        mode = "face";
+      } else {
+        mode = "side";
+      }
+    });
   }
 
   @override
@@ -103,6 +151,28 @@ class _ChatHomeState extends State<ChatHome> {
           return false;
         },
         child: Scaffold(
+          floatingActionButton: AvatarGlow(
+            animate: _speechToText.isListening,
+            glowColor: Color.fromARGB(130, 230, 62, 68),
+            endRadius: 75.0,
+            duration: Duration(milliseconds: 2000),
+            repeatPauseDuration: Duration(milliseconds: 100),
+            repeat: true,
+            child: FloatingActionButton(
+              backgroundColor: _speechToText.isNotListening
+                  ? const Color.fromARGB(49, 0, 0, 0)
+                  : Color.fromARGB(130, 230, 62, 68),
+              onPressed: _speechToText.isNotListening
+                  ? _startListening
+                  : _stopListening,
+              tooltip: '마이크를 켜서 음성인식',
+              child: Icon(
+                  _speechToText.isNotListening ? Icons.mic_off : Icons.mic),
+            ),
+          ),
+          floatingActionButtonLocation: mode == "side"
+              ? FloatingActionButtonLocation.miniCenterTop
+              : FloatingActionButtonLocation.miniCenterTop,
           appBar: CustomAppBarChat(),
           body: GestureDetector(
             onTap: () {
@@ -117,26 +187,81 @@ class _ChatHomeState extends State<ChatHome> {
               height: size.height,
               child: Column(
                 children: [
-                  Flexible(
-                    flex: 10,
-                    child: Container(
-                      padding: EdgeInsets.fromLTRB(15, 0, 15, 15),
-                      child: ListView.separated(
-                        controller: _scrollController,
-                        separatorBuilder: (context, index) =>
-                            SizedBox(height: 5),
-                        itemCount: chattings.length,
-                        itemBuilder: (context, index) {
-                          var saying = chattings[index];
-                          return SpeechBubble(
-                              textController: textController,
-                              message: saying["message"],
-                              who: saying["who"],
-                              textSize: textSize);
-                        },
-                      ),
-                    ),
-                  ),
+                  mode == "side"
+                      ? Flexible(
+                          flex: 10,
+                          child: Container(
+                            padding: EdgeInsets.fromLTRB(15, 0, 15, 15),
+                            child: ListView.separated(
+                              controller: _scrollController,
+                              separatorBuilder: (context, index) =>
+                                  SizedBox(height: 5),
+                              itemCount: chattings.length,
+                              itemBuilder: (context, index) {
+                                var saying = chattings[index];
+                                return SpeechBubble(
+                                    textController: textController,
+                                    message: saying["message"],
+                                    who: saying["who"],
+                                    textSize: textSize);
+                              },
+                            ),
+                          ),
+                        )
+                      : Flexible(
+                          flex: 10,
+                          child: Column(
+                            children: [
+                              Flexible(
+                                flex: 5,
+                                child: Transform(
+                                  transform:
+                                      Matrix4.diagonal3Values(-1.0, -1.0, 1.0),
+                                  alignment: Alignment.center,
+                                  child: Container(
+                                    padding: EdgeInsets.fromLTRB(15, 10, 15, 0),
+                                    child: ListView.separated(
+                                      controller: _scrollController,
+                                      separatorBuilder: (context, index) =>
+                                          SizedBox(height: 5),
+                                      itemCount: myChattings.length,
+                                      itemBuilder: (context, index) {
+                                        var saying = myChattings[index];
+                                        return SpeechBubble(
+                                          textController: textController,
+                                          message: saying,
+                                          who: 0,
+                                          textSize: textSize,
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Flexible(
+                                flex: 5,
+                                child: Container(
+                                  padding: EdgeInsets.fromLTRB(15, 10, 15, 0),
+                                  child: ListView.separated(
+                                    controller: _scrollController,
+                                    separatorBuilder: (context, index) =>
+                                        SizedBox(height: 5),
+                                    itemCount: yourChattings.length,
+                                    itemBuilder: (context, index) {
+                                      var saying = yourChattings[index];
+                                      return SpeechBubble(
+                                        textController: textController,
+                                        message: saying,
+                                        who: 1,
+                                        textSize: textSize,
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                   Container(
                     decoration: BoxDecoration(
                         border: Border(top: BorderSide(color: Colors.black38))),
@@ -146,10 +271,15 @@ class _ChatHomeState extends State<ChatHome> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
+                        IconButton(
+                            onPressed: () {
+                              changeMode();
+                            },
+                            icon: Icon(Icons.change_circle_outlined)),
                         FavoriteStar(
                             size: size, textController: textController),
                         SizedBox(
-                          width: size.width * 0.75,
+                          width: size.width * 0.64,
                           child: TextField(
                             onTap: () {
                               _scrollController.jumpTo(
@@ -186,7 +316,15 @@ class _ChatHomeState extends State<ChatHome> {
                             onPressed: () async {
                               var value = chatController.inputSay;
                               if (value.trim().isEmpty) {
+                                if (_speechToText.isNotListening) {
+                                  _startListening();
+                                } else {
+                                  _stopListening();
+                                }
                                 return;
+                              }
+                              if (_speechToText.isListening) {
+                                _speechToText.stop();
                               }
                               addChat(value);
                               await tts.speak(textController.text);
