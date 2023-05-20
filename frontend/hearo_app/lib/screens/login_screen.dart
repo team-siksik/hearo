@@ -2,8 +2,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hearo_app/apis/login_api.dart';
-import 'package:hearo_app/screens/home_screen.dart';
+import 'package:hearo_app/screens/choose_mode_screen.dart';
 import 'package:get/get.dart';
+import 'package:hearo_app/skills/local_noti.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -27,13 +28,13 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void initState() {
     super.initState();
-    // getPermissionCamera();
     getPermissionAudio();
-    // getPermission();
+    LocalNotification.initialize();
   }
 
   @override
   Widget build(BuildContext context) {
+    LocalNotification.requestPermission();
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       body: Container(
@@ -42,15 +43,11 @@ class _LoginScreenState extends State<LoginScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            GestureDetector(
-                onTap: () {
-                  showSuccessModal(context, size);
-                },
-                child: SizedBox(
-                    height: size.width * 0.6,
-                    width: size.width * 0.6,
-                    child: Image.asset("assets/images/hearo_logo_circle.png",
-                        fit: BoxFit.fill))),
+            SizedBox(
+                height: size.width * 0.6,
+                width: size.width * 0.6,
+                child: Image.asset("assets/images/hearo_logo_circle.png",
+                    fit: BoxFit.fill)),
             Column(
               children: [
                 SizedBox(
@@ -93,8 +90,10 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     const Text(
                       "구글아이디로 로그인",
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w600,
+                      ),
                     )
                   ],
                 ),
@@ -107,87 +106,9 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  // 환영 모달
-  void showSuccessModal(BuildContext context, Size size) {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return Dialog(
-            shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(20))),
-            child: SizedBox(
-                height: size.width * 0.55,
-                width: size.width * 0.8,
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                      top: 30, bottom: 30, left: 20, right: 20),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
-                        "히어로에 오신 것을 환영합니다.",
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                            fontSize: 22, fontWeight: FontWeight.w700),
-                      ),
-                      const Column(
-                        children: [
-                          SizedBox(
-                            height: 20,
-                          ),
-                          Text(
-                            "상대를 초대해서",
-                            style: TextStyle(
-                              fontSize: 18,
-                            ),
-                          ),
-                          Text(
-                            "대화를 시작해 보세요!",
-                            style: TextStyle(
-                              fontSize: 18,
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        width: 250,
-                        child: ElevatedButton(
-                            style: const ButtonStyle(
-                                iconSize: MaterialStatePropertyAll(20),
-                                backgroundColor:
-                                    MaterialStatePropertyAll(Color(0xffe63e43)),
-                                shape: MaterialStatePropertyAll(
-                                    RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(10))))),
-                            onPressed: () {
-                              Get.to(() => HomeScreen());
-                            },
-                            child: const Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  "시작하기",
-                                  style: TextStyle(fontSize: 20),
-                                ),
-                                SizedBox(
-                                  width: 20,
-                                ),
-                                Icon(Icons.arrow_forward)
-                              ],
-                            )),
-                      )
-                    ],
-                  ),
-                )),
-          );
-        });
-  }
-
   loginWithGoogle(context, size) async {
     // Trigger the authentication flow
     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-
     // Obtain the auth details from the request
     final GoogleSignInAuthentication? googleAuth =
         await googleUser?.authentication;
@@ -198,13 +119,12 @@ class _LoginScreenState extends State<LoginScreen> {
         accessToken: googleAuth?.accessToken,
         idToken: googleAuth?.idToken,
       );
-      print(credential);
+      print(credential.accessToken);
       // Once signed in, return the UserCredential
       final data = sendToken(context, size, credential.accessToken);
       return data;
     } catch (e) {
       print(e);
-      print('에러에러에러에러에러에러에러에러에러');
     }
   }
 
@@ -213,7 +133,7 @@ class _LoginScreenState extends State<LoginScreen> {
     final accessToken = data;
     final flag = await ApiLog.loginApi(accessToken);
     if (flag == true) {
-      showSuccessModal(context, size);
+      Get.to(() => ChooseModeScreen());
     }
   }
 }
