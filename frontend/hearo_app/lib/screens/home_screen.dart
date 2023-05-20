@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hearo_app/controller/login_controller.dart';
+import 'package:hearo_app/screens/ais/sound_class.dart';
 import 'package:hearo_app/screens/chats/chat_home.dart';
-import 'package:hearo_app/test/screen1.dart';
-import 'package:hearo_app/test/screen2.dart';
-import 'package:hearo_app/widgets/common/carousel_widget.dart';
+import 'package:hearo_app/screens/mysettings/favorite_say.dart';
+import 'package:hearo_app/screens/chats/sign_lang.dart';
 import 'package:hearo_app/widgets/common/custom_app_bar.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -24,174 +25,223 @@ class _HomeScreenState extends State<HomeScreen> {
     return WillPopScope(
       onWillPop: onWillPop,
       child: Scaffold(
-        appBar: const CustomMainAppBar(),
+        appBar: CustomMainAppBar(),
         body: SizedBox(
           width: size.width,
           height: size.height,
           child: Column(
             children: [
-              // 안녕하세요 ~ 환영해요 부분
-              SizedBox(
-                width: size.width,
-                child: Padding(
-                  padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "안녕하세요, ${loginController.loginData[0]["nickname"]}님",
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.w600),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
-                        child: Row(
-                          children: [
-                            Text(
-                              "히어로",
-                              style: TextStyle(
-                                  fontSize: 14,
-                                  color: Color(0xffe63e43),
-                                  fontWeight: FontWeight.w600),
-                            ),
-                            Text(
-                              "에 오신 것을 환영해요.",
-                              style: TextStyle(fontSize: 14),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              // 광고 부분 캐러셀
               Flexible(
                 flex: 1,
                 child: Container(
-                    decoration: BoxDecoration(
-                      color: Color(0xffFAFAFA),
-                      borderRadius: const BorderRadius.only(
-                          bottomLeft: Radius.circular(14),
-                          bottomRight: Radius.circular(14)),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.transparent.withOpacity(0.25),
-                          spreadRadius: 0,
-                          blurRadius: 1.0,
-                          offset:
-                              const Offset(0, 4), // changes position of shadow
-                        ),
-                      ],
-                    ),
-                    margin: const EdgeInsets.symmetric(vertical: 5),
-                    padding: const EdgeInsets.symmetric(vertical: 10),
+                  decoration: BoxDecoration(
+                    color: Color(0xffFAFAFA),
+                    borderRadius: const BorderRadius.only(
+                        bottomLeft: Radius.circular(30),
+                        bottomRight: Radius.circular(30)),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.transparent.withOpacity(0.25),
+                        spreadRadius: 0,
+                        blurRadius: 1.0,
+                        offset:
+                            const Offset(0, 4), // changes position of shadow
+                      ),
+                    ],
+                  ),
+                  width: size.width,
+                  child: // 안녕하세요 ~ 환영해요 부분
+                      SizedBox(
                     width: size.width,
-                    child:
-                        // Image.asset("assets/images/temp1.png", fit: BoxFit.cover),
-                        const CarouselWidget()),
+                    child: Padding(
+                      padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "안녕하세요, ${loginController.loginData[0]["nickname"]}님",
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.w600),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "히어로",
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      color: Color(0xff1A73E8),
+                                      fontWeight: FontWeight.w600),
+                                ),
+                                Text(
+                                  "에 오신 것을 환영해요.",
+                                  style: TextStyle(fontSize: 16),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
               ),
               // 네비게이션 버튼들
               Flexible(
-                flex: 2,
-                child: Column(children: [
-                  Container(
-                    margin: const EdgeInsets.only(
-                        top: 40, bottom: 40, left: 40, right: 40),
-                    child: ElevatedButton(
-                        onPressed: () {
-                          Get.to(() => ChatHome());
-                        },
-                        style: ElevatedButton.styleFrom(
-                            elevation: 4,
-                            minimumSize:
-                                Size(size.width * 0.8, size.width * 0.24),
-                            backgroundColor: const Color(0xffF35D61),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(14))),
-                        child: Row(
-                          children: [
-                            Image.asset("assets/images/start1.png"),
-                            const Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text("대화 시작하기",
-                                    style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w600)),
-                                Text("누가 말하는지 알 수 있어요.",
-                                    style: TextStyle(fontSize: 12)),
-                              ],
-                            )
-                          ],
-                        )),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 20),
-                        child: ElevatedButton(
-                            onPressed: () {
-                              Get.to(() => Screen2());
-                            },
-                            style: ElevatedButton.styleFrom(
-                                elevation: 4,
-                                minimumSize:
-                                    Size(size.width * 0.35, size.width * 0.45),
-                                backgroundColor: const Color(0xffFFC542),
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(14))),
-                            child: Column(
-                              children: [
-                                const Padding(
-                                  padding: EdgeInsets.only(bottom: 12),
-                                  child: Text(
-                                    "수어인식 대화",
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 18),
-                                  ),
-                                ),
-                                Image.asset(
-                                    "assets/images/Groupdiscussion1.png")
-                              ],
-                            )),
+                flex: 10,
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 10, 20, 5),
+                  child: Column(children: [
+                    InkWell(
+                      onTap: () {
+                        Get.to(() => ChatHome());
+                      },
+                      child: naviButton(size, 0),
+                    ),
+                    InkWell(
+                      onTap: () {
+                        Get.to(() => SoundClass());
+                      },
+                      child: naviButton(size, 2),
+                    ),
+                    InkWell(
+                      onTap: () {
+                        Get.to(() => SignLang());
+                      },
+                      child: naviButton(size, 1),
+                    ),
+                    Expanded(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          InkWell(
+                              focusColor: Color(0xff1A73E8),
+                              onTap: () {
+                                Get.to(() => FavoriteSay());
+                              },
+                              child: settingButton(size, 0)),
+                          InkWell(
+                              onTap: () async {
+                                await openAppSettings();
+                              },
+                              child: settingButton(size, 1)),
+                        ],
                       ),
-                      Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 20),
-                        child: ElevatedButton(
-                            onPressed: () {
-                              Get.to(() => Screen1());
-                            },
-                            style: ElevatedButton.styleFrom(
-                                elevation: 4,
-                                minimumSize:
-                                    Size(size.width * 0.35, size.width * 0.45),
-                                backgroundColor: const Color(0xff3ED598),
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(14))),
-                            child: Column(
-                              children: [
-                                const Padding(
-                                  padding: EdgeInsets.only(bottom: 12),
-                                  child: Text(
-                                    "주변 소음인식",
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 18),
-                                  ),
-                                ),
-                                Image.asset("assets/images/folderman1.png")
-                              ],
-                            )),
-                      ),
-                    ],
-                  )
-                ]),
+                    )
+                  ]),
+                ),
               )
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  Container settingButton(Size size, int idx) {
+    final info = [
+      {
+        "img": "assets/images/free-icon-favorites-5432410.png",
+        "txt": "자주 쓰는 말"
+      },
+      {"img": "assets/images/setperm.png", "txt": "앱 권한 설정"},
+    ];
+    return Container(
+      width: size.width * 0.26,
+      height: size.width * 0.26,
+      decoration: BoxDecoration(
+        border: Border.all(color: const Color.fromARGB(31, 233, 233, 233)),
+        color: Colors.white,
+        borderRadius: const BorderRadius.all(Radius.circular(24)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.transparent.withOpacity(0.10),
+            spreadRadius: 1,
+            blurRadius: 4.0,
+            offset: const Offset(1, 2), // changes position of shadow
+          ),
+        ],
+      ),
+      child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+        Flexible(
+          flex: 1,
+          child: Image.asset(info[idx]["img"]!),
+        ),
+        Flexible(
+          flex: 1,
+          child: Text(info[idx]["txt"]!),
+        )
+      ]),
+    );
+  }
+
+  Container naviButton(Size size, int idx) {
+    final info = [
+      {"img": "assets/images/conversation.png", "txt": "대화 나누기"},
+      {"img": "assets/images/signlang.png", "txt": "수어 인식"},
+      {"img": "assets/images/alarm.png", "txt": "주변 소음 인식"},
+    ];
+    return Container(
+      margin: EdgeInsets.only(bottom: 10),
+      height: size.height * 0.13,
+      decoration: BoxDecoration(
+        border: Border(
+            bottom:
+                BorderSide(color: Color.fromARGB(31, 136, 175, 255), width: 3)),
+        color: Colors.transparent,
+      ),
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Image.asset(info[idx]["img"]!),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 20),
+                  child: Text(info[idx]["txt"]!,
+                      textAlign: TextAlign.left,
+                      style: TextStyle(fontSize: 28)),
+                ),
+              ],
+            ),
+            IconButton(
+                onPressed: () {
+                  if (idx == 0) {
+                    showModalBottomSheet(
+                      context: context,
+                      builder: (context) {
+                        return Image.asset("assets/images/temp1.png");
+                      },
+                    );
+                  } else if (idx == 2) {
+                    showModalBottomSheet(
+                      context: context,
+                      builder: (context) {
+                        return Image.asset("assets/images/temp2.png");
+                      },
+                    );
+                  } else {
+                    showModalBottomSheet(
+                      context: context,
+                      builder: (context) {
+                        return Image.asset("assets/images/temp3.png");
+                      },
+                    );
+                  }
+                },
+                icon: Icon(
+                  Icons.help_outline_rounded,
+                  size: 28,
+                ))
+          ],
         ),
       ),
     );
