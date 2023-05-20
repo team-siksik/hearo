@@ -24,6 +24,7 @@ if (flutterVersionName == null) {
 
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
+// apply plugin: 'com.google.gms.google-services'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
@@ -43,7 +44,14 @@ android {
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
     }
-
+    signingConfigs {
+    release {
+      keyAlias 'hearo'
+      keyPassword '458869'
+      storeFile file('../../hearo.jks')
+      storePassword '458869'
+    }
+  }
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "com.example.hearo_app"
@@ -59,7 +67,12 @@ android {
         release {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig signingConfigs.debug
+            signingConfig signingConfigs.release
+            shrinkResources false    // this line
+            minifyEnabled false       // this line
+                       // TODO: release 빌드 버전을 위한 서명 구성을 추가하세요.
+           // 현재는 `flutter run --release`가 디버그용 키로 서명되어 동작합니다.
+        //    signingConfig signingConfigs.release
         }
     }
 }
@@ -70,6 +83,7 @@ flutter {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation platform('com.google.firebase:firebase-bom:31.5.0')
+    // implementation platform('com.google.firebase:firebase-bom:31.5.0')
+    implementation platform('com.google.firebase:firebase-bom:32.0.0')
     implementation 'com.google.firebase:firebase-analytics-ktx'
 }
