@@ -9,15 +9,9 @@ interface UserType {
     userSeq: number;
     accessToken: string;
     email: string;
-    image_url: string;
+    profileImg: string;
     delYn: string;
     role: string;
-  } | null;
-  setting: {
-    settingSeq: Number;
-    userSeq: Number;
-    fontSize: Number;
-    voiceSetting: Number;
   } | null;
   isLoading: boolean;
 }
@@ -26,7 +20,7 @@ interface LoginPayloadType {
   nickname: string;
   email: string;
   accessToken: string;
-  image_url: string;
+  profileImg: string;
   delYn: string;
   role: string;
 }
@@ -43,15 +37,9 @@ const initialState: UserType = {
     userSeq: 0,
     email: "",
     accessToken: "",
-    image_url: "",
+    profileImg: "",
     delYn: "",
     role: "",
-  },
-  setting: {
-    settingSeq: 0,
-    userSeq: 0,
-    fontSize: 0,
-    voiceSetting: 0,
   },
   isLoggedIn: false,
   isLoading: false,
@@ -65,7 +53,7 @@ const googleLogin = createAsyncThunk(
     if (!response) {
       throw new Error();
     }
-    console.log(response.data.data);
+    console.log("로그인", response.data.data);
     return response.data.data;
   }
 );
@@ -77,7 +65,8 @@ const googleLogout = createAsyncThunk(
     if (!response) {
       throw new Error();
     }
-    localStorage.removeItem("accessToken");
+    sessionStorage.removeItem("accessToken");
+    sessionStorage.removeItem("userSeq");
     return response;
   }
 );
@@ -89,6 +78,9 @@ const googleWithdraw = createAsyncThunk(
     if (!response) {
       throw new Error();
     }
+
+    sessionStorage.removeItem("accessToken");
+    sessionStorage.removeItem("userSeq");
     return response;
   }
 );
@@ -137,8 +129,8 @@ const userSlice = createSlice({
       .addCase(googleLogin.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isLoggedIn = true;
-        localStorage.setItem("accessToken", action.payload.accessToken);
-        localStorage.setItem("userSeq", action.payload.userSeq);
+        sessionStorage.setItem("accessToken", action.payload.accessToken);
+        sessionStorage.setItem("userSeq", action.payload.userSeq);
         state.user = action.payload;
         state.user!.accessToken = "";
       })
@@ -146,7 +138,7 @@ const userSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(googleWithdraw.fulfilled, (state, action) => {
-        localStorage.removeItem("accessToken");
+        sessionStorage.removeItem("accessToken");
         state.isLoggedIn = false;
         state.user = null;
       })
