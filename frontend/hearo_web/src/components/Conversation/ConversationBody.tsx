@@ -14,6 +14,7 @@ import Alert from "../common/ui/Alert";
 import { MemoType, MessageType } from "@/types/types";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { saveMeeting, startMeeting } from "@/redux/modules/meeting";
+import { getUserSetting } from "@/redux/modules/profile";
 
 // const socketURl = "http://k8a6031.p.ssafy.io:80/";
 const socketURl = "https://k8a6031.p.ssafy.io:8090/";
@@ -79,6 +80,9 @@ function ConversationBody({
   // Text-to-Speech를 위한 text
   const [text, setText] = useState<string>("");
   const addMemoList = useAppSelector((state) => state.meeting.memoList);
+  const userVoiceSetting = useAppSelector(
+    (state) => state.user.user?.setting.voiceSetting
+  );
   const [memoList, setMemoList] = useState<MemoType[]>([]);
 
   const [intervalKey, setIntervalKey] = useState<any>();
@@ -548,7 +552,13 @@ function ConversationBody({
                   overflow: "auto",
                 }}
               >
-                {text && <TTS text={text} setText={setText} />}
+                {text && (
+                  <TTS
+                    text={text}
+                    setText={setText}
+                    userVoiceSetting={userVoiceSetting}
+                  />
+                )}
                 {conversation.map((item, idx) => {
                   return (
                     <div key={idx}>
