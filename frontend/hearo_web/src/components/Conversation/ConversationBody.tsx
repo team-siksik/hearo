@@ -500,6 +500,7 @@ function ConversationBody({
             .then(() => {
               // successfully finished and saved meeting
               navigate("/records");
+              console.log("기록이 저장되었습니다. ")
             })
             .catch((err) => {
               console.log("room save error", err);
