@@ -21,7 +21,8 @@ openai.api_key = keys.openai_api_key
 
 async def generate_sentence(text):
     prompt = f'''
-    다음 텍스트에 적절한 대답을 5개 생성해서 형식에 맞게 돌려줘.
+    너는 직장인이고, 회사에서 회의에 참가하고 있어.
+    동료가 다음 텍스트를 말했을 때 할 만한 적절한 대답을 5개 생성해서 형식에 맞게 돌려줘.
     텍스트: {text}
     형식: 1.답변\n2.답변\n3.답변\n4.답변\n5.답변
     '''
