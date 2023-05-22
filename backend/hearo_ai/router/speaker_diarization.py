@@ -165,7 +165,7 @@ async def audio(sid, data):
     audio = data['audio']
     split = data["split"]
 
-    waveform(room_id, audio)
+    # waveform(room_id, audio)
 
     if sid in transcoder_cache:
         transcoder = transcoder_cache[sid]
@@ -195,22 +195,22 @@ async def audio(sid, data):
     await socket_manager.emit("data", sending, room_id)
 
 
-@socket_manager.on("waveform")
-async def waveform(sid, data):
-    logger.info(f"waveform: {sid} sent audio")
+# @socket_manager.on("waveform")
+# async def waveform(sid, data):
+#     logger.info(f"waveform: {sid} sent audio")
 
-    room_id = data["room_id"]
-    audio = data["audio"]
+#     room_id = data["room_id"]
+#     audio = data["audio"]
 
-    file_path = 'temp.wav'
-    with open(file_path, 'wb') as f:
-        f.write(audio)
-    waveform, sr = librosa.load(file_path)
+#     file_path = 'temp.wav'
+#     with open(file_path, 'wb') as f:
+#         f.write(audio)
+#     waveform, sr = librosa.load(file_path)
 
-    spectrum_centroid = librosa.feature.spectral_centroid(y=waveform, sr=sr)
-    logger.info(f"waveform: {spectrum_centroid}")
+#     spectrum_centroid = librosa.feature.spectral_centroid(y=waveform, sr=sr)
+#     logger.info(f"waveform: {spectrum_centroid}")
 
-    average = np.mean(np.array(spectrum_centroid).flatten())
-    logger.info(f"waveform: {average}")
+#     average = np.mean(np.array(spectrum_centroid).flatten())
+#     logger.info(f"waveform: {average}")
 
-    os.remove(file_path)
+#     os.remove(file_path)
