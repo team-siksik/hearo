@@ -44,10 +44,11 @@ function RecordPage() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const location = useLocation();
-  const controls = useAnimation();
+  const audioRef = useRef<HTMLAudioElement>(null);
   const [dialog, setDialog] = useState<DialogType[]>([]);
   const [openMemo, setOpenMemo] = useState<boolean>(false);
   const [showInfo, setShowInfo] = useState<boolean>(false);
+  const [currentTime, setCurrentTime] = useState<number>(0);
 
   useEffect(() => {
     dispatch(getRecordDetail(Number(location.pathname.substring(9))));
@@ -80,7 +81,6 @@ function RecordPage() {
     return () => {};
   }, [recordData]);
 
-  // const [newTitle, setTitle] = useState(initialTitle);
   const [openRemoveRecordModal, setOpenRemoveRecordModal] =
     useState<boolean>(false);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -99,6 +99,15 @@ function RecordPage() {
   function handleDeleteClick() {
     setOpenRemoveRecordModal(true);
   }
+
+  const handlePlayButton = (sec: number) => {
+    const newTime = Math.floor(sec / 1000); // The time in seconds you want to skip to
+    setCurrentTime(newTime);
+    if (audioRef.current) {
+      audioRef.current.currentTime = newTime;
+      audioRef.current.play();
+    }
+  };
 
   //TODO: memo delete
   function deleteMemo(memoSeq: number) {
@@ -227,7 +236,7 @@ function RecordPage() {
               </div>
             )}
           </div>
-          <div className="mb-32 flex scroll-mx-0 flex-row">
+          <div className="mb-12 flex scroll-mx-0 flex-row">
             <motion.div
               key="left"
               // className={
@@ -247,7 +256,10 @@ function RecordPage() {
                     // TODO: ADD Favorite Context
                     <div key={item.start}>
                       <div>{item.speaker.name}</div>
-                      <div className="flex flex-row items-center">
+                      <div
+                        className="flex flex-row items-center"
+                        onClick={(e) => handlePlayButton(item.start)}
+                      >
                         <Dialog type={item.speaker.label}>{item.text}</Dialog>
                         <div className="text-sm text-gray-400">
                           {formatTime(item.start)}
@@ -271,7 +283,7 @@ function RecordPage() {
                   transition={{ duration: 0.3 }}
                 >
                   {recordData?.memoList?.length > 0 ? (
-                    <div className="h-full border-l border-gray-300 px-2">
+                    <div className="h-full px-2">
                       {recordData.memoList.map(
                         (item: MemoFromServerType, idx) => {
                           return (
@@ -318,8 +330,9 @@ function RecordPage() {
           <div onClick={addMemo}>
             <FloatingButton type="memoInRecord"></FloatingButton>
           </div>
-          <div className="audio mb-4">
+          <div className="audio mb-6">
             <audio
+              ref={audioRef}
               src={recordData.recordedFileUrl}
               controls
               className="w-full"
