@@ -16,7 +16,6 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { saveMeeting, startMeeting } from "@/redux/modules/meeting";
 
 const accessToken = sessionStorage.getItem("accessToken");
-// 임의 룸 넘버
 // const socketURl = "http://k8a6031.p.ssafy.io:80/";
 const socketURl = "https://k8a6031.p.ssafy.io:8090/";
 const recorderWorkerPath = "../STT/recorderWorker.js";
@@ -66,7 +65,6 @@ function ConversationBody({
   const [started, setStarted] = useState<boolean>(false);
   // regarding component status
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  // const [isFinal, setIsFinal] = useState<boolean>(false);
   const isFinal = useRef<boolean>(false);
   const partialResult = useRef<string>("");
 
@@ -94,8 +92,6 @@ function ConversationBody({
   const subRecorder = useRef<Recorder>();
 
   const [audio, setAudio] = useState<string>(); //whole audio blob url
-  // meeting room no
-  // const [roomSequence, setRoomSequence] = useState<number>();
   const roomSequence = useRef<number>(0);
   const roomId = useRef<string>("");
   const roomInfo = useAppSelector((state) => state.meeting.roomInfo);
@@ -110,9 +106,9 @@ function ConversationBody({
     roomId.current = roomInfo.roomId;
   }, [roomInfo]);
 
-  // function onEvent(code: any, data: any) {
-  //   console.log(`msg: ${code} : ${data || ""}\n`);
-  // }
+  function onEvent(code: any, data: any) {
+    console.log(`msg: ${code} : ${data || ""}\n`);
+  }
   function onError(code: any, data: any) {
     console.log(`Error: ${code} : ${data}\n`);
   }
@@ -246,7 +242,7 @@ function ConversationBody({
       // onEvent(MSG_WEB_SOCKET, data);
       // socket server에서 보낸 데이터가 object일 때
       if (data instanceof Object && !(data instanceof Blob)) {
-        // onError(ERR_SERVER, "WebSocket: onEvent: got Object, not a Blob");
+        onError(ERR_SERVER, "WebSocket: onEvent: got Object, not a Blob");
       }
       // socket server에서 보낸 데이터가 blob일 때
       else if (data instanceof Blob) {
@@ -259,11 +255,11 @@ function ConversationBody({
     });
 
     socket1.on("disconnect", (e) => {
-      // console.log("web socket closed");
-      // onEvent(MSG_WEB_SOCKET_CLOSE, e);
+      console.log("web socket closed");
     });
 
     socket1.on("error", (e) => {
+      console.log("socket error");
       // onEvent(ERR_SOCKET, e);
     });
 
@@ -354,11 +350,11 @@ function ConversationBody({
     //   "Waiting for approval to access your microphone ..."
     // );
     if (mediaRecorder.current) {
-      // console.log(mediaRecorder.current);
+      console.log(mediaRecorder.current);
       return;
     }
     if (socket.current) {
-      // console.log(socket.current);
+      console.log(socket.current);
       cancel();
       return;
     }
@@ -431,11 +427,10 @@ function ConversationBody({
       try {
         subRecorder.current?.stop();
         subRecorder.current?.clear();
-        // console.log("subRecorder stop");
+        console.log("subRecorder stop");
       } catch {
-        // console.log("subRecorder stop error");
+        console.log("subRecorder stop error");
       }
-      // onEvent(MSG_STOP, "Stopped recording");
 
       // Push the remaining audio to the server
 

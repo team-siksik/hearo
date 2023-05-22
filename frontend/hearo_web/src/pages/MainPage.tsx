@@ -10,18 +10,25 @@ import { motion } from "framer-motion";
 import { Player } from "@lottiefiles/react-lottie-player";
 import Mainmeeting from "@/assets/Icon/Mainmeeting.json";
 import { getUserSetting } from "@/redux/modules/profile";
+import { getUserInfo } from "@/redux/modules/user";
 
 interface PropsType {
   setLoginModal: React.Dispatch<SetStateAction<boolean>>;
   setOpenProfileModal?: React.Dispatch<SetStateAction<boolean>>;
 }
 function MainPage({ setLoginModal }: PropsType) {
-  const [comp, setComp] = useState<string>("main");
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const [comp, setComp] = useState<string>("main");
 
   const { isLoggedIn, user } = useAppSelector((state) => state.user);
   // redux에서 닉네임을 가져오기 위해 사용함
   // const nickname = isLoggedIn ? user?.nickname : "";
+  const accessToken = sessionStorage.getItem("accessToken");
+  const singleId = sessionStorage.getItem("userSeq");
+  useEffect(() => {
+    dispatch(getUserInfo({ accessToken: accessToken!, singleId: singleId! }));
+  }, []);
 
   const handleCommPageClick = () => {
     isLoggedIn ? navigate("/comm") : setLoginModal(true);
