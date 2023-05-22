@@ -38,6 +38,7 @@ const Navbar = ({
           singleId: localStorage.getItem("userSeq")!,
         })
       );
+      console.log("로그인이 정상적으로 이뤄졌으면 뜹니다.");
     }
   }, [isLoggedIn]);
 
