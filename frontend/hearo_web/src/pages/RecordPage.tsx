@@ -256,6 +256,9 @@ function RecordPage() {
               //   recordData?.memoList?.length > 0 ? "grid grid-cols-3 gap-4" : ""
               // }
               style={{
+                height: "440px",
+                overflowY: "auto",
+                overflowX: "hidden",
                 // maxHeight: "600px",
                 width:
                   openMemo || recordData.memoList?.length > 0 ? "70%" : "100%",
@@ -280,7 +283,7 @@ function RecordPage() {
                           : temporal_names[4]}
                       </div>
                       <div
-                        className="flex flex-row items-center"
+                        className="flex cursor-pointer flex-row items-center"
                         onClick={(e) => handlePlayButton(item.start)}
                       >
                         <Dialog type={item.speaker.label}>{item.text}</Dialog>
