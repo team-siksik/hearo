@@ -10,7 +10,7 @@ interface PropsType {
 
 function RecordpageSideBar({ isStarted }: PropsType) {
   const navigate = useNavigate();
-  const isLoggedin = !!sessionStorage.getItem("access_token");
+  const isLoggedin = !!localStorage.getItem("access_token");
   const [openModal, setOpenModal] = useState<boolean>(false);
 
   const handleConversationPageClick = () => {

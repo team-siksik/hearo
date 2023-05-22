@@ -32,7 +32,7 @@ function profileModal({ setOpenProfileModal }: PropsType) {
 
   const dispatch = useAppDispatch();
   const handleLogoutClick = () => {
-    dispatch(googleLogout(sessionStorage.getItem("accessToken")!));
+    dispatch(googleLogout(localStorage.getItem("accessToken")!));
     dispatch(userActions.logoutAction());
     alert("정상적으로 로그아웃되었습니다. 메인페이지로 이동합니다");
     setOpenProfileModal(false);

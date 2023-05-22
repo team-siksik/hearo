@@ -37,7 +37,7 @@ function FrequentPage() {
     setFrequentData(FrequentData);
   }, [FrequentData]);
 
-  const accessToken = sessionStorage.getItem("accessToken");
+  const accessToken = localStorage.getItem("accessToken");
   useEffect(() => {
     if (!accessToken) {
       navigate("/login");
