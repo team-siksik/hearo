@@ -1,6 +1,15 @@
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import { composeWithDevTools } from "redux-devtools-extension";
-import { persistReducer } from "redux-persist";
+import {
+  FLUSH,
+  PAUSE,
+  PERSIST,
+  PURGE,
+  REGISTER,
+  REHYDRATE,
+  persistReducer,
+  persistStore,
+} from "redux-persist";
 import storage from "redux-persist/lib/storage";
 
 import userReducer from "./modules/user";
@@ -24,10 +33,22 @@ const persistConfig = {
   whitelist: ["user"],
   // blacklist -> 그것만 제외합니다
 };
+const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 // store 생성, 기본 미들웨어로 redux-thunk를 추가하고 개발 환경에서 리덕스 개발자 도구(Redux DevTools Extension)를 활성화해줍니다.
-const store = configureStore({ reducer: rootReducer });
+// const store = configureStore({ reducer: rootReducer });
+const store = configureStore({
+  reducer: persistedReducer,
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+      },
+      // }).concat(logger),
+    }),
+});
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
+
 export default store;
