@@ -85,7 +85,7 @@ IoT Stack
 
 ### 로그인 화면
 
-![KakaoTalk_20230522_143644686_10.jpg](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/9e16cb78-e5f3-41d0-9e5b-1c3271dc35fb/KakaoTalk_20230522_143644686_10.jpg)
+![KakaoTalk_20230522_143644686_10.jpg](https://file.notion.so/f/s/9e16cb78-e5f3-41d0-9e5b-1c3271dc35fb/KakaoTalk_20230522_143644686_10.jpg?id=91225e1f-2263-4f76-93ca-e4ca29c35989&table=block&spaceId=1b86ba39-dd32-4ba3-9a75-9d2fee15b543&expirationTimestamp=1684824461913&signature=LQJ4QrALPoUDuXJiX_U2L2PtTuetXpa06Q2Ho3pZcbA&downloadName=KakaoTalk_20230522_143644686_10.jpg)
 
 - 구글 소셜 로그인을 통해 로그인을 할 수 있습니다.
 
