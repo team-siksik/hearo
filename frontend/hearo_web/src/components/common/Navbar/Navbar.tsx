@@ -28,16 +28,17 @@ const Navbar = ({
   const user = useAppSelector((state) => state.user.user);
 
   // 로그인여부
-  const isLoggedIn = localStorage.getItem("accessToken") ? true : false;
+  const isLoggedIn = sessionStorage.getItem("accessToken") ? true : false;
 
   useEffect(() => {
     if (isLoggedIn) {
       dispatch(
         getUserInfo({
-          accessToken: localStorage.getItem("accessToken")!,
-          singleId: localStorage.getItem("userSeq")!,
+          accessToken: sessionStorage.getItem("accessToken")!,
+          singleId: sessionStorage.getItem("userSeq")!,
         })
       );
+      console.log("로그인이 정상적으로 이뤄졌으면 뜹니다.");
     }
   }, [isLoggedIn]);
 
@@ -92,7 +93,7 @@ const Navbar = ({
               <div
                 className="h-5 w-5 rounded"
                 css={css`
-                  background-image: url(${user?.image_url});
+                  background-image: url(${user?.profileImg});
                   background-position: center;
                   background-size: cover;
                 `}
