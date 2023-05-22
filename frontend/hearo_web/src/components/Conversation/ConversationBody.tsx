@@ -60,8 +60,6 @@ function ConversationBody({
   setOpenGPTModal,
   setRequestString,
 }: PropsType) {
-  // person Id
-
   const accessToken = localStorage.getItem("accessToken");
   const userSeq = localStorage.getItem("userSeq");
   const [id, setId] = useState<number>(0);
@@ -81,7 +79,7 @@ function ConversationBody({
   const [text, setText] = useState<string>("");
   const addMemoList = useAppSelector((state) => state.meeting.memoList);
   const userVoiceSetting = useAppSelector(
-    (state) => state.user.user?.setting.voiceSetting
+    (state) => state.profile.setting.voiceSetting
   );
   const [memoList, setMemoList] = useState<MemoType[]>([]);
 
@@ -108,6 +106,10 @@ function ConversationBody({
   const reader = new FileReader();
 
   useEffect(() => {
+    dispatch(getUserSetting());
+  }, []);
+
+  useEffect(() => {
     // roomId.current = roomInfo.roomId;
     roomSequence.current = roomInfo.roomSeq;
   }, [roomInfo]);
@@ -123,9 +125,10 @@ function ConversationBody({
   const messageEndRef = useRef<HTMLDivElement>(null);
   // 채팅창 늘어날수록 스크롤 맨 밑으로 이동
   useEffect(() => {
-    if (messageEndRef.current)
+    if (messageEndRef.current) {
       messageEndRef.current.scrollIntoView({ behavior: "smooth" });
-  }, [conversation]);
+    }
+  }, [conversation.length]);
 
   // user이 텍스트 input에 넣으면 화면에 추가해주고, tts로 읽어주기
   useEffect(() => {

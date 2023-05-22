@@ -234,7 +234,7 @@ function RecordPage() {
               //   recordData?.memoList?.length > 0 ? "grid grid-cols-3 gap-4" : ""
               // }
               style={{
-                maxHeight: "600px",
+                // maxHeight: "600px",
                 width:
                   openMemo || recordData.memoList?.length > 0 ? "70%" : "100%",
                 transition: "width 0.5s",
