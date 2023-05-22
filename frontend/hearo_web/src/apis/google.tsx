@@ -19,7 +19,7 @@ function Google() {
         console.log(err);
       }
     };
-    // login();
+    login();
   }
 
   //TODO: access Token을 백으로 넘겨줌
