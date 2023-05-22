@@ -31,6 +31,7 @@ const initialState: MeetingType = {
 const startMeeting = createAsyncThunk(
   "meeting/startMeeting",
   async (accessToken: string, thunkAPI) => {
+    console.log(accessToken);
     const response = await MeetingAPI.startMeeting(accessToken);
     if (!response) {
       throw new Error();
