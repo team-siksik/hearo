@@ -185,7 +185,7 @@ function ConversationBody({
       console.log("connected");
       socket.current = socket1;
       socket1.emit("enter_room", {
-        room_id: 1434,
+        room_id: userSeq,
       });
 
       console.log("enter_the_room");
@@ -256,7 +256,7 @@ function ConversationBody({
       }
       // socket server에서 보낸 데이터가 string이나 나머지일 때
       else {
-        // console.log(data);
+        console.log(data);
       }
     });
 

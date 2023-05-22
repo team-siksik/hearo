@@ -18,9 +18,11 @@ function TTS({ text, setText, userVoiceSetting }: PropsType) {
 
   useEffect(() => {
     if (userVoiceSetting === 1) {
+      console.log(1);
       voiceGender.current = "ko-KR-Neural2-A";
       gender.current = "female";
     } else {
+      console.log(2);
       voiceGender.current = "ko-KR-Neural2-C";
       gender.current = "male";
     }
