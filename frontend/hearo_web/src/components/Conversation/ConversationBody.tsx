@@ -15,8 +15,7 @@ import { MemoType, MessageType } from "@/types/types";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { saveMeeting, startMeeting } from "@/redux/modules/meeting";
 
-const accessToken = localStorage.getItem("accessToken");
-const roomNo = 1343; // 임의 룸 넘버
+const accessToken = sessionStorage.getItem("accessToken");
 // const socketURl = "http://k8a6031.p.ssafy.io:80/";
 const socketURl = "https://k8a6031.p.ssafy.io:8090/";
 const recorderWorkerPath = "../STT/recorderWorker.js";
@@ -66,7 +65,6 @@ function ConversationBody({
   const [started, setStarted] = useState<boolean>(false);
   // regarding component status
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  // const [isFinal, setIsFinal] = useState<boolean>(false);
   const isFinal = useRef<boolean>(false);
   const partialResult = useRef<string>("");
 
@@ -94,10 +92,9 @@ function ConversationBody({
   const subRecorder = useRef<Recorder>();
 
   const [audio, setAudio] = useState<string>(); //whole audio blob url
-  // meeting room no
-  // const [roomSequence, setRoomSequence] = useState<number>();
   const roomSequence = useRef<number>(0);
-  const roomSeq = useAppSelector((state) => state.meeting.roomInfo.roomSeq);
+  const roomId = useRef<string>("");
+  const roomInfo = useAppSelector((state) => state.meeting.roomInfo);
   const socket = useRef<Socket | null>(null);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
@@ -105,12 +102,13 @@ function ConversationBody({
   const reader = new FileReader();
 
   useEffect(() => {
-    roomSequence.current = roomSeq;
-  }, [roomSeq]);
+    roomSequence.current = roomInfo.roomSeq;
+    roomId.current = roomInfo.roomId;
+  }, [roomInfo]);
 
-  // function onEvent(code: any, data: any) {
-  //   console.log(`msg: ${code} : ${data || ""}\n`);
-  // }
+  function onEvent(code: any, data: any) {
+    console.log(`msg: ${code} : ${data || ""}\n`);
+  }
   function onError(code: any, data: any) {
     console.log(`Error: ${code} : ${data}\n`);
   }
@@ -182,7 +180,7 @@ function ConversationBody({
       console.log("connected");
       socket.current = socket1;
       socket1.emit("enter_room", {
-        room_id: roomNo,
+        room_id: roomId,
       });
 
       console.log("enter_the_room");
@@ -244,7 +242,7 @@ function ConversationBody({
       // onEvent(MSG_WEB_SOCKET, data);
       // socket server에서 보낸 데이터가 object일 때
       if (data instanceof Object && !(data instanceof Blob)) {
-        // onError(ERR_SERVER, "WebSocket: onEvent: got Object, not a Blob");
+        onError(ERR_SERVER, "WebSocket: onEvent: got Object, not a Blob");
       }
       // socket server에서 보낸 데이터가 blob일 때
       else if (data instanceof Blob) {
@@ -257,11 +255,11 @@ function ConversationBody({
     });
 
     socket1.on("disconnect", (e) => {
-      // console.log("web socket closed");
-      // onEvent(MSG_WEB_SOCKET_CLOSE, e);
+      console.log("web socket closed");
     });
 
     socket1.on("error", (e) => {
+      console.log("socket error");
       // onEvent(ERR_SOCKET, e);
     });
 
@@ -352,11 +350,11 @@ function ConversationBody({
     //   "Waiting for approval to access your microphone ..."
     // );
     if (mediaRecorder.current) {
-      // console.log(mediaRecorder.current);
+      console.log(mediaRecorder.current);
       return;
     }
     if (socket.current) {
-      // console.log(socket.current);
+      console.log(socket.current);
       cancel();
       return;
     }
@@ -365,6 +363,7 @@ function ConversationBody({
       const start = async () => {
         try {
           const result = await dispatch(startMeeting(accessToken!));
+          console.log(result);
           if (result) {
             record()
               .then((response) => {
@@ -390,7 +389,7 @@ function ConversationBody({
       if (item instanceof Blob) {
         if (item.size > 0) {
           socket.current?.emit("audio", {
-            room_id: roomNo,
+            room_id: roomId,
             audio: item,
             split: false,
           });
@@ -404,7 +403,7 @@ function ConversationBody({
         //   room_id: roomNo,
         //   message: item,
         // });
-        socket.current?.emit("waveform", { room_id: roomNo, audio: item }); // base64
+        socket.current?.emit("waveform", { room_id: roomId, audio: item }); // base64
 
         // onEvent(MSG_SEND, `Send tag: ${item}`);
       }
@@ -429,11 +428,10 @@ function ConversationBody({
       try {
         subRecorder.current?.stop();
         subRecorder.current?.clear();
-        // console.log("subRecorder stop");
+        console.log("subRecorder stop");
       } catch {
-        // console.log("subRecorder stop error");
+        console.log("subRecorder stop error");
       }
-      // onEvent(MSG_STOP, "Stopped recording");
 
       // Push the remaining audio to the server
 
@@ -461,7 +459,7 @@ function ConversationBody({
         }
       }
       if (socket) {
-        socket.current?.emit("close_room", { room_id: roomNo });
+        socket.current?.emit("close_room", { room_id: roomId });
         socket.current?.close();
         socket.current = null;
       }
@@ -482,7 +480,7 @@ function ConversationBody({
       // onEvent(MSG_STOP, "Stopped recording");
     }
     if (socket) {
-      socket.current?.emit("close_room", { room_id: roomNo });
+      socket.current?.emit("close_room", { room_id: roomId });
       socket.current?.close();
       // setSocket(null);
       socket.current = null;
@@ -500,6 +498,7 @@ function ConversationBody({
             .then(() => {
               // successfully finished and saved meeting
               navigate("/records");
+              console.log("기록이 저장되었습니다. ");
             })
             .catch((err) => {
               console.log("room save error", err);

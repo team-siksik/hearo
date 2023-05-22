@@ -14,7 +14,7 @@ import {
 function ConvertBar() {
   const navigate = useNavigate();
   const [loginModal, setLoginModal] = useState(false);
-  const isLoggedin = !!localStorage.getItem("access_token");
+  const isLoggedin = !!sessionStorage.getItem("access_token");
   const location = useLocation();
 
   const handleConversationPageClick = () => {
