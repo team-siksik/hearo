@@ -9,7 +9,7 @@ interface UserType {
     userSeq: number;
     accessToken: string;
     email: string;
-    image_url: string;
+    profileImg: string;
     delYn: string;
     role: string;
   } | null;
@@ -26,7 +26,7 @@ interface LoginPayloadType {
   nickname: string;
   email: string;
   accessToken: string;
-  image_url: string;
+  profileImg: string;
   delYn: string;
   role: string;
 }
@@ -43,7 +43,7 @@ const initialState: UserType = {
     userSeq: 0,
     email: "",
     accessToken: "",
-    image_url: "",
+    profileImg: "",
     delYn: "",
     role: "",
   },
