@@ -1,6 +1,6 @@
 # 히어로
 
-소리를 잇는 다리
+소리를 잇는 다리 
 
 ![mainpage](/uploads/0e7b53d8852b1f83cbf657bee44affc6/mainpage.png)
 
