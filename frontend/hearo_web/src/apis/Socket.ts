@@ -1,8 +1,9 @@
 import { io } from "socket.io-client";
 
 // TODO: Socket 통신 -> 소음 알림!! STT 화자 분리!!
+const socketURl = "https://k8a6031.p.ssafy.io:8090/";
 
-const socket = io("http://k8a6031.p.ssafy.io:80", {
+const socket = io(socketURl, {
   autoConnect: false,
   transports: ["websocket"],
   path: "/ws/socket.io",
