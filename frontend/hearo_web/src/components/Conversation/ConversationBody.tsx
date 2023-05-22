@@ -137,7 +137,7 @@ function ConversationBody({
       });
       partialResult.current = "";
       socket.current?.emit("audio", {
-        room_id: 1343,
+        room_id: userSeq,
         audio: null,
         split: true,
       });
