@@ -5,10 +5,6 @@ import App from "./App";
 import "./index.css";
 import { Provider } from "react-redux";
 import store from "./redux/configStore";
-import { persistStore } from "redux-persist";
-import { PersistGate } from "redux-persist/integration/react";
-
-const persistor = persistStore(store);
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   // <React.StrictMode>

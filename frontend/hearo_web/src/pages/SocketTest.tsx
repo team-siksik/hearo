@@ -8,9 +8,11 @@ import { io } from "socket.io-client";
 // const socket = io("/", { autoConnect: false }); // client domain === server domain
 
 // const socket = io("http://ubuntu@k8a6031.p.ssafy.io:80/ws", {
+const socketURl = "https://k8a6031.p.ssafy.io:8090/ws/";
+// const socketURl = "https://k8a6031.p.ssafy.io:8090/";
 
 function SocketTest() {
-  const socket = io("http://k8a6031.p.ssafy.io:80/", {
+  const socket = io(socketURl, {
     autoConnect: false,
     transports: ["websocket"],
     path: "/ws/socket.io",
@@ -20,44 +22,53 @@ function SocketTest() {
   }, []);
   // socket이 연결이 되었으면 실행
   socket.on("connect", () => {
+    console.log(socket);
     console.log("connected");
   });
 
   // socket에 info data가 있으면 실행
   socket.on("info", (data) => {
+    console.log(socket);
     console.log(data);
   });
 
   // socket에 데이터가 있으면 실행
   socket.on("data", (data) => {
+    console.log(socket);
     console.log(data);
   });
 
   socket.on("connect_error", (err) => {
+    console.log(socket);
     console.log(`connect_error due to ${err.message}`);
   });
 
   // socket 연결이 끊겼을 때 실행
   socket.on("disconnect", (reason) => {
     // ... socket.disconnect();
+    console.log(socket);
     console.log(reason);
   });
 
   function handlesocketopen() {
     console.log("socket open request");
+    console.log(socket);
     socket.open();
   }
   function handlesocketclose() {
     console.log("socket close request");
+    console.log(socket);
     socket.close();
   }
 
   function openRoom() {
     console.log("socket open room request");
+    console.log(socket);
     socket.emit("enter_room", { room_id: "1234" });
   }
   function sendMessage() {
     console.log("socket send msg request");
+    console.log(socket);
     socket.emit("audio", { audio: "1234" });
   }
   return (
