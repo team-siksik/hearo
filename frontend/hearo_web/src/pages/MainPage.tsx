@@ -26,9 +26,9 @@ function MainPage({ setLoginModal }: PropsType) {
   // const nickname = isLoggedIn ? user?.nickname : "";
   const accessToken = localStorage.getItem("accessToken");
   const singleId = localStorage.getItem("userSeq");
-  useEffect(() => {
-    dispatch(getUserInfo({ accessToken: accessToken!, singleId: singleId! }));
-  }, []);
+  // useEffect(() => {
+  //   dispatch(getUserInfo({ accessToken: accessToken!, singleId: singleId! }));
+  // }, []);
 
   const handleCommPageClick = () => {
     isLoggedIn ? navigate("/comm") : setLoginModal(true);
