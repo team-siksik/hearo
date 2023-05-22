@@ -24,8 +24,8 @@ function MainPage({ setLoginModal }: PropsType) {
   const { isLoggedIn, user } = useAppSelector((state) => state.user);
   // redux에서 닉네임을 가져오기 위해 사용함
   // const nickname = isLoggedIn ? user?.nickname : "";
-  const accessToken = sessionStorage.getItem("accessToken");
-  const singleId = sessionStorage.getItem("userSeq");
+  const accessToken = localStorage.getItem("accessToken");
+  const singleId = localStorage.getItem("userSeq");
   useEffect(() => {
     dispatch(getUserInfo({ accessToken: accessToken!, singleId: singleId! }));
   }, []);

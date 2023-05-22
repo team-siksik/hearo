@@ -4,7 +4,7 @@ import React, { SetStateAction, useEffect, useRef, useState } from "react";
 import { Socket, io } from "socket.io-client";
 
 //FIXME: accessToken 연결 전 수정해야함
-const accessToken = sessionStorage.getItem("accessToken");
+const accessToken = localStorage.getItem("accessToken");
 
 const socketURl = "http://k8a6031.p.ssafy.io:80/";
 const recorderWorkerPath = "../STT/recorderWorker.js";
@@ -223,7 +223,7 @@ export default function STT({}: PropsType) {
     }
 
     if (!isRecording) {
-      // const accessToken = sessionStorage.getItem("accessToken");
+      // const accessToken = localStorage.getItem("accessToken");
       MeetingAPI.startMeeting(accessToken!)
         .then((result) => {
           setRoomSeq(result.data.data.roomSeq); // roomSequence
