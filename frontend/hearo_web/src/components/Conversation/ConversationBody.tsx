@@ -198,7 +198,7 @@ function ConversationBody({
           // };
           subRecorder.current?.clear();
         }, "audio/wav");
-      }, 250);
+      }, 500);
       setIntervalKey(intervalKey);
       try {
         subRecorder.current?.record();
@@ -210,6 +210,7 @@ function ConversationBody({
     });
 
     socket1.on("data", (e) => {
+      console.log(e);
       const { final, transcript } = e;
       console.log(final, transcript);
       if (transcript !== "nothing" && transcript.trim() !== "") {
@@ -392,6 +393,7 @@ function ConversationBody({
     if (socket) {
       // If item is an audio blob
       if (item instanceof Blob) {
+        console.log(item);
         if (item.size > 0) {
           socket.current?.emit("audio", {
             room_id: userSeq,
