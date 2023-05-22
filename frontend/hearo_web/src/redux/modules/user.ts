@@ -53,7 +53,7 @@ const googleLogin = createAsyncThunk(
     if (!response) {
       throw new Error();
     }
-    console.log(response.data.data);
+    console.log("로그인", response.data.data);
     return response.data.data;
   }
 );

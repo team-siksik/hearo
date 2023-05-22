@@ -363,6 +363,7 @@ function ConversationBody({
       const start = async () => {
         try {
           const result = await dispatch(startMeeting(accessToken!));
+          console.log(result);
           if (result) {
             record()
               .then((response) => {
