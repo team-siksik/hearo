@@ -37,7 +37,7 @@ const initialState = {
 const getRecordList = createAsyncThunk(
   "record/getRecordList",
   async (page: number, thunkAPI) => {
-    const accessToken = sessionStorage.getItem("accessToken");
+    const accessToken = localStorage.getItem("accessToken");
     const response = await RecordAPI.getRecords(accessToken!, page);
     if (!response) {
       throw new Error();
@@ -50,7 +50,7 @@ const getRecordList = createAsyncThunk(
 const getRecordDetail = createAsyncThunk(
   "record/getRecordDetail",
   async (recordSeq: number, thunkAPI) => {
-    const accessToken = sessionStorage.getItem("accessToken");
+    const accessToken = localStorage.getItem("accessToken");
     const response = await RecordAPI.getRecordItem(accessToken!, recordSeq);
     if (!response) {
       throw new Error();
@@ -63,7 +63,7 @@ const getRecordDetail = createAsyncThunk(
 const deleteRecords = createAsyncThunk(
   "record/deleteRecords",
   async (deleteRecordSeqList: number[], thunkAPI) => {
-    const accessToken = sessionStorage.getItem("accessToken");
+    const accessToken = localStorage.getItem("accessToken");
     const response = await RecordAPI.deleteRecord(
       accessToken!,
       deleteRecordSeqList
@@ -80,7 +80,7 @@ const changeRecordTitleAsync = createAsyncThunk(
   "record/changeRecordTitle",
   async (newData: newTitleData, thunkAPI) => {
     const { newTitle, recordSeq } = newData;
-    const accessToken = sessionStorage.getItem("accessToken");
+    const accessToken = localStorage.getItem("accessToken");
     const response = await RecordAPI.updateRecordTitle(
       accessToken!,
       recordSeq,
@@ -98,7 +98,7 @@ const deleteMemoAsync = createAsyncThunk(
   "record/deleteMemo",
   async (delItem: DelItem, thunkAPI) => {
     const { memoSeq, recordSeq } = delItem;
-    const accessToken = sessionStorage.getItem("accessToken");
+    const accessToken = localStorage.getItem("accessToken");
     const response = await RecordAPI.deleteMemo(
       accessToken!,
       recordSeq,
