@@ -12,6 +12,12 @@ interface UserType {
     profileImg: string;
     delYn: string;
     role: string;
+    setting: {
+      settingSeq: number;
+      userSeq: number;
+      fontSize: number;
+      voiceSetting: number;
+    };
   } | null;
   isLoading: boolean;
 }
@@ -40,6 +46,12 @@ const initialState: UserType = {
     profileImg: "",
     delYn: "",
     role: "",
+    setting: {
+      settingSeq: 0,
+      userSeq: 0,
+      fontSize: 0,
+      voiceSetting: 0,
+    },
   },
   isLoggedIn: false,
   isLoading: false,

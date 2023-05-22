@@ -8,38 +8,23 @@ import React, { SetStateAction, useEffect, useRef, useState } from "react";
 interface PropsType {
   text: string;
   setText: React.Dispatch<SetStateAction<string>>;
+  userVoiceSetting?: number;
 }
 
-function TTS({ text, setText }: PropsType) {
+function TTS({ text, setText, userVoiceSetting }: PropsType) {
   const dispatch = useAppDispatch();
   const voiceGender = useRef<string>("");
   const gender = useRef<string>("");
-  const voicePreference = useAppSelector(
-    (state) => state.profile.setting?.voiceSetting
-  );
-  const [voicePrefer, setVoicePrefer] = useState<number>(0);
 
   useEffect(() => {
-    if (voicePreference === 1) {
-      setVoicePrefer(1);
-    } else {
-      setVoicePrefer(2);
-    }
-  }, [voicePreference]);
-
-  useEffect(() => {
-    dispatch(getUserSetting());
-  }, []);
-
-  useEffect(() => {
-    if (voicePrefer === 1) {
+    if (userVoiceSetting === 1) {
       voiceGender.current = "ko-KR-Neural2-A";
       gender.current = "female";
     } else {
       voiceGender.current = "ko-KR-Neural2-C";
       gender.current = "male";
     }
-  }, [voicePreference]);
+  }, [userVoiceSetting]);
 
   const [audio, setAudio] = useState();
   const [playing, setPlaying] = useState<boolean>(false);
