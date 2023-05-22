@@ -132,7 +132,6 @@ const userSlice = createSlice({
         localStorage.setItem("accessToken", action.payload.accessToken);
         localStorage.setItem("userSeq", action.payload.userSeq);
         state.user = action.payload;
-        state.user!.accessToken = "";
       })
       .addCase(googleLogin.rejected, (state) => {
         state.isLoading = false;
