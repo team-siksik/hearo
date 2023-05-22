@@ -73,14 +73,14 @@ function SettingsPage() {
   };
 
   function handleLogoutClick() {
-    dispatch(googleLogout(localStorage.getItem("accessToken")!));
+    dispatch(googleLogout(sessionStorage.getItem("accessToken")!));
     dispatch(userActions.logoutAction());
     alert("정상적으로 로그아웃되었습니다. 메인페이지로 이동합니다");
     navigate("/");
   }
 
   function deleteAccount() {
-    dispatch(googleWithdraw(localStorage.getItem("accessToken")!));
+    dispatch(googleWithdraw(sessionStorage.getItem("accessToken")!));
   }
 
   // FIXME: 모달 밖을 눌러서 모달을 닫았을 때, 재클릭 시 모달이 더이상 뜨지 않는 현상
