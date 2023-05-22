@@ -11,6 +11,7 @@ function Google() {
   if (accessToken) {
     const login = async () => {
       try {
+        console.log("login try");
         const result = await dispatch(googleLogin(accessToken));
         if (result) {
           navigate("/");

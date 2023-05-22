@@ -49,7 +49,6 @@ const initialState: UserType = {
 const googleLogin = createAsyncThunk(
   "users/googleLogin",
   async (accessToken: string, thunkAPI) => {
-    console.log(accessToken);
     const response = await UserAPI.googleLogin(accessToken);
     if (!response) {
       throw new Error();
