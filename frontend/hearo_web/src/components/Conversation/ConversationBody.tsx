@@ -15,7 +15,8 @@ import { MemoType, MessageType } from "@/types/types";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { saveMeeting, startMeeting } from "@/redux/modules/meeting";
 
-const accessToken = sessionStorage.getItem("accessToken");
+const accessToken = localStorage.getItem("accessToken");
+
 // const socketURl = "http://k8a6031.p.ssafy.io:80/";
 const socketURl = "https://k8a6031.p.ssafy.io:8090/";
 const recorderWorkerPath = "../STT/recorderWorker.js";
@@ -102,8 +103,8 @@ function ConversationBody({
   const reader = new FileReader();
 
   useEffect(() => {
-    roomSequence.current = roomInfo.roomSeq;
     roomId.current = roomInfo.roomId;
+    roomSequence.current = roomInfo.roomSeq;
   }, [roomInfo]);
 
   function onEvent(code: any, data: any) {
@@ -180,7 +181,7 @@ function ConversationBody({
       console.log("connected");
       socket.current = socket1;
       socket1.emit("enter_room", {
-        room_id: roomId,
+        room_id: roomId.current,
       });
 
       console.log("enter_the_room");
@@ -389,7 +390,7 @@ function ConversationBody({
       if (item instanceof Blob) {
         if (item.size > 0) {
           socket.current?.emit("audio", {
-            room_id: roomId,
+            room_id: roomId.current,
             audio: item,
             split: false,
           });
@@ -403,7 +404,10 @@ function ConversationBody({
         //   room_id: roomNo,
         //   message: item,
         // });
-        socket.current?.emit("waveform", { room_id: roomId, audio: item }); // base64
+        socket.current?.emit("waveform", {
+          room_id: roomId.current,
+          audio: item,
+        }); // base64
 
         // onEvent(MSG_SEND, `Send tag: ${item}`);
       }
@@ -459,7 +463,7 @@ function ConversationBody({
         }
       }
       if (socket) {
-        socket.current?.emit("close_room", { room_id: roomId });
+        socket.current?.emit("close_room", { room_id: roomId.current });
         socket.current?.close();
         socket.current = null;
       }
@@ -480,7 +484,7 @@ function ConversationBody({
       // onEvent(MSG_STOP, "Stopped recording");
     }
     if (socket) {
-      socket.current?.emit("close_room", { room_id: roomId });
+      socket.current?.emit("close_room", { room_id: roomId.current });
       socket.current?.close();
       // setSocket(null);
       socket.current = null;
