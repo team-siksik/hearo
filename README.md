@@ -81,6 +81,90 @@ IoT Stack
 
 ## 서비스 소개
 
+## 앱
+
+### 로그인 화면
+
+![KakaoTalk_20230522_143644686_10.jpg](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/9e16cb78-e5f3-41d0-9e5b-1c3271dc35fb/KakaoTalk_20230522_143644686_10.jpg)
+
+- 구글 소셜 로그인을 통해 로그인을 할 수 있습니다.
+
+### 모드 선택
+
+![KakaoTalk_20230522_143644686_09.jpg](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/242db7f5-d153-411a-93c0-96702662451d/KakaoTalk_20230522_143644686_09.jpg)
+
+- 자체 히어로 글래스가 있는 사람과 없는 사람이 모드를 정할 수 있습니다.
+
+### 일반 홈
+
+![KakaoTalk_20230522_143644686_08.jpg](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/f5b915d3-9033-4ac7-a697-661f32c4a7c2/KakaoTalk_20230522_143644686_08.jpg)
+
+- 기능을 선택하여 들어갈 수 있는 화면입니다.
+
+### 계정 페이지
+
+![KakaoTalk_20230522_143644686.jpg](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/f5d91664-8503-4c41-9244-386e072a099a/KakaoTalk_20230522_143644686.jpg)
+
+- 계정 페이지입니다.
+- 모드를 변경하거나  로그아웃 및 회원 탈퇴가 가능합니다.
+
+![KakaoTalk_20230522_143644686_01.jpg](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/a195809d-835e-4146-9320-a2373b75f729/KakaoTalk_20230522_143644686_01.jpg)
+
+- 자주 쓰는 말을 등록, 수정 및 삭제할 수 있습니다.
+
+![KakaoTalk_20230522_150419693.jpg](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/c66df40e-783f-4195-8ca0-e33bf9f06d6e/KakaoTalk_20230522_150419693.jpg)
+
+- 앱의 권한 설정을 관리할 수 있습니다.
+
+### 대화
+
+![KakaoTalk_20230522_143644686_06.jpg](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/7add2257-5da3-41cf-b2e9-99ae32637946/KakaoTalk_20230522_143644686_06.jpg)
+
+![KakaoTalk_20230522_143644686_05.jpg](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/ae756a65-9f0e-4639-bde1-862de969d46d/KakaoTalk_20230522_143644686_05.jpg)
+
+![KakaoTalk_20230522_151650202.jpg](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/3fdb3998-e362-4fdd-886b-aec7cd6ca4d6/KakaoTalk_20230522_151650202.jpg)
+
+- 대화 화면입니다.
+    - 대화 이용하기 도움말을 통해 기능을 알 수 있습니다.
+
+### 소음 인식
+
+- 안경과 동일
+
+### 수어 인식
+
+![KakaoTalk_20230522_143644686_07.jpg](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/80093e5e-edf2-4bcd-b8a6-def5e9044817/KakaoTalk_20230522_143644686_07.jpg)
+
+## 글래스
+
+### 글래스
+
+![KakaoTalk_20230522_143644686_04.jpg](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/e170a4ed-7aa2-47d5-a04c-37a847c8310f/KakaoTalk_20230522_143644686_04.jpg)
+
+### 글래스 찾기
+
+![KakaoTalk_20230522_144922130_01.jpg](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/2c667fcb-6c62-4886-8c23-3fdd7d187cca/KakaoTalk_20230522_144922130_01.jpg)
+
+![KakaoTalk_20230522_144922130.jpg](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/d9221d15-87ba-447f-bd5f-fb3b8ced2721/KakaoTalk_20230522_144922130.jpg)
+
+### 글래스 홈
+
+![KakaoTalk_20230522_144922130_02.jpg](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/9506c4cd-e8c6-4400-a680-b14e85943b15/KakaoTalk_20230522_144922130_02.jpg)
+
+### 대화
+
+![KakaoTalk_20230522_143644686_06.jpg](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/7add2257-5da3-41cf-b2e9-99ae32637946/KakaoTalk_20230522_143644686_06.jpg)
+
+![KakaoTalk_20230521_220243759.gif](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/b579a4ea-c609-4bfe-8d8f-c51e13b129ef/KakaoTalk_20230521_220243759.gif)
+
+### 소음 인식
+
+![KakaoTalk_20230522_143644686_12.jpg](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/97746c3e-721e-4d5e-88c3-2f4922e856f1/KakaoTalk_20230522_143644686_12.jpg)
+
+![KakaoTalk_20230522_143644686_11.jpg](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/6f5cd452-b856-42f0-bd8a-f234a81d507e/KakaoTalk_20230522_143644686_11.jpg)
+
+![KakaoTalk_20230522_143644686_02.jpg](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/832b4f76-0288-4933-8f39-4018727aa2d8/KakaoTalk_20230522_143644686_02.jpg)
+
 ## 팀원 소개
 
 ### 6_6씩씩이
