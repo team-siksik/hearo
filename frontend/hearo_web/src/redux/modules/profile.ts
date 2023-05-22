@@ -11,10 +11,10 @@ interface ProfileType {
     accessToken: string;
   };
   setting: {
-    settingSeq: Number;
-    userSeq: Number;
-    fontSize: Number;
-    voiceSetting: Number;
+    settingSeq: number;
+    userSeq: number;
+    fontSize: number;
+    voiceSetting: number;
   };
   FrequentList: FrequentType[];
 }
