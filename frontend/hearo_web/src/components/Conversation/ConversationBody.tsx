@@ -166,9 +166,9 @@ function ConversationBody({
   }
 
   function createSocket() {
-    const socket1 = io(socketURl, {
+    const socket1 = io("https://k8a6031.p.ssafy.io:8090/", {
       reconnectionDelayMax: 10000,
-      //   autoConnect: false,
+      autoConnect: true,
       transports: ["websocket"],
       path: "/ws/socket.io",
     });
@@ -176,13 +176,12 @@ function ConversationBody({
     if (!socket1) {
       throw new Error("socket error!");
     }
-
     // start recording if socket is connected
     socket1.on("connect", () => {
       console.log("connected");
       socket.current = socket1;
       socket1.emit("enter_room", {
-        room_id: userSeq,
+        room_id: 1434,
       });
 
       console.log("enter_the_room");

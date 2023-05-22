@@ -30,17 +30,17 @@ const Navbar = ({
   // 로그인여부
   const isLoggedIn = localStorage.getItem("accessToken") ? true : false;
 
-  useEffect(() => {
-    if (isLoggedIn) {
-      dispatch(
-        getUserInfo({
-          accessToken: localStorage.getItem("accessToken")!,
-          singleId: localStorage.getItem("userSeq")!,
-        })
-      );
-      console.log("로그인이 정상적으로 이뤄졌으면 뜹니다.");
-    }
-  }, [isLoggedIn]);
+  // useEffect(() => {
+  //   if (isLoggedIn) {
+  //     dispatch(
+  //       getUserInfo({
+  //         accessToken: localStorage.getItem("accessToken")!,
+  //         singleId: localStorage.getItem("userSeq")!,
+  //       })
+  //     );
+  //     console.log("로그인이 정상적으로 이뤄졌으면 뜹니다.");
+  //   }
+  // }, [isLoggedIn]);
 
   // 로고클릭 시 메인페이지로 이동
   const homeClick = () => {
