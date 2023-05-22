@@ -37,7 +37,7 @@ const initialState: ProfileType = {
 const getUserSetting = createAsyncThunk(
   "profile/getUserSetting",
   async (thunkAPI) => {
-    const accessToken = localStorage.getItem("accessToken");
+    const accessToken = sessionStorage.getItem("accessToken");
     const response = await ProfileAPI.getUserSetting(accessToken!);
     if (!response) {
       throw new Error();
@@ -49,7 +49,7 @@ const getUserSetting = createAsyncThunk(
 const updateUserSetting = createAsyncThunk(
   "profile/updateUserSetting",
   async (voiceSetting: number, thunkAPI) => {
-    const accessToken = localStorage.getItem("accessToken");
+    const accessToken = sessionStorage.getItem("accessToken");
     const response = await ProfileAPI.updateUserSetting(
       accessToken!,
       voiceSetting
@@ -65,7 +65,7 @@ const updateUserSetting = createAsyncThunk(
 const getFrequent = createAsyncThunk(
   "profile/getFrequent",
   async (thunkAPI) => {
-    const accessToken = localStorage.getItem("accessToken");
+    const accessToken = sessionStorage.getItem("accessToken");
     const response = await ProfileAPI.getMyPhraseList(accessToken!);
     if (!response) {
       throw new Error();
@@ -78,7 +78,7 @@ const addFrequent = createAsyncThunk(
   "profile/addFrequent",
   async (sentence: string, thunkAPI) => {
     console.log(sentence);
-    const accessToken = localStorage.getItem("accessToken");
+    const accessToken = sessionStorage.getItem("accessToken");
     const response = await ProfileAPI.addMyPhrase(accessToken!, sentence);
     if (!response) {
       throw new Error();
@@ -91,7 +91,7 @@ const addFrequent = createAsyncThunk(
 const deleteFrequent = createAsyncThunk(
   "profile/deleteFrequent",
   async (frequentSeq: number, thunkAPI) => {
-    const accessToken = localStorage.getItem("accessToken");
+    const accessToken = sessionStorage.getItem("accessToken");
     const response = await ProfileAPI.deleteMyPhrase(accessToken!, frequentSeq);
     if (!response) {
       throw new Error();
