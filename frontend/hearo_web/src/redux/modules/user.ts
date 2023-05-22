@@ -78,6 +78,7 @@ const googleLogout = createAsyncThunk(
       throw new Error();
     }
     localStorage.removeItem("accessToken");
+    localStorage.removeItem("userSeq");
     return response;
   }
 );
@@ -89,6 +90,9 @@ const googleWithdraw = createAsyncThunk(
     if (!response) {
       throw new Error();
     }
+
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("userSeq");
     return response;
   }
 );
