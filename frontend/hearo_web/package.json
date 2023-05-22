@@ -30,6 +30,7 @@
     "react-slick": "^0.29.0",
     "react-spinners": "^0.13.8",
     "redux-devtools-extension": "^2.13.9",
+    "redux-persist": "^6.0.0",
     "slick-carousel": "^1.8.1",
     "socket.io-client": "^4.6.1",
     "twin.macro": "^3.3.1",
