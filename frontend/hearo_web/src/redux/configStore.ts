@@ -39,6 +39,7 @@ const persistedReducer = persistReducer(persistConfig, rootReducer);
 // const store = configureStore({ reducer: rootReducer });
 const store = configureStore({
   reducer: persistedReducer,
+  // TODO: 주석 달기
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
