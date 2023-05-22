@@ -28,14 +28,14 @@ const Navbar = ({
   const user = useAppSelector((state) => state.user.user);
 
   // 로그인여부
-  const isLoggedIn = sessionStorage.getItem("accessToken") ? true : false;
+  const isLoggedIn = localStorage.getItem("accessToken") ? true : false;
 
   useEffect(() => {
     if (isLoggedIn) {
       dispatch(
         getUserInfo({
-          accessToken: sessionStorage.getItem("accessToken")!,
-          singleId: sessionStorage.getItem("userSeq")!,
+          accessToken: localStorage.getItem("accessToken")!,
+          singleId: localStorage.getItem("userSeq")!,
         })
       );
       console.log("로그인이 정상적으로 이뤄졌으면 뜹니다.");

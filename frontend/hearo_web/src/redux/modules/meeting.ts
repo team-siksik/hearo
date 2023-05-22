@@ -43,7 +43,7 @@ const startMeeting = createAsyncThunk(
 const saveMeeting = createAsyncThunk(
   "meeting/saveMeeting",
   async (audio: Blob, thunkAPI) => {
-    const accessToken = sessionStorage.getItem("accessToken");
+    const accessToken = localStorage.getItem("accessToken");
     const currentState = thunkAPI.getState() as RootState;
     const memo = new Blob(
       [
