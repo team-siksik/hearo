@@ -65,8 +65,8 @@ const googleLogout = createAsyncThunk(
     if (!response) {
       throw new Error();
     }
-    sessionStorage.removeItem("accessToken");
-    sessionStorage.removeItem("userSeq");
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("userSeq");
     return response;
   }
 );
@@ -79,8 +79,8 @@ const googleWithdraw = createAsyncThunk(
       throw new Error();
     }
 
-    sessionStorage.removeItem("accessToken");
-    sessionStorage.removeItem("userSeq");
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("userSeq");
     return response;
   }
 );
@@ -129,8 +129,8 @@ const userSlice = createSlice({
       .addCase(googleLogin.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isLoggedIn = true;
-        sessionStorage.setItem("accessToken", action.payload.accessToken);
-        sessionStorage.setItem("userSeq", action.payload.userSeq);
+        localStorage.setItem("accessToken", action.payload.accessToken);
+        localStorage.setItem("userSeq", action.payload.userSeq);
         state.user = action.payload;
         state.user!.accessToken = "";
       })
@@ -138,7 +138,7 @@ const userSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(googleWithdraw.fulfilled, (state, action) => {
-        sessionStorage.removeItem("accessToken");
+        localStorage.removeItem("accessToken");
         state.isLoggedIn = false;
         state.user = null;
       })
