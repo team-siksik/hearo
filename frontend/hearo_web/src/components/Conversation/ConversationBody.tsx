@@ -194,7 +194,7 @@ function ConversationBody({
           // };
           subRecorder.current?.clear();
         }, "audio/wav");
-      }, 500);
+      }, 250);
       setIntervalKey(intervalKey);
       try {
         subRecorder.current?.record();
