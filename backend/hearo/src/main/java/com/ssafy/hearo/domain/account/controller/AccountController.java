@@ -53,6 +53,7 @@ public class AccountController {
 
     @GetMapping("/info/{singleId}")
     public ResponseEntity<Result> getAccount(@PathVariable Long singleId) {
+        log.info("user detail get");
         return ResponseEntity.ok().body(responseService.getSingleResult(accountService.account(singleId)
                 .orElseThrow(() -> new ErrorException(AccountErrorCode.ACCOUNT_NOT_FOUND))));
     }
