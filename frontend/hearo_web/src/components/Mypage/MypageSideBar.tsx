@@ -7,7 +7,7 @@ import { BookOpenIcon, Cog6ToothIcon } from "@heroicons/react/24/solid";
 
 function MypageSideBar() {
   const navigate = useNavigate();
-  const isLoggedin = !!localStorage.getItem("access_token");
+  const isLoggedin = !!sessionStorage.getItem("access_token");
 
   const handleConversationPageClick = () => {
     navigate("/comm");

@@ -15,7 +15,7 @@ import { MemoType, MessageType } from "@/types/types";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { saveMeeting, startMeeting } from "@/redux/modules/meeting";
 
-const accessToken = localStorage.getItem("accessToken");
+const accessToken = sessionStorage.getItem("accessToken");
 // 임의 룸 넘버
 // const socketURl = "http://k8a6031.p.ssafy.io:80/";
 const socketURl = "https://k8a6031.p.ssafy.io:8090/";
@@ -502,7 +502,7 @@ function ConversationBody({
             .then(() => {
               // successfully finished and saved meeting
               navigate("/records");
-              console.log("기록이 저장되었습니다. ")
+              console.log("기록이 저장되었습니다. ");
             })
             .catch((err) => {
               console.log("room save error", err);
