@@ -40,6 +40,15 @@ interface TimeFormat {
   seconds: string;
 }
 
+const temporal_names = [
+  "무서운 쿼카",
+  "귀여운 악아",
+  "똑똑한 사자",
+  "더러운 고양이",
+  "깨끗한 대머리독수리",
+  "못된 강아지",
+];
+
 function RecordPage() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
@@ -259,7 +268,17 @@ function RecordPage() {
                   dialog.map((item, idx) => (
                     // TODO: ADD Favorite Context
                     <div key={item.start}>
-                      <div>{item.speaker.name}</div>
+                      <div>
+                        {item.speaker.name === "A"
+                          ? temporal_names[0]
+                          : item.speaker.name === "B"
+                          ? temporal_names[1]
+                          : item.speaker.name === "C"
+                          ? temporal_names[2]
+                          : item.speaker.name === "C"
+                          ? temporal_names[3]
+                          : temporal_names[4]}
+                      </div>
                       <div
                         className="flex flex-row items-center"
                         onClick={(e) => handlePlayButton(item.start)}
