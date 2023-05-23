@@ -17,7 +17,7 @@ function MemoList({ memoList, setMemoList }: PropsType) {
   }, [memoList]);
 
   return (
-    <div className="flex h-[288px] flex-col gap-2 overflow-auto overflow-x-auto pb-2">
+    <div className="flex h-[288px] flex-col gap-4 overflow-auto overflow-x-auto pb-2">
       {memoList?.map((item, idx) => {
         return (
           <MemoItem key={idx} item={item} idx={idx} setMemoList={setMemoList} />
