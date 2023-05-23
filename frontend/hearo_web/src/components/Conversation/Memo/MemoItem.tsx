@@ -35,7 +35,15 @@ function MemoItem({ item, idx, setMemoList }: PropsType) {
     }
   }
   return (
-    <div className="relative w-full rounded-md p-2 shadow-xl">
+    <div
+      className={
+        idx % 3 === 0
+          ? "relative w-full bg-[#fce1e4] p-2 pb-8 shadow-xl"
+          : idx % 3 === 1
+          ? "relative w-full bg-[#fcf4dd] p-2 pb-8 shadow-xl"
+          : "relative w-full bg-[#daeaf6] p-2 pb-8 shadow-xl"
+      }
+    >
       <div>
         <p className="memoCreatedAt text-sm text-gray-400">
           {parsing(item.timestamp)}

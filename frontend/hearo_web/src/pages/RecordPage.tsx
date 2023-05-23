@@ -147,7 +147,9 @@ function RecordPage() {
       <MypageSideBar />
       <div className="absolute right-0 mt-[4.25rem] w-[82%]">
         <div className="mx-8">
+          {/* 대화 페이지 상단 */}
           <div className="flex items-stretch justify-between ">
+            {/* title */}
             <div className="flex min-w-[400px] flex-row items-center">
               <div className="w-full self-center rounded-lg text-3xl font-bold text-gray-600">
                 <form onSubmit={(e) => e.preventDefault()}>
@@ -176,7 +178,8 @@ function RecordPage() {
                 </div>
               )}
             </div>
-            <div className="mr-4 flex  flex-row">
+            {/* 우측 상단 뒤로가기 및 휴지통 버튼 */}
+            <div className="mr-4 flex flex-row">
               <div className="m-4 p-1">
                 <button
                   className="w-20 rounded-full bg-red-main py-2 text-white transition-all duration-200 ease-out hover:bg-red-400"
@@ -195,7 +198,7 @@ function RecordPage() {
               </div>
             </div>
           </div>
-
+          {/* 대화 페이지 녹음 정보 */}
           <div className="mb-2 flex flex-col rounded-md border p-4 shadow-md ">
             <div
               className="flex flex-row items-center"
@@ -237,6 +240,7 @@ function RecordPage() {
             )}
           </div>
           <div className="mb-12 flex scroll-mx-0 flex-row">
+            {/* 대화 페이지 대화 다이얼로그 */}
             <motion.div
               key="left"
               // className={
@@ -269,7 +273,27 @@ function RecordPage() {
                   ))}
               </div>
             </motion.div>
-            <AnimatePresence>
+            {/* 대화 페이지 대화 메모 */}
+            {recordData?.memoList?.length > 0 ? (
+              <>
+                <div className="h-full w-[30%] px-2 pt-6">
+                  {recordData.memoList.map((item: MemoFromServerType, idx) => {
+                    return (
+                      <div key={item.memoSeq} className="relative mb-3">
+                        <MemoItem item={item} idx={idx} />
+                        <div
+                          className="absolute right-4 top-0 w-4"
+                          onClick={(e) => deleteMemo(item.memoSeq)}
+                        >
+                          <CrossIconRed />
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </>
+            ) : null}
+            {/* <AnimatePresence>
               {openMemo && (
                 <motion.div
                   key="right"
@@ -324,7 +348,7 @@ function RecordPage() {
                   )}
                 </motion.div>
               )}
-            </AnimatePresence>
+            </AnimatePresence> */}
           </div>
 
           <div onClick={addMemo}>
