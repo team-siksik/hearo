@@ -84,44 +84,44 @@ IoT Stack
 
 ### 로그인 화면
 
-<img src="/uploads/1d6689ccdcd3e8d913768c6948c2e5ff/KakaoTalk_20230522_143644686_10.jpg" height="200">
+<img src="/uploads/1d6689ccdcd3e8d913768c6948c2e5ff/KakaoTalk_20230522_143644686_10.jpg" height=400">
 
 - 구글 소셜 로그인을 통해 로그인을 할 수 있습니다.
 
 ### 모드 선택
 
-![KakaoTalk_20230522_143644686_09](/uploads/e84304ff4c1a2f2a43c2ef0d7820eb79/KakaoTalk_20230522_143644686_09.jpg)
+<img src="/uploads/e84304ff4c1a2f2a43c2ef0d7820eb79/KakaoTalk_20230522_143644686_09.jpg" height="400"/>
 
 - 자체 히어로 글래스가 있는 사람과 없는 사람이 모드를 정할 수 있습니다.
 
 ### 일반 홈
 
-![KakaoTalk_20230522_143644686_08](/uploads/b6d15cac3c07b7493dc7eb861131fdd6/KakaoTalk_20230522_143644686_08.jpg)
+<img src="/uploads/b6d15cac3c07b7493dc7eb861131fdd6/KakaoTalk_20230522_143644686_08.jpg" height="400"/>
 
 - 기능을 선택하여 들어갈 수 있는 화면입니다.
 
 ### 계정 페이지
 
-![KakaoTalk_20230522_143644686](/uploads/a5d47fe3546ee1297e3af22a1bd7f07d/KakaoTalk_20230522_143644686.jpg)
+<img src="/uploads/a5d47fe3546ee1297e3af22a1bd7f07d/KakaoTalk_20230522_143644686.jpg" height="400"/>
 
 - 계정 페이지입니다.
 - 모드를 변경하거나 로그아웃 및 회원 탈퇴가 가능합니다.
 
-![KakaoTalk_20230522_143644686_01](/uploads/24b2b99401de80add63ee5c0c3f121cd/KakaoTalk_20230522_143644686_01.jpg)
+<img src="/uploads/24b2b99401de80add63ee5c0c3f121cd/KakaoTalk_20230522_143644686_01.jpg" height="400"/>
 
 - 자주 쓰는 말을 등록, 수정 및 삭제할 수 있습니다.
 
-![KakaoTalk_20230522_150419693](/uploads/03f28270dbacda3d4c8c45c6a7854890/KakaoTalk_20230522_150419693.jpg)
+<img src="/uploads/03f28270dbacda3d4c8c45c6a7854890/KakaoTalk_20230522_150419693.jpg" height="400"/>
 
 - 앱의 권한 설정을 관리할 수 있습니다.
 
 ### 대화
 
-![KakaoTalk_20230522_143644686_06](/uploads/031443913fe473bb40013582145421f0/KakaoTalk_20230522_143644686_06.jpg)
+<img src="/uploads/031443913fe473bb40013582145421f0/KakaoTalk_20230522_143644686_06.jpg" height="400"/>
 
-![KakaoTalk_20230522_143644686_05](/uploads/30f488e499d8e5dffeeff9eff545030f/KakaoTalk_20230522_143644686_05.jpg)
+<img src="/uploads/30f488e499d8e5dffeeff9eff545030f/KakaoTalk_20230522_143644686_05.jpg" height="400"/>
 
-![KakaoTalk_20230522_151650202](/uploads/dd4050e728a7dd0db20270ec09455d1f/KakaoTalk_20230522_151650202.jpg)
+<img src="/uploads/dd4050e728a7dd0db20270ec09455d1f/KakaoTalk_20230522_151650202.jpg" height="400"/>
 
 - 대화 화면입니다.
   - 대화 이용하기 도움말을 통해 기능을 알 수 있습니다.
@@ -132,37 +132,38 @@ IoT Stack
 
 ### 수어 인식
 
-![KakaoTalk_20230522_143644686_07](/uploads/69a06f20028a515a62c50cdb2153a1df/KakaoTalk_20230522_143644686_07.jpg)
+<img src="/uploads/69a06f20028a515a62c50cdb2153a1df/KakaoTalk_20230522_143644686_07.jpg" height="400"/>
 
 ## 글래스
 
 ### 글래스
 
-![KakaoTalk_20230522_143644686_04](/uploads/f43fbd326279970a0ac3a3a35e2c7479/KakaoTalk_20230522_143644686_04.jpg)
+<img src="/uploads/f43fbd326279970a0ac3a3a35e2c7479/KakaoTalk_20230522_143644686_04.jpg" height="400"/>
 
 ### 글래스 찾기
 
-![KakaoTalk_20230522_144922130_01](/uploads/9378003d2b2e0a399a6bc543a841c2a8/KakaoTalk_20230522_144922130_01.jpg)
+<img src="/uploads/9378003d2b2e0a399a6bc543a841c2a8/KakaoTalk_20230522_144922130_01.jpg" height="400"/>
 
-![KakaoTalk_20230522_144922130](/uploads/c28df7eec07587ed169eff789161c36f/KakaoTalk_20230522_144922130.jpg)
+<img src="/uploads/c28df7eec07587ed169eff789161c36f/KakaoTalk_20230522_144922130.jpg" height="400"/>
 
 ### 글래스 홈
 
-![KakaoTalk_20230522_144922130_02](/uploads/c591a98a9d4367806ab867349837dde9/KakaoTalk_20230522_144922130_02.jpg)
+<img src="/uploads/c591a98a9d4367806ab867349837dde9/KakaoTalk_20230522_144922130_02.jpg" height="400"/>
 
 ### 대화
 
-![KakaoTalk_20230522_143644686_06](/uploads/031443913fe473bb40013582145421f0/KakaoTalk_20230522_143644686_06.jpg)
+<img src="/uploads/031443913fe473bb40013582145421f0/KakaoTalk_20230522_143644686_06.jpg" height="400"/>
 
-![KakaoTalk_20230521_220243759](/uploads/630b31b47cdfff624216aa48bd99ba59/KakaoTalk_20230521_220243759.gif)
+<img src="/uploads/630b31b47cdfff624216aa48bd99ba59/KakaoTalk_20230521_220243759.gif" height="400"/>
+![KakaoTalk_20230521_220243759]()
 
 ### 소음 인식
 
-![KakaoTalk_20230522_143644686_12](/uploads/1ed376ae764d34f64ce4b23aeed932f5/KakaoTalk_20230522_143644686_12.jpg)
+<img src="/uploads/1ed376ae764d34f64ce4b23aeed932f5/KakaoTalk_20230522_143644686_12.jpg" height="400"/>
 
-![KakaoTalk_20230522_143644686_11](/uploads/a79dca762de57b99376aae26321f4370/KakaoTalk_20230522_143644686_11.jpg)
+<img src="/uploads/a79dca762de57b99376aae26321f4370/KakaoTalk_20230522_143644686_11.jpg" height="400"/>
 
-![KakaoTalk_20230522_143644686_02](/uploads/ab5e11508ea0caa365cd7fa8cd4e1f6e/KakaoTalk_20230522_143644686_02.jpg)
+<img src="/uploads/ab5e11508ea0caa365cd7fa8cd4e1f6e/KakaoTalk_20230522_143644686_02.jpg" height="400"/>
 
 ## 팀원 소개
 
