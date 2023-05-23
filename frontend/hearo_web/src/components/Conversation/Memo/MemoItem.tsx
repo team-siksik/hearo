@@ -35,13 +35,14 @@ function MemoItem({ item, idx, setMemoList }: PropsType) {
     }
   }
   return (
-    <div className="relative w-full rounded-md border border-gray-200 p-2">
-      <div className="">
+    <div className="relative w-full rounded-md p-2 shadow-xl">
+      <div>
         <p className="memoCreatedAt text-sm text-gray-400">
           {parsing(item.timestamp)}
         </p>
         <p className="memoContent">{item.content}</p>
       </div>
+
       <>
         {setMemoList ? (
           <div className="absolute right-1 top-1" onClick={deleteMemoInMeeting}>
@@ -50,6 +51,22 @@ function MemoItem({ item, idx, setMemoList }: PropsType) {
         ) : null}
       </>
     </div>
+    // <div className="relative w-full rounded-md border border-gray-200 p-2">
+    //   <div>
+    //     <p className="memoCreatedAt text-sm text-gray-400">
+    //       {parsing(item.timestamp)}
+    //     </p>
+    //     <p className="memoContent">{item.content}</p>
+    //   </div>
+
+    //   <>
+    //     {setMemoList ? (
+    //       <div className="absolute right-1 top-1" onClick={deleteMemoInMeeting}>
+    //         <CrossIconRed />
+    //       </div>
+    //     ) : null}
+    //   </>
+    // </div>
   );
 }
 export default MemoItem;
