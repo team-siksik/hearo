@@ -32,7 +32,7 @@ function Dialog({
             <div
               {...onLongPress()}
               onClick={onClick}
-              className="user_dialog m-2 inline-block h-fit w-fit max-w-sm rounded-xl border border-gray-100 p-2 shadow-md"
+              className="user_dialog m-4 inline-block h-fit w-fit max-w-sm rounded-xl border border-gray-100 p-2 shadow-md"
             >
               {children}
             </div>

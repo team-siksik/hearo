@@ -268,7 +268,7 @@ function RecordPage() {
                   dialog.map((item, idx) => (
                     // TODO: ADD Favorite Context
                     <div key={item.start}>
-                      <div>
+                      <div className="m-3 font-bold">
                         {item.speaker.name === "A"
                           ? temporal_names[0]
                           : item.speaker.name === "B"
