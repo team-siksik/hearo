@@ -84,7 +84,7 @@ IoT Stack
 
 ### 로그인 화면
 
-![KakaoTalk_20230522_143644686_10](/uploads/1d6689ccdcd3e8d913768c6948c2e5ff/KakaoTalk_20230522_143644686_10.jpg)
+<img src="/uploads/1d6689ccdcd3e8d913768c6948c2e5ff/KakaoTalk_20230522_143644686_10.jpg" height="200">
 
 - 구글 소셜 로그인을 통해 로그인을 할 수 있습니다.
 
