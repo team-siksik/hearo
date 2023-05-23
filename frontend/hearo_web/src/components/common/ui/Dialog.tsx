@@ -54,7 +54,7 @@ function Dialog({
         ) : type === "3" ? (
           <div
             onClick={onClick}
-            className="user_dialog m-2 inline-block h-fit w-fit max-w-sm rounded-xl bg-green-100 p-2 shadow-md"
+            className="user_dialog m-2 inline-block h-fit w-fit max-w-sm rounded-xl bg-[#ddedea] p-2 shadow-md"
           >
             {children}
           </div>
