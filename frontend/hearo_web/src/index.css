@@ -1,0 +1,64 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body,
+#root,
+.app {
+  height: 100%;
+  width: 100%;
+  @apply text-gray-500;
+  @apply text-gray-950;
+  font-family: "DM Sans", sans-serif;
+}
+
+/* 캐러셀 좌우 화살표 */
+.slick-prev::before {
+  opacity: 1;
+  background-color: white;
+  border-radius: 100%;
+  font-size: 25px;
+  color: #e25252;
+}
+.slick-next::before {
+  opacity: 1;
+  background-color: white;
+  border-radius: 100%;
+  font-size: 25px;
+  color: #e25252;
+}
+
+.popover-bottom {
+  @apply after:border-[10px] after:border-b-transparent after:border-l-transparent after:border-r-transparent after:border-t-white;
+}
+.popover-top {
+  @apply before:border-[10px] before:border-b-white before:border-l-transparent before:border-r-transparent before:border-t-transparent;
+}
+.popover-left {
+  @apply before:border-[10px] before:border-b-transparent before:border-l-transparent before:border-r-white before:border-t-transparent;
+}
+.popover-right {
+  @apply after:border-[10px] after:border-b-transparent after:border-l-white after:border-r-transparent after:border-t-transparent;
+}
+
+@font-face {
+  font-family: "Pretendard-Regular";
+  src: url("./assets/Fonts/Pretendard-Regular.woff") format("woff");
+}
+@font-face {
+  font-family: "Pretendard-Bold";
+  src: url("./assets/Fonts/Pretendard-Bold.woff") format("woff");
+}
+@font-face {
+  font-family: "Pretendard-ExtraBold";
+  src: url("./assets/Fonts/Pretendard-ExtraBold.woff") format("woff");
+}
+@font-face {
+  font-family: "Pretendard-Light";
+  src: url("./assets/Fonts/Pretendard-Light.woff") format("woff");
+}
+@font-face {
+  font-family: "Pretendard-Thin";
+  src: url("./assets/Fonts/Pretendard-Thin.woff") format("woff");
+}
