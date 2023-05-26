@@ -1,0 +1,1 @@
+-keep class com.example.hearo_app.flutter_blue_plus.** { *; }
