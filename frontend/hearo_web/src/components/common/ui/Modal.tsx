@@ -271,7 +271,7 @@ function Modal({
           shouldCloseOnOverlayClick={cannotExit ? false : true}
           ariaHideApp={false}
         >
-          <div className="absolute right-0 top-0 flex">
+          <div className="absolute right-1 top-1 flex">
             {cannotExit ? null : (
               <button onClick={(e) => handleModal(e)}>
                 <CrossIconRed />

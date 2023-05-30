@@ -118,7 +118,6 @@ function RecordPage() {
     }
   };
 
-  //TODO: memo delete
   function deleteMemo(memoSeq: number) {
     const delItem = {
       memoSeq: [memoSeq],
@@ -304,7 +303,7 @@ function RecordPage() {
                       <div key={item.memoSeq} className="relative mb-3">
                         <MemoItem item={item} idx={idx} />
                         <div
-                          className="absolute right-4 top-0 w-4"
+                          className="absolute right-4 top-1 w-4"
                           onClick={(e) => deleteMemo(item.memoSeq)}
                         >
                           <CrossIconRed />
@@ -315,62 +314,6 @@ function RecordPage() {
                 </div>
               </>
             ) : null}
-            {/* <AnimatePresence>
-              {openMemo && (
-                <motion.div
-                  key="right"
-                  style={{
-                    width: "30%",
-                    minHeight: "100px",
-                  }}
-                  initial={{ width: "0%", minHeight: "100px" }}
-                  animate={{ width: "30%", minHeight: "0" }}
-                  exit={{ width: "0%", minHeight: "100px" }}
-                  transition={{ duration: 0.3 }}
-                >
-                  {recordData?.memoList?.length > 0 ? (
-                    <div className="h-full px-2">
-                      {recordData.memoList.map(
-                        (item: MemoFromServerType, idx) => {
-                          return (
-                            <div key={item.memoSeq} className="relative mb-3">
-                              <MemoItem item={item} idx={idx} />
-                              <div
-                                className="absolute right-4 top-0 w-4"
-                                onClick={(e) => deleteMemo(item.memoSeq)}
-                              >
-                                <CrossIconRed />
-                              </div>
-                            </div>
-                          );
-                        }
-                      )}
-                    </div>
-                  ) : (
-                    <div className="memoInput relative mt-3 w-full rounded-lg border border-gray-200">
-                      <textarea
-                        name="memo"
-                        className="h-[5.5rem] w-full resize-none rounded-lg p-2 focus:border-none focus:outline-none"
-                        id="memo"
-                        maxLength={500}
-                        // ref={textareaRef}
-                        placeholder="메모 작성하기"
-                        // onKeyDown={handleKeyDown}
-                      ></textarea>
-                      <div className="addMemoBtnBox absolute bottom-1 right-2 flex items-center">
-                        <button
-                          className="addMemoBtn h-8 rounded-lg bg-blue-100 px-4 hover:bg-blue-200"
-                          type="button"
-                          // onClick={handleSendClick}
-                        >
-                          추가
-                        </button>
-                      </div>
-                    </div>
-                  )}
-                </motion.div>
-              )}
-            </AnimatePresence> */}
           </div>
 
           <div onClick={addMemo}>

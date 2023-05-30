@@ -31,6 +31,7 @@ function TotalRecordsPage() {
   const [openRemoveRecordModal, setOpenRemoveRecordModal] =
     useState<boolean>(false);
   const isLoading = useAppSelector((state) => state.record.isLoading);
+  const error = useAppSelector((state) => state.record.error);
   const [totalRecords, setTotalRecords] = useState<RecordItem[]>([]);
   const recordList = useAppSelector((state) => state.record.recordList);
 
