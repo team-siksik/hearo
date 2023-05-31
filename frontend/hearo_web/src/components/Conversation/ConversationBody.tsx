@@ -1,6 +1,12 @@
 import React, { SetStateAction, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button, Dialog, FloatingButton, MemoComp } from "@/components";
+import {
+  Button,
+  Dialog,
+  FloatingButton,
+  MemoComp,
+  RecordpageSideBar,
+} from "@/components";
 import AddFavModal from "./MeetingBody/AddFavModal";
 import GPTRecommend from "./GPTRecommend";
 import ExitModal from "./ExitModal";
@@ -56,19 +62,13 @@ function ConversationBody({
   setTimerStarted,
   seconds,
   conversation,
-  setConversation,
   setOpenGPTModal,
   setRequestString,
 }: PropsType) {
   const accessToken = localStorage.getItem("accessToken");
   const userSeq = localStorage.getItem("userSeq");
-  const [id, setId] = useState<number>(0);
-  const [started, setStarted] = useState<boolean>(false);
   // regarding component status
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const isFinal = useRef<boolean>(false);
-  const partialResult = useRef<string>("");
-
   const [openMemoPage, setOpenMemoPage] = useState<boolean>(false);
   const [openExitModal, setOpenExitModal] = useState<boolean>(false);
   const [openAlertModal, setOpenAlertModal] = useState<boolean>(false);
@@ -77,40 +77,35 @@ function ConversationBody({
   const [chosenFavItem, setChosenFavItem] = useState<string>("");
   // Text-to-Speech를 위한 text
   const [text, setText] = useState<string>("");
-  const addMemoList = useAppSelector((state) => state.meeting.memoList);
-  const userVoiceSetting = useAppSelector(
-    (state) => state.profile.setting.voiceSetting
-  );
   const [memoList, setMemoList] = useState<MemoType[]>([]);
 
   const [intervalKey, setIntervalKey] = useState<any>();
   const [mediaStream, setMediaStream] = useState<MediaStream>(); //streaming되는 미디어
   const [isRecording, setIsRecording] = useState<boolean>(false);
   const [audioArray, setAudioArray] = useState<Blob[]>([]);
+  const [audio, setAudio] = useState<string>(); //whole audio blob url
+  const [endWithoutSaving, setEndWithoutSaving] = useState<boolean>(false);
 
-  // const [audioBlob, setAudioBlob] = useState<Blob>();
-
-  // const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder>(); // 녹음기
-  // const [subRecorder, setSubRecorder] = useState<any>(); // worker recorder
   const mediaRecorder = useRef<MediaRecorder>();
   const subRecorder = useRef<Recorder>();
 
-  const [audio, setAudio] = useState<string>(); //whole audio blob url
-  const roomSequence = useRef<number>(0);
-  // const roomId = useRef<string>("");
   const roomInfo = useAppSelector((state) => state.meeting.roomInfo);
+  const addMemoList = useAppSelector((state) => state.meeting.memoList);
+  const userVoiceSetting = useAppSelector(
+    (state) => state.profile.setting.voiceSetting
+  );
+  const roomSequence = useRef<number>(0);
   const socket = useRef<Socket | null>(null);
+  const partialResult = useRef<string>("");
+
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-
-  const reader = new FileReader();
 
   useEffect(() => {
     dispatch(getUserSetting());
   }, []);
 
   useEffect(() => {
-    // roomId.current = roomInfo.roomId;
     roomSequence.current = roomInfo.roomSeq;
   }, [roomInfo]);
 
@@ -144,14 +139,6 @@ function ConversationBody({
         audio: null,
         split: true,
       });
-      // setConversation((prevConversation) => [
-      //   ...prevConversation,
-      //   {
-      //     // idx: id,
-      //     content: message,
-      //     speaker: "user",
-      //   },
-      // ]);
     }
   }, [message]);
 
@@ -409,16 +396,10 @@ function ConversationBody({
         }
         //If item is like string or sth
       } else {
-        // socket.current?.emit("send_message_to_room", {
-        //   room_id: roomNo,
-        //   message: item,
-        // });
         socket.current?.emit("waveform", {
           room_id: userSeq,
           audio: item,
         }); // base64
-
-        // onEvent(MSG_SEND, `Send tag: ${item}`);
       }
     } else {
       onError(ERR_CLIENT, `No web socket connection: failed to send: ${item}`);
@@ -451,11 +432,6 @@ function ConversationBody({
       subRecorder.current?.exportWAV((blob: Blob) => {
         // socket send audio
         socketSend(blob);
-        // reader.readAsDataURL(blob);
-        // reader.onloadend = function () {
-        //   var base64String = reader.result;
-        //   socketSend(base64String);
-        // };
         // socket send recording finish sign
         socketSend("finish_audio");
         subRecorder.current?.clear();
@@ -506,7 +482,7 @@ function ConversationBody({
   async function closeRoomAPI(blob?: Blob) {
     MeetingAPI.finishMeeting(accessToken!, roomSequence.current!)
       .then(() => {
-        if (blob) {
+        if (blob && !endWithoutSaving) {
           dispatch(saveMeeting(blob))
             .then(() => {
               // successfully finished and saved meeting
@@ -531,6 +507,11 @@ function ConversationBody({
 
   return (
     <>
+      <RecordpageSideBar
+        isStarted={isStarted}
+        cancel={cancel}
+        setEndWithoutSaving={setEndWithoutSaving}
+      />
       <section className="message-sec mb-12 h-full overflow-x-auto ">
         {openExitModal && (
           <ExitModal
