@@ -17,7 +17,7 @@ interface DelItem {
 const initialState = {
   isLoading: false,
   recordList: [],
-  isLast: false,
+  isLastPage: false,
   recordData: {
     recordSeq: 0,
     conversationSeq: 0,
@@ -124,9 +124,12 @@ const recordSlice = createSlice({
       state.isLoading = true;
     });
     builder.addCase(getRecordList.fulfilled, (state, action) => {
-      state.isLoading = false;
-      state.isLast = action.payload.isLast;
-      state.recordList = action.payload.recordList;
+      return {
+        ...state,
+        isLoading: false,
+        isLastPage: action.payload.isLast,
+        recordList: state.recordList.concat(...action.payload.recordList),
+      };
     });
     builder.addCase(getRecordList.rejected, (state, action) => {
       state.isLoading = false;
