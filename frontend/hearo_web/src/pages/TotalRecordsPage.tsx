@@ -1,10 +1,6 @@
-import React, { useState, useEffect } from "react";
-import { MypageSideBar, RecordpageSideBar, Spinner } from "@/components";
+import React, { useState, useEffect, useRef } from "react";
+import { MypageSideBar, Spinner } from "@/components";
 import { RecordsItem } from "@/components";
-import { RecordAPI } from "@/apis/api";
-import { TrashIcon } from "@heroicons/react/24/solid";
-import { NewspaperIcon } from "@heroicons/react/24/outline";
-import { RemoveRecordModal } from "@/components";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getRecordList } from "@/redux/modules/records";
@@ -28,15 +24,41 @@ function TotalRecordsPage() {
   const location = useLocation();
 
   const [nextPage, setNextPage] = useState<number>(0);
+  const isLastPage = useAppSelector((state) => state.record.isLastPage);
   const [openRemoveRecordModal, setOpenRemoveRecordModal] =
     useState<boolean>(false);
   const isLoading = useAppSelector((state) => state.record.isLoading);
+  const error = useAppSelector((state) => state.record.error); // error alert
   const [totalRecords, setTotalRecords] = useState<RecordItem[]>([]);
-  const recordList = useAppSelector((state) => state.record.recordList);
+  const recordList = useAppSelector((state) => state.record.recordList); // 바뀌는지 확인
+  const observerTarget = useRef<HTMLDivElement>(null);
+  const observer = useRef<IntersectionObserver | null>(null);
 
   useEffect(() => {
     dispatch(getRecordList(nextPage));
-  }, [location, nextPage]);
+  }, [nextPage]);
+
+  function observeCallback(entries: IntersectionObserverEntry[]) {
+    if (entries[0].isIntersecting && !isLastPage) {
+      setNextPage((prev) => prev + 1);
+    }
+  }
+
+  useEffect(() => {
+    observer.current = new IntersectionObserver(observeCallback, {
+      threshold: 0.1,
+    });
+
+    if (observerTarget.current && observer.current) {
+      observer.current.observe(observerTarget.current);
+    }
+
+    return () => {
+      if (observerTarget.current && observer.current) {
+        observer.current.unobserve(observerTarget.current);
+      }
+    };
+  }, []);
 
   return (
     <div>
@@ -50,10 +72,8 @@ function TotalRecordsPage() {
           style={{ width: "calc(82% - 1rem)" }}
         >
           <div className="space-y-4 pb-12">
-            {isLoading ? (
-              <div className="flex h-96 items-center justify-center font-bold">
-                <Spinner loading={true} />
-              </div>
+            {isLoading && recordList.length === 0 ? (
+              <div></div>
             ) : recordList.length === 0 ? (
               <div className="flex h-96 items-center justify-center font-bold">
                 <p className="font-Pretendard-Bold">
@@ -66,6 +86,13 @@ function TotalRecordsPage() {
               ))
             )}
           </div>
+          {isLoading ? (
+            <div className="flex items-center justify-center font-bold">
+              <Spinner loading={true} />
+            </div>
+          ) : (
+            <div ref={observerTarget} className="h-[10px] w-full"></div>
+          )}
         </div>
       </div>
     </div>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { SetStateAction, useState } from "react";
 import Button from "../common/ui/Button";
 import { useNavigate } from "react-router-dom";
 import { BookOpenIcon, Cog6ToothIcon } from "@heroicons/react/24/solid";
@@ -6,12 +6,19 @@ import Modal from "../common/ui/Modal";
 
 interface PropsType {
   isStarted?: boolean;
+  cancel: () => void;
+  setEndWithoutSaving: React.Dispatch<SetStateAction<boolean>>;
 }
 
-function RecordpageSideBar({ isStarted }: PropsType) {
+function RecordpageSideBar({
+  isStarted,
+  cancel,
+  setEndWithoutSaving,
+}: PropsType) {
   const navigate = useNavigate();
   const isLoggedin = !!localStorage.getItem("access_token");
   const [openModal, setOpenModal] = useState<boolean>(false);
+  const [navigateTo, setNavigateTo] = useState<string>("");
 
   const handleConversationPageClick = () => {
     navigate("/comm");
@@ -20,6 +27,7 @@ function RecordpageSideBar({ isStarted }: PropsType) {
   const handleRecordPageClick = () => {
     if (isStarted) {
       setOpenModal(true);
+      setNavigateTo("/records");
     } else {
       navigate("/records");
     }
@@ -29,10 +37,17 @@ function RecordpageSideBar({ isStarted }: PropsType) {
   const handleMypageClick = () => {
     if (isStarted) {
       setOpenModal(true);
+      setNavigateTo("/mypage/settings");
     } else {
       navigate("/mypage/settings");
     }
   };
+
+  function handleExitClick() {
+    setEndWithoutSaving(true);
+    cancel();
+    navigate(navigateTo);
+  }
 
   return (
     <div
@@ -87,7 +102,7 @@ function RecordpageSideBar({ isStarted }: PropsType) {
             <Button onClick={() => setOpenModal(false)} type="backButton">
               취소
             </Button>
-            <Button onClick={() => navigate("/")} type="deleteButton">
+            <Button onClick={handleExitClick} type="deleteButton">
               나가기
             </Button>
           </div>
