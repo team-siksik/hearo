@@ -17,7 +17,7 @@ interface DelItem {
 const initialState = {
   isLoading: false,
   recordList: [],
-  isLast: false,
+  isLastPage: false,
   recordData: {
     recordSeq: 0,
     conversationSeq: 0,
@@ -30,6 +30,7 @@ const initialState = {
     modDtm: "",
     memoList: [],
   },
+  error: "",
 };
 
 // middleware
@@ -123,9 +124,16 @@ const recordSlice = createSlice({
       state.isLoading = true;
     });
     builder.addCase(getRecordList.fulfilled, (state, action) => {
+      return {
+        ...state,
+        isLoading: false,
+        isLastPage: action.payload.isLast,
+        recordList: state.recordList.concat(...action.payload.recordList),
+      };
+    });
+    builder.addCase(getRecordList.rejected, (state, action) => {
       state.isLoading = false;
-      state.isLast = action.payload.isLast;
-      state.recordList = action.payload.recordList;
+      state.error = "기록 조회를 실패하였습니다.";
     });
     builder.addCase(getRecordDetail.pending, (state) => {
       state.isLoading = true;
