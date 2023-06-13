@@ -90,15 +90,15 @@ Hearo는 청각장애인과 비장애인을 연결하는 소통 특화 플랫폼
 
 - Hearo Glass 연결
 
-  <img src="https://github.com/team-siksik/hearo/assets/98254573/8bc1fd26-a8d8-4b90-9b56-3d58dcaa218e" width="300"/><img src="https://github.com/team-siksik/hearo/assets/98254573/6ea39fa4-ca8c-4c78-9d31-9bea35b0abb0" width="300"/>
+  <img src="https://github.com/team-siksik/hearo/assets/98254573/8bc1fd26-a8d8-4b90-9b56-3d58dcaa218e" width="300"/><img src="https://github.com/team-siksik/hearo/assets/98254573/6ea39fa4-ca8c-4c78-9d31-9bea35b0abb0" height="622"/>
 
 - 대화 나누기
 
-  <img src="https://github.com/team-siksik/hearo/assets/98254573/ae5bae7d-bbe8-45d7-b781-50fe6415a519" width="300"/><img src="https://github.com/team-siksik/hearo/assets/98254573/56d41039-2033-4462-9751-a95c6a3397a7" width="300"/>
+  <img src="https://github.com/team-siksik/hearo/assets/98254573/ae5bae7d-bbe8-45d7-b781-50fe6415a519" width="300"/><img src="https://github.com/team-siksik/hearo/assets/98254573/56d41039-2033-4462-9751-a95c6a3397a7" height="622"/>
 
 - 주변 소음 인식
 
-  <img src="https://github.com/team-siksik/hearo/assets/98254573/cef0b3ef-06f2-422d-87f9-dc508d1fb820" width="300"/>
+  <img src="https://github.com/team-siksik/hearo/assets/98254573/cef0b3ef-06f2-422d-87f9-dc508d1fb820" width="600"/>
 
 
 
@@ -106,23 +106,23 @@ Hearo는 청각장애인과 비장애인을 연결하는 소통 특화 플랫폼
 
 - 로그인
 
-  <img src="https://github.com/team-siksik/hearo/assets/98254573/d4d57c8f-ce7c-46b4-8a7c-5e03cdea92bc" width="300"/>
+  <img src="https://github.com/team-siksik/hearo/assets/98254573/d4d57c8f-ce7c-46b4-8a7c-5e03cdea92bc"/>
 
 - 메인 화면
 
-  <img src="https://github.com/team-siksik/hearo/assets/98254573/9eff56c6-69a3-462e-8502-1e3b75188f51" width="300"/>
+  <img src="https://github.com/team-siksik/hearo/assets/98254573/9eff56c6-69a3-462e-8502-1e3b75188f51"/>
 
 - 회의 진행 화면
 
-  <img src="https://github.com/team-siksik/hearo/assets/98254573/bde205bf-5647-405e-8740-6804e233d688" width="300"/>
+  <img src="https://github.com/team-siksik/hearo/assets/98254573/bde205bf-5647-405e-8740-6804e233d688"/>
 
 - 내 기록
 
-  <img src="https://github.com/team-siksik/hearo/assets/98254573/a7bb3a77-848d-4c0f-a2a9-c3370e83b51b" width="300"/>
+  <img src="https://github.com/team-siksik/hearo/assets/98254573/a7bb3a77-848d-4c0f-a2a9-c3370e83b51b"/>
 
 - 내 정보
 
-  <img src="https://github.com/team-siksik/hearo/assets/98254573/0e39f20c-4e28-4e33-902d-742e713db256" width="300"/>
+  <img src="https://github.com/team-siksik/hearo/assets/98254573/0e39f20c-4e28-4e33-902d-742e713db256"/>
 
 
 
