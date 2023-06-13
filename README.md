@@ -1,191 +1,116 @@
-# Hearo 히어로 - 소리를 잇는 다리
+# :ear: Hearo
 
-![mainpage](/uploads/0e7b53d8852b1f83cbf657bee44affc6/mainpage.png)
 
-#### Hearo [바로가기](https://k8a603.p.ssafy.io/)
 
-## 프로젝트 소개
+### 목차
 
-2023년 통계를 기준으로, 전세계에서 7천만 명 정도의 사람들이 청각 장애가 있습니다.  
-많은 청각 장애인들은 직장에서, 그리고 일상생활에서 대화나 생활에 제한이 있습니다.  
-소통의 장벽을 허물어 드리겠습니다.  
-청각장애인과 비장애인을 연결하는 소통 특화 플랫폼, 히어로입니다.
+1. [서비스 소개](#1.-서비스-소개)
+2. [기술 스택](#2.-기술-스택)
+3. [주요 기능](#3.-주요-기능)
+4. [프로젝트 구성도](#4.-프로젝트-구성도)
+5. [데모 영상](#5.-데모-영상)
+6. [팀 소개](#6.-팀-소개)
 
-## 주요 기능
 
-### 오피스
 
-#### - 실시간 대화 내용 텍스트화
+## 1. 서비스 소개
 
-### 앱
+2023년 통계를 기준으로, 전 세계에는 약 7천만 명의 청각 장애인이 있습니다. 많은 청각 장애인들은 직장에서, 그리고 일상생활에서 소통에 불편함을 겪습니다. 이제 히어로를 사용해 소통의 장벽을 허물어 보세요!  
 
-### 글래스
+Hearo는 청각장애인과 비장애인을 연결하는 소통 특화 플랫폼으로, 웹과 앱, 글래스와 워치를 통해 사용할 수 있습니다.  
 
-## 주요 기술
+- Hearo App: 일상 생활에서의 불편함을 해결해 줍니다. 대화 기능, 위험 소음 인식, 수어 번역 기능을 제공합니다.
+- Hearo Glass: 특별 제작된 글래스로 Hearo App의 기능을 사용할 수 있습니다. 글래스를 통해 휴대폰 화면이 아닌 상대방의 눈을 바라보며 소통할 수 있습니다.
+- Hearo Office (Web): Hearo의 오피스 특화 서비스로, 실시간으로 회의 내용을 파악할 수 있습니다.
 
-Backend Stack
 
-- Java OpenJDK 11
-- Spring Boot Gradle 2.7.10
-  - Spring Data JPA
-  - Spring Security
-  - Spring Cloud Gateway
-  - Lombok
-  - Swagger 2.9.2
-  - JWT 0.9.1
-- Mysql 8.0.33
-- Clova Speech
 
-Frontend Stack
+## 2. 기술 스택
 
-- Node.js 18.14.2
-- Vite 2.4.0
-- TypeScript 4.9.5
-- React 18.2.0
-  - React Router Dom 6.8.2
-  - Redux 8.0.5
-  - Redux Toolkit 1.9.5
-- axios 1.3.5
-- socket io client 4.6.1
-- Flutter 3.10.0-3.0.pre.44
+| **Frontend** | <img src="https://img.shields.io/badge/Node.js-339933?style=flat&logo=node.js&logoColor=white"/><img src="https://img.shields.io/badge/Vite-646CFF?style=flat&logo=vite&logoColor=white"/><img src="https://img.shields.io/badge/Typescript-3178C6?style=flat&logo=typescript&logoColor=white"/><img src="https://img.shields.io/badge/React-61DAFB?style=flat&logo=react&logoColor=white"/><img src="https://img.shields.io/badge/React%20Router-CA4245?style=flat&logo=react-router&logoColor=white"/><img src="https://img.shields.io/badge/Redux-764ABC?style=flat&logo=redux&logoColor=white"/><img src="https://img.shields.io/badge/Flutter-02569B?style=flat&logo=flutter&logoColor=white"/><img src="https://img.shields.io/badge/Axios-5A29E4?style=flat&logo=axios&logoColor=white"/><img src="https://img.shields.io/badge/Socket.io-010101?style=flat&logo=socket.io&logoColor=white"/> |
+| ------------ | ------------------------------------------------------------ |
+| **Backend**  | <img src="https://img.shields.io/badge/Spring%20Boot-6DB33F?style=flat&logo=spring-boot&logoColor=white"/><img src="https://img.shields.io/badge/Gradle-02303A?style=flat&logo=gradle&logoColor=white"/><img src="https://img.shields.io/badge/Spring%20Data%20JPA-000000?style=flat&logoColor=white"/><img src="https://img.shields.io/badge/Spring%20Security-6DB33F?style=flat&logo=spring-security&logoColor=white"/><img src="https://img.shields.io/badge/Spring%20Cloud-000000?style=flat&logoColor=white"/><img src="https://img.shields.io/badge/FastAPI-009688?style=flat&logo=fastapi&logoColor=white"/><img src="https://img.shields.io/badge/MySQL-4479A1?style=flat&logo=mysql&logoColor=white"/><img src="https://img.shields.io/badge/Clova%20Speech%20API-000000?style=flat&logoColor=white"/><img src="https://img.shields.io/badge/ChatGPT%20API-000000?style=flat&logoColor=white"/><img src="https://img.shields.io/badge/Socket.io-010101?style=flat&logo=socket.io&logoColor=white"/> |
+| **IoT**      | <img src="https://img.shields.io/badge/CirtcuitPython-000000?style=flat&logoColor=white"/><img src="https://img.shields.io/badge/Adafruit-000000?style=flat&logo=adafruit&logoColor=white"/> |
+| **AI**       | <img src="https://img.shields.io/badge/Python-3776AB?style=flat&logo=python&logoColor=white"/><img src="https://img.shields.io/badge/Tensorflow-FF6F00?style=flat&logo=tensorflow&logoColor=white"/><img src="https://img.shields.io/badge/OpenCV-5C3EE8?style=flat&logo=opencv&logoColor=white"/><img src="https://img.shields.io/badge/Mediapipe-000000?style=flat&logoColor=white"/> |
+| **Infra**    | <img src="https://img.shields.io/badge/NGINX-009639?style=flat&logo=nginx&logoColor=white"/><img src="https://img.shields.io/badge/Docker-2496ED?style=flat&logo=docker&logoColor=white"/><img src="https://img.shields.io/badge/Jenkins-D24939?style=flat&logo=jenkins&logoColor=white"/><img src="https://img.shields.io/badge/Amazon%20EC2-FF9900?style=flat&logo=amazon-ec2&logoColor=white"/><img src="https://img.shields.io/badge/Amazon%20S3-569A31?style=flat&logo=amazon-s3&logoColor=white"/> |
 
-AI Stack
 
-- python 3.8
-- Tensorflow 2.11.0
-- Fast Api
 
-Server
+## 3. 주요 기능
 
-- AWS EC2 t3.large
-- AWS S3
+### Hearo App
 
-CI/CD Stack
+- 로그인
 
-- Jenkins
-- docker compose 2.16.0
-- nginx
+  <img src="https://github.com/team-siksik/hearo/assets/98254573/3e86a231-e107-42bc-87e6-6a1ecc9e0714" width="300"/>
 
-IoT Stack
+  - 구글 소셜 로그인 지원
+  - 최초 로그인 시 사용에 필요한 권한 요청
 
-- CircuitPython 8.0.5
-  - Adafruit circuitpython libraries
+- 모드 선택
+  <img src="https://github.com/team-siksik/hearo/assets/98254573/734864a2-a515-4fac-bd09-dc028ccb3b97" width="300"/>
+  - 자체 히어로 글래스가 있는 사람과 없는 사람이 모드를 정할 수 있습니다.
 
-## 협업 툴
+- 일반 홈
+  - 기능을 선택하여 들어갈 수 있는 화면입니다.
 
-## 아키텍쳐
+- 계정 페이지
 
-## ERD
+  - 계정 페이지입니다.
 
-![ERD_230513](/uploads/f1d19b15b95484b15643781b65ff84f0/ERD_230513.png)
+  - 모드를 변경하거나 로그아웃 및 회원 탈퇴가 가능합니다.
 
-## 서비스 소개
+  - 자주 쓰는 말을 등록, 수정 및 삭제할 수 있습니다.
 
-## 앱
+  - 앱의 권한 설정을 관리할 수 있습니다.
 
-### 로그인 화면
 
-<img src="/uploads/1d6689ccdcd3e8d913768c6948c2e5ff/KakaoTalk_20230522_143644686_10.jpg" height="400" />
-
-- 구글 소셜 로그인을 통해 로그인을 할 수 있습니다.
-
-### 모드 선택
-
-<img src="/uploads/e84304ff4c1a2f2a43c2ef0d7820eb79/KakaoTalk_20230522_143644686_09.jpg" height="400"/>
-
-- 자체 히어로 글래스가 있는 사람과 없는 사람이 모드를 정할 수 있습니다.
-
-### 일반 홈
-
-<img src="/uploads/b6d15cac3c07b7493dc7eb861131fdd6/KakaoTalk_20230522_143644686_08.jpg" height="400"/>
-
-- 기능을 선택하여 들어갈 수 있는 화면입니다.
-
-### 계정 페이지
-
-<img src="/uploads/a5d47fe3546ee1297e3af22a1bd7f07d/KakaoTalk_20230522_143644686.jpg" height="400"/>
-
-- 계정 페이지입니다.
-- 모드를 변경하거나 로그아웃 및 회원 탈퇴가 가능합니다.
-
-<img src="/uploads/24b2b99401de80add63ee5c0c3f121cd/KakaoTalk_20230522_143644686_01.jpg" height="400"/>
-
-- 자주 쓰는 말을 등록, 수정 및 삭제할 수 있습니다.
-
-<img src="/uploads/03f28270dbacda3d4c8c45c6a7854890/KakaoTalk_20230522_150419693.jpg" height="400"/>
-
-- 앱의 권한 설정을 관리할 수 있습니다.
-
-### 대화
-
-<img src="/uploads/031443913fe473bb40013582145421f0/KakaoTalk_20230522_143644686_06.jpg" height="400"/>
-
-<img src="/uploads/30f488e499d8e5dffeeff9eff545030f/KakaoTalk_20230522_143644686_05.jpg" height="400"/>
-
-<img src="/uploads/dd4050e728a7dd0db20270ec09455d1f/KakaoTalk_20230522_151650202.jpg" height="400"/>
-
-- 대화 화면입니다.
+- 대화
+  - 대화 화면입니다.
   - 대화 이용하기 도움말을 통해 기능을 알 수 있습니다.
+- 소음 인식
+  - 안경과 동일
 
-### 소음 인식
+- 수어 인식
 
-- 안경과 동일
+### Hearo Glass
 
-### 수어 인식
+- 글래스 찾기
+- 글래스 홈
+- 대화
+- 소음 인식
 
-<img src="/uploads/69a06f20028a515a62c50cdb2153a1df/KakaoTalk_20230522_143644686_07.jpg" height="400"/>
+### Hearo Office (Web)
 
-## 글래스
+- 메인 화면
+- 로그인
+- 대화 페이지
+- 대화 기록 페이지
+- 프로필 설정 페이지
 
-### 글래스
 
-<img src="/uploads/f43fbd326279970a0ac3a3a35e2c7479/KakaoTalk_20230522_143644686_04.jpg" height="400"/>
 
-### 글래스 찾기
+## 4. 프로젝트 구성도
 
-<img src="/uploads/9378003d2b2e0a399a6bc543a841c2a8/KakaoTalk_20230522_144922130_01.jpg" height="400"/>
+### 개체-관계 모델 (ERD)
 
-<img src="/uploads/c28df7eec07587ed169eff789161c36f/KakaoTalk_20230522_144922130.jpg" height="400"/>
+![ERD_230513](https://github.com/team-siksik/hearo/assets/98254573/4a4b915a-5ec3-4f1a-ba45-5e208d721f86)
 
-### 글래스 홈
 
-<img src="/uploads/c591a98a9d4367806ab867349837dde9/KakaoTalk_20230522_144922130_02.jpg" height="400"/>
 
-### 대화
+## 5. 데모 영상
 
-<img src="/uploads/031443913fe473bb40013582145421f0/KakaoTalk_20230522_143644686_06.jpg" height="400"/>
+[![데모 영상](https://img.youtube.com/vi/wH8JIsThcEE/0.jpg)](https://youtu.be/wH8JIsThcEE)
 
-<img src="/uploads/630b31b47cdfff624216aa48bd99ba59/KakaoTalk_20230521_220243759.gif" height="400"/>
 
-### 소음 인식
 
-<img src="/uploads/1ed376ae764d34f64ce4b23aeed932f5/KakaoTalk_20230522_143644686_12.jpg" height="400"/>
+## 6. 팀 소개
 
-<img src="/uploads/a79dca762de57b99376aae26321f4370/KakaoTalk_20230522_143644686_11.jpg" height="400"/>
-
-<img src="/uploads/ab5e11508ea0caa365cd7fa8cd4e1f6e/KakaoTalk_20230522_143644686_02.jpg" height="400"/>
-
-## 웹
-
-### 메인 화면
-
-### 로그인
-
-### 대화 페이지
-
-### 대화 기록 페이지
-
-### 프로필 설정 페이지
-
-## 팀원 소개
-
-### 6_6씩씩이
-
-| 이름   | 역할             |
-| ------ | ---------------- |
-| 김동준 | 팀장, Flutter FE |
-| 김나연 | Backend, AI      |
-| 남기성 | Frontend         |
-| 노현정 | Frontend         |
-| 박장훈 | CI/CD, AI        |
-| 홍영민 | IoT, AI          |
+|  이름  |          역할           |
+| :----: | :---------------------: |
+| 김동준 | 팀장<br/>Frontend (App) |
+| 김나연 |     Backend<br/>AI      |
+| 남기성 |     Frontend (Web)      |
+| 노현정 |     Frontend (Web)      |
+| 박장훈 |      CI/CD<br/>AI       |
+| 홍영민 |       IoT<br/>AI        |
