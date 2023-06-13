@@ -27,12 +27,12 @@ Hearo는 청각장애인과 비장애인을 연결하는 소통 특화 플랫폼
 
 ## 2. 기술 스택
 
-| **Frontend** | <img src="https://img.shields.io/badge/Node.js-339933?style=flat&logo=node.js&logoColor=white"/><img src="https://img.shields.io/badge/Vite-646CFF?style=flat&logo=vite&logoColor=white"/><img src="https://img.shields.io/badge/Typescript-3178C6?style=flat&logo=typescript&logoColor=white"/><img src="https://img.shields.io/badge/React-61DAFB?style=flat&logo=react&logoColor=white"/><img src="https://img.shields.io/badge/React%20Router-CA4245?style=flat&logo=react-router&logoColor=white"/><img src="https://img.shields.io/badge/Redux-764ABC?style=flat&logo=redux&logoColor=white"/><img src="https://img.shields.io/badge/Flutter-02569B?style=flat&logo=flutter&logoColor=white"/><img src="https://img.shields.io/badge/Axios-5A29E4?style=flat&logo=axios&logoColor=white"/><img src="https://img.shields.io/badge/Socket.io-010101?style=flat&logo=socket.io&logoColor=white"/> |
-| ------------ | ------------------------------------------------------------ |
-| **Backend**  | <img src="https://img.shields.io/badge/Spring%20Boot-6DB33F?style=flat&logo=spring-boot&logoColor=white"/><img src="https://img.shields.io/badge/Gradle-02303A?style=flat&logo=gradle&logoColor=white"/><img src="https://img.shields.io/badge/Spring%20Data%20JPA-000000?style=flat&logoColor=white"/><img src="https://img.shields.io/badge/Spring%20Security-6DB33F?style=flat&logo=spring-security&logoColor=white"/><img src="https://img.shields.io/badge/Spring%20Cloud-000000?style=flat&logoColor=white"/><img src="https://img.shields.io/badge/FastAPI-009688?style=flat&logo=fastapi&logoColor=white"/><img src="https://img.shields.io/badge/MySQL-4479A1?style=flat&logo=mysql&logoColor=white"/><img src="https://img.shields.io/badge/Clova%20Speech%20API-000000?style=flat&logoColor=white"/><img src="https://img.shields.io/badge/ChatGPT%20API-000000?style=flat&logoColor=white"/><img src="https://img.shields.io/badge/Socket.io-010101?style=flat&logo=socket.io&logoColor=white"/> |
-| **IoT**      | <img src="https://img.shields.io/badge/CirtcuitPython-000000?style=flat&logoColor=white"/><img src="https://img.shields.io/badge/Adafruit-000000?style=flat&logo=adafruit&logoColor=white"/> |
-| **AI**       | <img src="https://img.shields.io/badge/Python-3776AB?style=flat&logo=python&logoColor=white"/><img src="https://img.shields.io/badge/Tensorflow-FF6F00?style=flat&logo=tensorflow&logoColor=white"/><img src="https://img.shields.io/badge/OpenCV-5C3EE8?style=flat&logo=opencv&logoColor=white"/><img src="https://img.shields.io/badge/Mediapipe-000000?style=flat&logoColor=white"/> |
-| **Infra**    | <img src="https://img.shields.io/badge/NGINX-009639?style=flat&logo=nginx&logoColor=white"/><img src="https://img.shields.io/badge/Docker-2496ED?style=flat&logo=docker&logoColor=white"/><img src="https://img.shields.io/badge/Jenkins-D24939?style=flat&logo=jenkins&logoColor=white"/><img src="https://img.shields.io/badge/Amazon%20EC2-FF9900?style=flat&logo=amazon-ec2&logoColor=white"/><img src="https://img.shields.io/badge/Amazon%20S3-569A31?style=flat&logo=amazon-s3&logoColor=white"/> |
+| **Frontend** | <img src="https://img.shields.io/badge/Node.js-339933?style=flat&logo=node.js&logoColor=white"/> <img src="https://img.shields.io/badge/Vite-646CFF?style=flat&logo=vite&logoColor=white"/> <img src="https://img.shields.io/badge/Typescript-3178C6?style=flat&logo=typescript&logoColor=white"/> <img src="https://img.shields.io/badge/React-61DAFB?style=flat&logo=react&logoColor=white"/>  <img src="https://img.shields.io/badge/React%20Router-CA4245?style=flat&logo=react-router&logoColor=white"/> <img src="https://img.shields.io/badge/Redux-764ABC?style=flat&logo=redux&logoColor=white"/> <img src="https://img.shields.io/badge/Flutter-02569B?style=flat&logo=flutter&logoColor=white"/> <img src="https://img.shields.io/badge/Axios-5A29E4?style=flat&logo=axios&logoColor=white"/> <img src="https://img.shields.io/badge/Socket.io-010101?style=flat&logo=socket.io&logoColor=white"/> |
+| :----------: | :----------------------------------------------------------: |
+| **Backend**  | <img src="https://img.shields.io/badge/Spring%20Boot-6DB33F?style=flat&logo=spring-boot&logoColor=white"/> <img src="https://img.shields.io/badge/Gradle-02303A?style=flat&logo=gradle&logoColor=white"/> <img src="https://img.shields.io/badge/Spring%20Data%20JPA-000000?style=flat&logoColor=white"/> <img src="https://img.shields.io/badge/Spring%20Security-6DB33F?style=flat&logo=spring-security&logoColor=white"/> <img src="https://img.shields.io/badge/Spring%20Cloud-000000?style=flat&logoColor=white"/> <img src="https://img.shields.io/badge/FastAPI-009688?style=flat&logo=fastapi&logoColor=white"/> <img src="https://img.shields.io/badge/MySQL-4479A1?style=flat&logo=mysql&logoColor=white"/> <img src="https://img.shields.io/badge/Clova%20Speech%20API-000000?style=flat&logoColor=white"/> <img src="https://img.shields.io/badge/ChatGPT%20API-000000?style=flat&logoColor=white"/> <img src="https://img.shields.io/badge/Socket.io-010101?style=flat&logo=socket.io&logoColor=white"/> |
+|   **IoT**    | <img src="https://img.shields.io/badge/CirtcuitPython-000000?style=flat&logoColor=white"/> <img src="https://img.shields.io/badge/Adafruit-000000?style=flat&logo=adafruit&logoColor=white"/> |
+|    **AI**    | <img src="https://img.shields.io/badge/Python-3776AB?style=flat&logo=python&logoColor=white"/> <img src="https://img.shields.io/badge/Tensorflow-FF6F00?style=flat&logo=tensorflow&logoColor=white"/> <img src="https://img.shields.io/badge/OpenCV-5C3EE8?style=flat&logo=opencv&logoColor=white"/> <img src="https://img.shields.io/badge/Mediapipe-000000?style=flat&logoColor=white"/> |
+|  **Infra**   | <img src="https://img.shields.io/badge/NGINX-009639?style=flat&logo=nginx&logoColor=white"/> <img src="https://img.shields.io/badge/Docker-2496ED?style=flat&logo=docker&logoColor=white"/> <img src="https://img.shields.io/badge/Jenkins-D24939?style=flat&logo=jenkins&logoColor=white"/> <img src="https://img.shields.io/badge/Amazon%20EC2-FF9900?style=flat&logo=amazon-ec2&logoColor=white"/> <img src="https://img.shields.io/badge/Amazon%20S3-569A31?style=flat&logo=amazon-s3&logoColor=white"/> |
 
 
 
@@ -42,43 +42,65 @@ Hearo는 청각장애인과 비장애인을 연결하는 소통 특화 플랫폼
 
 - 로그인
 
-  <img src="https://github.com/team-siksik/hearo/assets/98254573/3e86a231-e107-42bc-87e6-6a1ecc9e0714" width="300"/>
-
   - 구글 소셜 로그인 지원
   - 최초 로그인 시 사용에 필요한 권한 요청
 
+  <img src="https://github.com/team-siksik/hearo/assets/98254573/3e86a231-e107-42bc-87e6-6a1ecc9e0714" width="300"/>
+
 - 모드 선택
+
+  - Hearo Glass 사용 여부에 따라 `연결 없이 시작하기` 또는 `H-Glass 시작하기` 선택
+
   <img src="https://github.com/team-siksik/hearo/assets/98254573/734864a2-a515-4fac-bd09-dc028ccb3b97" width="300"/>
-  - 자체 히어로 글래스가 있는 사람과 없는 사람이 모드를 정할 수 있습니다.
 
-- 일반 홈
-  - 기능을 선택하여 들어갈 수 있는 화면입니다.
+- 메인 화면
 
-- 계정 페이지
+  - `대화 나누기`, `주변 소음 인식`, `수어 인식`, `앱 권한 설정`, `자주 쓰는 말` 기능
+  - 물음표 아이콘 선택하여 기능 설명 확인
 
-  - 계정 페이지입니다.
+  <img src="https://github.com/team-siksik/hearo/assets/98254573/7144d2d9-6fe7-4bd8-b171-35b95125fe97" width="300"/>
 
-  - 모드를 변경하거나 로그아웃 및 회원 탈퇴가 가능합니다.
+- 대화 나누기
 
-  - 자주 쓰는 말을 등록, 수정 및 삭제할 수 있습니다.
+  <img src="https://github.com/team-siksik/hearo/assets/98254573/9bfa3c17-5844-4e8f-9f37-9b9f38e42a62" width="300"/>
 
-  - 앱의 권한 설정을 관리할 수 있습니다.
+- 주변 소음 인식
 
-
-- 대화
-  - 대화 화면입니다.
-  - 대화 이용하기 도움말을 통해 기능을 알 수 있습니다.
-- 소음 인식
-  - 안경과 동일
+  <img src="https://github.com/team-siksik/hearo/assets/98254573/9f265b37-8608-4260-a586-ee1c483ce862" width="300"/>
 
 - 수어 인식
 
+  <img src="https://github.com/team-siksik/hearo/assets/98254573/49f84dd7-bfce-493e-acc9-e2bb5bea70b7" width="300"/>
+
+- 자주 쓰는 말
+
+  <img src="https://github.com/team-siksik/hearo/assets/98254573/7c9c347f-d896-4559-bd7b-8f6f4668d769" width="300"/>
+
+- 앱 권한 설정
+
+  <img src="https://github.com/team-siksik/hearo/assets/98254573/5336ee61-a759-4ed7-a303-2a1d36993d70" width="300"/>
+
+- 내 계정
+
+  <img src="https://github.com/team-siksik/hearo/assets/98254573/4dfb0600-c872-4b0e-8af4-eae8df845903" width="300"/>
+
+
+
 ### Hearo Glass
 
-- 글래스 찾기
-- 글래스 홈
-- 대화
-- 소음 인식
+- Hearo Glass 연결
+
+  <img src="https://github.com/team-siksik/hearo/assets/98254573/8bc1fd26-a8d8-4b90-9b56-3d58dcaa218e" width="300"/><img src="https://github.com/team-siksik/hearo/assets/98254573/6ea39fa4-ca8c-4c78-9d31-9bea35b0abb0" width="300"/>
+
+- 대화 나누기
+
+  <img src="https://github.com/team-siksik/hearo/assets/98254573/ae5bae7d-bbe8-45d7-b781-50fe6415a519" width="300"/><img src="https://github.com/team-siksik/hearo/assets/98254573/56d41039-2033-4462-9751-a95c6a3397a7" width="300"/>
+
+- 주변 소음 인식
+
+  <img src="https://github.com/team-siksik/hearo/assets/98254573/cef0b3ef-06f2-422d-87f9-dc508d1fb820" width="300"/>
+
+
 
 ### Hearo Office (Web)
 
