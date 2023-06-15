@@ -78,7 +78,7 @@ Hearo는 청각장애인과 비장애인을 연결하는 소통 특화 플랫폼
 
 - 앱 권한 설정
 
-  <img src="/images/hearo_자주쓰는말.gif" width="300"/>
+  <img src="/images/hearo_앱권한설정.gif" width="300"/>
 
 - 내 계정
 
@@ -99,7 +99,6 @@ Hearo는 청각장애인과 비장애인을 연결하는 소통 특화 플랫폼
 - 주변 소음 인식
 
   <img src="/images/hearo_글래스같이화면에뜸.gif" width="600"/>
-
 
 
 ### Hearo Office (Web)
