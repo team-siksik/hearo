@@ -121,7 +121,7 @@ Hearo는 청각장애인과 비장애인을 연결하는 소통 특화 플랫폼
   <img src="https://github.com/team-siksik/hearo/assets/98254573/a7bb3a77-848d-4c0f-a2a9-c3370e83b51b"/>
 
 - 내 정보
-
+  ![내 정보](https://github.com/team-siksik/hearo/assets/98254573/0e39f20c-4e28-4e33-902d-742e713db256)
   <img src="https://github.com/team-siksik/hearo/assets/98254573/0e39f20c-4e28-4e33-902d-742e713db256"/>
 
 
