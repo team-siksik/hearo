@@ -45,44 +45,44 @@ Hearo는 청각장애인과 비장애인을 연결하는 소통 특화 플랫폼
   - 구글 소셜 로그인 지원
   - 최초 로그인 시 사용에 필요한 권한 요청
 
-  <img src="https://github.com/team-siksik/hearo/assets/98254573/3e86a231-e107-42bc-87e6-6a1ecc9e0714" width="300"/>
+  <img src="/images/hearo_계정페이지.gif" width="300"/>
 
 - 모드 선택
 
   - Hearo Glass 사용 여부에 따라 `연결 없이 시작하기` 또는 `H-Glass 시작하기` 선택
 
-  <img src="https://github.com/team-siksik/hearo/assets/98254573/734864a2-a515-4fac-bd09-dc028ccb3b97" width="300"/>
+  <img src="/images/hearo_모드선택.gif" width="300"/>
 
 - 메인 화면
 
   - `대화 나누기`, `주변 소음 인식`, `수어 인식`, `앱 권한 설정`, `자주 쓰는 말` 기능
   - 물음표 아이콘 선택하여 기능 설명 확인
 
-  <img src="https://github.com/team-siksik/hearo/assets/98254573/7144d2d9-6fe7-4bd8-b171-35b95125fe97" width="300"/>
+  <img src="/images/hearo_메인화면.gif" width="300"/>
 
 - 대화 나누기
 
-  <img src="https://github.com/team-siksik/hearo/assets/98254573/9bfa3c17-5844-4e8f-9f37-9b9f38e42a62" width="300"/>
+  <img src="/images/hearo_대화나누기.gif" width="300"/>
 
 - 주변 소음 인식
 
-  <img src="https://github.com/team-siksik/hearo/assets/98254573/9f265b37-8608-4260-a586-ee1c483ce862" width="300"/>
+  <img src="/images/hearo_소음인식.gif" width="300"/>
 
 - 수어 인식
 
-  <img src="https://github.com/team-siksik/hearo/assets/98254573/49f84dd7-bfce-493e-acc9-e2bb5bea70b7" width="300"/>
+  <img src="/images/hearo_수어인식.gif" width="300"/>
 
 - 자주 쓰는 말
 
-  <img src="https://github.com/team-siksik/hearo/assets/98254573/7c9c347f-d896-4559-bd7b-8f6f4668d769" width="300"/>
+  <img src="/images/hearo_자주쓰는말.gif" width="300"/>
 
 - 앱 권한 설정
 
-  <img src="https://github.com/team-siksik/hearo/assets/98254573/5336ee61-a759-4ed7-a303-2a1d36993d70" width="300"/>
+  <img src="/images/hearo_자주쓰는말.gif" width="300"/>
 
 - 내 계정
 
-  <img src="https://github.com/team-siksik/hearo/assets/98254573/4dfb0600-c872-4b0e-8af4-eae8df845903" width="300"/>
+  <img src="/images/hearo_계정페이지.gif" width="300"/>
 
 
 
@@ -90,15 +90,15 @@ Hearo는 청각장애인과 비장애인을 연결하는 소통 특화 플랫폼
 
 - Hearo Glass 연결
 
-  <img src="https://github.com/team-siksik/hearo/assets/98254573/8bc1fd26-a8d8-4b90-9b56-3d58dcaa218e" width="300"/><img src="https://github.com/team-siksik/hearo/assets/98254573/6ea39fa4-ca8c-4c78-9d31-9bea35b0abb0" height="622"/>
+  <img src="/images/hearo_글래스연결.gif" width="300"/><img src="/images/hearo_글래스켜짐.gif" height="622"/>
 
 - 대화 나누기
 
-  <img src="https://github.com/team-siksik/hearo/assets/98254573/ae5bae7d-bbe8-45d7-b781-50fe6415a519" width="300"/><img src="https://github.com/team-siksik/hearo/assets/98254573/56d41039-2033-4462-9751-a95c6a3397a7" height="622"/>
+  <img src="/images/hearo_글래스화면대화.gif" width="300"/><img src="/images/hearo_글래스진짜대화출력.gif" height="622"/>
 
 - 주변 소음 인식
 
-  <img src="https://github.com/team-siksik/hearo/assets/98254573/cef0b3ef-06f2-422d-87f9-dc508d1fb820" width="600"/>
+  <img src="/images/hearo_글래스같이화면에뜸.gif" width="600"/>
 
 
 
@@ -106,23 +106,23 @@ Hearo는 청각장애인과 비장애인을 연결하는 소통 특화 플랫폼
 
 - 로그인
 
-  <img src="https://github.com/team-siksik/hearo/assets/98254573/d4d57c8f-ce7c-46b4-8a7c-5e03cdea92bc"/>
+  <img src="/images/메인_로그인.gif"/>
 
 - 메인 화면
 
-  <img src="https://github.com/team-siksik/hearo/assets/98254573/9eff56c6-69a3-462e-8502-1e3b75188f51"/>
+  <img src="/images/메인_화면.gif"/>
 
 - 회의 진행 화면
 
-  <img src="https://github.com/team-siksik/hearo/assets/98254573/bde205bf-5647-405e-8740-6804e233d688"/>
+  <img src="/images/대화_진행.gif"/>
 
 - 내 기록
 
-  <img src="https://github.com/team-siksik/hearo/assets/98254573/a7bb3a77-848d-4c0f-a2a9-c3370e83b51b"/>
+  <img src="/images/대화_기록.gif"/>
 
 - 내 정보
-  ![내 정보](https://github.com/team-siksik/hearo/assets/98254573/0e39f20c-4e28-4e33-902d-742e713db256)
-  <img src="https://github.com/team-siksik/hearo/assets/98254573/0e39f20c-4e28-4e33-902d-742e713db256"/>
+
+  <img src="/images/환경설정.gif"/>
 
 
 
