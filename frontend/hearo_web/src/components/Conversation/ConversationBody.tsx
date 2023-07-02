@@ -260,18 +260,6 @@ function ConversationBody({
     return socket1;
   }
 
-  function onPartialResults(script: any) {
-    const result = decodeUnicode(script[0].transcript)
-      .replace(/<UNK>/gi, "")
-      .replace(/{/gi, "")
-      .replace(/}/gi, "")
-      .replace(/\[/gi, "")
-      .replace(/\]/gi, "")
-      .replace(/\(/gi, "")
-      .replace(/\)/gi, "");
-    if (result !== "." && !result.includes("^")) partialResult.current = result;
-  }
-
   async function record() {
     // 마이크 mediaStream 생성: Promise를 반환하므로 async/await 사용
     const mediaStream = await navigator.mediaDevices.getUserMedia({
