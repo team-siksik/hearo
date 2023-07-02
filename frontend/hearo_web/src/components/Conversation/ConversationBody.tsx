@@ -182,10 +182,6 @@ function ConversationBody({
       const intervalKey = setInterval(() => {
         subRecorder.current?.exportWAV((blob: Blob) => {
           socketSend(blob);
-          // reader.readAsDataURL(blob);
-          // reader.onloadend = function () {
-          //   socketSend(reader.result);
-          // };
           subRecorder.current?.clear();
         }, "audio/wav");
       }, 500);
@@ -196,7 +192,6 @@ function ConversationBody({
       } catch (err) {
         console.log("subRecorder doesn't work");
       }
-      // onEvent(MSG_WEB_SOCKET_OPEN, "socket_open");
     });
 
     socket1.on("data", (e) => {
@@ -256,7 +251,6 @@ function ConversationBody({
 
     socket1.on("error", (e) => {
       console.log("socket error");
-      // onEvent(ERR_SOCKET, e);
     });
 
     socket1.on("connect_error", (err) => {
@@ -298,16 +292,12 @@ function ConversationBody({
     const subRecorder1 = new Recorder(input, {
       workerPath: { recorderWorkerPath },
     });
-    // setSubRecorder(subRecorder);
     subRecorder.current = subRecorder1;
 
     // MediaRecorder 생성 - 전체 녹음하는 recorder
     const mediaRecorder1 = new MediaRecorder(mediaStream, {
       audioBitsPerSecond: 16000,
-      // mimeType: "audio/wav; codecs=opus",
     });
-    // onEvent(MSG_INIT_RECORDER, "Recorder initialized");
-    // setMediaRecorder(mediaRecorder);
     mediaRecorder.current = mediaRecorder1;
 
     // 이벤트핸들러: 녹음 데이터 취득 처리
@@ -341,10 +331,6 @@ function ConversationBody({
 
   // recording start
   function startRecord() {
-    // onEvent(
-    //   MSG_WAITING_MICROPHONE,
-    //   "Waiting for approval to access your microphone ..."
-    // );
     if (mediaRecorder.current) {
       console.log(mediaRecorder.current);
       return;
@@ -390,9 +376,6 @@ function ConversationBody({
             audio: item,
             split: false,
           });
-          // onEvent(AUDIO_SEND, `Send: blob: ${item.type}, ${item.size}`);
-        } else {
-          // onEvent(MSG_SEND_EMPTY, `Send: blob: ${item.type}, EMPTY`);
         }
         //If item is like string or sth
       } else {
@@ -466,12 +449,10 @@ function ConversationBody({
     if (subRecorder) {
       subRecorder.current?.stop();
       subRecorder.current?.clear();
-      // onEvent(MSG_STOP, "Stopped recording");
     }
     if (socket) {
       socket.current?.emit("close_room", { room_id: userSeq });
       socket.current?.close();
-      // setSocket(null);
       socket.current = null;
     }
     setIsRecording(false);
